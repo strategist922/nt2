@@ -15,10 +15,33 @@
 #include <boost/simd/include/functions/unaligned_load.hpp>
 #include <boost/simd/include/functions/splat.hpp>
 #include <boost/simd/sdk/memory/align_on.hpp>
+#include <boost/simd/sdk/simd/meta/unroll.hpp>
 #include <boost/mpl/assert.hpp>
 
 namespace boost { namespace simd
 {
+  namespace detail
+  {
+    template<class T, class U, class vT, class vU, class F>
+    struct transform_unary_impl
+    {
+      BOOST_FORCEINLINE
+      transform_unary_impl(T const* begin_, U* out_, F& f_) : begin(begin_), out(out_), f(f_)
+      {
+      }
+
+      BOOST_FORCEINLINE
+      void operator()(std::size_t i) const
+      {
+        simd::store(f(simd::unaligned_load<vT>(begin, i)), out, i);
+      }
+
+      T const* begin;
+      U* out;
+      F& f;
+    };
+  }
+
   template<class T, class U, class UnOp>
   U* transform(T const* begin, T const* end, U* out, UnOp f)
   {
@@ -34,20 +57,44 @@ namespace boost { namespace simd
 
     std::size_t shift = simd::align_on(out, N * sizeof(U)) - out;
     T const* end2 = begin + shift;
-    T const* end3 = end2 + (end - end2)/N*N;
+    std::size_t iter_size = (end - end2)/N*N;
 
     // prologue
     for(; begin!=end2; ++begin, ++out)
       *out = f(*begin);
 
-    for(; begin!=end3; begin += N, out += N)
-      simd::store(f(simd::unaligned_load<vT>(begin)), out);
+    meta::unroll<16, N>::apply(0, iter_size, detail::transform_unary_impl<T, U, vT, vU, UnOp>(begin, out, f));
+    begin += iter_size;
+    out += iter_size;
 
     // epilogue
     for(; begin!=end; ++begin, ++out)
       *out = f(*begin);
 
     return out;
+  }
+
+  namespace detail
+  {
+    template<class T1, class T2, class U, class vT1, class vT2, class vU, class F>
+    struct transform_binary_impl
+    {
+      BOOST_FORCEINLINE
+      transform_binary_impl(T1 const* begin1_, T2 const* begin2_, U* out_, F& f_) : begin1(begin1_), begin2(begin2_), out(out_), f(f_)
+      {
+      }
+
+      BOOST_FORCEINLINE
+      void operator()(std::size_t i) const
+      {
+        simd::store(f(simd::unaligned_load<vT1>(begin1, i), simd::unaligned_load<vT2>(begin2, i)), out, i);
+      }
+
+      T1 const* begin1;
+      T2 const* begin2;
+      U* out;
+      F& f;
+    };
   }
 
   template<class T1, class T2, class U, class BinOp>
@@ -66,20 +113,44 @@ namespace boost { namespace simd
 
     std::size_t shift = simd::align_on(out, N * sizeof(U)) - out;
     T1 const* end2 = begin1 + shift;
-    T1 const* end3 = end2 + (end - end2)/N*N;
+    std::size_t iter_size = (end - end2)/N*N;
 
     // prologue
     for(; begin1!=end2; ++begin1, ++begin2, ++out)
       *out = f(*begin1, *begin2);
 
-    for(; begin1!=end3; begin1 += N, begin2 += N, out += N)
-      simd::store(f(simd::unaligned_load<vT1>(begin1), simd::unaligned_load<vT2>(begin2)), out);
+    meta::unroll<16, N>::apply(0, iter_size, detail::transform_binary_impl<T1, T2, U, vT1, vT2, vU, BinOp>(begin1, begin2, out, f));
+    begin1 += iter_size;
+    begin2 += iter_size;
+    out += iter_size;
 
     // epilogue
     for(; begin1!=end; ++begin1, ++begin2, ++out)
       *out = f(*begin1, *begin2);
 
     return out;
+  }
+
+  namespace detail
+  {
+    template<class T, class vT, class vU, class F>
+    struct accumulate_impl
+    {
+      BOOST_FORCEINLINE
+      accumulate_impl(T const* begin_, vU& cur_, F& f_) : begin(begin_), cur(cur_), f(f_)
+      {
+      }
+
+      BOOST_FORCEINLINE
+      void operator()(std::size_t i) const
+      {
+        cur = f(cur, boost::simd::load<vT>(begin, i));
+      }
+
+      T const* begin;
+      vU& cur;
+      F& f;
+    };
   }
 
   template<class T, class U, class F>
@@ -96,7 +167,7 @@ namespace boost { namespace simd
     static const std::size_t N = vT::static_size;
 
     T const* end2 = simd::align_on(begin, N * sizeof(T));
-    T const* end3 = end2 + (end - end2)/N*N;
+    std::size_t iter_size = (end - end2)/N*N;
 
     vU cur = simd::splat<vU>(init);
 
@@ -104,8 +175,8 @@ namespace boost { namespace simd
     for(; begin!=end2; ++begin)
       init = f(init, *begin);
 
-    for(; begin!=end3; begin += N)
-      cur = f(cur, boost::simd::load<vT>(begin));
+    meta::unroll<16, N>::apply(0, iter_size, detail::accumulate_impl<T, vT, vU, F>(begin, cur, f));
+    begin += iter_size;
 
     // reduce cur
     for(U const* b = cur.begin(); b != cur.end(); ++b)

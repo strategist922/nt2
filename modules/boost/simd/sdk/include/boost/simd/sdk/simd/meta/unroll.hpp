@@ -13,228 +13,122 @@
 // Specializations for unroll (Duff's devices optimization)
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace boost{ namespace simd{ namespace meta{
-
-  template<int N>
+namespace boost { namespace simd { namespace meta
+{
+  template<int N, std::size_t Step = 1>
   struct unroll
   {};
 
-  template<>
-  struct unroll<0>
+  template<std::size_t N>
+  struct unroll<0, N>
   {
-    template<class SimdInputIterator, class SimdOutputIterator, class UnOp>
-    inline static void
-    apply( SimdInputIterator& in, SimdInputIterator const& end
-         , SimdOutputIterator& out, UnOp f)
+    template<class F>
+    static void
+    apply( std::size_t begin, std::size_t end, F f )
     {
-      while(in != end)
-      *out++ = f(*in++);
+      for(; begin != end; begin += N)
+        f(begin);
     }
-
-    template<class SimdInputIterator, class SimdOutputIterator, class BinOp>
-    inline static void
-    apply( SimdInputIterator& in1, SimdInputIterator& in2
-         , SimdInputIterator const& end, SimdOutputIterator& out, BinOp f)
-    {
-      while(in1 != end)
-      *out++ = f(*in1++,*in2++);
-    }
-
   };
 
-  template<>
-  struct unroll<2>
+  template<std::size_t N>
+  struct unroll<2, N>
   {
-    template<class SimdInputIterator, class SimdOutputIterator, class UnOp>
-    inline static void
-    apply( SimdInputIterator& in, SimdInputIterator const& end
-         , SimdOutputIterator& out, UnOp f)
+    template<class F>
+    static void
+    apply( std::size_t begin, std::size_t end, F f )
     {
-      typename SimdInputIterator::difference_type distance = end - in;
-      typename SimdInputIterator::difference_type n = (distance + 1) / 2;
+      std::size_t distance = (end - begin)/N;
+      std::size_t n = (distance + 1) / 2;
 
       switch(distance % 2)
       {
-        case 0 : do{
-          *out++ = f(*in++);
-        case 1 : *out++ = f(*in++);
-        } while(--n > 0);
-      }
-    }
-
-    template<class SimdInputIterator, class SimdOutputIterator, class BinOp>
-    inline static void
-    apply( SimdInputIterator& in1, SimdInputIterator& in2
-         , SimdInputIterator const& end, SimdOutputIterator& out, BinOp f)
-    {
-      typename SimdInputIterator::difference_type distance = end - in1;
-      typename SimdInputIterator::difference_type n = (distance + 1) / 2;
-
-      switch(distance % 2)
-      {
-        case 0 : do{
-          *out++ = f(*in1++,*in2++);
-        case 1 : *out++ = f(*in1++,*in2++);
-        } while(--n > 0);
+        case 0 : do {
+          f(begin); begin += N;
+        case 1 : f(begin); begin += N;
+        } while(--n != 0);
       }
     }
   };
 
-  template<>
-  struct unroll<4>
+  template<std::size_t N>
+  struct unroll<4, N>
   {
-    template<class SimdInputIterator, class SimdOutputIterator, class UnOp>
-    inline static void
-    apply( SimdInputIterator& in, SimdInputIterator const& end
-         , SimdOutputIterator& out, UnOp f)
+    template<class F>
+    static void
+    apply( std::size_t begin, std::size_t end, F f )
     {
-      typename SimdInputIterator::difference_type distance = end - in;
-      typename SimdInputIterator::difference_type n = (distance + 3) / 4;
+      std::size_t distance = (end - begin)/N;
+      std::size_t n = (distance + 3) / 4;
 
       switch(distance % 4)
       {
-        case 0 : do{
-          *out++ = f(*in++);
-        case 3 : *out++ = f(*in++);
-        case 2 : *out++ = f(*in++);
-        case 1 : *out++ = f(*in++);
-        } while(--n > 0);
-      }
-    }
-
-    template<class SimdInputIterator, class SimdOutputIterator, class BinOp>
-    inline static void
-    apply( SimdInputIterator& in1, SimdInputIterator& in2
-         , SimdInputIterator const& end, SimdOutputIterator& out, BinOp f)
-    {
-      typename SimdInputIterator::difference_type distance = end - in1;
-      typename SimdInputIterator::difference_type n = (distance + 3) / 4;
-
-      switch(distance % 4)
-      {
-        case 0 : do{
-          *out++ = f(*in1++,*in2++);
-        case 3 : *out++ = f(*in1++,*in2++);
-        case 2 : *out++ = f(*in1++,*in2++);
-        case 1 : *out++ = f(*in1++,*in2++);
-        } while(--n > 0);
-      }
-    }
-
-  };
-
-  template<>
-  struct unroll<8>
-  {
-    template<class SimdInputIterator, class SimdOutputIterator, class UnOp>
-    inline static void
-    apply( SimdInputIterator& in, SimdInputIterator const& end
-         , SimdOutputIterator& out, UnOp f)
-    {
-      typename SimdInputIterator::difference_type distance = end - in;
-      typename SimdInputIterator::difference_type n = (distance + 7) / 8;
-
-      switch(distance % 8)
-      {
-        case 0 : do{
-          *out++ = f(*in++);
-        case 7 : *out++ = f(*in++);
-        case 6 : *out++ = f(*in++);
-        case 5 : *out++ = f(*in++);
-        case 4 : *out++ = f(*in++);
-        case 3 : *out++ = f(*in++);
-        case 2 : *out++ = f(*in++);
-        case 1 : *out++ = f(*in++);
-        } while(--n > 0);
-      }
-    }
-
-    template<class SimdInputIterator, class SimdOutputIterator, class BinOp>
-    inline static void
-    apply( SimdInputIterator& in1, SimdInputIterator& in2
-         , SimdInputIterator const& end, SimdOutputIterator& out, BinOp f)
-    {
-      typename SimdInputIterator::difference_type distance = end - in1;
-      typename SimdInputIterator::difference_type n = (distance + 7) / 8;
-
-      switch(distance % 8)
-      {
-        case 0 : do{
-          *out++ = f(*in1++,*in2++);
-        case 7 : *out++ = f(*in1++,*in2++);
-        case 6 : *out++ = f(*in1++,*in2++);
-        case 5 : *out++ = f(*in1++,*in2++);
-        case 4 : *out++ = f(*in1++,*in2++);
-        case 3 : *out++ = f(*in1++,*in2++);
-        case 2 : *out++ = f(*in1++,*in2++);
-        case 1 : *out++ = f(*in1++,*in2++);
-        } while(--n > 0);
+        case 0 : do {
+          f(begin); begin += N;
+        case 3 : f(begin); begin += N;
+        case 2 : f(begin); begin += N;
+        case 1 : f(begin); begin += N;
+        } while(--n != 0);
       }
     }
   };
 
-  template<>
-  struct unroll<16>
+  template<std::size_t N>
+  struct unroll<8, N>
   {
-    template<class SimdInputIterator, class SimdOutputIterator, class UnOp>
-    inline static void
-    apply( SimdInputIterator& in, SimdInputIterator const& end
-         , SimdOutputIterator& out, UnOp f)
+    template<class F>
+    static void
+    apply( std::size_t begin, std::size_t end, F f )
     {
-      typename SimdInputIterator::difference_type distance = end - in;
-      typename SimdInputIterator::difference_type n = (distance + 15) / 16;
+      std::size_t distance = (end - begin)/N;
+      std::size_t n = (distance + 7) / 8;
 
-      switch(distance % 16)
+      switch(distance % 8)
       {
-        case 0 : do{
-          *out++ = f(*in++);
-        case 15 : *out++ = f(*in++);
-        case 14 : *out++ = f(*in++);
-        case 13 : *out++ = f(*in++);
-        case 12 : *out++ = f(*in++);
-        case 11 : *out++ = f(*in++);
-        case 10 : *out++ = f(*in++);
-        case 9  : *out++ = f(*in++);
-        case 8  : *out++ = f(*in++);
-        case 7  : *out++ = f(*in++);
-        case 6  : *out++ = f(*in++);
-        case 5  : *out++ = f(*in++);
-        case 4  : *out++ = f(*in++);
-        case 3  : *out++ = f(*in++);
-        case 2  : *out++ = f(*in++);
-        case 1  : *out++ = f(*in++);
-        } while(--n > 0);
+        case 0 : do {
+          f(begin); begin += N;
+        case 7 : f(begin); begin += N;
+        case 6 : f(begin); begin += N;
+        case 5 : f(begin); begin += N;
+        case 4 : f(begin); begin += N;
+        case 3 : f(begin); begin += N;
+        case 2 : f(begin); begin += N;
+        case 1 : f(begin); begin += N;
+        } while(--n != 0);
       }
     }
+  };
 
-    template<class SimdInputIterator, class SimdOutputIterator, class BinOp>
-    inline static void
-    apply( SimdInputIterator& in1, SimdInputIterator& in2
-         , SimdInputIterator const& end, SimdOutputIterator& out, BinOp f)
+  template<std::size_t N>
+  struct unroll<16, N>
+  {
+    template<class F>
+    static void
+    apply( std::size_t begin, std::size_t end, F f )
     {
-      typename SimdInputIterator::difference_type distance = end - in1;
-      typename SimdInputIterator::difference_type n = (distance + 15) / 16;
+      std::size_t distance = (end - begin)/N;
+      std::size_t n = (distance + 15) / 16;
 
       switch(distance % 16)
       {
-        case 0 : do{
-          *out++ = f(*in1++,*in2++);
-        case 15 : *out++ = f(*in1++,*in2++);
-        case 14 : *out++ = f(*in1++,*in2++);
-        case 13 : *out++ = f(*in1++,*in2++);
-        case 12 : *out++ = f(*in1++,*in2++);
-        case 11 : *out++ = f(*in1++,*in2++);
-        case 10 : *out++ = f(*in1++,*in2++);
-        case 9  : *out++ = f(*in1++,*in2++);
-        case 8  : *out++ = f(*in1++,*in2++);
-        case 7  : *out++ = f(*in1++,*in2++);
-        case 6  : *out++ = f(*in1++,*in2++);
-        case 5  : *out++ = f(*in1++,*in2++);
-        case 4  : *out++ = f(*in1++,*in2++);
-        case 3  : *out++ = f(*in1++,*in2++);
-        case 2  : *out++ = f(*in1++,*in2++);
-        case 1  : *out++ = f(*in1++,*in2++);
-        } while(--n > 0);
+        case 0 : do {
+          f(begin); begin += N;
+        case 15 : f(begin); begin += N;
+        case 14 : f(begin); begin += N;
+        case 13 : f(begin); begin += N;
+        case 12 : f(begin); begin += N;
+        case 11 : f(begin); begin += N;
+        case 10 : f(begin); begin += N;
+        case 9  : f(begin); begin += N;
+        case 8  : f(begin); begin += N;
+        case 7  : f(begin); begin += N;
+        case 6  : f(begin); begin += N;
+        case 5  : f(begin); begin += N;
+        case 4  : f(begin); begin += N;
+        case 3  : f(begin); begin += N;
+        case 2  : f(begin); begin += N;
+        case 1  : f(begin); begin += N;
+        } while(--n != 0);
       }
     }
   };
