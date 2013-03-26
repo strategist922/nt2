@@ -32,7 +32,7 @@
 #define BOOST_SIMD_CARDINALS          (8)(16)
 #define BOOST_SIMD_TAG_SEQ            (::boost::simd::tag::lrb_)
 #define BOOST_SIMD_DEFAULT_EXTENSION  ::boost::simd::tag::lrb_
-#define BOOST_SIMD_DEFAULT_SITE       ::boost::simd::tag::lrb_
+#define BOOST_SIMD_DEFAULT_SITE       ::boost::simd::tag::__simd< ::boost::simd::tag::lrb_>
 
 #include <boost/simd/sdk/simd/extensions/lrb/lrb_prototype_primitives.hpp>
 #include <boost/simd/sdk/simd/extensions/lrb/adds2lrb.hpp>

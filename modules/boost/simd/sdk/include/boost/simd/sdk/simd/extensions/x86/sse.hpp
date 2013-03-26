@@ -32,7 +32,7 @@
 #define BOOST_SIMD_CARDINALS          (4)
 #define BOOST_SIMD_TAG_SEQ            (::boost::simd::tag::sse_)
 #define BOOST_SIMD_DEFAULT_EXTENSION  ::boost::simd::tag::sse_
-#define BOOST_SIMD_DEFAULT_SITE       ::boost::simd::tag::sse_
+#define BOOST_SIMD_DEFAULT_SITE       ::boost::simd::tag::simd__< ::boost::simd::tag::sse_>
 
 #include <emmintrin.h>
 

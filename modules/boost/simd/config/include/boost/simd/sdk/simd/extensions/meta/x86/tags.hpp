@@ -18,19 +18,19 @@ namespace boost { namespace simd { namespace tag
 {
   // Tag hierarchy for SSE extensions
   BOOST_DISPATCH_HIERARCHY_CLASS(sse_, simd_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(sse2_, sse_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(sse3_, sse2_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(sse4a_, sse3_);
+  BOOST_DISPATCH_HIERARCHY_CLASS(sse2_, simd__<sse_>);
+  BOOST_DISPATCH_HIERARCHY_CLASS(sse3_, simd__<sse2_>);
+  BOOST_DISPATCH_HIERARCHY_CLASS(sse4a_, simd__<sse3_>);
 #ifdef BOOST_SIMD_ARCH_AMD
-  BOOST_DISPATCH_HIERARCHY_CLASS(ssse3_, sse4a_);
+  BOOST_DISPATCH_HIERARCHY_CLASS(ssse3_, simd__<sse4a_>);
 #else
-  BOOST_DISPATCH_HIERARCHY_CLASS(ssse3_, sse3_);
+  BOOST_DISPATCH_HIERARCHY_CLASS(ssse3_, simd__<sse3_>);
 #endif
-  BOOST_DISPATCH_HIERARCHY_CLASS(sse4_1_, ssse3_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(sse4_2_, sse4_1_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(avx_, sse4_2_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(fma4_, avx_);
-  BOOST_DISPATCH_HIERARCHY_CLASS(xop_, fma4_);
+  BOOST_DISPATCH_HIERARCHY_CLASS(sse4_1_, simd__<ssse3_>);
+  BOOST_DISPATCH_HIERARCHY_CLASS(sse4_2_, simd__<sse4_1_>);
+  BOOST_DISPATCH_HIERARCHY_CLASS(avx_, simd__<sse4_2_>);
+  BOOST_DISPATCH_HIERARCHY_CLASS(fma4_, simd__<avx_>);
+  BOOST_DISPATCH_HIERARCHY_CLASS(xop_, simd__<fma4_>);
 
   // Tag hierarchy for larrabee extensions
   BOOST_DISPATCH_HIERARCHY_CLASS(lrb_, simd_);

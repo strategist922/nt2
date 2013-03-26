@@ -47,6 +47,14 @@ namespace nt2
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL(tag::transform_, transform, (A0&)(A1 const&)(A2 const&)(A3 const&), 4)
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL(tag::transform_, transform, (A0 const&)(A1&)(A2 const&)(A3 const&), 4)
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL(tag::transform_, transform, (A0&)(A1&)(A2 const&)(A3 const&), 4)
+
+  // variant with explicit site
+  template<class Site, class A0, class A1, class A2, class A3>
+  BOOST_FORCEINLINE typename meta::call<tag::transform_(A0&, A1&, A2 const&, A3 const&), Site>::type
+  transform(A0& a0, A1& a1, A2 const& a2, A3 const& a3)
+  {
+    return functor<tag::transform_, Site>()(a0, a1, a2, a3);
+  }
 }
 
 #endif
