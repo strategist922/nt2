@@ -15,7 +15,12 @@
 
 namespace boost { namespace simd { namespace tag
 {
-  BOOST_DISPATCH_HIERARCHY_CLASS(simd_, boost::dispatch::tag::cpu_);
+  //BOOST_DISPATCH_HIERARCHY_CLASS(simd_, boost::dispatch::tag::cpu_);
+  struct simd_ : boost::dispatch::tag::cpu_
+  {
+    typedef boost::dispatch::tag::cpu_ base;
+    typedef boost::dispatch::tag::cpu_ parent;
+  };
 
   // parametric trampoline
   template<class X>

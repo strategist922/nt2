@@ -67,7 +67,7 @@ namespace nt2 { namespace ext
       for(std::size_t m=p+aligned_sz; it != m; it+=N)
         nt2::run( a0, it, nt2::run(a1, it, meta::as_<target_type>()) );
 
-      nt2::transform<typename X::parent>(a0, a1, it, sz-aligned_sz);
+      nt2::transform<typename X::parent::base>(a0, a1, it, sz-aligned_sz);
     }
   };
 } }
