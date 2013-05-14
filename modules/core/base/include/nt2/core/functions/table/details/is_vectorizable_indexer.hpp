@@ -156,14 +156,14 @@ namespace nt2 { namespace ext
   {
   };
 
-  template<class Children, class Cardinal>
-  struct is_vectorizable_indexers_impl
+  template<class Children>
+  struct is_contiguous_indexers
   {
     typedef typename boost::mpl::end<Children>::type seq_end;
 
     typedef typename boost::mpl::
             find_if< Children
-                   , boost::mpl::not_< is_vectorizable_indexer< boost::mpl::_1, Cardinal > >
+                   , boost::mpl::not_< is_vectorizable_indexer< boost::mpl::_1, boost::mpl::size_t<0> > >
                    >::type it;
 
     typedef typename boost::mpl::
@@ -188,15 +188,10 @@ namespace nt2 { namespace ext
 
   template<class Children, class Data>
   struct is_vectorizable_indexers
-       : is_vectorizable_indexers_impl<Children, typename meta::cardinal_of<typename meta::target_value<Data>::type>::type>
+       : is_vectorizable_indexer< typename boost::mpl::deref<typename boost::mpl::begin<Children>::type>::type, boost::mpl::size_t<1> >
   {
   };
 
-  template<class Children>
-  struct is_contiguous_indexers
-       : is_vectorizable_indexers_impl<Children, boost::mpl::size_t<0> >
-  {
-  };
 } }
 
 #endif

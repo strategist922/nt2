@@ -19,6 +19,22 @@
 
 namespace nt2 { namespace ext
 {
+  template<class Tag, std::size_t N, class Expr>
+  struct max_vect_size_impl;
+
+  template<class Expr>
+  std::size_t max_vect_size(Expr const&);
+
+  template<std::size_t N, class Expr>
+  struct max_vect_size_impl<tag::adjfun_, N, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return std::min( max_vect_size(boost::proto::child_c<0>(expr)), expr.extent()[0] );
+    }
+  };
+
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::run_, tag::cpu_
                             , (A0)(State)(Data)(N)
                             , ((node_<A0, nt2::tag::adjfun_, N, nt2::container::domain>))
@@ -38,11 +54,11 @@ namespace nt2 { namespace ext
     {
       // Types for indices computation
       typedef typename A0::extent_type                                  ext_t;
-      typedef typename meta::as_index<result_type>::type                i_t;
+      typedef State                                                     i_t;
       typedef typename result_of::as_subscript<ext_t,i_t>::type         sub_t;
 
       // Compute position and shifted position
-      sub_t pos0 = as_subscript(a0.extent(), enumerate<i_t>(p));
+      sub_t pos0 = as_subscript(a0.extent(), p);
 
       sub_t pos1 = pos0;
       ++pos1[boost::proto::value(boost::proto::child_c<1>(a0))];

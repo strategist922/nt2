@@ -19,6 +19,8 @@
 #include <boost/simd/sdk/simd/meta/is_vectorizable.hpp>
 #include <boost/fusion/include/pop_front.hpp>
 
+#include <nt2/include/constants/valmax.hpp>
+
 namespace nt2 { namespace ext
 {
   //============================================================================
@@ -35,6 +37,85 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
     {
       nt2::transform(a0,a1,0,nt2::numel(a0));
+    }
+  };
+
+  template<class Tag, std::size_t N, class Expr>
+  struct max_vect_size_impl;
+
+  template<class Expr>
+  BOOST_FORCEINLINE std::size_t max_vect_size(Expr const& expr)
+  {
+    return max_vect_size_impl<typename Expr::proto_tag, Expr::proto_arity_c, Expr const>()(expr);
+  }
+
+  template<class Tag, std::size_t N, class Expr>
+  struct max_vect_size_impl2;
+
+  template<class Tag, std::size_t N, class Expr>
+  struct max_vect_size_impl : max_vect_size_impl2<Tag, N, Expr>
+  {
+  };
+
+  template<class Tag, class Expr>
+  struct max_vect_size_impl2<Tag, 0, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return Valmax<result_type>();
+    }
+  };
+
+  template<class Tag, class Expr>
+  struct max_vect_size_impl2<Tag, 1, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return max_vect_size(boost::proto::child_c<0>(expr));
+    }
+  };
+
+  template<class Tag, class Expr>
+  struct max_vect_size_impl2<Tag, 2, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return std::min( max_vect_size(boost::proto::child_c<0>(expr))
+                     , max_vect_size(boost::proto::child_c<1>(expr))
+                     );
+    }
+  };
+
+  template<class Tag, class Expr>
+  struct max_vect_size_impl2<Tag, 3, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return std::min( max_vect_size(boost::proto::child_c<0>(expr))
+                     , std::min( max_vect_size(boost::proto::child_c<1>(expr))
+                               , max_vect_size(boost::proto::child_c<2>(expr))
+                               )
+                     );
+    }
+  };
+
+  template<class Tag, class Expr>
+  struct max_vect_size_impl2<Tag, 4, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return std::min( max_vect_size(boost::proto::child_c<0>(expr))
+                     , std::min( max_vect_size(boost::proto::child_c<1>(expr))
+                               , std::min( max_vect_size(boost::proto::child_c<2>(expr))
+                                         , max_vect_size(boost::proto::child_c<3>(expr))
+                                         )
+                               )
+                     );
     }
   };
 
@@ -58,17 +139,23 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE result_type
     operator()(A0& a0, A1& a1, A2 p, A3 sz) const
     {
+      std::size_t inner_sz = std::min(max_vect_size(a0), max_vect_size(a1));
+      inner_sz = std::min(inner_sz, sz);
+
       static const std::size_t N = boost::simd::meta
                                         ::cardinal_of<target_type>::value;
 
-      std::size_t aligned_sz  = sz & ~(N-1);
+      std::size_t aligned_sz  = inner_sz & ~(N-1);
       std::size_t it          = p;
 
-      for(std::size_t m=p+aligned_sz; it != m; it+=N)
-        nt2::run( a0, it, nt2::run(a1, it, meta::as_<target_type>()) );
+      for(std::size_t p2 = it; it != p+sz; p2 = it)
+      {
+        for(std::size_t m=p2+aligned_sz; it != m; it+=N)
+          nt2::run( a0, it, nt2::run(a1, it, meta::as_<target_type>()) );
 
-      for(std::size_t m=p+sz; it != m; ++it)
-        nt2::run( a0, it, nt2::run(a1, it, meta::as_<stype>()) );
+        for(std::size_t m=p2+inner_sz; it != m; ++it)
+          nt2::run( a0, it, nt2::run(a1, it, meta::as_<stype>()) );
+      }
     }
   };
 } }

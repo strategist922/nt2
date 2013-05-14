@@ -23,6 +23,22 @@
 
 namespace nt2 { namespace ext
 {
+  template<class Tag, std::size_t N, class Expr>
+  struct max_vect_size_impl;
+
+  template<class Expr>
+  std::size_t max_vect_size(Expr const&);
+
+  template<std::size_t N, class Expr>
+  struct max_vect_size_impl<tag::function_index_, N, Expr>
+  {
+    typedef std::size_t result_type;
+    BOOST_FORCEINLINE result_type operator()(Expr& expr) const
+    {
+      return std::min( max_vect_size(boost::proto::child_c<2>(expr)), expr.extent()[0] );
+    }
+  };
+
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::run_, tag::cpu_
                             , (Expr)(State)(Data)(Arity)
                             , ((expr_< unspecified_<Expr>
