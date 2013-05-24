@@ -54,26 +54,36 @@ namespace nt2 { namespace details
     typedef typename ext::size_of<Tag,Domain,Arity,Expr>::result_type           extent_type;
     typedef typename meta::strip<extent_type>::type                             size_type;
 
+    typedef typename boost::dispatch::meta::
+            transfer_qualifiers< typename meta::container_of<Domain>::type
+                                ::template
+                                apply< typename meta::
+                                       strip<value_type>::type
+                                     , nt2::settings(size_type)
+                                     >::type
+                              , value_type
+                              >::type                             container_type;
+
     typedef typename boost::mpl::
     if_< boost::is_same< size_type, _0D >
        , value_type
-       , typename boost::dispatch::meta::
-         transfer_qualifiers< typename meta::container_of<Domain>::type
-                              ::template
-                              apply< typename meta::
-                                     strip<value_type>::type
-                                   , nt2::settings(size_type)
-                                   >::type
-                            , value_type
-                            >::type
-       >::type                                                    type;
+       , container_type
+       >::type                                                    scalar_container_type;
+
     typedef container::expression< typename boost::
-                        remove_const<Expr>::type
-                      , type>                                     result_type;
+                                   remove_const<Expr>::type
+                                 , scalar_container_type
+                                 >                                expr_type;
+
+    typedef typename boost::mpl::
+    if_< boost::is_same< size_type, _0D >
+       , value_type
+       , expr_type
+       >::type                                                    result_type;
 
     BOOST_FORCEINLINE result_type operator()(Expr& e) const
     {
-      return result_type(e);
+      return result_type(expr_type(e));
     }
   };
 } }
