@@ -144,6 +144,32 @@ NT2_TEST_CASE( buffer_assignment )
 }
 
 //==============================================================================
+// Test for buffer release
+//==============================================================================
+NT2_TEST_CASE(buffer_release)
+{
+  using nt2::memory::buffer;
+
+  buffer<nt2::object> b(5);
+  for(std::ptrdiff_t i = 0; i < 5; ++i ) b[i].s = "released";
+
+  buffer<nt2::object>::pointer ptr = b.release();
+
+  NT2_TEST(b.empty());
+  NT2_TEST_EQUAL(b.size()     , 0u );
+  NT2_TEST_EQUAL(b.capacity() , 0u );
+
+  b.resize(7);
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 7u );
+
+  for( std::size_t i = 0; i < 5; ++i )
+    NT2_TEST_EQUAL( ptr[i].s, std::string("released") );
+
+  boost::simd::deallocate(ptr);
+}
+
+//==============================================================================
 // Test for buffer swap
 //==============================================================================
 NT2_TEST_CASE( buffer_swap )

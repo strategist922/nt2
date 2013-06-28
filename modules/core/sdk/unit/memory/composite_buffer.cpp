@@ -348,6 +348,44 @@ NT2_TEST_CASE(buffer_assignment)
 }
 
 //==============================================================================
+// Test for buffer release
+//==============================================================================
+NT2_TEST_CASE(buffer_release)
+{
+  using nt2::memory::buffer;
+  using nt2::memory::composite_buffer;
+
+  composite_buffer< buffer<foo> > b(5);
+
+  for ( std::size_t i = 0; i < 5; ++i )
+  {
+    foo f = {2.*i,3.f*i,short(i)};
+    b[i] = f;
+  }
+
+  composite_buffer< buffer<foo> >::pointer ptr = b.release();
+
+  NT2_TEST(b.empty());
+  NT2_TEST_EQUAL(b.size()     , 0u );
+  NT2_TEST_EQUAL(b.capacity() , 0u );
+
+  b.resize(7);
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 7u );
+
+  for( std::size_t i = 0; i < 5; ++i )
+  {
+    NT2_TEST_EQUAL( boost::fusion::at_c<0>(ptr)[i], 2.*i     );
+    NT2_TEST_EQUAL( boost::fusion::at_c<1>(ptr)[i], 3.f*i    );
+    NT2_TEST_EQUAL( boost::fusion::at_c<2>(ptr)[i], short(i) );
+  }
+
+  boost::simd::deallocate(boost::fusion::at_c<0>(ptr));
+  boost::simd::deallocate(boost::fusion::at_c<1>(ptr));
+  boost::simd::deallocate(boost::fusion::at_c<2>(ptr));
+}
+
+//==============================================================================
 // Test for buffer swap
 //==============================================================================
 NT2_TEST_CASE(buffer_swap)

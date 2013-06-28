@@ -173,10 +173,29 @@ namespace nt2 { namespace memory
     }
 
     //==========================================================================
+    // Data export
+    //==========================================================================
+    BOOST_FORCEINLINE pointer release()
+    {
+      pointer that = this->raw();
+      begin_ = end_ = capacity_ = &dummy_;
+      return  that;
+    }
+
+    //==========================================================================
     // Non-conservative resize
     //==========================================================================
     void resize( size_type sz )
     {
+      if(!sz)
+      {
+        if(!boost::is_same< Allocator, fixed_allocator<T> >::value)
+          nt2::memory::destruct(begin_, end_, get_allocator());
+
+        begin_ = end_ = capacity_ = &dummy_;
+        return;
+      }
+
       if(sz > capacity() )
       {
         // Resize to twice the requested size to optimize capacity usage

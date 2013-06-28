@@ -29,6 +29,7 @@ SET( SOURCES
   push_back.cpp
   relative_index.cpp
   relative_size.cpp
+  release.cpp
   resize.cpp
   size.cpp
   subscript.cpp

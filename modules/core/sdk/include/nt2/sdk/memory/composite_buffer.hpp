@@ -422,6 +422,42 @@ namespace nt2 { namespace memory
     }
 
     private:
+    //==========================================================================
+    // Data export helper
+    //==========================================================================
+    struct releaser
+    {
+      template<class Sig> struct result;
+      template<class This,class Elem> struct result<This(Elem)> : result<This(Elem&)> {};
+      template<class This,class Elem> struct result<This(Elem&)>
+      {
+        typedef typename Elem::pointer type;
+      };
+      template<class This,class Elem> struct result<This(Elem const&)>
+      {
+        typedef typename Elem::const_pointer type;
+      };
+
+      template<typename T> BOOST_FORCEINLINE
+      typename result<releaser(T&)>::type
+      operator()(T& t) const  { return t.release(); }
+
+      template<typename T> BOOST_FORCEINLINE
+      typename result<releaser(T const&)>::type
+      operator()(T const& t) const  { return t.release(); }
+    };
+
+    public:
+    //==========================================================================
+    // Data export
+    //==========================================================================
+    BOOST_FORCEINLINE pointer release()
+    {
+      boost::fusion::transform_view<data_t,releaser> that(data_, releaser() );
+      return that;
+    }
+
+    private:
     data_t data_;
   };
 

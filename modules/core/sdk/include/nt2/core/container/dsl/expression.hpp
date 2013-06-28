@@ -304,6 +304,25 @@ namespace nt2 { namespace container
     }
 
     //==========================================================================
+    // Export raw data and clean-up expression
+    //==========================================================================
+    pointer release()
+    {
+      //========================================================================
+      //               ****NT2_INVALID_RELEASE_NON_TERMINAL****
+      // If this static assert triggers, a release() request have been issued
+      // on a non terminal node.
+      //               ****NT2_INVALID_RELEASE_NON_TERMINAL****
+      //========================================================================
+      BOOST_MPL_ASSERT_MSG( (boost::proto::arity_of<Expr>::value == 0)
+                          , NT2_INVALID_ACCESS_TO_RAW_DATA_ON_NON_TERMINAL
+                          , (Expr&)
+                          );
+
+      return boost::proto::value(*this).release();
+    }
+
+    //==========================================================================
     // Access to raw data
     //==========================================================================
     pointer       data()
