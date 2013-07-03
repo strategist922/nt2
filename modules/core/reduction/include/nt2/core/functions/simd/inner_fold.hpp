@@ -50,24 +50,21 @@ namespace nt2 { namespace ext
       inner_sz = std::min(inner_sz, bound);
       std::size_t aligned_sz = inner_sz & ~(N-1);
 
-      target_type vec_out;
-
       for(std::size_t j = 0; j != obound; ++j)
       {
-        vec_out = neutral(nt2::meta::as_<target_type>());
-        value_type s_out = uop(vec_out);
+        value_type s_out = neutral(nt2::meta::as_<value_type>());
+        target_type vec_out = neutral(nt2::meta::as_<target_type>());
 
         for(std::size_t p = j*bound; p != (j+1)*bound; p += inner_sz)
         {
           for(std::size_t i = p; i != p+aligned_sz; i+=N)
             vec_out = bop(vec_out, nt2::run(in, i, meta::as_<target_type>()));
 
-          s_out = uop(vec_out);
-
           for(std::size_t i = p+aligned_sz; i != p+inner_sz; ++i)
             s_out = bop(s_out, nt2::run(in, i, meta::as_<value_type>()));
         }
 
+        s_out = bop(s_out, uop(vec_out));
         nt2::run(out, j, s_out);
       }
     }
