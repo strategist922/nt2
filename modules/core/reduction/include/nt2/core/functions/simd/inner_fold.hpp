@@ -10,6 +10,8 @@
 #define NT2_CORE_FUNCTIONS_SIMD_INNER_FOLD_HPP_INCLUDED
 
 #include <nt2/core/functions/inner_fold.hpp>
+#include <nt2/include/functions/run.hpp>
+#include <nt2/core/container/dsl/max_vect_size.hpp>
 #include <boost/simd/sdk/simd/native.hpp>
 #include <boost/simd/sdk/simd/meta/is_vectorizable.hpp>
 
@@ -42,24 +44,31 @@ namespace nt2 { namespace ext
       extent_type ext = in.extent();
       static const std::size_t N = boost::simd::meta::cardinal_of<target_type>::value;
       std::size_t bound  = boost::fusion::at_c<0>(ext);
-      std::size_t ibound = (boost::fusion::at_c<0>(ext)/N) * N;
       std::size_t obound = nt2::numel(boost::fusion::pop_front(ext));
+
+      std::size_t inner_sz = std::min(max_vect_size(out), max_vect_size(in));
+      inner_sz = std::min(inner_sz, bound);
+      std::size_t aligned_sz = inner_sz & ~(N-1);
+
       target_type vec_out;
 
-      for(std::size_t j = 0, k = 0; j != obound; ++j, k+=bound)
+      for(std::size_t j = 0; j != obound; ++j)
       {
         vec_out = neutral(nt2::meta::as_<target_type>());
-
-        for(std::size_t i = 0; i != ibound; i+=N)
-          vec_out = bop(vec_out, nt2::run(in, i+k, meta::as_<target_type>()));
-
         value_type s_out = uop(vec_out);
 
-        for(std::size_t i = ibound; i != bound; ++i)
-          s_out = bop(s_out, nt2::run(in, i+k, meta::as_<value_type>()));
+        for(std::size_t p = j*bound; p != (j+1)*bound; p += inner_sz)
+        {
+          for(std::size_t i = p; i != p+aligned_sz; i+=N)
+            vec_out = bop(vec_out, nt2::run(in, i, meta::as_<target_type>()));
+
+          s_out = uop(vec_out);
+
+          for(std::size_t i = p+aligned_sz; i != p+inner_sz; ++i)
+            s_out = bop(s_out, nt2::run(in, i, meta::as_<value_type>()));
+        }
 
         nt2::run(out, j, s_out);
-
       }
     }
 
