@@ -13,18 +13,13 @@
 #include <nt2/core/functions/adjfun.hpp>
 #include <nt2/include/functions/run.hpp>
 #include <nt2/include/functions/simd/enumerate.hpp>
+#include <nt2/core/container/dsl/max_vect_size.hpp>
 #include <nt2/core/utility/as_subscript.hpp>
 #include <nt2/core/utility/as_index.hpp>
 #include <nt2/sdk/meta/as_index.hpp>
 
 namespace nt2 { namespace ext
 {
-  template<class Tag, std::size_t N, class Expr>
-  struct max_vect_size_impl;
-
-  template<class Expr>
-  std::size_t max_vect_size(Expr const&);
-
   template<std::size_t N, class Expr>
   struct max_vect_size_impl<tag::adjfun_, N, Expr>
   {
