@@ -11,6 +11,8 @@
 #if defined(_OPENMP) && _OPENMP >= 200203 /* OpenMP 2.0 */
 
 #include <nt2/core/functions/outer_fold.hpp>
+#include <nt2/include/functions/run.hpp>
+#include <nt2/core/container/dsl/max_vect_size.hpp>
 #include <boost/simd/sdk/simd/meta/is_vectorizable.hpp>
 #include <boost/fusion/include/pop_back.hpp>
 #include <nt2/sdk/config/cache.hpp>
@@ -60,7 +62,10 @@ namespace nt2 { namespace ext
       std::size_t cache_line_size = nt2::config::top_cache_line_size(2); // in byte
       std::size_t nb_vec = cache_line_size/(sizeof(value_type)*N);
       std::size_t cache_bound = (nb_vec)*N;
-      std::size_t bound = ((ibound)/cache_bound) * cache_bound;
+
+      std::size_t inner_sz = std::min(max_vect_size(out), max_vect_size(in));
+      inner_sz = std::min(inner_sz, ibound);
+      std::size_t aligned_sz = inner_sz/cache_bound * cache_bound;
 
 #ifndef BOOST_NO_EXCEPTIONS
       boost::exception_ptr exception;
@@ -76,22 +81,40 @@ namespace nt2 { namespace ext
           try
           {
 #endif
-            for(std::size_t i = 0; i < bound; i+=cache_bound)
+            for(std::size_t j = 0; j < ibound; j+=inner_sz)
             {
-              id = i+o_;
-
-              for (std::size_t k = 0, k_ = id; k < nb_vec; ++k, k_+=N)
-                nt2::run(out, k_, neutral(nt2::meta::as_<target_type>()));
-
-              for(std::size_t m = 0; m < mbound; ++m)
+              for(std::size_t i = 0; i < aligned_sz; i+=cache_bound)
               {
-                std::size_t m_ = m*ibound;
+                id = i+o_;
+
                 for (std::size_t k = 0, k_ = id; k < nb_vec; ++k, k_+=N)
-                  nt2::run( out, k_
-                          , bop( nt2::run(out, k_, meta::as_<target_type>())
-                               , nt2::run(in, k_+m_, meta::as_<target_type>())
+                  nt2::run(out, k_, neutral(nt2::meta::as_<target_type>()));
+
+                for(std::size_t m = 0; m < mbound; ++m)
+                {
+                  std::size_t m_ = m*ibound;
+                  for (std::size_t k = 0, k_ = id; k < nb_vec; ++k, k_+=N)
+                    nt2::run( out, k_
+                            , bop( nt2::run(out, k_, meta::as_<target_type>())
+                                 , nt2::run(in, k_+m_, meta::as_<target_type>())
+                                 )
+                            );
+                }
+              }
+
+              // scalar part
+              for(std::size_t i = aligned_sz; i < inner_sz; ++i)
+              {
+                id = i+o_;
+                nt2::run(out, id, neutral(nt2::meta::as_<value_type>()));
+                for(std::size_t m = 0, m_ = 0; m < mbound; ++m, m_+=ibound)
+                {
+                  nt2::run( out, id
+                          , bop( nt2::run(out, id,meta::as_<value_type>())
+                               , nt2::run(in, id+m_,meta::as_<value_type>())
                                )
                           );
+                }
               }
             }
 #ifndef BOOST_NO_EXCEPTIONS
@@ -102,26 +125,12 @@ namespace nt2 { namespace ext
             exception = boost::current_exception();
           }
 #endif
-          // scalar part
-          for(std::size_t i = bound; i < ibound; ++i)
-          {
-            id = i+o_;
-            nt2::run(out, id, neutral(nt2::meta::as_<value_type>()));
-            for(std::size_t m = 0, m_ = 0; m < mbound; ++m, m_+=ibound)
-            {
-              nt2::run( out, id
-                      , bop( nt2::run(out, id,meta::as_<value_type>())
-                           , nt2::run(in, id+m_,meta::as_<value_type>())
-                           )
-                      );
-            }
-          }
         }
+      }
 #ifndef BOOST_NO_EXCEPTIONS
         if(exception)
           boost::rethrow_exception(exception);
 #endif
-      }
     }
   };
 
