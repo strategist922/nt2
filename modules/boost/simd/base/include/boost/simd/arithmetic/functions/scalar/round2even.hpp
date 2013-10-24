@@ -14,9 +14,11 @@
 #include <boost/simd/include/constants/twotonmb.hpp>
 #include <boost/simd/include/constants/zero.hpp>
 #include <boost/simd/sdk/config/enforce_precision.hpp>
+#include <boost/simd/sdk/config/enforce_semantics.hpp>
 
 namespace boost { namespace simd { namespace ext
 {
+  BOOST_SIMD_ENFORCE_SEMANTICS_BEGIN()
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::round2even_, tag::cpu_
                             , (A0)
                             , (scalar_< floating_<A0> >)
@@ -35,6 +37,7 @@ namespace boost { namespace simd { namespace ext
       return a0 < Zero<A0>() ? -d : d;
     }
   };
+  BOOST_SIMD_ENFORCE_SEMANTICS_END()
 
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::round2even_, tag::cpu_
                             , (A0)

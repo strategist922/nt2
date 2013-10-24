@@ -17,6 +17,7 @@
 #include <boost/simd/include/functions/simd/plus.hpp>
 #include <boost/simd/include/functions/simd/minus.hpp>
 #include <boost/simd/include/constants/twotonmb.hpp>
+#include <boost/simd/sdk/config/enforce_semantics.hpp>
 
 namespace boost { namespace simd { namespace ext
 {
@@ -28,6 +29,7 @@ namespace boost { namespace simd { namespace ext
     BOOST_SIMD_FUNCTOR_CALL(1) { return a0; }
   };
 
+  BOOST_SIMD_ENFORCE_SEMANTICS_BEGIN()
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::round2even_, boost::simd::tag::simd_, (A0)(X)
                             , ((simd_<floating_<A0>,X>))
                             )
@@ -44,6 +46,7 @@ namespace boost { namespace simd { namespace ext
       return (d1^s);
     }
   };
+  BOOST_SIMD_ENFORCE_SEMANTICS_END()
 } } }
 
 #endif
