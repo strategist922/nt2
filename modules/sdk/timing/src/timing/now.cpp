@@ -194,11 +194,6 @@ namespace nt2
         attr.exclude_hv = 1;
         //attr.exclude_idle = 1;
         perf_event_hw_cycles = ::syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
-        if(perf_event_hw_cycles == -1)
-        {
-          if(errno != ENOENT) // ENOENT occurs on some virtualization systems
-            ::perror("perf_event_hw_cycles init failed");
-        }
       }
 
       ~perf_event_hw_cycles_scoped()

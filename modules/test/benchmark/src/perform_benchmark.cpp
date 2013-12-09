@@ -15,10 +15,91 @@
 #include <nt2/sdk/timing/now.hpp>
 #include <vector>
 
+#include <boost/simd/sdk/config/os.hpp>
+#ifdef BOOST_SIMD_OS_LINUX
+#include <boost/dispatch/meta/ignore_unused.hpp>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <errno.h>
+#include <map>
+#include <string>
+#include <stdio.h>
+#endif
+
 namespace nt2
 {
   namespace details
   {
+    #ifdef BOOST_SIMD_OS_LINUX
+    struct ensure_max_cpu_freq
+    {
+      ensure_max_cpu_freq()
+      {
+        DIR* dir = ::opendir("/sys/devices/system/cpu");
+        struct dirent* it;
+        while((it = ::readdir(dir)))
+        {
+          if(it->d_type != DT_DIR || strncmp(it->d_name, "cpu", 3))
+            continue;
+
+          std::string path = "/sys/devices/system/cpu/";
+          path += it->d_name;
+          path += "/cpufreq/scaling_governor";
+
+          int fd = ::open(path.c_str(), O_RDWR);
+          if(fd < 0)
+          {
+            if(errno != ENOENT && errno != EACCES)
+              perror(("failure to open scaling governor " + path).c_str());
+            continue;
+          }
+
+          char buffer[256];
+          ssize_t sz = ::read(fd, buffer, sizeof buffer);
+          if(sz < 0)
+          {
+            perror("failure to read scaling governor");
+            ::close(fd);
+            continue;
+          }
+          previous_settings[path] = std::string(buffer, buffer+sz);
+
+
+          ::lseek(fd, 0, SEEK_SET);
+          sz = ::write(fd, "performance", 11);
+          boost::dispatch::ignore_unused(sz);
+          ::close(fd);
+        }
+      }
+
+      ~ensure_max_cpu_freq()
+      {
+        for(std::map<std::string, std::string>::iterator it = previous_settings.begin(); it != previous_settings.end(); ++it)
+        {
+          int fd = ::open(it->first.c_str(), O_WRONLY);
+          if(fd < 0)
+            continue;
+
+          ssize_t sz = ::write(fd, it->second.c_str(), it->second.size());
+          boost::dispatch::ignore_unused(sz);
+          ::close(fd);
+        }
+      }
+
+      std::map<std::string, std::string> previous_settings;
+    };
+    #else
+    struct ensure_max_cpu_freq
+    {
+      ensure_max_cpu_freq()
+      {
+      }
+    };
+    #endif
+
     static std::vector<nt2::cycles_t      > individual_measurement_cycles;
     static std::vector<nt2::time_quantum_t> individual_measurement_time_quantums;
 
@@ -27,6 +108,8 @@ namespace nt2
     BOOST_DISPATCH_NOINLINE intermediate_result_t
     perform_benchmark_impl( base_experiment const& test, nt2::seconds_t const d )
     {
+      nt2::details::ensure_max_cpu_freq ensure_max_cpu_freq_scoped;
+
       individual_measurement_cycles       .clear();
       individual_measurement_time_quantums.clear();
 
