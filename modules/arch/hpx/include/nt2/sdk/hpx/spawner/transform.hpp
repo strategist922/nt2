@@ -12,10 +12,10 @@
 
 #if defined(NT2_USE_HPX)
 
-#include <hpx/include/lcos.hpp>
 #include <hpx/lcos/future_wait.hpp>
 
 #include <nt2/sdk/shared_memory/spawner.hpp>
+#include <nt2/sdk/hpx/future/future.hpp>
 
 #include <vector>
 
@@ -35,11 +35,16 @@ namespace nt2
   struct spawner< tag::transform_, tag::hpx_<Site> >
   {
 
+    typedef typename tag::hpx_<Site> Arch;
+
     spawner() {}
 
     template<typename Worker>
     void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
     {
+      typedef typename
+      nt2::make_future< Arch,void >::type future;
+
       std::size_t leftover = size % grain;
       std::size_t nblocks  = size/grain;
 
