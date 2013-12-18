@@ -41,6 +41,7 @@ namespace nt2
        return make_ready_future_impl<Arch>().call(value);
     }
 
+
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/shared_memory/future.hpp")\
 )
