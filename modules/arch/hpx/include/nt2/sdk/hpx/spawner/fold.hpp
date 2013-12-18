@@ -12,10 +12,10 @@
 
 #if defined(NT2_USE_HPX)
 
-#include <hpx/include/lcos.hpp>
 #include <hpx/lcos/future_wait.hpp>
 
 #include <nt2/sdk/shared_memory/spawner.hpp>
+#include <nt2/sdk/hpx/future/future.hpp>
 
 #include <boost/assert.hpp>
 
@@ -36,6 +36,11 @@ namespace nt2
   template<class Site, class result_type>
   struct spawner< tag::fold_, tag::hpx_<Site> , result_type>
   {
+
+    typedef typename tag::hpx_<Site> Arch;
+
+    typedef typename
+      nt2::make_future< Arch, result_type >::type future;
 
     spawner() {}
 
