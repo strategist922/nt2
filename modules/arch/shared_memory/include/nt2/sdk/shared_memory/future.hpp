@@ -52,15 +52,14 @@ namespace nt2
                      >::type
   async( BOOST_FWD_REF(F) f
          BOOST_PP_COMMA_IF(N)
-         BOOST_PP_ENUM(N,
-           NT2_FUTURE_FORWARD_ARGS, ~)
-         )
+         BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
+       )
   {
     return async_impl<Arch>().call(boost::forward<F>(f)
                                    BOOST_PP_COMMA_IF(N)
                                    BOOST_PP_ENUM(N,
                                      NT2_FUTURE_FORWARD_ARGS2, ~)
-      );
+                                  );
   }
 
 #undef NT2_FUTURE_FORWARD_ARGS
