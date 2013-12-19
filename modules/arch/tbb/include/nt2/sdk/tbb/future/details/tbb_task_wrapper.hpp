@@ -66,10 +66,8 @@ namespace nt2
       tbb::task* execute()
       {
         res_ = boost::move(
-                   f_(BOOST_PP_COMMA_IF(N)
-                      BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)
-                      )
-                  );
+                f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~))
+                );
         return NULL;
       }
 

@@ -63,6 +63,7 @@ namespace nt2
       {
         if( work!= NULL )
         work_->wait_for_all();
+        delete work; work = NULL;
       }
 
       template<class F>
