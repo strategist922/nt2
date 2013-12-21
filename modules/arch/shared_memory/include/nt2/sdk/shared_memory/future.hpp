@@ -41,24 +41,24 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-  template< typename Arch,
-            typename F BOOST_PP_COMMA_IF(N)
-            BOOST_PP_ENUM_PARAMS(N, typename A)
+  template< typename Arch,typename F \
+              BOOST_PP_COMMA_IF(N)\
+              BOOST_PP_ENUM_PARAMS(N, typename A)\
           >
-  inline typename make_future< Arch,
-                       typename boost::result_of<
-                          F(BOOST_PP_ENUM_PARAMS(N, A))
-                        >::type
-                     >::type
-  async( BOOST_FWD_REF(F) f
-         BOOST_PP_COMMA_IF(N)
-         BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
+  inline typename make_future< Arch,\
+                       typename boost::result_of<\
+                       F(BOOST_PP_ENUM_PARAMS(N, A))\
+                       >::type\
+                       >::type
+  async( F & f\
+         BOOST_PP_COMMA_IF(N)\
+         BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
        )
   {
-    return async_impl<Arch>().call(boost::forward<F>(f)
-                                   BOOST_PP_COMMA_IF(N)
-                                   BOOST_PP_ENUM(N,
-                                     NT2_FUTURE_FORWARD_ARGS2, ~)
+    return async_impl<Arch>().call(f\
+                                   BOOST_PP_COMMA_IF(N)\
+                                   BOOST_PP_ENUM(N,\
+                                   NT2_FUTURE_FORWARD_ARGS2, ~)\
                                   );
   }
 

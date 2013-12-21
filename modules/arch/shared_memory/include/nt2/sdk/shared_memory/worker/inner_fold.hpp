@@ -46,14 +46,17 @@ namespace nt2
   template<class BackEnd, class Site, class In, class Neutral, class Bop>
   struct worker<tag::inner_fold_step_,BackEnd,Site,In,Neutral,Bop>
   {
+    typedef int result_type;
+
     worker(In & in, Neutral const & neutral, Bop const & bop)
           :in_(in),neutral_(neutral),bop_(bop)
     {}
 
     template<class Out>
-    void operator()(Out & out, std::size_t begin, std::size_t size)
+    int operator()(Out & out, std::size_t begin, std::size_t size)
     {
       details::inner_fold_step(out,in_,bop_,std::make_pair(begin,size));
+      return 0;
     };
 
     In & in_;
@@ -68,6 +71,7 @@ namespace nt2
   template<class BackEnd,class Site, class Out, class In, class Neutral,class Bop,class Uop>
   struct worker<tag::inner_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
   {
+    typedef int result_type;
     typedef typename boost::remove_reference<In>::type::extent_type           extent_type;
     typedef typename Out::value_type                                          value_type;
     typedef typename details::target_type_from_site<Site,value_type>::type    target_type;
@@ -76,7 +80,7 @@ namespace nt2
     : out_(out), in_(in), neutral_(n), bop_(bop), uop_(uop)
     {}
 
-    void operator()(std::size_t begin, std::size_t size) const
+    int operator()(std::size_t begin, std::size_t size) const
     {
       extent_type ext = in_.extent();
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
@@ -108,6 +112,8 @@ namespace nt2
           s_out = bop_(s_out, nt2::run(in_, i+k, meta::as_<value_type>()));
 
         nt2::run(out_, j, s_out);
+
+        return 0;
       }
     }
 

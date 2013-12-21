@@ -25,13 +25,16 @@ namespace nt2
   template<class BackEnd, class Site, class Out, class In, class Neutral,class Bop,class Uop>
   struct worker<tag::outer_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
   {
+      typedef int result_type;
+
       worker(Out& out, In& in, Neutral const& n, Bop const& bop, Uop const& uop)
       : out_(out), in_(in), neutral_(n), bop_(bop), uop_(uop)
       {}
 
-      void operator()(std::size_t begin, std::size_t size) const
+      int operator()(std::size_t begin, std::size_t size) const
       {
           work(out_,in_,neutral_,bop_,uop_,std::make_pair(begin,size));
+          return 0;
       }
 
       Out&                     out_;

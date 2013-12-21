@@ -25,13 +25,16 @@ namespace nt2
   template<class BackEnd,class Site, class Out, class In>
   struct worker<tag::transform_,BackEnd,Site,Out,In>
   {
+      typedef int result_type;
+
       worker(Out & out, In & in)
       :out_(out),in_(in)
       {}
 
-      void operator()(std::size_t begin, std::size_t size)
+      int operator()(std::size_t begin, std::size_t size)
       {
           work(out_,in_,std::make_pair(begin,size));
+          return 0;
       };
 
       Out & out_;
