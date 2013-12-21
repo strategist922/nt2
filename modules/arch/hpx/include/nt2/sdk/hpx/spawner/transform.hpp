@@ -44,7 +44,7 @@ namespace nt2
     void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
     {
       typedef typename
-      nt2::make_future< Arch,void >::type future;
+      nt2::make_future< Arch, int >::type future;
 
       std::size_t leftover = size % grain;
       std::size_t nblocks  = size/grain;
