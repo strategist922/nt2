@@ -33,7 +33,6 @@ namespace nt2
     template<class Site>
     struct spawner< tag::transform_, tag::hpx_<Site> >
     {
-
         typedef typename tag::hpx_<Site> Arch;
 
         spawner() {}
