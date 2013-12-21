@@ -12,10 +12,12 @@
 
 #if defined(NT2_USE_TBB)
 
-#include <tbb/tbb.h>
-#include <nt2/sdk/tbb/blocked_range.hpp>
+// #include <tbb/tbb.h>
+// #include <nt2/sdk/tbb/blocked_range.hpp>
+
 #include <nt2/sdk/shared_memory/spawner.hpp>
-#include <nt2/sdk/hpx/future/future.hpp>
+#include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/tbb/future/future.hpp>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -29,27 +31,27 @@ namespace nt2
     template<class T> struct tbb_;
   }
 
-  namespace details
-  {
-    template<class Worker>
-    struct Tbb_Transformer
-    {
-        Tbb_Transformer(Worker & w)
-        :w_(w)
-        {}
+  // namespace details
+  // {
+  //   template<class Worker>
+  //   struct Tbb_Transformer
+  //   {
+  //       Tbb_Transformer(Worker & w)
+  //       :w_(w)
+  //       {}
 
-        void operator()(nt2::blocked_range<std::size_t> const& r) const
-        {
-            w_(r.begin(),r.size());
-        };
+  //       void operator()(nt2::blocked_range<std::size_t> const& r) const
+  //       {
+  //           w_(r.begin(),r.size());
+  //       };
 
-        Worker & w_;
+  //       Worker & w_;
 
-    private:
-        Tbb_Transformer& operator=(Tbb_Transformer const&);
+  //   private:
+  //       Tbb_Transformer& operator=(Tbb_Transformer const&);
 
-    };
-  }
+  //   };
+  // }
 
   template<class Site>
   struct spawner< tag::transform_, tag::tbb_<Site> >
@@ -87,7 +89,7 @@ namespace nt2
 //       #endif
 /****************************************************************************/
       typedef typename
-      nt2::make_future< Arch,void >::type future;
+      nt2::make_future< Arch,int >::type future;
 
       std::size_t nblocks  = size/grain;
       std::size_t ibound   = nblocks * grain;

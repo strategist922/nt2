@@ -55,23 +55,22 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-  template< typename F
-            BOOST_PP_COMMA_IF(N)
+  template< typename F\
+            BOOST_PP_COMMA_IF(N)\
             BOOST_PP_ENUM_PARAMS(N, typename A) >
-  inline typename make_future<
-                    tag::hpx_<Site>,
-                    typename boost::result_of<
-                               F(BOOST_PP_ENUM_PARAMS(N, A))
-                             >::type
-                    >::type
-  call(BOOST_FWD_REF(F) f
-       BOOST_PP_COMMA_IF(N)
+  inline typename make_future<\
+                    tag::hpx_<Site>,\
+                    typename boost::result_of<\
+                    F(BOOST_PP_ENUM_PARAMS(N, A))\
+                    >::type >::type
+  call(BOOST_FWD_REF(F) f\
+       BOOST_PP_COMMA_IF(N)\
        BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
       )
   {
-    return hpx::async(boost::forward<F>(f)
-                      BOOST_PP_COMMA_IF(N)
-                      BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)
+    return hpx::async(boost::forward<F>(f)\
+                      BOOST_PP_COMMA_IF(N)\
+                      BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
                      );
   }
 

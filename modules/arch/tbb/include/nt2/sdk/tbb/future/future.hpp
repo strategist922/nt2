@@ -8,10 +8,12 @@
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 #if !BOOST_PP_IS_ITERATING
-#ifndef NT2_SDK_HPX_FUTURE_FUTURE_HPP_INCLUDED
-#define NT2_SDK_HPX_FUTURE_FUTURE_HPP_INCLUDED
+#ifndef NT2_SDK_TBB_FUTURE_FUTURE_HPP_INCLUDED
+#define NT2_SDK_TBB_FUTURE_FUTURE_HPP_INCLUDED
 
 #if defined(NT2_USE_TBB)
+
+#include <tbb/tbb.h>
 
 #include <boost/move/move.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -20,8 +22,9 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 
-#include <nt2/sdk/hpx/future/details/tbb_future.hpp>
-#include <nt2/sdk/hpx/future/details/tbb_task_wrapper.hpp>
+#include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/tbb/future/details/tbb_future.hpp>
+#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
 namespace nt2
 {
@@ -56,30 +59,35 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-  template< typename F
-            BOOST_PP_COMMA_IF(N)
+  template< typename F\
+            BOOST_PP_COMMA_IF(N)\
             BOOST_PP_ENUM_PARAMS(N, typename A) >
-  inline typename make_future<
-                    tag::tbb_<Site>,
-                    typename boost::result_of<
-                               F(BOOST_PP_ENUM_PARAMS(N, A))
-                             >::type
-                    >::type
-  call(BOOST_FWD_REF(F) f
-       BOOST_PP_COMMA_IF(N)
-       BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
+  inline typename make_future< tag::tbb_<Site>,\
+            typename boost::result_of<\
+            F(BOOST_PP_ENUM_PARAMS(N, A))>::type \
+            >::type
+  call(F & f\
+       BOOST_PP_COMMA_IF(N)\
+       BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
       )
   {
 
-    tbb_future<typename boost::result_of<
-                  F(BOOST_PP_ENUM_PARAMS(N, A))
-                   >::type
-                        > future_res;
+    details::tbb_future<typename boost::result_of<\
+                  F(BOOST_PP_ENUM_PARAMS(N, A))\
+                  >::type> future_res;
 
-    BOOST_PP_CAT(tbb_task_wrapper,N) * work =
-        new(tbb::task::allocate_root()) BOOST_PP_CAT(tbb_task_wrapper,N)
-            (f, future_res.result
-              , BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)
+    tbb::task * work =
+      new(tbb::task::allocate_root()) \
+          BOOST_PP_CAT(details::tbb_task_wrapper,N)\
+            <F,typename boost::result_of<\
+               F(BOOST_PP_ENUM_PARAMS(N, A))\
+               >::type\
+             BOOST_PP_COMMA_IF(N)\
+             BOOST_PP_ENUM_PARAMS(N,A) \
+            >\
+            (f, future_res.res_\
+             BOOST_PP_COMMA_IF(N)\
+             BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
             );
 
     future_res.attach_task(work);

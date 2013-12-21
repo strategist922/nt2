@@ -15,6 +15,7 @@
 #include <hpx/lcos/future_wait.hpp>
 
 #include <nt2/sdk/shared_memory/spawner.hpp>
+#include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/hpx/future/future.hpp>
 
 #include <vector>
