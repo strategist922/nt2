@@ -63,12 +63,12 @@ namespace nt2
                     typename boost::result_of<\
                     F(BOOST_PP_ENUM_PARAMS(N, A))\
                     >::type >::type
-  call(BOOST_FWD_REF(F) f\
+  call(F & f\
        BOOST_PP_COMMA_IF(N)\
        BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
       )
   {
-    return hpx::async(boost::forward<F>(f)\
+    return hpx::async(f\
                       BOOST_PP_COMMA_IF(N)\
                       BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
                      );
