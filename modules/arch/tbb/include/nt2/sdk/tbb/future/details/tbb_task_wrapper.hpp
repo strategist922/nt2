@@ -13,8 +13,6 @@
 
 #if defined(NT2_USE_TBB)
 
-#include <tbb/tbb.h>
-
 #include <boost/move/utility.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
@@ -51,7 +49,7 @@ namespace nt2
              typename result_type\
              BOOST_PP_COMMA_IF(N)\
              BOOST_PP_ENUM_PARAMS(N, typename A) >
-    struct BOOST_PP_CAT(tbb_task_wrapper,N): public tbb::task
+    struct BOOST_PP_CAT(tbb_task_wrapper,N)
     {
       BOOST_PP_CAT(tbb_task_wrapper,N) \
                      (F & f, \
@@ -64,10 +62,9 @@ namespace nt2
         BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
       {}
 
-      tbb::task* execute()
+      void operator()()
       {
         res_ = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
-        return NULL;
       }
 
       F & f_;
