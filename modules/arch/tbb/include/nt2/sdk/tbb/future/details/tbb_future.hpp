@@ -21,73 +21,39 @@ namespace nt2
     template<class T> struct tbb_;
   }
 
-  namespace details
+  template<typename result_type>
+  struct tbb_future
   {
-    template<typename F>
-    struct tbb_continuation: public tbb::task
-    {
-
-      tbb_continuation(F & f) : f_(f)
-      {}
-
-      tbb::task* execute()
-      {
-        f_();
-        return NULL;
-      }
-
-      private:
-        F & f_;
-    };
-
-    template<typename result_type>
-    struct tbb_future
-    {
       tbb_future() : work_(NULL)
       {}
 
-      void attach_task(tbb::task * work)
+      void attach_task(tbb::task_group * work)
       {
         work_ = work;
       }
 
+      void wait()
+      {
+          if( work_!= NULL )
+          { work_->wait();
+            delete(work_);
+            work_ = NULL;
+          }
+      }
+
       result_type get()
       {
-        if( work_ == NULL ) return res_;
-        else work_->wait_for_all();
+        if( work_ != NULL ) wait();
         return res_;
       }
 
-      void wait()
-      {
-        if( work_!= NULL )
-        work_->wait_for_all();
-      }
-
-      template<typename F>
-      tbb_future< \
-        typename boost::result_of<F>::type\
-        > then(F& f)
-      {
-        details::tbb_future< \
-          typename boost::result_of<F>::type > \
-          then_future;
-
-        tbb_continuation<F>* c =
-          new( work_->allocate_continuation() ) \
-             tbb_continuation<F>(f);
-
-        then_future.attach_task(c);
-
-        return then_future;
-      }
+      result_type res_;
 
      private:
-      tbb::task * work_;
-     public:
-      result_type res_;
-    };
-   }
+      tbb::task_group * work_;
+
+   };
+  }
  }
 
  #endif

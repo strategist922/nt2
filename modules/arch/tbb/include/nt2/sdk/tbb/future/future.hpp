@@ -76,23 +76,15 @@ namespace nt2
                   F(BOOST_PP_ENUM_PARAMS(N, A))\
                   >::type> future_res;
 
-    tbb::task * work =
-      new(tbb::task::allocate_root()) \
-          BOOST_PP_CAT(details::tbb_task_wrapper,N)\
-            <F,typename boost::result_of<\
-               F(BOOST_PP_ENUM_PARAMS(N, A))\
-               >::type\
-             BOOST_PP_COMMA_IF(N)\
-             BOOST_PP_ENUM_PARAMS(N,A) \
-            >\
-            (f, future_res.res_\
-             BOOST_PP_COMMA_IF(N)\
-             BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
-            );
+    tbb::task_group * work = new(tbb::task_group());
 
     future_res.attach_task(work);
 
-    tbb::task::spawn(*work);
+    work->run( BOOST_PP_CAT(details::tbb_task_wrapper,N)\
+                (f, future_res.res_\
+                BOOST_PP_COMMA_IF(N)\
+                BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
+                ) );
 
     return future_res;
   }
