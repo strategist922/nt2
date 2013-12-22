@@ -20,10 +20,11 @@ namespace nt2
   {
     template<class T> struct tbb_;
   }
-
-  template<typename result_type>
-  struct tbb_future
+  namespace details
   {
+   template<typename result_type>
+   struct tbb_future
+   {
       tbb_future() : work_(NULL)
       {}
 
@@ -52,9 +53,9 @@ namespace nt2
      private:
       tbb::task_group * work_;
 
-   };
-  }
- }
+    };
+   }
+}
 
  #endif
 #endif

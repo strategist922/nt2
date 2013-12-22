@@ -36,7 +36,7 @@ namespace nt2
   template<class Site, class result_type>
   struct make_future<tag::tbb_<Site> , result_type>
   {
-     typedef  nt2::details::tbb_future<result_type> type;
+     typedef nt2::details::tbb_future<result_type> type;
   };
 
   template<class Site>
@@ -76,15 +76,21 @@ namespace nt2
                   F(BOOST_PP_ENUM_PARAMS(N, A))\
                   >::type> future_res;
 
-    tbb::task_group * work = new(tbb::task_group());
+    tbb::task_group * work = new tbb::task_group;
 
     future_res.attach_task(work);
 
     work->run( BOOST_PP_CAT(details::tbb_task_wrapper,N)\
-                (f, future_res.res_\
-                BOOST_PP_COMMA_IF(N)\
-                BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
-                ) );
+               <F,typename boost::result_of<\
+               F(BOOST_PP_ENUM_PARAMS(N, A))\
+               >::type\
+               BOOST_PP_COMMA_IF(N)\
+               BOOST_PP_ENUM_PARAMS(N,A) \
+               >\
+               (f, future_res.res_\
+               BOOST_PP_COMMA_IF(N)\
+               BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
+               ) );
 
     return future_res;
   }
@@ -93,3 +99,4 @@ namespace nt2
 #undef NT2_FUTURE_FORWARD_ARGS2
 
 #endif
+
