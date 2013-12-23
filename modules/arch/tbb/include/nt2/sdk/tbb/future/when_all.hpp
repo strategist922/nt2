@@ -52,7 +52,7 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::tbb_future<A##n> & a##n
+#define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::tbb_future<A##n> const & a##n
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*a##n##.get_node(),*c);
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
