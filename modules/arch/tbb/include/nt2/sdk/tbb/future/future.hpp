@@ -14,6 +14,7 @@
 #if defined(NT2_USE_TBB)
 
 #include <tbb/tbb.h>
+#include <tbb/flow_graph.h>
 
 #include <vector>
 
@@ -82,9 +83,10 @@ namespace nt2
 
     tbb::flow::graph * work = new tbb::flow::graph;
 
-    std::vector<node_type> * node_list = new std::vector<node_type>;
+    std::vector<node_type *> * node_list \
+      = new std::vector<node_type *>;
 
-    node_list->push_back(\
+    node_type * node = new \
        node_type( *work,\
        BOOST_PP_CAT(details::tbb_task_wrapper,N)\
        <F,typename boost::result_of<\
@@ -98,7 +100,8 @@ namespace nt2
        BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
        ) );
 
-    future_res.attach_task(work,node_list,&node_list->begin());
+    node_list->push_back(node);
+    future_res.attach_task(work,node_list,node);
 
     return future_res;
   }

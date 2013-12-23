@@ -14,6 +14,7 @@
 #if defined(NT2_USE_TBB)
 
 #include <tbb/tbb.h>
+#include <tbb/flow_graph.h>
 
 #include <boost/move/utility.hpp>
 #include <boost/preprocessor/cat.hpp>
