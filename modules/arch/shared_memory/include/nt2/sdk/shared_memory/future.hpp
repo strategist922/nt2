@@ -16,7 +16,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
-#include <boost/preprocessor/comparison/less.hpp>
+#include <boost/preprocessor/comparison/greater.hpp>
 
 namespace nt2
 {
@@ -66,7 +66,7 @@ namespace nt2
                                   );
   }
 
-#if !BOOST_PP_LESS(N,0)
+#if BOOST_PP_GREATER(N,0)
 
   template< typename Arch,\
   BOOST_PP_ENUM_PARAMS(N, typename A)\
