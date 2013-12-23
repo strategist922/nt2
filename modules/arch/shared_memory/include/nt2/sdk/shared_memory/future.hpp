@@ -16,6 +16,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/preprocessor/comparison/less.hpp>
 
 namespace nt2
 {
@@ -24,6 +25,9 @@ namespace nt2
 
   template<class Arch>
   struct async_impl;
+
+  template<class Arch>
+  struct when_all_impl;
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/shared_memory/future.hpp")\
@@ -61,6 +65,22 @@ namespace nt2
                                    NT2_FUTURE_FORWARD_ARGS2, ~)\
                                   );
   }
+
+#if !BOOST_PP_LESS(N,0)
+
+  template< typename Arch,\
+  BOOST_PP_ENUM_PARAMS(N, typename A)\
+  >
+  inline typename make_future< Arch,int>::type
+  when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
+  {
+    return when_all_impl<Arch>().call(\
+                                      BOOST_PP_ENUM(N,\
+                                      NT2_FUTURE_FORWARD_ARGS2, ~)\
+                                     );
+  }
+
+#endif
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS2
