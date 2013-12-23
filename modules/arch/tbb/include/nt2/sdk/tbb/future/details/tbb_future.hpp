@@ -13,6 +13,7 @@
 #if defined(NT2_USE_TBB)
 
 #include <tbb/tbb.h>
+#include <tbb/flow_graph.h>
 #include <vector>
 
 namespace nt2
@@ -30,7 +31,7 @@ namespace nt2
      tbb_continuation(F & f) : f_(f)
      {}
 
-     void operator()( tbb::flow::continue_msg ) const
+     void operator()( tbb::flow::continue_msg const &)
      {
         f_();
      }
@@ -49,7 +50,7 @@ namespace nt2
       {}
 
        void attach_task(tbb::flow::graph * work,
-                        std::vector<node_type> * node_list,
+                        std::vector<node_type *> * node_list,
                         node_type * node
                         )
       {
@@ -62,10 +63,14 @@ namespace nt2
       {
           if( work_!= NULL )
           {
-            node_list_->begin().try_put(continue_msg());
+            node_list_->front()->try_put(tbb::flow::continue_msg());
             work_->wait_for_all();
             delete(work_);
-            delete(node_list_);
+            for (std::size_t i =0; i<node_list_->size(); i++)
+            {
+              delete((*node_list_)[i]);
+            }
+            delete (node_list_);
             work_ = NULL;
             node_list_ = NULL;
             node_ = NULL;
@@ -85,12 +90,12 @@ namespace nt2
       {
         details::tbb_future<int> then_future;
 
-        node_list_->push_back(
-            node_type(*work_, tbb_continuation<F>(f)) );
+        node_type * c = new node_type( *work_, tbb_continuation<F>(f) );
+        node_list_->push_back(c);
 
-        tbb::flow::make_edge(node_,node_list_->back());
+        tbb::flow::make_edge(*node_,*c);
 
-        then_future.attach_task(work_,node_list_,&node_list_->back());
+        then_future.attach_task(work_,node_list_,c);
 
         return then_future;
        }
@@ -99,7 +104,7 @@ namespace nt2
 
      private:
       tbb::flow::graph * work_;
-      std::vector< node_type > * node_list_;
+      std::vector< node_type *> * node_list_;
       node_type * node_;
     };
    }
