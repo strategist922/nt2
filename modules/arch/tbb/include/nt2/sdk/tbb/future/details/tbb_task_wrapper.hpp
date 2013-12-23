@@ -13,6 +13,8 @@
 
 #if defined(NT2_USE_TBB)
 
+#include <tbb/tbb.h>
+
 #include <boost/move/utility.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
@@ -62,7 +64,7 @@ namespace nt2
         BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
       {}
 
-      void operator()()
+      void operator()( tbb::flow::continue_msg ) const
       {
         res_ = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
       }
@@ -84,4 +86,3 @@ namespace nt2
 #undef NT2_FUTURE_FORWARD_ARGS4
 
 #endif
-

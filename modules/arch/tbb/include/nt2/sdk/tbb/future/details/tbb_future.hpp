@@ -13,6 +13,7 @@
 #if defined(NT2_USE_TBB)
 
 #include <tbb/tbb.h>
+#include <vector>
 
 namespace nt2
 {
@@ -22,23 +23,52 @@ namespace nt2
   }
   namespace details
   {
+
+   template<typename F>
+   struct tbb_continuation
+   {
+     tbb_continuation(F & f) : f_(f)
+     {}
+
+     void operator()( tbb::flow::continue_msg ) const
+     {
+        f_();
+     }
+
+     private:
+     F & f_;
+   };
+
    template<typename result_type>
    struct tbb_future
    {
-      tbb_future() : work_(NULL)
+      typedef typename tbb::flow::continue_node<\
+      tbb::flow::continue_msg> node_type;
+
+      tbb_future() : work_(NULL),node_list_(NULL),node_(NULL)
       {}
 
-      void attach_task(tbb::task_group * work)
+       void attach_task(tbb::flow::graph * work,
+                        std::vector<node_type> * node_list,
+                        node_type * node
+                        )
       {
         work_ = work;
+        node_list_ = node_list;
+        node_ = node;
       }
 
       void wait()
       {
           if( work_!= NULL )
-          { work_->wait();
+          {
+            node_list_->begin().try_put(continue_msg());
+            work_->wait_for_all();
             delete(work_);
+            delete(node_list_);
             work_ = NULL;
+            node_list_ = NULL;
+            node_ = NULL;
           }
       }
 
@@ -48,11 +78,29 @@ namespace nt2
         return res_;
       }
 
+      template<typename F>
+      tbb_future< \
+      typename boost::result_of<F>::type\
+      > then(F& f)
+      {
+        details::tbb_future<int> then_future;
+
+        node_list_->push_back(
+            node_type(*work_, tbb_continuation<F>(f)) );
+
+        tbb::flow::make_edge(node_,node_list_->back());
+
+        then_future.attach_task(work_,node_list_,&node_list_->back());
+
+        return then_future;
+       }
+
       result_type res_;
 
      private:
-      tbb::task_group * work_;
-
+      tbb::flow::graph * work_;
+      std::vector< node_type > * node_list_;
+      node_type * node_;
     };
    }
 }
