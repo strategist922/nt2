@@ -49,15 +49,30 @@ namespace nt2
       tbb_future() : work_(NULL),node_list_(NULL),node_(NULL)
       {}
 
+       node_type * get_node()
+       {
+           return node_;
+       }
+
+       std::vector< node_type *> * get_node_list()
+       {
+           return node_list_;
+       }
+
+       tbb::flow::graph * get_work()
+       {
+           return work_;
+       }
+
        void attach_task(tbb::flow::graph * work,
                         std::vector<node_type *> * node_list,
                         node_type * node
                         )
-      {
-        work_ = work;
-        node_list_ = node_list;
-        node_ = node;
-      }
+       {
+           work_ = work;
+           node_list_ = node_list;
+           node_ = node;
+       }
 
       void wait()
       {
