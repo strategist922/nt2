@@ -76,8 +76,6 @@ namespace nt2
 
       void wait()
       {
-          if( work_!= NULL )
-          {
             node_list_->front()->try_put(tbb::flow::continue_msg());
             work_->wait_for_all();
             delete(work_);
@@ -86,15 +84,12 @@ namespace nt2
               delete((*node_list_)[i]);
             }
             delete (node_list_);
-            work_ = NULL;
-            node_list_ = NULL;
-            node_ = NULL;
           }
       }
 
       result_type get()
       {
-        if( work_ != NULL ) wait();
+        wait();
         return res_;
       }
 
