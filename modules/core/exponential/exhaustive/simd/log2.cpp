@@ -7,33 +7,43 @@
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 #include <nt2/sdk/unit/exhaustive.hpp>
-#include <nt2/include/functions/log.hpp>
-
+#include <nt2/include/functions/log2.hpp>
+#include <nt2/include/functions/log2.hpp>
+#include <boost/simd/sdk/simd/native.hpp>
 #include <nt2/include/constants/zero.hpp>
 #include <nt2/include/constants/valmax.hpp>
+#include <nt2/include/constants/log_2.hpp>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
 
-struct raw_log
+struct raw_log2
 {
   float operator()(float x) const
   {
-    return float(::logl(double(x)));
+    return float(std::log2((long double)x));
   }
 };
 
+
 int main(int ac, char* av[])
 {
-  float mini = 0.0f;
-  float maxi = nt2::Valmax<float>();
+  typedef BOOST_SIMD_DEFAULT_EXTENSION             ext_t;
+  typedef boost::simd::native<float,ext_t>           n_t;
+
+  float mini = 1.0e-37f;
+  float maxi = 1.0E+37f;
   if(ac == 3)
   {
     mini = std::atof(av[1]);
     maxi = std::atof(av[2]);
   }
-  nt2::exhaustive_test<float> ( mini
-                              , maxi
-                              , nt2::functor<nt2::tag::log_>()
-                              , raw_log()
-                              );
 
+  nt2::exhaustive_test<n_t> (mini
+                            ,maxi
+                            , nt2::functor<nt2::tag::log2_>()
+                            , raw_log2()
+                            );
   return 0;
 }

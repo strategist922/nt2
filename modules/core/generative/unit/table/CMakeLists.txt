@@ -48,10 +48,12 @@ ind2sub.cpp
 indices.cpp
 inf.cpp
 ldexpmask.cpp
+limitexponent.cpp
 linspace.cpp
 log10_pi.cpp
 logspace.cpp
 maxexponent.cpp
+maxexponentm1.cpp
 maxinit.cpp
 maxleftshift.cpp
 meight.cpp

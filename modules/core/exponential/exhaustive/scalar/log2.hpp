@@ -16,21 +16,14 @@ struct raw_log
 {
   float operator()(float x) const
   {
-    return float(::logl(double(x)));
+    return float(nt2::log(double(x)));
   }
 };
 
-int main(int ac, char* av[])
+int main()
 {
-  float mini = 0.0f;
-  float maxi = nt2::Valmax<float>();
-  if(ac == 3)
-  {
-    mini = std::atof(av[1]);
-    maxi = std::atof(av[2]);
-  }
-  nt2::exhaustive_test<float> ( mini
-                              , maxi
+  nt2::exhaustive_test<float> ( nt2::Zero<float>()
+                              , nt2::Valmax<float>()
                               , nt2::functor<nt2::tag::log_>()
                               , raw_log()
                               );

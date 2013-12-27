@@ -19,12 +19,14 @@
 #include <nt2/include/functions/splat.hpp>
 #include <nt2/include/functions/ilog2.hpp>
 #include <nt2/include/functions/exp2.hpp>
+#include <nt2/include/functions/all.hpp>
 #include <nt2/include/constants/zero.hpp>
 #include <nt2/include/functions/min.hpp>
 #include <nt2/include/constants/nan.hpp>
 #include <boost/simd/sdk/meta/cardinal_of.hpp>
 #include <nt2/sdk/meta/type_id.hpp>
 #include <iostream>
+#include <iomanip>
 #include <cstdio>
 
 #define NT2_ASSERTS_AS_TRAP
@@ -37,7 +39,7 @@ namespace nt2
 
     Perform a ULP test on every representable single precision value
     in a given interval. Results are reported using a bucket histogram that
-    gives hint on how many values fall in a given range of ULPS, a sample input
+    gives hint on how many values fall in a given range of ULPs, a sample input
     leading to this precision and the awaited result.
 
     @par Note:
@@ -61,16 +63,20 @@ namespace nt2
     const in_t vN = nt2::splat<in_t>(N);
 
     float a[N];
-    float in[M+2];
-    float ref[M+2];
-    float val[M+2];
+    float maxin[M+2];
+    float minin[M+2];
+    float minref[M+2];
+    float minval[M+2];
+    bool  hit[M+2];
     nt2::uint32_t histo[M+2];
 
     for(std::size_t i = 0; i < M+2; i++)
     {
       histo[i] = 0;
-      val[i] = nt2::Nan<float>();
-      in[i]  = nt2::Valmin<float>();
+      minval[i] = nt2::Nan<float>();
+      minin[i]  = nt2::Valmin<float>();
+      maxin[i]  = nt2::Valmax<float>();
+      hit[i] =  false;
     }
 
     // Fill up the reference SIMD register data
@@ -84,11 +90,13 @@ namespace nt2
 
     std::cout << "Exhaustive test for: " << nt2::type_id(test_f)      << "\n"
               << "             versus: " << nt2::type_id(reference_f) << "\n"
-              << "             With T: " << nt2::type_id<Type>()      << "\n";
+              << "             With T: " << nt2::type_id<Type>()      << "\n"
+              << "    in the interval: [" << mini << ",  " << maxi << "]" << "\n";
     std::cout << std::endl;
     std::cout << "[" << std::flush;
 
     while( nt2::extract(a0,N-1) < maxi )
+//    while(all(lt(a0, maxi)))
     {
       n_t z = test_f(a0);
 
@@ -102,21 +110,31 @@ namespace nt2
         if(nt2::is_invalid(u))
         {
           ++histo[M+1];
-          if (nt2::abs(in[M+1]) >= nt2::abs(nt2::extract(a0,i)))
+          if (!hit[M+1])
           {
-            in [M+1] = nt2::extract(a0,i);
-            ref[M+1] = v;
-            val[M+1] = nt2::extract(z,i);
+            maxin [M+1] = minin [M+1] = nt2::extract(a0,i);
+            minref[M+1] = v;
+            minval[M+1] = nt2::extract(z,i);
+            hit[M+1] = true;
+          }
+          else
+          {
+            maxin [M+1] = nt2::extract(a0,i);
           }
         }
         else
         {
           int p = nt2::min(int(M), int(nt2::ilog2(nt2::iround(u))));
-          if (nt2::abs(in[i]) >= nt2::abs(nt2::extract(a0,i)))
+          if (!hit[p])
           {
-            in[p] = nt2::extract(a0,i);
-            ref[p] = v;
-            val[p] = nt2::extract(z,i);
+            maxin [p] = minin [p] = nt2::extract(a0,i);
+            minref[p] = v;
+            minval[p] = nt2::extract(z,i);
+            hit[p] = true;
+          }
+          else
+          {
+            maxin [p] = nt2::extract(a0,i);
           }
           ++histo[p];
         }
@@ -149,14 +167,15 @@ namespace nt2
     {
       if(histo[i])
       {
-        printf("%10u values (%.2f%%)\twithin %1.1f ULPS.\t"
+        printf("%10u values (%.2f%%)\twithin %1.1f ULPs.\t"
               , histo[i], (histo[i]*100.0/k), (d < 2 ? 0 : d/4)
               );
-        std::cout << std::scientific
-                  << "Sample value x = " << in[i]
-                  << " returns " << val[i]
-                  << " instead of " << ref[i]
-                  << std::endl;
+        if(i)
+          std::cout << std::scientific << std::setprecision(7)
+                    << "All samples values are in = [" << minin[i] << ",  "<< maxin[i] << "]"
+                    << " Example: "<< minin[i] << " returns " << minval[i]
+                    << " instead of " << minref[i];
+        std::cout << std::endl;
       }
     }
 
@@ -165,11 +184,12 @@ namespace nt2
         printf("%10u values (%.2f%%)\twith invalid result.\t"
               , histo[M+1], (histo[M+1]*100.0/k)
               );
-        std::cout << std::scientific
-                  << "Sample value x = " << in[M+1]
-                  << " returns " << val[M+1]
-                  << " instead of " << ref[M+1]
+        std::cout << std::scientific << std::setprecision(7)
+                  << "All samples value in = [" << minin[M+1] << ",  "<< maxin[M+1] << "]"
+                  << " Example: "<< minin[M+1] << " returns " << minval[M+1]
+                  << " instead of " << minref[M+1]
                   << std::endl;
+
     }
   }
 }

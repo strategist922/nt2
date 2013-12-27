@@ -9,6 +9,7 @@
 ################################################################################
 
 SET( SOURCES
+  fast_log.cpp
   sqrt1pm1.cpp
   pow.cpp
   nthroot.cpp

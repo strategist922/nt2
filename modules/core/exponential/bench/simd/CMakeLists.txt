@@ -8,6 +8,9 @@
 ##############################################################################
 
 SET( SOURCES
+  fast_log.cpp
+  fast_log2.cpp
+  fast_log10.cpp
   expx2.cpp
   pow.cpp
   nthroot.cpp

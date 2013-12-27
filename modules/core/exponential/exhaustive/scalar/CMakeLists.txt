@@ -8,8 +8,14 @@
 ##############################################################################
 
 SET( SOURCES
- log.cpp
- exp.cpp
+  fast_log.cpp
+  fast_log2.cpp
+  fast_log10.cpp
+  log.cpp
+  log2.cpp
+  log10.cpp
+  log1p.cpp
+  exp.cpp
 # List of simd test files for toolbox arithmetic
    )
 

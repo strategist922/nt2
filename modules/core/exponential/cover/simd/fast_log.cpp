@@ -6,18 +6,19 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#define NT2_UNIT_MODULE "nt2 exponential toolbox - log/scalar Mode"
+#define NT2_UNIT_MODULE "nt2 exponential toolbox - fast_log/simd Mode"
 
 //////////////////////////////////////////////////////////////////////////////
-// cover test behavior of exponential components in scalar mode
+// cover test behavior of exponential components in simd mode
 //////////////////////////////////////////////////////////////////////////////
 /// created by jt the 08/12/2010
 ///
-#include <nt2/exponential/include/functions/log.hpp>
+#include <nt2/exponential/include/functions/fast_log.hpp>
+#include <boost/simd/sdk/simd/native.hpp>
 #include <nt2/include/functions/max.hpp>
 #include <nt2/include/functions/exp.hpp>
 #include <nt2/include/functions/sqr.hpp>
-extern "C" { long double cephes_logl(long double); }
+extern "C" { long double cephes_fast_logl(long double); }
 
 #include <boost/type_traits/is_same.hpp>
 #include <nt2/sdk/functor/meta/call.hpp>
@@ -33,38 +34,45 @@ extern "C" { long double cephes_logl(long double); }
 #include <nt2/sdk/unit/module.hpp>
 
 #include <nt2/constant/constant.hpp>
+#include <nt2/sdk/meta/cardinal_of.hpp>
+#include <nt2/include/functions/splat.hpp>
+#include <nt2/include/functions/aligned_load.hpp>
+#include <nt2/constant/constant.hpp>
 
 
-NT2_TEST_CASE_TPL ( log_real__1_0,  NT2_REAL_TYPES)
+NT2_TEST_CASE_TPL ( fast_log_real__1_0,  NT2_SIMD_REAL_TYPES)
 {
-
-  using nt2::log;
-  using nt2::tag::log_;
+  using nt2::fast_log;
+  using nt2::tag::fast_log_;
+  using nt2::aligned_load;
+  using boost::simd::native;
+  using nt2::meta::cardinal_of;
+  typedef NT2_SIMD_DEFAULT_EXTENSION  ext_t;
+  typedef typename nt2::meta::upgrade<T>::type   u_t;
+  typedef native<T,ext_t>                        n_t;
+  typedef n_t                                     vT;
   typedef typename nt2::meta::as_integer<T>::type iT;
-  typedef typename nt2::meta::call<log_(T)>::type r_t;
+  typedef native<iT,ext_t>                       ivT;
+  typedef typename nt2::meta::call<fast_log_(vT)>::type r_t;
+  typedef typename nt2::meta::call<fast_log_(T)>::type sr_t;
   typedef typename nt2::meta::scalar_of<r_t>::type ssr_t;
-  typedef typename nt2::meta::upgrade<T>::type u_t;
-  typedef typename boost::dispatch::meta::as_floating<T>::type wished_r_t;
-
-
-  // return type conformity test
-  NT2_TEST( (boost::is_same < r_t, wished_r_t >::value) );
 
   // random verifications
   static const nt2::uint32_t NR = NT2_NB_RANDOM_TEST;
   {
     NT2_CREATE_BUF(tab_a0,T, NR, T(0.1), T(10));
     double ulp0, ulpd ; ulpd=ulp0=0.0;
-    T a0;
-    for(nt2::uint32_t j =0; j < NR; ++j )
+    for(nt2::uint32_t j = 0; j < NR;j+=cardinal_of<n_t>::value)
       {
-        std::cout << "for param "
-                  << "  a0 = "<< u_t(a0 = tab_a0[j])
-                  << std::endl;
-        NT2_TEST_ULP_EQUAL( nt2::log(a0),::cephes_logl(a0),0.5);
-        ulp0=nt2::max(ulpd,ulp0);
-     }
-     std::cout << "max ulp found is: " << ulp0 << std::endl;
-   }
-} // end of test for floating_
+        vT a0 = aligned_load<vT>(&tab_a0[0],j);
+        r_t v = fast_log(a0);
+        for(nt2::uint32_t i = 0; i< cardinal_of<n_t>::value; i++)
+        {
 
+          NT2_TEST_ULP_EQUAL( v[i],ssr_t(nt2::fast_log (a0[i])), 0.5);
+          ulp0 = nt2::max(ulpd,ulp0);
+        }
+      }
+    std::cout << "max ulp found is: " << ulp0 << std::endl;
+  }
+} // end of test for floating_

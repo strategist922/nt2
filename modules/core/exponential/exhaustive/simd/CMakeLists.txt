@@ -9,6 +9,12 @@
 
 SET( SOURCES
 # List of simd test files for toolbox arithmetic
+   fast_log.cpp
+   fast_log2.cpp
+   fast_log10.cpp
+   log.cpp
+   log2.cpp
+   log10.cpp
    )
 
 nt2_module_add_tests(core.exponential.simd.exhaustive ${SOURCES})

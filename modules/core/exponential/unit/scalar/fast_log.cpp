@@ -6,7 +6,7 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#include <nt2/exponential/include/functions/log.hpp>
+#include <nt2/exponential/include/functions/fast_log.hpp>
 
 #include <nt2/sdk/functor/meta/call.hpp>
 #include <nt2/sdk/unit/module.hpp>
@@ -23,15 +23,15 @@
 #include <nt2/include/constants/inf.hpp>
 #include <nt2/include/constants/minf.hpp>
 #include <nt2/include/constants/nan.hpp>
-#include <nt2/include/constants/exp_1.hpp>
 #include <nt2/include/constants/log_2.hpp>
+#include <nt2/include/constants/exp_1.hpp>
 
-NT2_TEST_CASE_TPL ( log_real,  NT2_REAL_TYPES)
+NT2_TEST_CASE_TPL ( fast_log_real,  NT2_REAL_TYPES)
 {
-  using nt2::log;
-  using nt2::tag::log_;
+  using nt2::fast_log;
+  using nt2::tag::fast_log_;
 
-  typedef typename nt2::meta::call<log_(T)>::type r_t;
+  typedef typename nt2::meta::call<fast_log_(T)>::type r_t;
   typedef T wished_r_t;
 
   // return type conformity test
@@ -39,14 +39,17 @@ NT2_TEST_CASE_TPL ( log_real,  NT2_REAL_TYPES)
 
   // specific values tests
 #ifndef BOOST_SIMD_NO_INVALIDS
-  NT2_TEST_ULP_EQUAL(log(nt2::Inf<T>()), nt2::Inf<r_t>(), 0);
-  NT2_TEST_ULP_EQUAL(log(nt2::Minf<T>()), nt2::Nan<r_t>(), 0);
-  NT2_TEST_ULP_EQUAL(log(nt2::Mone<T>()), nt2::Nan<r_t>(), 0);
-  NT2_TEST_ULP_EQUAL(log(nt2::Nan<T>()), nt2::Nan<r_t>(), 0);
-  NT2_TEST_ULP_EQUAL(log(nt2::Zero<T>()), nt2::Minf<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Inf<T>()), nt2::Inf<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Minf<T>()), nt2::Nan<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Mone<T>()), nt2::Nan<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Nan<T>()), nt2::Nan<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Zero<T>()), nt2::Minf<r_t>(), 0);
 #endif
-  NT2_TEST_ULP_EQUAL(log(nt2::One<T>()), nt2::Zero<r_t>(), 0);
-  NT2_TEST_ULP_EQUAL(log(nt2::Two<T>()), nt2::Log_2<r_t>(), 0);
-  NT2_TEST_ULP_EQUAL(log(nt2::Exp_1<T>()), nt2::One<r_t>(), 1);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::One<T>()), nt2::Zero<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Two<T>()), nt2::Log_2<r_t>(), 0);
+  NT2_TEST_ULP_EQUAL(fast_log(nt2::Exp_1<T>()), nt2::One<r_t>(), 0);
 }
+
+
+
 

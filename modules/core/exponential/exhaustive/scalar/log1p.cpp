@@ -7,22 +7,24 @@
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 #include <nt2/sdk/unit/exhaustive.hpp>
-#include <nt2/include/functions/log.hpp>
+#include <nt2/include/functions/log1p.hpp>
 
 #include <nt2/include/constants/zero.hpp>
 #include <nt2/include/constants/valmax.hpp>
+#include <nt2/include/functions/frexp.hpp>
+#include <cmath>
 
-struct raw_log
+struct raw_log1p
 {
   float operator()(float x) const
   {
-    return float(::logl(double(x)));
+    return float(nt2::log1p(double(x)));
   }
 };
 
 int main(int ac, char* av[])
 {
-  float mini = 0.0f;
+  float mini = nt2::Mone<float>();
   float maxi = nt2::Valmax<float>();
   if(ac == 3)
   {
@@ -31,9 +33,8 @@ int main(int ac, char* av[])
   }
   nt2::exhaustive_test<float> ( mini
                               , maxi
-                              , nt2::functor<nt2::tag::log_>()
-                              , raw_log()
+                              , nt2::functor<nt2::tag::log1p_>()
+                              , raw_log1p()
                               );
-
   return 0;
 }

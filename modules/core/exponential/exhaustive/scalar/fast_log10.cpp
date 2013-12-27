@@ -7,16 +7,16 @@
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 #include <nt2/sdk/unit/exhaustive.hpp>
-#include <nt2/include/functions/log.hpp>
-
+#include <nt2/include/functions/fast_log10.hpp>
+#include <nt2/include/functions/log10.hpp>
 #include <nt2/include/constants/zero.hpp>
 #include <nt2/include/constants/valmax.hpp>
-
-struct raw_log
+#include <cmath>
+struct raw_fast_log10
 {
   float operator()(float x) const
   {
-    return float(::logl(double(x)));
+    return float(::log10((double)x));
   }
 };
 
@@ -31,8 +31,8 @@ int main(int ac, char* av[])
   }
   nt2::exhaustive_test<float> ( mini
                               , maxi
-                              , nt2::functor<nt2::tag::log_>()
-                              , raw_log()
+                              , nt2::functor<nt2::tag::fast_log10_>()
+                              , raw_fast_log10()
                               );
 
   return 0;

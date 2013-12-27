@@ -8,6 +8,7 @@
 ##############################################################################
 
 SET( SOURCES
+  fast_log.cpp
   logspace_sub.cpp
   logspace_add.cpp
   sqrt1pm1.cpp

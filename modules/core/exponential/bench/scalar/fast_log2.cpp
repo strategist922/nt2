@@ -6,14 +6,22 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#include <nt2/exponential/include/functions/log2.hpp>
-#include <nt2/sdk/bench/benchmark.hpp>
-#include <nt2/sdk/bench/timing.hpp>
+#define NT2_BENCH_MODULE "nt2 exponential toolbox - fast_log2/scalar Mode"
 
 //////////////////////////////////////////////////////////////////////////////
-// scalar runtime benchmark for functor<log2_> from exponential
+// timing Test behavior of exponential components in scalar mode
 //////////////////////////////////////////////////////////////////////////////
-using nt2::tag::log2_;
+#include <nt2/exponential/include/functions/fast_log2.hpp>
+#include <nt2/sdk/bench/benchmark.hpp>
+#include <nt2/sdk/bench/timing.hpp>
+#include <boost/dispatch/meta/as_integer.hpp>
+#include <cmath>
+
+
+//////////////////////////////////////////////////////////////////////////////
+// scalar runtime benchmark for functor<fast_log2_> from exponential
+//////////////////////////////////////////////////////////////////////////////
+using nt2::tag::fast_log2_;
 
 //////////////////////////////////////////////////////////////////////////////
 // range macro
@@ -22,11 +30,14 @@ using nt2::tag::log2_;
 
 namespace n1 {
   typedef float T;
-  NT2_TIMING(log2_,(RS(T,T(0.1),T(10))))
+  typedef boost::dispatch::meta::as_integer<T>::type iT;
+  NT2_TIMING(fast_log2_,(RS(T,T(0.1),T(10))))
 }
 namespace n2 {
   typedef double T;
-  NT2_TIMING(log2_,(RS(T,T(0.1),T(10))))
+  typedef boost::dispatch::meta::as_integer<T>::type iT;
+  NT2_TIMING(fast_log2_,(RS(T,T(0.1),T(10))))
 }
+
 
 #undef RS
