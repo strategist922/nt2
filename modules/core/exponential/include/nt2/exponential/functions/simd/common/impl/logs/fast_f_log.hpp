@@ -155,8 +155,7 @@ namespace nt2 { namespace details
       y = nt2::fma(fe, Log_2lo<A0>(), y);
       y = nt2::fma(Mhalf<A0>(), x2, y);
       A0 z  = x + y;
-      A0 y2 = nt2::fma(Log_2hi<A0>(), fe, z);
-      return finalize(a0, y2);
+      return  nt2::fma(Log_2hi<A0>(), fe, z);
     }
 
     static inline A0 log2(const A0& a0)
@@ -169,8 +168,7 @@ namespace nt2 { namespace details
       y =  nt2::fma(Mhalf<A0>(),x2, y);
       // multiply log of fraction by log2(e)
       A0 z = nt2::fma(x,Log2_em1<A0>(),y*Log2_em1<A0>());// 0.44269504088896340735992
-      A0 z1 = ((z+y)+x)+fe;
-      return finalize(a0, z1);
+      return ((z+y)+x)+fe;
     }
 
     static inline A0 log10(const A0& a0)
@@ -184,23 +182,7 @@ namespace nt2 { namespace details
       z = nt2::amul(z, y, Log10_ehi<A0>());
       z = nt2::amul(z, x, Log10_ehi<A0>());
       z = nt2::amul(z, fe, Log10_2hi<A0>());
-      z = nt2::amul(z, fe, Log10_2lo<A0>());
-      return finalize(a0, z);
-    }
-  private:
-    static inline A0 finalize(const A0& a0, const A0& y)
-    {
-//     #ifdef BOOST_SIMD_NO_NANS
-//       BOOST_AUTO_TPL(test, nt2::is_ltz(a0));
-//     #else
-//       BOOST_AUTO_TPL(test, nt2::logical_or(nt2::is_ltz(a0), nt2::is_nan(a0)));
-//     #endif
-//       A0 y1 = nt2::if_nan_else(test, y);
-//     #ifndef BOOST_SIMD_NO_INFINITIES
-//       y1 = if_else(nt2::is_equal(a0, nt2::Inf<A0>()), a0, y1);
-//     #endif
-//       return if_else(is_eqz(a0), nt2::Minf<A0>(), y1);
-      return y;
+      return nt2::amul(z, fe, Log10_2lo<A0>());
     }
   };
 } }

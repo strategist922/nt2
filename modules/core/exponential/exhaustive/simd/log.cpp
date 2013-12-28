@@ -21,13 +21,20 @@ struct raw_log
   }
 };
 
-int main()
+int main(int ac, char* av[])
 {
   typedef BOOST_SIMD_DEFAULT_EXTENSION             ext_t;
   typedef boost::simd::native<float,ext_t>           n_t;
+  float mini = nt2::Zero<float>();
+  float maxi = nt2::Valmax<float>();
+  if(ac == 3)
+  {
+    mini = std::atof(av[1]);
+    maxi = std::atof(av[2]);
+  }
 
-  nt2::exhaustive_test<n_t> ( nt2::Zero<float>()
-                            , nt2::Valmax<float>()
+  nt2::exhaustive_test<n_t> (mini
+                            , maxi
                             , nt2::functor<nt2::tag::log_>()
                             , raw_log()
                             );
