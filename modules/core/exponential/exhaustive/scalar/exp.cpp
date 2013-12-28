@@ -11,9 +11,6 @@
 
 #include <nt2/include/constants/valmin.hpp>
 #include <nt2/include/constants/valmax.hpp>
-#include <nt2/include/functions/ulpdist.hpp>
-#include <nt2/include/functions/mantissa.hpp>
-#include <nt2/include/functions/exponent.hpp>
 
 struct raw_exp
 {
@@ -29,7 +26,6 @@ int main(int ac, char* av[])
   float maxi = nt2::Valmax<float>();
   if(ac == 3)
   {
-<<<<<<< Updated upstream
     mini = std::atof(av[1]);
     maxi = std::atof(av[2]);
   }

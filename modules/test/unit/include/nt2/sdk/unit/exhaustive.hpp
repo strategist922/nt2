@@ -96,7 +96,6 @@ namespace nt2
     std::cout << "[" << std::flush;
 
     while( nt2::extract(a0,N-1) < maxi )
-//    while(all(lt(a0, maxi)))
     {
       n_t z = test_f(a0);
 
