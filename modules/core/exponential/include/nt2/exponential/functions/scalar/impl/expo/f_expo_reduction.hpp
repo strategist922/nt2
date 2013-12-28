@@ -47,10 +47,12 @@ namespace nt2 { namespace details
     {
       typedef typename meta::scalar_of<A0>::type sA0;
       const A0 t =  nt2::sqr(x);
-      return  x -
-        t*nt2::horner<NT2_HORNER_COEFF_T(sA0, 3,
-                                    (0x3888d272, 0xbb360954, 0x3e2aaaaa)
-                                   )> (t);
+//      return  x -
+//         t*nt2::horner<NT2_HORNER_COEFF_T(sA0, 3,
+//                                     (0x3888d272, 0xbb360954, 0x3e2aaaaa)
+//                                    )> (t);
+      return x- t/nt2::horner<NT2_HORNER_COEFF_T(sA0, 2, (0x3dcccc82,0x40bffff6))> (t);  //9.9999443e-02   5.9999952e+00
+    //[0.00006524183845613152,  -0.0027776556089520454, 0.1666666567325592]
     }
 
     static inline A0 reduce(const A0& a0, A0& hi, A0& lo, A0& x)

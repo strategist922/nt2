@@ -29,6 +29,7 @@ int main(int ac, char* av[])
   float maxi = nt2::Valmax<float>();
   if(ac == 3)
   {
+<<<<<<< Updated upstream
     mini = std::atof(av[1]);
     maxi = std::atof(av[2]);
   }
