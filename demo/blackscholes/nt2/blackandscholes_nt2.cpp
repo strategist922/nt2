@@ -9,7 +9,7 @@
 //==============================================================================
 #include <iostream>
 #include <nt2/sdk/bench/benchmark.hpp>
-#include <nt2/include/functions/log.hpp>
+#include <nt2/include/functions/fast_log.hpp>
 #include <nt2/include/functions/fma.hpp>
 #include <nt2/include/functions/sqr.hpp>
 #include <nt2/include/functions/sqrt.hpp>
@@ -46,7 +46,7 @@ namespace nt2 {
       NT2_FUNCTOR_CALL(5)
       {
         A0 da   = nt2::sqrt(a2);
-        A0 tmp1 = nt2::log(a0/a1);
+        A0 tmp1 = nt2::fast_log(a0/a1);
         A0 tmp2 = nt2::sqr(a4);
         A0 tmp4 = nt2::fma(tmp2,nt2::Half<A0>(),a3);
         A0 tmp3 = (tmp4*a2)/(a4*da);
