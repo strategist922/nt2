@@ -12,12 +12,15 @@
 
 #if defined(NT2_USE_TBB)
 
-// #include <tbb/tbb.h>
-// #include <nt2/sdk/tbb/blocked_range.hpp>
+#include <tbb/tbb.h>
+#include <nt2/sdk/tbb/blocked_range.hpp>
+#include <tbb/flow_graph.h>
+#include <tbb/scalable_allocator.h>
 
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/future.hpp>
+//#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -91,6 +94,13 @@ namespace nt2
       typedef typename
       nt2::make_future< Arch,int >::type future;
 
+//     typedef typename tbb::flow::continue_node< tbb::flow::continue_msg >
+//        node_type;
+//
+//      tbb::flow::graph g;
+//      std::vector< node_type * > barrier;
+//      std::vector<int> result(nblocks+1);
+
       std::size_t nblocks  = size/grain;
       std::size_t ibound   = nblocks * grain;
       std::size_t leftover = size % grain;
@@ -100,26 +110,47 @@ namespace nt2
 
 #ifndef BOOST_NO_EXCEPTIONS
       boost::exception_ptr exception;
-#endif
 
-#ifndef BOOST_NO_EXCEPTIONS
       try
       {
 #endif
 
       for(std::size_t n=0;n<nblocks;++n)
       {
-         // Call operation
-         barrier.push_back ( async<Arch>(w, begin+n*grain, grain) );
+          std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+          // Call operation
+          barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
       }
-
-      if(leftover) barrier.push_back ( async<Arch>(w, begin+ibound,leftover) );
 
       for(std::size_t n=0;n<nblocks;++n)
       {
-         // Call operation
-         barrier[n].get();
+          // Call operation
+          barrier[n].get();
       }
+
+//      tbb::flow::broadcast_node< tbb::flow::continue_msg > start(g);
+//
+//      for(std::size_t n=0;n<nblocks;++n)
+//      {
+//         std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+//
+//         details::tbb_task_wrapper2<Worker, int, std::size_t,std::size_t>
+//          tbb_w(w, result[n], begin+n*grain, chunk);
+//
+//         // Call operation
+//         barrier.push_back( new node_type(g,tbb_w) );
+//         tbb::flow::make_edge( start, *barrier[n]);
+//      }
+//
+//
+//        start.try_put( tbb::flow::continue_msg() );
+//        g.wait_for_all();
+//
+//
+//      for(std::size_t n=0;n<nblocks;++n)
+//      {
+//          delete barrier[n];
+//      }
 
 #ifndef BOOST_NO_EXCEPTIONS
       }

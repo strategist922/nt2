@@ -44,9 +44,9 @@ namespace nt2
 #define N BOOST_PP_ITERATION()
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n##_)
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) a##n##_
 #define NT2_FUTURE_FORWARD_ARGS3(z,n,t) a##n##_(boost::forward<A##n>(a##n))
-#define NT2_FUTURE_FORWARD_ARGS4(z,n,t) A##n const & a##n##_;
+#define NT2_FUTURE_FORWARD_ARGS4(z,n,t) const A##n a##n##_;
 
     template<class F,\
              typename result_type\
