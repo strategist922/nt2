@@ -204,7 +204,7 @@ namespace nt2
         details::tbb_future<result_type> then_future;
 
         node_type * c = new node_type
-          ( getWork(),
+          ( *getWork(),
             details::tbb_task_wrapper0<F,result_type>
             (f,then_future.res_)
           );
