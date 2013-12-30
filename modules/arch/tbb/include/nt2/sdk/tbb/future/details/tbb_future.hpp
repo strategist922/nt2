@@ -15,59 +15,183 @@
 #include <tbb/tbb.h>
 #include <tbb/flow_graph.h>
 #include <vector>
+#include <cstdio>
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
+// Global variables
 
 namespace nt2
 {
-  namespace tag
-  {
-    template<class T> struct tbb_;
-  }
-  namespace details
-  {
+    namespace tag
+    {
+        template<class T> struct tbb_;
+    }
 
-   template<typename result_type>
-   struct tbb_future
-   {
+    namespace details
+    {
+
+        class tbb_future_base
+        {
+            protected:
+            // Constructeur/destructeur
+            tbb_future_base () {}
+            ~tbb_future_base () {}
+
+            public:
+
+            // Interface publique
+            static tbb::flow::graph *getWork ()
+            {
+                if (NULL == nt2_graph_)
+                {
+                   printf("Create new graph\n");
+                   nt2_graph_ = new tbb::flow::graph;
+                }
+
+                return nt2_graph_;
+            }
+
+            // Interface publique
+            static tbb::flow::broadcast_node
+            <tbb::flow::continue_msg> *getStart ()
+            {
+                if (NULL == start_task_)
+                {
+                    printf("Create new start task\n");
+                    start_task_ =
+                    new tbb::flow::broadcast_node
+                    <tbb::flow::continue_msg>(*getWork());
+                }
+
+                return (start_task_);
+            }
+
+            // Interface publique
+            static std::vector< \
+            tbb::flow::continue_node<  \
+            tbb::flow::continue_msg> * \
+            > * getTaskQueue ()
+            {
+                if (NULL == task_queue_)
+                {
+                    printf("Create new task queue\n");
+
+                    task_queue_ = new std::vector< \
+                    tbb::flow::continue_node< \
+                    tbb::flow::continue_msg> * \
+                    >;
+
+                    task_queue_->reserve(100);
+                }
+
+                return task_queue_;
+            }
+
+            // Interface publique
+            static bool * getGraphIsExecuted ()
+            {
+                if (NULL == graph_is_executed_)
+                {
+                    graph_is_executed_ = new bool(false);
+                    printf("Create new isready with value %d\n",*graph_is_executed_);
+                }
+                return graph_is_executed_;
+            }
+
+            static void kill_graph ()
+            {
+                if (NULL != nt2_graph_)
+                {
+                    delete nt2_graph_;
+                    nt2_graph_ = NULL;
+                }
+
+                if (NULL != start_task_)
+                {
+                    delete start_task_;
+                    start_task_ = NULL;
+                }
+
+                if (NULL != task_queue_)
+                {
+                    for (std::size_t i =0; i<task_queue_->size(); i++)
+                    {
+                        delete( (*task_queue_)[i] );
+                    }
+
+                    delete task_queue_;
+                    task_queue_ = NULL;
+                }
+
+                if (NULL != graph_is_executed_)
+                {
+                    delete graph_is_executed_;
+                    graph_is_executed_ = NULL;
+                }
+            }
+
+        private:
+
+            // Unique instance
+
+            static tbb::flow::graph *
+              nt2_graph_;
+
+            static tbb::flow::broadcast_node<tbb::flow::continue_msg> *
+              start_task_;
+
+            static std::vector< \
+            tbb::flow::continue_node< \
+            tbb::flow::continue_msg> * \
+            > *
+              task_queue_;
+
+            static bool *
+              graph_is_executed_;
+    };
+
+    tbb::flow::graph *
+    tbb_future_base::nt2_graph_ = NULL;
+
+    tbb::flow::broadcast_node<tbb::flow::continue_msg> *
+    tbb_future_base::start_task_ = NULL;
+
+    std::vector< \
+    tbb::flow::continue_node< \
+    tbb::flow::continue_msg> * \
+    > *
+    tbb_future_base::task_queue_ = NULL;
+
+    bool *
+    tbb_future_base::graph_is_executed_ = NULL;
+
+
+
+
+    template<typename result_type>
+    struct tbb_future : public tbb_future_base
+    {
       typedef typename tbb::flow::continue_node<\
       tbb::flow::continue_msg> node_type;
 
-      tbb_future() : work_(NULL),node_list_(NULL),node_(NULL),ready_(NULL)
+      tbb_future() : node_(NULL)
       {}
 
-       void attach_task(tbb::flow::graph * work,
-                        std::vector<node_type *> * node_list,
-                        node_type * node,
-                        bool * ready
-                        )
+       void attach_task(node_type * node)
        {
-           work_ = work;
-           node_list_ = node_list;
            node_ = node;
-           ready_ = ready;
        }
 
       void wait()
       {
-            node_list_->front()->try_put(tbb::flow::continue_msg());
-            work_->wait_for_all();
-
-            delete(work_);
-
-            for (std::size_t i =0; i<node_list_->size(); i++)
-            {
-              delete((*node_list_)[i]);
-            }
-
-            delete (node_list_);
-
-            *ready_ = true;
+            getStart()->try_put(tbb::flow::continue_msg());
+            getWork()->wait_for_all();
+            *getGraphIsExecuted() = true;
       }
 
       result_type get()
       {
-        if(!(*ready_)) wait();
+        if(! *getGraphIsExecuted()) wait();
         return res_;
       }
 
@@ -80,28 +204,24 @@ namespace nt2
         details::tbb_future<result_type> then_future;
 
         node_type * c = new node_type
-          ( *work_,
+          ( getWork(),
             details::tbb_task_wrapper0<F,result_type>
             (f,then_future.res_)
           );
 
-        node_list_->push_back(c);
+        getTaskQueue()->push_back(c);
 
         tbb::flow::make_edge(*node_,*c);
 
-        then_future.attach_task(work_,node_list_,c,ready_);
+        then_future.attach_task(c);
 
         return then_future;
        }
 
       result_type res_;
-
-      tbb::flow::graph * work_;
-      std::vector< node_type *> * node_list_;
       node_type * node_;
-      bool * ready_;
     };
-   }
+    }
 }
 
  #endif
