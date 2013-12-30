@@ -77,21 +77,25 @@ namespace nt2
        BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
       )
   {
-    details::tbb_future<typename boost::result_of<\
-                  F(BOOST_PP_ENUM_PARAMS(N, A))\
-                  >::type> future_res;
 
-    tbb::flow::graph * work = new tbb::flow::graph;
+      typedef typename boost::result_of<\
+      F(BOOST_PP_ENUM_PARAMS(N, A))\
+      >::type result_type;
 
-    std::vector<node_type *> * node_list \
+      details::tbb_future<result_type> future_res;
+
+      tbb::flow::graph * work = new tbb::flow::graph;
+      bool * ready = new bool(false);
+
+      std::vector<node_type *> * node_list \
       = new std::vector<node_type *>;
 
-    node_type * node = new \
+      node_list->reserve(10);
+
+      node_type * node = new \
        node_type( *work,\
        BOOST_PP_CAT(details::tbb_task_wrapper,N)\
-       <F,typename boost::result_of<\
-       F(BOOST_PP_ENUM_PARAMS(N, A))\
-       >::type\
+       <F,result_type\
        BOOST_PP_COMMA_IF(N)\
        BOOST_PP_ENUM_PARAMS(N,A) \
        >\
@@ -100,10 +104,10 @@ namespace nt2
        BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
        ) );
 
-    node_list->push_back(node);
-    future_res.attach_task(work,node_list,node);
+      node_list->push_back(node);
+      future_res.attach_task(work,node_list,node,ready);
 
-    return future_res;
+      return future_res;
   }
 
 #undef NT2_FUTURE_FORWARD_ARGS

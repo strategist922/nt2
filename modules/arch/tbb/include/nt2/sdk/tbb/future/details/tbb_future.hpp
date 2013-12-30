@@ -15,6 +15,8 @@
 #include <tbb/tbb.h>
 #include <tbb/flow_graph.h>
 #include <vector>
+#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
+
 
 namespace nt2
 {
@@ -25,97 +27,79 @@ namespace nt2
   namespace details
   {
 
-   template<typename F>
-   struct tbb_continuation
-   {
-     tbb_continuation(F & f) : f_(f)
-     {}
-
-     void operator()( tbb::flow::continue_msg const &)
-     {
-        f_();
-     }
-
-     private:
-     F & f_;
-   };
-
    template<typename result_type>
    struct tbb_future
    {
       typedef typename tbb::flow::continue_node<\
       tbb::flow::continue_msg> node_type;
 
-      tbb_future() : work_(NULL),node_list_(NULL),node_(NULL)
+      tbb_future() : work_(NULL),node_list_(NULL),node_(NULL),ready_(NULL)
       {}
-
-       node_type * get_node()
-       {
-           return node_;
-       }
-
-       std::vector< node_type *> * get_node_list()
-       {
-           return node_list_;
-       }
-
-       tbb::flow::graph * get_work()
-       {
-           return work_;
-       }
 
        void attach_task(tbb::flow::graph * work,
                         std::vector<node_type *> * node_list,
-                        node_type * node
+                        node_type * node,
+                        bool * ready
                         )
        {
            work_ = work;
            node_list_ = node_list;
            node_ = node;
+           ready_ = ready;
        }
 
       void wait()
       {
             node_list_->front()->try_put(tbb::flow::continue_msg());
             work_->wait_for_all();
+
             delete(work_);
+
             for (std::size_t i =0; i<node_list_->size(); i++)
             {
               delete((*node_list_)[i]);
             }
+
             delete (node_list_);
-          }
+
+            *ready_ = true;
       }
 
       result_type get()
       {
-        wait();
+        if(!(*ready_)) wait();
         return res_;
       }
 
       template<typename F>
-      tbb_future< \
-      typename boost::result_of<F>::type\
-      > then(F& f)
+      tbb_future<typename boost::result_of<F>::type>
+      then(F& f)
       {
-        details::tbb_future<int> then_future;
+        typedef typename boost::result_of<F>::type result_type;
 
-        node_type * c = new node_type( *work_, tbb_continuation<F>(f) );
+        details::tbb_future<result_type> then_future;
+
+        node_type * c = new node_type
+          ( *work_,
+            details::tbb_task_wrapper0<F,result_type>
+            (f,then_future.res_)
+          );
+
         node_list_->push_back(c);
 
         tbb::flow::make_edge(*node_,*c);
 
-        then_future.attach_task(work_,node_list_,c);
+        then_future.attach_task(work_,node_list_,c,ready_);
 
         return then_future;
        }
 
       result_type res_;
 
-     private:
       tbb::flow::graph * work_;
       std::vector< node_type *> * node_list_;
       node_type * node_;
+      bool * ready_;
     };
    }
 }

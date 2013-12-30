@@ -26,7 +26,7 @@ namespace nt2
 
     struct empty_body
     {
-      void operator()( tbb::flow::continue_msg ) const{}
+      int operator()(){}
     };
 
     template<class Site>
@@ -53,7 +53,7 @@ namespace nt2
 #define N BOOST_PP_ITERATION()
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::tbb_future<A##n> const & a##n
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*a##n##.get_node(),*c);
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*a##n##.node_,*c);
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
         details::tbb_future<int> call\
@@ -61,17 +61,26 @@ namespace nt2
         {
             tbb_future<int> future_res;
 
-            tbb::flow::graph * work = a0.get_work();
+            details::empty_body f;
+
+            tbb::flow::graph * work = a0.work_;
 
             std::vector<node_type *> * node_list \
-              = a0.get_node_list();
+              = a0.node_list_;
 
-            node_type * c = new node_type(*work,details::empty_body);
+            bool * ready = a0.ready_;
+
+            node_type * c = new node_type
+                ( *work_,
+                  details::tbb_task_wrapper0<F,int>
+                  (f,future_res.res_)
+                );
+
             node_list_->push_back(c);
 
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS2, ~)
 
-            future_res.attach_task(work,node_list,c);
+            future_res.attach_task(work,node_list,c,ready);
 
             return future_res;
          }
