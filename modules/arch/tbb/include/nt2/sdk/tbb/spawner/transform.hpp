@@ -20,7 +20,6 @@
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/future.hpp>
-//#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -91,22 +90,16 @@ namespace nt2
 //             }
 //       #endif
 /****************************************************************************/
-      typedef typename
-      nt2::make_future< Arch,int >::type future;
 
-//     typedef typename tbb::flow::continue_node< tbb::flow::continue_msg >
-//        node_type;
-//
-//      tbb::flow::graph g;
-//      std::vector< node_type * > barrier;
-//      std::vector<int> result(nblocks+1);
+    typedef typename
+    nt2::make_future< Arch,int >::type future;
 
-      std::size_t nblocks  = size/grain;
-      std::size_t ibound   = nblocks * grain;
-      std::size_t leftover = size % grain;
+    std::size_t nblocks  = size/grain;
+    std::size_t ibound   = nblocks * grain;
+    std::size_t leftover = size % grain;
 
-      std::vector< future > barrier;
-      barrier.reserve(nblocks+1);
+    std::vector< future > barrier;
+    barrier.reserve(nblocks+1);
 
 #ifndef BOOST_NO_EXCEPTIONS
       boost::exception_ptr exception;
@@ -128,29 +121,7 @@ namespace nt2
           barrier[n].get();
       }
 
-//      tbb::flow::broadcast_node< tbb::flow::continue_msg > start(g);
-//
-//      for(std::size_t n=0;n<nblocks;++n)
-//      {
-//         std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
-//
-//         details::tbb_task_wrapper2<Worker, int, std::size_t,std::size_t>
-//          tbb_w(w, result[n], begin+n*grain, chunk);
-//
-//         // Call operation
-//         barrier.push_back( new node_type(g,tbb_w) );
-//         tbb::flow::make_edge( start, *barrier[n]);
-//      }
-//
-//
-//        start.try_put( tbb::flow::continue_msg() );
-//        g.wait_for_all();
-//
-//
-//      for(std::size_t n=0;n<nblocks;++n)
-//      {
-//          delete barrier[n];
-//      }
+      barrier[0].kill_graph();
 
 #ifndef BOOST_NO_EXCEPTIONS
       }

@@ -31,28 +31,30 @@
 
 namespace nt2
 {
-  namespace tag
-  {
-    template<class T> struct tbb_;
-  }
+    namespace tag
+    {
+        template<class T> struct tbb_;
+    }
 
-  template<class Site, class result_type>
-  struct make_future<tag::tbb_<Site> , result_type>
-  {
-     typedef nt2::details::tbb_future<result_type> type;
-  };
+    template<class Site, class result_type>
+    struct make_future<tag::tbb_<Site> , result_type>
+    {
+        typedef nt2::details::tbb_future<result_type> type;
+    };
 
-  template<class Site>
-  struct async_impl< tag::tbb_<Site> >
-  {
-    typedef typename tbb::flow::continue_node<\
-    tbb::flow::continue_msg> node_type;
+
+
+    template<class Site>
+    struct async_impl< tag::tbb_<Site> >
+    {
+        typedef typename tbb::flow::continue_node<\
+        tbb::flow::continue_msg> node_type;
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/tbb/future/future.hpp") \
 )
 #include BOOST_PP_ITERATE()
-  };
+    };
 }
 
 #endif
@@ -65,50 +67,48 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-  template< typename F\
-            BOOST_PP_COMMA_IF(N)\
-            BOOST_PP_ENUM_PARAMS(N, typename A) >
-  inline typename make_future< tag::tbb_<Site>,\
-            typename boost::result_of<\
-            F(BOOST_PP_ENUM_PARAMS(N, A))>::type \
-            >::type
-  call(F & f\
-       BOOST_PP_COMMA_IF(N)\
-       BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
-      )
-  {
+        template< typename F\
+                BOOST_PP_COMMA_IF(N)\
+                BOOST_PP_ENUM_PARAMS(N, typename A) >
+        inline typename make_future< tag::tbb_<Site>,\
+                typename boost::result_of<\
+                F(BOOST_PP_ENUM_PARAMS(N, A))>::type \
+                >::type
+        call(F & f\
+           BOOST_PP_COMMA_IF(N)\
+           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
+          )
+        {
 
-      typedef typename boost::result_of<\
-      F(BOOST_PP_ENUM_PARAMS(N, A))\
-      >::type result_type;
+          typedef typename boost::result_of<\
+          F(BOOST_PP_ENUM_PARAMS(N, A))\
+          >::type result_type;
 
-      details::tbb_future<result_type> future_res;
+          typedef typename details::tbb_future<result_type>
+          future;
 
-      tbb::flow::graph * work = new tbb::flow::graph;
-      bool * ready = new bool(false);
+          future future_res;
 
-      std::vector<node_type *> * node_list \
-      = new std::vector<node_type *>;
+          node_type * node = new \
+          node_type(*future_res.getWork(),\
+           BOOST_PP_CAT(details::tbb_task_wrapper,N)\
+           <F,result_type\
+           BOOST_PP_COMMA_IF(N)\
+           BOOST_PP_ENUM_PARAMS(N,A) \
+           >\
+           (f, future_res.res_\
+           BOOST_PP_COMMA_IF(N)\
+           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
+           ) );
 
-      node_list->reserve(10);
+          tbb::flow::make_edge
+          (*future_res.getStart(),*node);
 
-      node_type * node = new \
-       node_type( *work,\
-       BOOST_PP_CAT(details::tbb_task_wrapper,N)\
-       <F,result_type\
-       BOOST_PP_COMMA_IF(N)\
-       BOOST_PP_ENUM_PARAMS(N,A) \
-       >\
-       (f, future_res.res_\
-       BOOST_PP_COMMA_IF(N)\
-       BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
-       ) );
+          future_res.getTaskQueue()->push_back(node);
+          future_res.attach_task(node);
 
-      node_list->push_back(node);
-      future_res.attach_task(work,node_list,node,ready);
-
-      return future_res;
-  }
+          return future_res;
+        }
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS2

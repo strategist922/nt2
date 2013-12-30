@@ -63,24 +63,17 @@ namespace nt2
 
             details::empty_body f;
 
-            tbb::flow::graph * work = a0.work_;
-
-            std::vector<node_type *> * node_list \
-              = a0.node_list_;
-
-            bool * ready = a0.ready_;
-
             node_type * c = new node_type
-                ( *work_,
+                ( *future_res.getWork(),
                   details::tbb_task_wrapper0<F,int>
                   (f,future_res.res_)
                 );
 
-            node_list_->push_back(c);
+            task_queue.push_back(c);
 
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS2, ~)
 
-            future_res.attach_task(work,node_list,c,ready);
+            future_res.attach_task(c);
 
             return future_res;
          }
