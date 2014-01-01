@@ -16,18 +16,28 @@
 #include <tbb/tbb.h>
 #include <tbb/flow_graph.h>
 
-#include <vector>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/iteration/iterate.hpp>
+
+#include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 
 namespace nt2
 {
-  namespace details
-  {
-
-    struct empty_body
+    namespace details
     {
-      int operator()(){}
-    };
+
+        struct empty_body
+        {
+          int operator()()
+          {
+            return 0;
+          }
+        };
+    }
 
     template<class Site>
     struct when_all_impl< tag::tbb_<Site> >
@@ -37,12 +47,11 @@ namespace nt2
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 1, BOOST_DISPATCH_MAX_ARITY, \
-"nt2/sdk/tbb/future/details/tbb_when_all.hpp") \
+"nt2/sdk/tbb/future/when_all.hpp") \
 )
 
 #include BOOST_PP_ITERATE()
     };
-  }
 }
 
 #endif
@@ -52,26 +61,28 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
+#define POINT(a,b) a.b
+
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::tbb_future<A##n> const & a##n
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*a##n##.node_,*c);
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*(POINT(a##n,node_)),*c);
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
         details::tbb_future<int> call\
         ( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
         {
-            tbb_future<int> future_res;
+            details::tbb_future<int> future_res;
 
             details::empty_body f;
 
             node_type * c = new node_type
                 ( *future_res.getWork(),
-                  details::tbb_task_wrapper0<F,int>
+                  details::tbb_task_wrapper0<details::empty_body,int>
                   (f,future_res.res_)
                 );
 
-            task_queue.push_back(c);
+            future_res.getTaskQueue()->push_back(c);
 
-            BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS2, ~)
+            BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS1, ~)
 
             future_res.attach_task(c);
 
