@@ -20,14 +20,25 @@
 
 namespace nt2
 {
-  template<class Arch, class result_type>
-  struct make_future;
+   template<class Arch, class result_type>
+   struct make_future;
 
-  template<class Arch>
-  struct async_impl;
+   template<class Arch>
+   struct async_impl;
 
-  template<class Arch>
-  struct when_all_impl;
+   template<class Arch>
+   struct when_all_impl;
+
+   template<class Arch>
+   struct make_ready_future_impl;
+
+   template< typename Arch, typename result_type>
+   inline typename make_future< Arch,result_type>::type
+   make_ready_future(BOOST_FWD_REF(result_type) value)
+   {
+       return make_ready_future_impl<Arch>().call \
+        (boost::forward<result_type>(value));
+   }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/shared_memory/future.hpp")\
