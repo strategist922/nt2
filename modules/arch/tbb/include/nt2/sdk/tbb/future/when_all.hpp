@@ -22,23 +22,11 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 
-#include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
+#include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
 namespace nt2
 {
-    namespace details
-    {
-
-        struct empty_body
-        {
-          int operator()()
-          {
-            return 0;
-          }
-        };
-    }
-
     template<class Site>
     struct when_all_impl< tag::tbb_<Site> >
     {
@@ -74,11 +62,7 @@ namespace nt2
 
             details::empty_body f;
 
-            node_type * c = new node_type
-                ( *future_res.getWork(),
-                  details::tbb_task_wrapper0<details::empty_body,int>
-                  (f,future_res.res_)
-                );
+            node_type * c = new node_type( *future_res.getWork(), f );
 
             future_res.getTaskQueue()->push_back(c);
 

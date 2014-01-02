@@ -25,20 +25,27 @@
 
 namespace nt2
 {
-  namespace tag
-  {
-    template<class T> struct hpx_;
-  }
+    namespace tag
+    {
+        template<class T> struct hpx_;
+    }
 
-  template<class Site, class result_type>
-  struct make_future<tag::hpx_<Site> , result_type>
-  {
-     typedef  hpx::lcos::future<result_type> type;
-  };
+    template<class Site, class result_type>
+    struct make_future<tag::hpx_<Site> , result_type>
+    {
+         typedef  hpx::lcos::future<result_type> type;
+    };
 
-  template<class Site>
-  struct async_impl< tag::hpx_<Site> >
-  {
+    inline hpx::lcos::future<result_type>
+    make_ready_future_impl(BOOST_FWD_REF(result_type) value)
+    {
+        return hpx::make_ready_future
+          (boost::forward<result_type>(value));
+    };
+
+    template<class Site>
+    struct async_impl< tag::hpx_<Site> >
+    {
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/hpx/future/future.hpp") \
 )
