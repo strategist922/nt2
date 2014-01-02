@@ -165,9 +165,6 @@ namespace nt2
     bool *
     tbb_future_base::graph_is_executed_ = NULL;
 
-
-
-
     template<typename result_type>
     struct tbb_future : public tbb_future_base
     {
@@ -184,14 +181,17 @@ namespace nt2
 
       void wait()
       {
+        if(!( *getGraphIsExecuted() ))
+        {
             getStart()->try_put(tbb::flow::continue_msg());
             getWork()->wait_for_all();
             *getGraphIsExecuted() = true;
+        }
       }
 
       result_type get()
       {
-        if(! *getGraphIsExecuted()) wait();
+        if(!( *getGraphIsExecuted())) wait();
         return res_;
       }
 
@@ -221,6 +221,7 @@ namespace nt2
       result_type res_;
       node_type * node_;
     };
+
     }
 }
 

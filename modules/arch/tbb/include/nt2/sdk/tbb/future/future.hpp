@@ -28,6 +28,7 @@
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
+#include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
 namespace nt2
 {
@@ -39,10 +40,38 @@ namespace nt2
     template<class Site, class result_type>
     struct make_future<tag::tbb_<Site> , result_type>
     {
-        typedef nt2::details::tbb_future<result_type> type;
+        typedef details::tbb_future<result_type> type;
     };
 
+    template< class Site>
+    struct make_ready_future_impl< tag::tbb_<Site> >
+    {
+        template< typename result_type >
+        inline details::tbb_future<result_type>
+        call(BOOST_FWD_REF(result_type) value)
+        {
+            typedef typename tbb::flow::continue_node<\
+            tbb::flow::continue_msg> node_type;
 
+            details::tbb_future<result_type> future_res;
+
+            future_res.res_ =
+              boost::forward<result_type>(value);
+
+            details::empty_body f;
+
+            node_type * node = new node_type
+            ( *future_res.getWork(),f );
+
+            future_res.getTaskQueue()->push_back(node);
+
+            tbb::flow::make_edge(*(future_res.getStart()),*node);
+
+            future_res.attach_task(node);
+
+            return future_res;
+        }
+    };
 
     template<class Site>
     struct async_impl< tag::tbb_<Site> >

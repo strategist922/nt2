@@ -18,8 +18,9 @@
 #include <tbb/scalable_allocator.h>
 
 #include <nt2/sdk/shared_memory/spawner.hpp>
-#include <nt2/sdk/shared_memory/future.hpp>
+
 #include <nt2/sdk/tbb/future/future.hpp>
+#include <nt2/sdk/tbb/future/when_all.hpp>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
