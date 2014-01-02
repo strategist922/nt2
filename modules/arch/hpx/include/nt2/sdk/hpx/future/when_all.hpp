@@ -69,7 +69,7 @@ hpx::lcos::future<A##n> const & a##n
         {
             return hpx::when_all \
                ( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_VAR, ~) \
-               ).then(empty_body());
+               ).then(details::empty_body());
         }
 
 #undef HPX_WAIT_ALL_FUTURE_ARG
