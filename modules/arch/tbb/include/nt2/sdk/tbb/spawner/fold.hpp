@@ -23,83 +23,78 @@
 namespace nt2
 {
 
-  namespace tag
-  {
-    struct fold_;
-    template<class T> struct tbb_;
-  }
-
-  namespace details
-  {
-    template<class Worker, class result_type>
-    struct Tbb_Folder
+    namespace tag
     {
-        Tbb_Folder(Worker & w)
-        :w_(w)
-        {
-            out_ = w.neutral_(nt2::meta::as_<result_type>());
-        }
+        struct fold_;
+        template<class T> struct tbb_;
+    }
 
-        Tbb_Folder(Tbb_Folder& src, tbb::split)
-        : w_(src.w_)
+    namespace details
+    {
+        template<class Worker, class result_type>
+        struct Tbb_Folder
         {
-            out_ = w_.neutral_(nt2::meta::as_<result_type>());
-        }
+            Tbb_Folder(Worker & w)
+            :w_(w)
+            {
+                out_ = w.neutral_(nt2::meta::as_<result_type>());
+            }
 
-        void operator()(nt2::blocked_range<std::size_t> const& r)
-        {
-            w_(out_,r.begin(),r.size());
+            Tbb_Folder(Tbb_Folder& src, tbb::split)
+            : w_(src.w_)
+            {
+                out_ = w_.neutral_(nt2::meta::as_<result_type>());
+            }
+
+            void operator()(nt2::blocked_range<std::size_t> const& r)
+            {
+                w_(out_,r.begin(),r.size());
+            };
+
+            void join(Tbb_Folder& rhs) { out_ = w_.bop_(out_, rhs.out_); }
+
+            Worker & w_;
+            result_type out_;
+
+            private:
+            Tbb_Folder& operator=(Tbb_Folder const&);
         };
+    }
 
-        void join(Tbb_Folder& rhs) { out_ = w_.bop_(out_, rhs.out_); }
-
-        Worker & w_;
-        result_type out_;
-
-    private:
-        Tbb_Folder& operator=(Tbb_Folder const&);
-
-    };
-  }
-
-  template<class Site, class result_type>
-  struct spawner< tag::fold_, tag::tbb_<Site>, result_type>
-  {
-
-    spawner(){}
-
-    template<typename Worker>
-    result_type operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+    template<class Site, class result_type>
+    struct spawner< tag::fold_, tag::tbb_<Site>, result_type>
     {
 
-#ifndef BOOST_NO_EXCEPTIONS
-      boost::exception_ptr exception;
-#endif
+        spawner(){}
 
-     BOOST_ASSERT_MSG( size % grain == 0, "Reduce size not divisible by grain");
+        template<typename Worker>
+        result_type operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+        {
+            #ifndef BOOST_NO_EXCEPTIONS
+            boost::exception_ptr exception;
+            #endif
 
-     details::Tbb_Folder<Worker,result_type> tbb_w ( w );
+            BOOST_ASSERT_MSG( size % grain == 0, "Reduce size not divisible by grain");
+            details::Tbb_Folder<Worker,result_type> tbb_w ( w );
 
-#ifndef BOOST_NO_EXCEPTIONS
+            #ifndef BOOST_NO_EXCEPTIONS
             try
             {
-#endif
-             tbb::parallel_reduce( nt2::blocked_range<std::size_t>(begin,begin+size,grain)
+            #endif
+            tbb::parallel_reduce( nt2::blocked_range<std::size_t>(begin,begin+size,grain)
                                   ,tbb_w
-                                 );
-
-#ifndef BOOST_NO_EXCEPTIONS
+                                );
+            #ifndef BOOST_NO_EXCEPTIONS
             }
             catch(...)
             {
-              exception = boost::current_exception();
+                exception = boost::current_exception();
             }
-#endif
+            #endif
+            return tbb_w.out_;
+        }
 
-      return tbb_w.out_;
-    }
-
-};
+    };
 }
 
 #endif

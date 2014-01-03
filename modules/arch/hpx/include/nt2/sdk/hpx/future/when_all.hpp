@@ -40,7 +40,6 @@ namespace nt2
     template<class Site>
     struct when_all_impl< tag::hpx_<Site> >
     {
-
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 1, BOOST_DISPATCH_MAX_ARITY, \
 "nt2/sdk/hpx/future/when_all.hpp") \

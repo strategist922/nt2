@@ -83,6 +83,7 @@ namespace nt2
     int operator()(std::size_t begin, std::size_t size) const
     {
       extent_type ext = in_.extent();
+
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
       std::size_t grain  = top_cache_line_size;
 

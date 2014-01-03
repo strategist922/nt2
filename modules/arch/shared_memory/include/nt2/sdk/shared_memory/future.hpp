@@ -20,25 +20,25 @@
 
 namespace nt2
 {
-   template<class Arch, class result_type>
-   struct make_future;
+    template<class Arch, class result_type>
+    struct make_future;
 
-   template<class Arch>
-   struct async_impl;
+    template<class Arch>
+    struct async_impl;
 
-   template<class Arch>
-   struct when_all_impl;
+    template<class Arch>
+    struct when_all_impl;
 
-   template<class Arch>
-   struct make_ready_future_impl;
+    template<class Arch>
+    struct make_ready_future_impl;
 
-   template< typename Arch, typename result_type>
-   inline typename make_future< Arch,result_type>::type
-   make_ready_future(BOOST_FWD_REF(result_type) value)
-   {
+    template< typename Arch, typename result_type>
+    inline typename make_future< Arch,result_type>::type
+    make_ready_future(BOOST_FWD_REF(result_type) value)
+    {
        return make_ready_future_impl<Arch>().call \
         (boost::forward<result_type>(value));
-   }
+    }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/shared_memory/future.hpp")\
@@ -56,40 +56,40 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-  template< typename Arch,typename F \
+    template< typename Arch,typename F \
               BOOST_PP_COMMA_IF(N)\
               BOOST_PP_ENUM_PARAMS(N, typename A)\
           >
-  inline typename make_future< Arch,\
+    inline typename make_future< Arch,\
                        typename boost::result_of<\
                        F(BOOST_PP_ENUM_PARAMS(N, A))\
                        >::type\
                        >::type
-  async( F & f\
+    async( F & f\
          BOOST_PP_COMMA_IF(N)\
          BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
        )
-  {
+    {
     return async_impl<Arch>().call(f\
                                    BOOST_PP_COMMA_IF(N)\
                                    BOOST_PP_ENUM(N,\
                                    NT2_FUTURE_FORWARD_ARGS2, ~)\
                                   );
-  }
+    }
 
 #if BOOST_PP_GREATER(N,0)
 
-  template< typename Arch,\
-  BOOST_PP_ENUM_PARAMS(N, typename A)\
-  >
-  inline typename make_future< Arch,int>::type
-  when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
-  {
+    template< typename Arch,\
+    BOOST_PP_ENUM_PARAMS(N, typename A)\
+    >
+    inline typename make_future< Arch,int>::type
+    when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
+    {
     return when_all_impl<Arch>().call(\
                                       BOOST_PP_ENUM(N,\
                                       NT2_FUTURE_FORWARD_ARGS2, ~)\
                                      );
-  }
+    }
 
 #endif
 

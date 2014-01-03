@@ -28,111 +28,108 @@
 
 namespace nt2
 {
-  namespace tag
-  {
-    struct transform_;
-    template<class T> struct tbb_;
-  }
-
-  // namespace details
-  // {
-  //   template<class Worker>
-  //   struct Tbb_Transformer
-  //   {
-  //       Tbb_Transformer(Worker & w)
-  //       :w_(w)
-  //       {}
-
-  //       void operator()(nt2::blocked_range<std::size_t> const& r) const
-  //       {
-  //           w_(r.begin(),r.size());
-  //       };
-
-  //       Worker & w_;
-
-  //   private:
-  //       Tbb_Transformer& operator=(Tbb_Transformer const&);
-
-  //   };
-  // }
-
-  template<class Site>
-  struct spawner< tag::transform_, tag::tbb_<Site> >
-  {
-    typedef typename tag::tbb_<Site> Arch;
-
-    spawner(){}
-
-    template<typename Worker>
-    void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+    namespace tag
     {
+        struct transform_;
+        template<class T> struct tbb_;
+    }
 
-// #ifndef BOOST_NO_EXCEPTIONS
-//         boost::exception_ptr exception;
-// #endif
+//    namespace details
+//    {
+//        template<class Worker>
+//        struct Tbb_Transformer
+//        {
+//            Tbb_Transformer(Worker & w)
+//            :w_(w)
+//            {}
+//
+//            void operator()(nt2::blocked_range<std::size_t> const& r) const
+//            {
+//                w_(r.begin(),r.size());
+//            };
+//
+//            Worker & w_;
+//
+//            private:
+//            Tbb_Transformer& operator=(Tbb_Transformer const&);
+//
+//        };
+//    }
 
-//       #ifndef BOOST_NO_EXCEPTIONS
-//             try
-//             {
-//       #endif
-//              details::Tbb_Transformer<Worker> tbb_w ( w );
+    template<class Site>
+    struct spawner< tag::transform_, tag::tbb_<Site> >
+    {
+        typedef typename tag::tbb_<Site> Arch;
 
-//              tbb::parallel_for( nt2::blocked_range<std::size_t>(begin,begin+size,grain),
-//                                 tbb_w
-//                               );
+        spawner(){}
 
+        template<typename Worker>
+        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+        {
 
+//#ifndef BOOST_NO_EXCEPTIONS
+//            boost::exception_ptr exception;
+//
+//            try
+//            {
+//#endif
+//            details::Tbb_Transformer<Worker> tbb_w ( w );
+//
+//            tbb::parallel_for(
+//                nt2::blocked_range<std::size_t>(begin,begin+size,grain),
+//                tbb_w);
+//
+//#ifndef BOOST_NO_EXCEPTIONS
+//            }
+//            catch(...)
+//            {
+//            exception = boost::current_exception();
+//            }
+//#endif
 
-//       #ifndef BOOST_NO_EXCEPTIONS
-//             }
-//             catch(...)
-//             {
-//               exception = boost::current_exception();
-//             }
-//       #endif
 /****************************************************************************/
 
-    typedef typename
-    nt2::make_future< Arch,int >::type future;
+            typedef typename
+            nt2::make_future< Arch,int >::type future;
 
-    std::size_t nblocks  = size/grain;
-    std::size_t ibound   = nblocks * grain;
-    std::size_t leftover = size % grain;
+            std::size_t nblocks  = size/grain;
+            std::size_t ibound   = nblocks * grain;
+            std::size_t leftover = size % grain;
 
-    std::vector< future > barrier;
-    barrier.reserve(nblocks+1);
+            std::vector< future > barrier;
+            barrier.reserve(nblocks+1);
 
-#ifndef BOOST_NO_EXCEPTIONS
-      boost::exception_ptr exception;
+            #ifndef BOOST_NO_EXCEPTIONS
+            boost::exception_ptr exception;
 
-      try
-      {
-#endif
+            try
+            {
+            #endif
 
-      for(std::size_t n=0;n<nblocks;++n)
-      {
-          std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
-          // Call operation
-          barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
-      }
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+                std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+                // Call operation
+                barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
+            }
 
-      for(std::size_t n=0;n<nblocks;++n)
-      {
-          // Call operation
-          barrier[n].get();
-      }
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+                // Call operation
+                barrier[n].get();
+            }
 
-      barrier[0].kill_graph();
+            barrier[0].kill_graph();
 
-#ifndef BOOST_NO_EXCEPTIONS
-      }
-      catch(...)
-      {
-        exception = boost::current_exception();
-      }
-#endif
-    }
-};
+            #ifndef BOOST_NO_EXCEPTIONS
+            }
+            catch(...)
+            {
+                exception = boost::current_exception();
+            }
+            #endif
+        }
+    };
 }
 
 #endif

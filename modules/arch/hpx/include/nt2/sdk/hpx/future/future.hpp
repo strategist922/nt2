@@ -50,7 +50,7 @@ namespace nt2
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/hpx/future/future.hpp") \
 )
 #include BOOST_PP_ITERATE()
-  };
+    };
 }
 
 #endif
@@ -62,24 +62,24 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-  template< typename F\
-            BOOST_PP_COMMA_IF(N)\
-            BOOST_PP_ENUM_PARAMS(N, typename A) >
-  inline typename make_future<\
-                    tag::hpx_<Site>,\
-                    typename boost::result_of<\
-                    F(BOOST_PP_ENUM_PARAMS(N, A))\
-                    >::type >::type
-  call(F & f\
-       BOOST_PP_COMMA_IF(N)\
-       BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
-      )
-  {
-    return hpx::async(f\
-                      BOOST_PP_COMMA_IF(N)\
-                      BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
+        template< typename F\
+                BOOST_PP_COMMA_IF(N)\
+                BOOST_PP_ENUM_PARAMS(N, typename A) >
+        inline typename make_future<\
+                        tag::hpx_<Site>,\
+                        typename boost::result_of<\
+                        F(BOOST_PP_ENUM_PARAMS(N, A))\
+                        >::type >::type
+        call(F & f\
+           BOOST_PP_COMMA_IF(N)\
+           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
+          )
+        {
+            return hpx::async(f\
+                     BOOST_PP_COMMA_IF(N)\
+                     BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
                      );
-  }
+        }
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS2

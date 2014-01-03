@@ -12,6 +12,9 @@
 
 #if defined(NT2_USE_TBB)
 
+#include <tbb/tbb.h>
+#include <tbb/flow_graph.h>
+
 namespace nt2
 {
     namespace details

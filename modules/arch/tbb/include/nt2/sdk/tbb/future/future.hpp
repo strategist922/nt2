@@ -120,14 +120,14 @@ namespace nt2
 
           node_type * node = new \
           node_type(*future_res.getWork(),\
-           BOOST_PP_CAT(details::tbb_task_wrapper,N)\
-           <F,result_type\
-           BOOST_PP_COMMA_IF(N)\
-           BOOST_PP_ENUM_PARAMS(N,A) \
-           >\
-           (f, future_res.res_\
-           BOOST_PP_COMMA_IF(N)\
-           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
+            BOOST_PP_CAT(details::tbb_task_wrapper,N)\
+            <F,result_type\
+            BOOST_PP_COMMA_IF(N)\
+            BOOST_PP_ENUM_PARAMS(N,A) \
+            >\
+            (f, future_res.res_\
+            BOOST_PP_COMMA_IF(N)\
+            BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
            ) );
 
           tbb::flow::make_edge
