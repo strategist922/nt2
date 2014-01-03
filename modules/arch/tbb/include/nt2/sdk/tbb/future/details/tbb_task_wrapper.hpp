@@ -29,7 +29,6 @@ namespace nt2
     namespace details
     {
 
-
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, \
 "nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp") \
@@ -84,7 +83,6 @@ namespace nt2
             BOOST_PP_CAT(tbb_task_wrapper,N) & \
             operator=(BOOST_PP_CAT(tbb_task_wrapper,N) const&);
         };
-
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS2
