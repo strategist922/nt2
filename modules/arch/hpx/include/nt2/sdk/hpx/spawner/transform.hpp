@@ -26,60 +26,60 @@
 
 namespace nt2
 {
-  namespace tag
+    namespace tag
     {
-      struct transform_;
-      template<class T> struct hpx_;
+        struct transform_;
+        template<class T> struct hpx_;
     }
 
-  template<class Site>
-  struct spawner< tag::transform_, tag::hpx_<Site> >
-  {
-
-    typedef typename tag::hpx_<Site> Arch;
-
-    spawner() {}
-
-    template<typename Worker>
-    void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+    template<class Site>
+    struct spawner< tag::transform_, tag::hpx_<Site> >
     {
-      typedef typename
-      nt2::make_future< Arch, int >::type future;
 
-      std::size_t leftover = size % grain;
-      std::size_t nblocks  = size/grain;
+        typedef typename tag::hpx_<Site> Arch;
 
-      std::vector< hpx::lcos::future<void> > barrier;
-      barrier.reserve(nblocks);
+        spawner() {}
 
-#ifndef BOOST_NO_EXCEPTIONS
-      boost::exception_ptr exception;
-#endif
+        template<typename Worker>
+        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+        {
+            typedef typename
+            nt2::make_future< Arch, int >::type future;
 
-#ifndef BOOST_NO_EXCEPTIONS
-      try
-      {
-#endif
+            std::size_t leftover = size % grain;
+            std::size_t nblocks  = size/grain;
 
-      for(std::size_t n=0;n<nblocks;++n)
-      {
-         std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+            std::vector< hpx::lcos::unique_future<void> > barrier;
+            barrier.reserve(nblocks);
 
-         // Call operation
-         barrier.push_back ( hpx::async(w, begin+n*grain, chunk) );
-      }
+            #ifndef BOOST_NO_EXCEPTIONS
+            boost::exception_ptr exception;
+            #endif
 
-      hpx::wait_all(barrier);
+            #ifndef BOOST_NO_EXCEPTIONS
+            try
+            {
+            #endif
 
-#ifndef BOOST_NO_EXCEPTIONS
-      }
-      catch(...)
-      {
-        exception = boost::current_exception();
-      }
-#endif
-   }
- };
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+              std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+
+              // Call operation
+              barrier.push_back ( hpx::async(w, begin+n*grain, chunk) );
+            }
+
+            hpx::wait_all(barrier);
+
+            #ifndef BOOST_NO_EXCEPTIONS
+            }
+            catch(...)
+            {
+            exception = boost::current_exception();
+            }
+            #endif
+        }
+    };
 }
 
 #endif

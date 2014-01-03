@@ -27,50 +27,48 @@
 
 namespace nt2
 {
-  namespace tag
-  {
-    struct fold_;
-    template<class T> struct hpx_;
-  }
+    namespace tag
+    {
+        struct fold_;
+        template<class T> struct hpx_;
+    }
 
-  template<class Site, class result_type>
-  struct spawner< tag::fold_, tag::hpx_<Site> , result_type>
-  {
-
-    typedef typename tag::hpx_<Site> Arch;
-
-    typedef typename
-      nt2::make_future< Arch, result_type >::type future;
-
-    spawner() {}
-
-    template<typename Worker>
-    result_type operator()(Worker w, std::size_t begin, std::size_t size, std::size_t  grain)
+    template<class Site, class result_type>
+    struct spawner< tag::fold_, tag::hpx_<Site> , result_type>
     {
 
-      BOOST_ASSERT_MSG( size % grain == 0, "Reduce size not divisible by grain");
+        typedef typename tag::hpx_<Site> Arch;
 
-      if (size == grain)
-       {
-         result_type out = w.neutral_(nt2::meta::as_<result_type>());
-         w(out,begin,size);
-         return out;
-        }
+        typedef typename
+          nt2::make_future< Arch, result_type >::type future;
 
-       std::size_t middle = begin + (size/(2*grain))*grain;
+        spawner() {}
 
-       hpx::lcos::shared_future<result_type>
-         other_out = hpx::async(*this,w,middle*1,begin+size-middle,grain*1);
+        template<typename Worker>
+        result_type operator()(Worker w, std::size_t begin, std::size_t size, std::size_t  grain)
+        {
 
-       result_type my_out = (*this)(w, begin, middle-begin, grain);
+            BOOST_ASSERT_MSG( size % grain == 0, "Reduce size not divisible by grain");
 
-       return w.bop_( my_out, other_out.get() );
+            if (size == grain)
+            {
+                result_type out = w.neutral_(nt2::meta::as_<result_type>());
+                w(out,begin,size);
+                return out;
+            }
 
-    }
-  };
+            std::size_t middle = begin + (size/(2*grain))*grain;
+
+            hpx::lcos::shared_future<result_type>
+              other_out = hpx::async(*this,w,middle*1,begin+size-middle,grain*1);
+
+            result_type my_out = (*this)(w, begin, middle-begin, grain);
+
+            return w.bop_( my_out, other_out.get() );
+
+         }
+      };
 }
 
-
 #endif
-
 #endif

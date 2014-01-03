@@ -14,11 +14,11 @@
 
 #include <tbb/tbb.h>
 #include <tbb/flow_graph.h>
+
 #include <vector>
 #include <cstdio>
-#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
-// Global variables
+#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
 namespace nt2
 {
@@ -29,17 +29,15 @@ namespace nt2
 
     namespace details
     {
-
         class tbb_future_base
         {
             protected:
-            // Constructeur/destructeur
+
             tbb_future_base () {}
             ~tbb_future_base () {}
 
             public:
 
-            // Interface publique
             static tbb::flow::graph *getWork ()
             {
                 if (NULL == nt2_graph_)
@@ -51,7 +49,6 @@ namespace nt2
                 return nt2_graph_;
             }
 
-            // Interface publique
             static tbb::flow::broadcast_node
             <tbb::flow::continue_msg> *getStart ()
             {
@@ -62,11 +59,9 @@ namespace nt2
                     new tbb::flow::broadcast_node
                     <tbb::flow::continue_msg>(*getWork());
                 }
-
                 return (start_task_);
             }
 
-            // Interface publique
             static std::vector< \
             tbb::flow::continue_node<  \
             tbb::flow::continue_msg> * \
@@ -83,7 +78,6 @@ namespace nt2
 
                     task_queue_->reserve(100);
                 }
-
                 return task_queue_;
             }
 
@@ -130,9 +124,7 @@ namespace nt2
                 }
             }
 
-        private:
-
-            // Unique instance
+            private:
 
             static tbb::flow::graph *
               nt2_graph_;
@@ -148,80 +140,79 @@ namespace nt2
 
             static bool *
               graph_is_executed_;
-    };
+        };
 
-    tbb::flow::graph *
-    tbb_future_base::nt2_graph_ = NULL;
+        tbb::flow::graph *
+        tbb_future_base::nt2_graph_ = NULL;
 
-    tbb::flow::broadcast_node<tbb::flow::continue_msg> *
-    tbb_future_base::start_task_ = NULL;
+        tbb::flow::broadcast_node<tbb::flow::continue_msg> *
+        tbb_future_base::start_task_ = NULL;
 
-    std::vector< \
-    tbb::flow::continue_node< \
-    tbb::flow::continue_msg> * \
-    > *
-    tbb_future_base::task_queue_ = NULL;
+        std::vector< \
+        tbb::flow::continue_node< \
+        tbb::flow::continue_msg> * \
+        > *
+        tbb_future_base::task_queue_ = NULL;
 
-    bool *
-    tbb_future_base::graph_is_executed_ = NULL;
+        bool *
+        tbb_future_base::graph_is_executed_ = NULL;
 
-    template<typename result_type>
-    struct tbb_future : public tbb_future_base
-    {
-      typedef typename tbb::flow::continue_node<\
-      tbb::flow::continue_msg> node_type;
-
-      tbb_future() : node_(NULL)
-      {}
-
-       void attach_task(node_type * node)
-       {
-           node_ = node;
-       }
-
-      void wait()
-      {
-        if(!( *getGraphIsExecuted() ))
+        template<typename result_type>
+        struct tbb_future : public tbb_future_base
         {
-            getStart()->try_put(tbb::flow::continue_msg());
-            getWork()->wait_for_all();
-            *getGraphIsExecuted() = true;
-        }
-      }
+            typedef typename tbb::flow::continue_node<\
+            tbb::flow::continue_msg> node_type;
 
-      result_type get()
-      {
-        if(!( *getGraphIsExecuted())) wait();
-        return res_;
-      }
+            tbb_future() : node_(NULL)
+            {}
 
-      template<typename F>
-      tbb_future<typename boost::result_of<F>::type>
-      then(F& f)
-      {
-        typedef typename boost::result_of<F>::type result_type;
+            void attach_task(node_type * node)
+            {
+                node_ = node;
+            }
 
-        details::tbb_future<result_type> then_future;
+            void wait()
+            {
+                if(!( *getGraphIsExecuted() ))
+                {
+                    getStart()->try_put(tbb::flow::continue_msg());
+                    getWork()->wait_for_all();
+                    *getGraphIsExecuted() = true;
+                }
+            }
 
-        node_type * c = new node_type
-          ( *getWork(),
-            details::tbb_task_wrapper0<F,result_type>
-            (f,then_future.res_)
-          );
+            result_type get()
+            {
+                if(!( *getGraphIsExecuted())) wait();
+                return res_;
+            }
 
-        getTaskQueue()->push_back(c);
+            template<typename F>
+            tbb_future<typename boost::result_of<F>::type>
+            then(F& f)
+            {
+                typedef typename boost::result_of<F>::type result_type;
 
-        tbb::flow::make_edge(*node_,*c);
+                details::tbb_future<result_type> then_future;
 
-        then_future.attach_task(c);
+                node_type * c = new node_type
+                  ( *getWork(),
+                    details::tbb_task_wrapper0<F,result_type>
+                    (f,then_future.res_)
+                  );
 
-        return then_future;
-       }
+                getTaskQueue()->push_back(c);
 
-      result_type res_;
-      node_type * node_;
-    };
+                tbb::flow::make_edge(*node_,*c);
 
+                then_future.attach_task(c);
+
+                return then_future;
+           }
+
+            result_type res_;
+            node_type * node_;
+        };
     }
 }
 
