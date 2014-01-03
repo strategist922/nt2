@@ -122,7 +122,6 @@ namespace nt2
                 exception = boost::current_exception();
             }
             #endif
-
         }
     };
 }
