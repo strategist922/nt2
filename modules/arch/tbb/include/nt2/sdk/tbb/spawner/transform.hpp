@@ -119,8 +119,6 @@ namespace nt2
                 barrier[n].get();
             }
 
-            barrier[0].kill_graph();
-
             #ifndef BOOST_NO_EXCEPTIONS
             }
             catch(...)

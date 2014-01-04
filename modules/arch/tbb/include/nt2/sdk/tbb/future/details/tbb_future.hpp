@@ -20,6 +20,8 @@
 
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
+#include <boost/shared_ptr.hpp>
+
 namespace nt2
 {
     namespace tag
@@ -82,14 +84,14 @@ namespace nt2
             }
 
             // Interface publique
-            static bool * getGraphIsExecuted ()
+            static boost::shared_ptr<bool> getGraphIsCompleted ()
             {
-                if (NULL == graph_is_executed_)
+                if (NULL == graph_is_completed_)
                 {
-                    graph_is_executed_ = new bool(false);
-                    printf("Create new isready with value %d\n",*graph_is_executed_);
+                    graph_is_completed_ = new boost::shared_ptr<bool>(new bool(false));
+                    printf("Create new isready with value %d\n",**graph_is_completed_);
                 }
-                return graph_is_executed_;
+                return *graph_is_completed_;
             }
 
             static void kill_graph ()
@@ -117,10 +119,10 @@ namespace nt2
                     task_queue_ = NULL;
                 }
 
-                if (NULL != graph_is_executed_)
+                if (NULL != graph_is_completed_)
                 {
-                    delete graph_is_executed_;
-                    graph_is_executed_ = NULL;
+                    delete graph_is_completed_;
+                    graph_is_completed_ = NULL;
                 }
             }
 
@@ -138,8 +140,8 @@ namespace nt2
             > *
               task_queue_;
 
-            static bool *
-              graph_is_executed_;
+            static boost::shared_ptr<bool> *
+              graph_is_completed_;
         };
 
         tbb::flow::graph *
@@ -154,8 +156,8 @@ namespace nt2
         > *
         tbb_future_base::task_queue_ = NULL;
 
-        bool *
-        tbb_future_base::graph_is_executed_ = NULL;
+        boost::shared_ptr<bool> *
+        tbb_future_base::graph_is_completed_ = NULL;
 
         template<typename result_type>
         struct tbb_future : public tbb_future_base
@@ -169,21 +171,28 @@ namespace nt2
             void attach_task(node_type * node)
             {
                 node_ = node;
+                ready_ = getGraphIsCompleted();
+            }
+
+            bool is_ready() const
+            {
+                return *ready_;
             }
 
             void wait()
             {
-                if(!( *getGraphIsExecuted() ))
+                if(!is_ready())
                 {
                     getStart()->try_put(tbb::flow::continue_msg());
                     getWork()->wait_for_all();
-                    *getGraphIsExecuted() = true;
+                    *ready_ = true;
+                    kill_graph();
                 }
             }
 
             result_type get()
             {
-                if(!( *getGraphIsExecuted())) wait();
+                if(!is_ready()) wait();
                 return res_;
             }
 
@@ -212,6 +221,7 @@ namespace nt2
 
             result_type res_;
             node_type * node_;
+            boost::shared_ptr<bool> ready_;
         };
     }
 }
