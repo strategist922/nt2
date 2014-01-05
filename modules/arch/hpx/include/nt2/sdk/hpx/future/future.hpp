@@ -36,11 +36,16 @@ namespace nt2
          typedef  hpx::lcos::future<result_type> type;
     };
 
-    inline hpx::lcos::future<result_type>
-    make_ready_future_impl(BOOST_FWD_REF(result_type) value)
+    template< class Site>
+    struct make_ready_future_impl< tag::hpx_<Site> >
     {
-        return hpx::make_ready_future
-          (boost::forward<result_type>(value));
+        template< typename result_type >
+        inline hpx::lcos::future<result_type>
+        call(BOOST_FWD_REF(result_type) value)
+        {
+           return hpx::make_ready_future
+             (boost::forward<result_type>(value));
+        }
     };
 
     template<class Site>
