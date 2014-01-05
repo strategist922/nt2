@@ -16,6 +16,7 @@
 #include <nt2/sdk/shared_memory/future.hpp>
 
 #include <hpx/include/lcos.hpp>
+#include <hpx/include/util.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
@@ -33,7 +34,7 @@ namespace nt2
     template<class Site, class result_type>
     struct make_future<tag::hpx_<Site> , result_type>
     {
-         typedef  hpx::lcos::unique_future<result_type> type;
+        typedef details::hpx_future<result_type> type;
     };
 
     template< class Site>
@@ -71,20 +72,23 @@ namespace nt2
           BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM_PARAMS(N, typename A) >
         inline typename make_future< \
-                          tag::hpx_<Site>,\
-                          typename boost::result_of< \
-                            F(BOOST_PP_ENUM_PARAMS(N, A)) \
-                            >::type \
-                           >::type
+          tag::hpx_<Site>,\
+          typename boost::result_of< \
+            F(BOOST_PP_ENUM_PARAMS(N, A)) \
+            >::type \
+          >::type
         call(F & f \
           BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
           )
         {
-            return hpx::async(f \
-                     BOOST_PP_COMMA_IF(N) \
-                     BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
-                     );
+            return tbb_future<result_type>(
+              hpx::lcos::local::dataflow( \
+                hpx::util::unwrapped(f) \
+                BOOST_PP_COMMA_IF(N) \
+                BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
+                )
+              );
         }
 
 #undef NT2_FUTURE_FORWARD_ARGS

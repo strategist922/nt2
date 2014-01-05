@@ -13,8 +13,8 @@
 
 #if defined(NT2_USE_HPX)
 
-#include <hpx/lcos/future.hpp>
-#include <hpx/lcos/wait_all.hpp>
+#include <hpx/include/lcos.hpp>
+#include <hpx/include/util.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/enum.hpp>
@@ -29,8 +29,7 @@ namespace nt2
     {
         struct empty_body
         {
-            template< typename T>
-            int operator()(T&)
+            int operator()()
             {
                 return 0;
             }
@@ -56,22 +55,31 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
+#define POINT(a,b) a.b
+
 #define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) \
 hpx::lcos::unique_future<A##n> const & a##n
 
-#define HPX_WAIT_ALL_FUTURE_VAR(z, n, t) a##n
+
+
+#define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::hpx_future<A##n> const & a##n
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) POINT(a##n,f_)
 
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
         hpx::lcos::unique_future<int>
         call( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG, ~))
         {
-            return hpx::when_all \
-               ( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_VAR, ~) \
-               ).then(details::empty_body());
+            return tbb_future<result_type>(
+              hpx::lcos::local::dataflow( \
+                hpx::util::unwrapped(empty_body()) \
+                BOOST_PP_COMMA_IF(N) \
+                BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS1, ~) \
+                )
+             );
         }
 
-#undef HPX_WAIT_ALL_FUTURE_ARG
-#undef HPX_WAIT_ALL_FUTURE_VAR
+#undef NT2_FUTURE_FORWARD_ARGS
+#undef NT2_FUTURE_FORWARD_ARGS1
 
 #endif
