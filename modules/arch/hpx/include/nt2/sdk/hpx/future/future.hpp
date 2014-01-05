@@ -13,8 +13,6 @@
 
 #if defined(NT2_USE_HPX)
 
-#include <nt2/sdk/shared_memory/future.hpp>
-
 #include <hpx/include/lcos.hpp>
 #include <hpx/include/util.hpp>
 
@@ -23,6 +21,9 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
+
+#include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/hpx/future/details/hpx_future.hpp>
 
 namespace nt2
 {
@@ -44,8 +45,12 @@ namespace nt2
         inline hpx::lcos::unique_future<result_type>
         call(BOOST_FWD_REF(result_type) value)
         {
-           return hpx::make_ready_future
-             (boost::forward<result_type>(value));
+          return
+            details::hpx_future<result_type>(
+              hpx::make_ready_future( \
+                boost::forward<result_type>(value) \
+                )
+              );
         }
     };
 
@@ -66,7 +71,9 @@ namespace nt2
 #define N BOOST_PP_ITERATION()
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
+
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) hpx::make_ready_future( \
+boost::forward<A##n>(a##n))
 
         template< typename F \
           BOOST_PP_COMMA_IF(N) \
@@ -82,7 +89,11 @@ namespace nt2
           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
           )
         {
-            return tbb_future<result_type>(
+            typedef typename boost::result_of< \
+              F(BOOST_PP_ENUM_PARAMS(N, A)) \
+              >::type result_type;
+
+            return details::hpx_future<result_type>(
               hpx::lcos::local::dataflow( \
                 hpx::util::unwrapped(f) \
                 BOOST_PP_COMMA_IF(N) \
