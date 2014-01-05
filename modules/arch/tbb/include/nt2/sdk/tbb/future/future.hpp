@@ -50,7 +50,7 @@ namespace nt2
         inline details::tbb_future<result_type>
         call(BOOST_FWD_REF(result_type) value)
         {
-            typedef typename tbb::flow::continue_node<\
+            typedef typename tbb::flow::continue_node< \
             tbb::flow::continue_msg> node_type;
 
             details::tbb_future<result_type> future_res;
@@ -60,8 +60,8 @@ namespace nt2
 
             details::empty_body f;
 
-            node_type * node = new node_type
-            ( *future_res.getWork(),f );
+            node_type * node = new node_type \
+              ( *future_res.getWork(),f );
 
             future_res.getTaskQueue()->push_back(node);
 
@@ -96,42 +96,43 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
-        template< typename F\
-                BOOST_PP_COMMA_IF(N)\
-                BOOST_PP_ENUM_PARAMS(N, typename A) >
-        inline typename make_future< tag::tbb_<Site>,\
-                typename boost::result_of<\
-                F(BOOST_PP_ENUM_PARAMS(N, A))>::type \
-                >::type
-        call(F & f\
-           BOOST_PP_COMMA_IF(N)\
-           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
+        template< typename F \
+          BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, typename A) >
+        inline typename make_future< tag::tbb_<Site>, \
+          typename boost::result_of< \
+            F(BOOST_PP_ENUM_PARAMS(N, A)) \
+            >::type \
+          >::type
+        call(F & f \
+          BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~) \
           )
         {
 
-          typedef typename boost::result_of<\
-          F(BOOST_PP_ENUM_PARAMS(N, A))\
-          >::type result_type;
+          typedef typename boost::result_of< \
+            F(BOOST_PP_ENUM_PARAMS(N, A)) \
+            >::type result_type;
 
-          typedef typename details::tbb_future<result_type>
-          future;
+          typedef typename details::tbb_future<result_type> \
+            future;
 
           future future_res;
 
-          node_type * node = new \
-          node_type(*future_res.getWork(),\
-            BOOST_PP_CAT(details::tbb_task_wrapper,N)\
-            <F,result_type\
-            BOOST_PP_COMMA_IF(N)\
-            BOOST_PP_ENUM_PARAMS(N,A) \
-            >\
-            (f, future_res.res_\
-            BOOST_PP_COMMA_IF(N)\
-            BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)\
-           ) );
+          node_type * node =
+            new node_type( *future_res.getWork(), \
+              BOOST_PP_CAT(details::tbb_task_wrapper,N)< \
+                F,result_type \
+                BOOST_PP_COMMA_IF(N) \
+                BOOST_PP_ENUM_PARAMS(N,A) \
+                > \
+                (f, future_res.res_ \
+                  BOOST_PP_COMMA_IF(N) \
+                  BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
+                  ) \
+               );
 
-          tbb::flow::make_edge
-          (*future_res.getStart(),*node);
+          tbb::flow::make_edge(*future_res.getStart(),*node);
 
           future_res.getTaskQueue()->push_back(node);
           future_res.attach_task(node);

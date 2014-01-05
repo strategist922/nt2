@@ -48,21 +48,20 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS3(z,n,t) a##n##_(boost::forward<A##n>(a##n))
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) const A##n a##n##_;
 
-        template<class F,\
-             typename result_type\
-             BOOST_PP_COMMA_IF(N)\
-             BOOST_PP_ENUM_PARAMS(N, typename A) >
+        template<class F, \
+          typename result_type \
+          BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, typename A) >
         struct BOOST_PP_CAT(tbb_task_wrapper,N)
         {
             BOOST_PP_CAT(tbb_task_wrapper,N) \
-                         (F & f, \
-                          result_type & res\
-                          BOOST_PP_COMMA_IF(N) \
-                          BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
-                         )
-            : f_(f),res_(res)\
-            BOOST_PP_COMMA_IF(N)\
-            BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
+              (F & f, \
+                result_type & res\
+                BOOST_PP_COMMA_IF(N) \
+                BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
+            : f_(f),res_(res) \
+              BOOST_PP_COMMA_IF(N) \
+              BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
             {}
 
             void operator()( tbb::flow::continue_msg ) const
