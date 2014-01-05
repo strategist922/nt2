@@ -21,6 +21,7 @@
 #include <boost/preprocessor/iterate.hpp>
 
 #include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/hpx/future/details/hpx_future.hpp>
 
 #include <vector>
 
