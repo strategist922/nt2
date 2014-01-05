@@ -15,6 +15,7 @@
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/hpx/future/future.hpp>
+#include <nt2/sdk/hpx/future/when_all.hpp>
 
 #include <vector>
 
@@ -42,7 +43,7 @@ namespace nt2
         void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
         {
             typedef typename
-            nt2::make_future< Arch, int >::type future;
+            nt2::make_future< Arch,int >::type future;
 
             std::size_t leftover = size % grain;
             std::size_t nblocks  = size/grain;
@@ -52,9 +53,7 @@ namespace nt2
 
             #ifndef BOOST_NO_EXCEPTIONS
             boost::exception_ptr exception;
-            #endif
 
-            #ifndef BOOST_NO_EXCEPTIONS
             try
             {
             #endif
@@ -77,7 +76,7 @@ namespace nt2
             }
             catch(...)
             {
-            exception = boost::current_exception();
+                exception = boost::current_exception();
             }
             #endif
         }

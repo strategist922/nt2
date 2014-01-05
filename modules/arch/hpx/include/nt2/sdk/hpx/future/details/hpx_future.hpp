@@ -17,30 +17,33 @@
 
 #include <boost/move/move.hpp>
 
-namespace nt2
+namespace nt2 { namespace details
 {
-
     template<typename result_type>
-    class tbb_future
+    class hpx_future
     {
-        BOOST_COPYABLE_AND_MOVABLE(tbb_future)
+        BOOST_COPYABLE_AND_MOVABLE(hpx_future)
         hpx::lcos::future<result_type> f_;
 
     public:
-        tbb_future(){}
+        hpx_future(){}
+
+        hpx_future(BOOST_FWD_REF(hpx::lcos::future<result_type>) f)
+        :f_(boost::forward< hpx::lcos::future<result_type> > (f) )
+        {}
 
         // Compiler-generated copy constructor...
 
-        tbb_future(BOOST_RV_REF(tbb_future) x)             // Move ctor
+        hpx_future(BOOST_RV_REF(hpx_future) x)             // Move ctor
         : f_(boost::move(x.f_)) { }
 
-        tbb_future& operator=(BOOST_RV_REF(tbb_future) x)  // Move assign
+        hpx_future& operator=(BOOST_RV_REF(hpx_future) x)  // Move assign
         {
             f_  = boost::move(x.f_);
             return *this;
         }
 
-        tbb_future& operator=(BOOST_COPY_ASSIGN_REF(tbb_future) x) // Copy assign
+        hpx_future& operator=(BOOST_COPY_ASSIGN_REF(hpx_future) x) // Copy assign
         {
             f_  = x.f_;
             return *this;
@@ -67,13 +70,13 @@ namespace nt2
         hpx_future<typename boost::result_of<F>::type>
         then(F& f)
         {
-            return tbb_future(
+            return hpx_future(
               hpx::lcos::local::dataflow( \
                 hpx::util::unwrapped(f),f_) \
               );
         }
     };
-}
+} }
 
  #endif
 #endif

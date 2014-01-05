@@ -21,6 +21,7 @@
 #include <boost/preprocessor/iterate.hpp>
 
 #include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/hpx/future/details/hpx_future.hpp>
 
 namespace nt2
 {
@@ -60,8 +61,6 @@ namespace nt2
 #define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) \
 hpx::lcos::unique_future<A##n> const & a##n
 
-
-
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::hpx_future<A##n> const & a##n
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) POINT(a##n,f_)
 
@@ -70,9 +69,9 @@ hpx::lcos::unique_future<A##n> const & a##n
         hpx::lcos::unique_future<int>
         call( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG, ~))
         {
-            return tbb_future<result_type>(
+            return details::hpx_future<int>(
               hpx::lcos::local::dataflow( \
-                hpx::util::unwrapped(empty_body()) \
+                hpx::util::unwrapped(details::empty_body()) \
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS1, ~) \
                 )
