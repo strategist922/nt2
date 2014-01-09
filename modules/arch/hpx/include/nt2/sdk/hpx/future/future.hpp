@@ -72,8 +72,7 @@ namespace nt2
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) hpx::make_ready_future( \
-boost::forward<A##n>(a##n))
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
         template< typename F \
           BOOST_PP_COMMA_IF(N) \
@@ -94,8 +93,7 @@ boost::forward<A##n>(a##n))
               >::type result_type;
 
             return details::hpx_future<result_type>(
-              hpx::lcos::local::dataflow( \
-                hpx::util::unwrapped(f) \
+              hpx::async( f \
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
                 )
