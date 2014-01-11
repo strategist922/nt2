@@ -165,7 +165,7 @@ namespace nt2
             typedef typename tbb::flow::continue_node<\
             tbb::flow::continue_msg> node_type;
 
-            tbb_future() : node_(NULL)
+            tbb_future() : node_(NULL),res_(new result_type)
             {}
 
             void attach_task(node_type * node)
@@ -193,7 +193,7 @@ namespace nt2
             result_type get()
             {
                 if(!is_ready()) wait();
-                return res_;
+                return *res_;
             }
 
             template<typename F>
@@ -207,7 +207,7 @@ namespace nt2
                 node_type * c = new node_type
                   ( *getWork(),
                     details::tbb_task_wrapper0<F,then_result_type>
-                    (f,then_future.res_)
+                    (f,*(then_future.res_))
                   );
 
                 getTaskQueue()->push_back(c);
@@ -219,8 +219,8 @@ namespace nt2
                 return then_future;
            }
 
-            result_type res_;
             node_type * node_;
+            boost::shared_ptr<result_type> res_;
             boost::shared_ptr<bool> ready_;
         };
     }

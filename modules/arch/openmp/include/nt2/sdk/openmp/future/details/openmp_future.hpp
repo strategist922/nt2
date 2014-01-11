@@ -63,7 +63,7 @@ namespace nt2
   template<typename result_type>
   struct openmp_future : openmp_future_base
   {
-      openmp_future()
+      openmp_future() : res_(new result_type)
       {}
 
       void attach_task()
@@ -89,7 +89,7 @@ namespace nt2
       result_type get()
       {
           if(!is_ready()) wait();
-          return res_;
+          return *res_;
       }
 
       template<typename F>
@@ -100,11 +100,11 @@ namespace nt2
 
           details::openmp_future<then_result_type> then_future;
 
-          then_result_type & then_res(then_future.res_);
+          then_result_type & then_res( *(then_future.res_) );
 
           #pragma omp task depend(in: res_) depend(out: then_res)
           {
-              then_future.res_ = f();
+              then_res = f();
           }
 
           then_future.attach_task();
@@ -112,7 +112,7 @@ namespace nt2
           return then_future;
       }
 
-      result_type res_;
+      boost::shared_ptr<result_type> res_;
       boost::shared_ptr<bool> ready_;
 
    };
