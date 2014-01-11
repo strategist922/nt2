@@ -66,6 +66,11 @@ namespace nt2
       openmp_future()
       {}
 
+      void attach_task()
+      {
+          ready_ = getGraphIsCompleted();
+      }
+
       bool is_ready() const
       {
           return *ready_;
@@ -76,7 +81,6 @@ namespace nt2
           if(!is_ready())
           {
               #pragma omp taskwait
-
               *ready_ = true;
               kill_graph();
           }
@@ -102,6 +106,8 @@ namespace nt2
           {
               then_future.res_ = f();
           }
+
+          then_future.attach_task();
 
           return then_future;
       }
