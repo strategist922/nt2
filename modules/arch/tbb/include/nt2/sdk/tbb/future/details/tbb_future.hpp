@@ -200,13 +200,13 @@ namespace nt2
             tbb_future<typename boost::result_of<F>::type>
             then(F& f)
             {
-                typedef typename boost::result_of<F>::type result_type;
+                typedef typename boost::result_of<F>::type then_result_type;
 
-                details::tbb_future<result_type> then_future;
+                details::tbb_future<then_result_type> then_future;
 
                 node_type * c = new node_type
                   ( *getWork(),
-                    details::tbb_task_wrapper0<F,result_type>
+                    details::tbb_task_wrapper0<F,then_result_type>
                     (f,then_future.res_)
                   );
 
