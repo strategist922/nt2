@@ -17,6 +17,7 @@
 #include <tbb/flow_graph.h>
 
 #include <vector>
+#include <cstdio>
 
 #include <boost/move/move.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -126,7 +127,7 @@ namespace nt2
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM_PARAMS(N,A) \
                 > \
-                (f, future_res.res_ \
+                (f, *(future_res.res_) \
                   BOOST_PP_COMMA_IF(N) \
                   BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
                   ) \

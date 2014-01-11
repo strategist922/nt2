@@ -76,12 +76,12 @@ namespace nt2
 
             details::openmp_future<result_type> future_res;
 
-            result_type & result(future_res.res_);
+            result_type & result( *(future_res.res_) );
 
             #pragma omp task depend(out: result) shared(f)
             {
-                future_res.res_ = f(\
-                BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
+                result = f(\
+                  BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
             }
 
             future_res.attach_task();
