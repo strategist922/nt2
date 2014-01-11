@@ -113,9 +113,9 @@ namespace nt2
           s_out = bop_(s_out, nt2::run(in_, i+k, meta::as_<value_type>()));
 
         nt2::run(out_, j, s_out);
-
-        return 0;
       }
+
+      return 0;
     }
 
     Out&                     out_;
