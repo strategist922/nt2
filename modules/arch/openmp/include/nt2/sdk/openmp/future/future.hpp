@@ -38,6 +38,27 @@ namespace nt2
         typedef nt2::details::openmp_future<result_type> type;
     };
 
+    template< class Site>
+    struct make_ready_future_impl< tag::openmp_<Site> >
+    {
+        template< typename result_type >
+        inline details::openmp_future<result_type>
+        call(BOOST_FWD_REF(result_type) value)
+        {
+            details::openmp_future<result_type> future_res;
+            result_type & result( *(future_res.res_) );
+
+            #pragma omp task shared(result,value) depend(out: result)
+            {
+                result = boost::forward<result_type>(value);
+            }
+
+            future_res.attach_task();
+
+            return future_res;
+        }
+    };
+
     template<class Site>
     struct async_impl< tag::openmp_<Site> >
     {
@@ -55,8 +76,8 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) A##n a##n
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) a##n
+#define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
         template< typename F\
           BOOST_PP_COMMA_IF(N)\
@@ -78,7 +99,11 @@ namespace nt2
 
             result_type & result( *(future_res.res_) );
 
-            #pragma omp task depend(out: result) shared(f)
+            #pragma omp task \
+               shared(f,result \
+                 BOOST_PP_COMMA_IF(N)\
+                 BOOST_PP_ENUM_PARAMS(N, a)) \
+               depend(out: result)
             {
                 result = f(\
                   BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
