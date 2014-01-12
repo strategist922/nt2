@@ -56,13 +56,13 @@ namespace nt2
 
             details::tbb_future<result_type> future_res;
 
-            future_res.res_ =
+            *(future_res.res_) =
               boost::forward<result_type>(value);
 
             details::empty_body f;
 
             node_type * node = new node_type \
-              ( *future_res.getWork(),f );
+              ( *(future_res.getWork()),f );
 
             future_res.getTaskQueue()->push_back(node);
 

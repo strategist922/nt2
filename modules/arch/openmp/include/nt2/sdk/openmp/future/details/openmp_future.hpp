@@ -100,11 +100,12 @@ namespace nt2
 
           details::openmp_future<then_result_type> then_future;
 
-          then_result_type & then_res( *(then_future.res_) );
+          result_type & prev( *res_ );
+          then_result_type & next( *(then_future.res_) );
 
-          #pragma omp task depend(in: res_) depend(out: then_res)
+          #pragma omp task shared(f,next) depend(in: prev) depend(out: next)
           {
-              then_res = f();
+              next = f();
           }
 
           then_future.attach_task();
