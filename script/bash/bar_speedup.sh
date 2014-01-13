@@ -1,62 +1,82 @@
 #!/bin/bash
-FIRST=0
-LAST=$#
-args=( "$@" )
 
-if [ "$1" == "-s" ];then
-  run=$2
-  ((FIRST=${FIRST}+2))
-else
-  run=""
+if [ $# -lt 1 ]
+then
+    echo "Usage: `basename $0` <program>..."
+    echo "If program is -, use content of existing res.txt file"
+    echo "RUN_CMD may be defined to an arbitrary prefix command"
+    echo "RUN_ARGS may be defined to an arbitrary list of arguments"
+    exit 65
 fi
 
-var=args[${FIRST}]
-while [ ${!var} == "-o" ];do
-  var1=args[${FIRST}+1]
-  var2=args[${FIRST}+2]
-  RUN_ARGS=("${RUN_ARGS} ${!var} ${!var1} ${!var2}")
-  ((FIRST=${FIRST}+3))
-  var=args[${FIRST}]
-done
-
-((NUM_TEST=${LAST}-${FIRST}))
-
-var=args[${FIRST}]
-if [ "$1" == "-s" ];then
-  ${run} ./${!var} "${RUN_ARGS}" | tee res.txt
-else
-  ${run} ./${!var} ${RUN_ARGS} | tee res.txt
+# run all programs, filter undesired output
+if [ "$1" != "-" ]
+then
+  rm -f res.txt
+  for i in "$@"
+  do
+    $RUN_CMD $i $RUN_ARGS | stdbuf -o0 grep -Ev "CTEST_FULL_OUTPUT|---" | stdbuf -o0 tail -n +2 | tee -a res.txt
+  done
 fi
-sed 1,4d res.txt > temp.txt; mv temp.txt res.txt
-nb_sizes=$(cat res.txt | wc -l)
 
-EXTENSION=$(head -n 1 res.txt  |  tr "_"  "\n" | sed 1d  | tr "<" "\n" | sed -n 1p)
-LEGEND="legend(\"${EXTENSION}\" "
-
-BENCH_NAME=$(head -n 1 res.txt | tr "_"  "\n"|sed -n 1p)
-for ((i=${FIRST}+1;i<${LAST};i++));do
-    var=args[${i}]
-    if [ "$1" == "-s" ];then
-      ${run} ./${!var} "${RUN_ARGS}" | sed 1,4d  | tee temp.txt; cat temp.txt >> res.txt
-    else
-      ${run} ./${!var} ${RUN_ARGS} | sed 1,4d  | tee temp.txt; cat temp.txt >> res.txt
+# count number of experiments and sizes
+# validate number of sizes
+# compute longest common prefix
+prefix=
+prev=
+prev_nb_sizes=0
+nb_sizes=0
+NUM_TEST=0
+while read l
+do
+  p=$(echo "$l" | cut -d$'\t' -f1)
+  if [ "$prev" == "" ] || [ "$prev" != "$p" ]
+  then
+    echo $p
+    if [ $nb_sizes -ne $prev_nb_sizes ] && [ $prev_nb_sizes -ne 0 ]
+    then
+      echo "inconsistent number of sizes, has $nb_sizes, previous had $prev_nb_sizes" >&2
+      exit 1
     fi
-    EXTENSION=$(dirname "$(dirname -- "$(dirname -- "${!var}")")")
-    TEMP=$(head -n 1 temp.txt |   tr "_"  "\n" | sed 1d | tr "<" "\n" | sed -n 1p)
-    if [ "${TEMP}" == "mkl" ];then
-      EXTENSION="mkl"
-    fi
-    if [ "${TEMP}" == "nt2" ];then
-      EXTENSION="${EXTENSION} nt2"
-    fi
-    LEGEND="${LEGEND} ,\"${EXTENSION}\" "
-done
-LEGEND="${LEGEND} )"
+    prev_nb_sizes=$nb_sizes
+    nb_sizes=0
+    NUM_TEST=$(($NUM_TEST+1))
+  fi
+  prev=$p
+  nb_sizes=$(($nb_sizes+1))
 
-TITLE="title("
-TITLE="${TITLE}\"${BENCH_NAME}"
-TITLE="${TITLE}\" )"
+  if [ "$prefix" == "" ]
+  then
+    prefix=$p
+  else
+    prefix=$(printf "%s\n%s\n" $prefix $p | sed -e 'N;s/^\(.*\).*\n\1.*$/\1/')
+  fi
+done < res.txt > exp.txt
+if [ $nb_sizes -ne $prev_nb_sizes ] && [ $prev_nb_sizes -ne 0 ]
+then
+   echo "inconsistent number of sizes, has $nb_sizes, previous had $prev_nb_sizes" >&2
+   exit 1
+fi
 
+# benchmark name is the longest prefix of all experiments without the last _
+BENCH_NAME=$(echo "$prefix" | sed -r 's/_[^_]+//')
+TITLE="title(\"$BENCH_NAME}\")"
+
+# compute legend
+LEGEND=""
+while read p
+do
+  p2=$(echo "$p" | sed -r "s/^${BENCH_NAME}_//")
+  if [ "$LEGEND" == "" ]
+  then
+    LEGEND="legend(\"$p2\""
+  else
+    LEGEND="$LEGEND, \"$p2\""
+  fi
+done < exp.txt
+LEGEND="$LEGEND)"
+
+# generate M-file
 i=0
 while read p; do
   SIZE[i]=$(echo $p | tr "(" "\n" | tr ")" "\n" | sed -n 2p)
