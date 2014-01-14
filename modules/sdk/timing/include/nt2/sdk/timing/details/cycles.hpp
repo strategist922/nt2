@@ -99,6 +99,20 @@ namespace nt2
   }
 }
 
+#elif defined(BOOST_SIMD_OS_LINUX) && defined(__ANDROID__)
+
+namespace nt2
+{
+  // INTERNAL ONLY
+  inline cycles_t read_cycles()
+  {
+    uint32_t value;
+    // Read CCNT Register
+    asm volatile ("MRC p15, 0, %0, c9, c13, 0\t\n": "=r"(value));
+    return value;
+  }
+}
+
 #else
 
 #include <nt2/sdk/timing/config.hpp>

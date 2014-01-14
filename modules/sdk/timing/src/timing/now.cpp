@@ -67,7 +67,7 @@ namespace nt2
 //==============================================================================
 // gettimeofday systems
 //==============================================================================
-#elif defined( BOOST_HAS_GETTIMEOFDAY )
+#elif defined( BOOST_HAS_GETTIMEOFDAY )  && !defined(__ANDROID__)
 #include <sys/time.h>
 
 namespace nt2
@@ -86,7 +86,66 @@ namespace nt2
     return static_cast<time_quantum_t>( tp.tv_sec ) * 1000000 + tp.tv_usec;
   }
 }
+#elif defined( BOOST_HAS_GETTIMEOFDAY) && defined(__ANDROID__)
+#include <sys/time.h>
+#include <iostream>
+namespace nt2
+{
+  static double get_timer_resolution()
+  {
+    return (  get_cpu_freq() );
+  }
 
+  void init_perfcounters (int32_t do_reset, int32_t enable_divider)
+  {
+    // in general enable all counters (including cycle counter)
+    int32_t value = 1;
+
+    // peform reset:
+    if (do_reset)
+    {
+      value |= 2;     // reset all counters to zero.
+      value |= 4;     // reset cycle counter to zero.
+    }
+
+    if (enable_divider)
+      value |= 8;     // enable "by 64" divider for CCNT.
+
+    value |= 16;
+
+    // program the performance-counter control-register:
+    asm volatile ("MCR p15, 0, %0, c9, c12, 0\t\n" :: "r"(value));
+
+    // enable all counters:
+    asm volatile ("MCR p15, 0, %0, c9, c12, 1\t\n" :: "r"(0x8000000f));
+
+     // clear overflows:
+    asm volatile ("MCR p15, 0, %0, c9, c12, 3\t\n" :: "r"(0x8000000f));
+  }
+
+
+  time_quantum_t get_cyclecount ()
+  {
+    uint32_t value;
+    // Read CCNT Register
+    asm volatile ("MRC p15, 0, %0, c9, c13, 0\t\n": "=r"(value));
+    return value;
+  }
+
+  static double const timer_ticks_per_nanosecond( 1 );//get_timer_resolution() );
+ // static double const timer_ticks_per_microsecond( 1 );
+ // NT2_SDK_TIMING_DECL time_quantum_t time_quantum()
+ // {
+   // time_quantum_t t = get_cyclecount() ;
+  //  return static_cast<time_quantum_t>(t);
+ // }
+  NT2_SDK_TIMING_DECL time_quantum_t time_quantum()
+  {
+    timeval tp;
+    BOOST_VERIFY( ::gettimeofday( &tp, NULL ) == 0 );
+    return static_cast<time_quantum_t>( tp.tv_sec ) * 1000000 + tp.tv_usec;
+  }
+}
 //==============================================================================
 // Other systems
 //==============================================================================
