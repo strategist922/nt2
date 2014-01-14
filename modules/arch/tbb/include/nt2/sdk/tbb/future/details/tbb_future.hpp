@@ -20,6 +20,7 @@
 
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
+#include <boost/move/utility.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace nt2
@@ -206,8 +207,15 @@ namespace nt2
 
                 node_type * c = new node_type
                   ( *getWork(),
-                    details::tbb_task_wrapper0<F,then_result_type>
-                    (f,*(then_future.res_))
+                      details::tbb_task_wrapper1<
+                        F,
+                        then_result_type,
+                        result_type
+                        >
+                      (f,
+                        *(then_future.res_),
+                        boost::forward<result_type>( *(this->res_) )
+                        )
                   );
 
                 getTaskQueue()->push_back(c);

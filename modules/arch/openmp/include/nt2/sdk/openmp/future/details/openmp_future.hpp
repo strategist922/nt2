@@ -105,7 +105,7 @@ namespace nt2
 
           #pragma omp task shared(f,next) depend(in: prev) depend(out: next)
           {
-              next = f();
+              next = f(prev);
           }
 
           then_future.attach_task();
