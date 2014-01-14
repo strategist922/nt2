@@ -100,7 +100,6 @@ namespace nt2
 }
 
 #elif defined(BOOST_SIMD_OS_LINUX) && defined(__ANDROID__)
-
 namespace nt2
 {
   // INTERNAL ONLY

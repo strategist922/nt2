@@ -36,10 +36,22 @@ namespace nt2
   BOOST_DISPATCH_NOTHROW unsigned long  get_cpu_freq();
 
   NT2_SDK_TIMING_DECL
+  BOOST_DISPATCH_NOTHROW unsigned long  get_cur_cpu_freq ();
+
+  NT2_SDK_TIMING_DECL
   BOOST_DISPATCH_NOTHROW microseconds_t to_microseconds( time_quantum_t );
 
   NT2_SDK_TIMING_DECL
   BOOST_DISPATCH_NOTHROW time_quantum_t to_timequantums( microseconds_t );
+
+  NT2_SDK_TIMING_DECL
+  BOOST_DISPATCH_NOTHROW void compute_time_distance(cycles_t &cycles_start
+                                                   , cycles_t &cycles_end
+                                                   , time_quantum_t &time_start
+                                                   , time_quantum_t& time_end
+                                                   , time_quantum_t& elapsed_time);
+
+
 }
 
 #include <nt2/sdk/timing/details/cycles.hpp>

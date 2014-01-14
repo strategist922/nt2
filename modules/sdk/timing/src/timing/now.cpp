@@ -67,7 +67,7 @@ namespace nt2
 //==============================================================================
 // gettimeofday systems
 //==============================================================================
-#elif defined( BOOST_HAS_GETTIMEOFDAY )  && !defined(__ANDROID__)
+#elif defined( BOOST_HAS_GETTIMEOFDAY )
 #include <sys/time.h>
 
 namespace nt2
@@ -81,66 +81,6 @@ namespace nt2
     /// http://pubs.opengroup.org/onlinepubs/009695399/functions/clock_gettime.html
     /// http://gruntthepeon.free.fr/blog/index.php/2011/05/30/56-clock_gettime-is-slow
     ///                                     (18.10.2012.) (Domagoj Saric)
-    timeval tp;
-    BOOST_VERIFY( ::gettimeofday( &tp, NULL ) == 0 );
-    return static_cast<time_quantum_t>( tp.tv_sec ) * 1000000 + tp.tv_usec;
-  }
-}
-#elif defined( BOOST_HAS_GETTIMEOFDAY) && defined(__ANDROID__)
-#include <sys/time.h>
-#include <iostream>
-namespace nt2
-{
-  static double get_timer_resolution()
-  {
-    return (  get_cpu_freq() );
-  }
-
-  void init_perfcounters (int32_t do_reset, int32_t enable_divider)
-  {
-    // in general enable all counters (including cycle counter)
-    int32_t value = 1;
-
-    // peform reset:
-    if (do_reset)
-    {
-      value |= 2;     // reset all counters to zero.
-      value |= 4;     // reset cycle counter to zero.
-    }
-
-    if (enable_divider)
-      value |= 8;     // enable "by 64" divider for CCNT.
-
-    value |= 16;
-
-    // program the performance-counter control-register:
-    asm volatile ("MCR p15, 0, %0, c9, c12, 0\t\n" :: "r"(value));
-
-    // enable all counters:
-    asm volatile ("MCR p15, 0, %0, c9, c12, 1\t\n" :: "r"(0x8000000f));
-
-     // clear overflows:
-    asm volatile ("MCR p15, 0, %0, c9, c12, 3\t\n" :: "r"(0x8000000f));
-  }
-
-
-  time_quantum_t get_cyclecount ()
-  {
-    uint32_t value;
-    // Read CCNT Register
-    asm volatile ("MRC p15, 0, %0, c9, c13, 0\t\n": "=r"(value));
-    return value;
-  }
-
-  static double const timer_ticks_per_nanosecond( 1 );//get_timer_resolution() );
- // static double const timer_ticks_per_microsecond( 1 );
- // NT2_SDK_TIMING_DECL time_quantum_t time_quantum()
- // {
-   // time_quantum_t t = get_cyclecount() ;
-  //  return static_cast<time_quantum_t>(t);
- // }
-  NT2_SDK_TIMING_DECL time_quantum_t time_quantum()
-  {
     timeval tp;
     BOOST_VERIFY( ::gettimeofday( &tp, NULL ) == 0 );
     return static_cast<time_quantum_t>( tp.tv_sec ) * 1000000 + tp.tv_usec;
@@ -227,6 +167,60 @@ namespace nt2
   BOOST_DISPATCH_NOTHROW unsigned long get_cpu_freq ()
   {
     return max_cpu_freq;
+  }
+
+  NT2_SDK_TIMING_DECL unsigned long cur_cpu_freq = 1000000000; // 1Ghz by default
+
+  struct cur_cpu_freq_scoped
+  {
+    cur_cpu_freq_scoped()
+    {
+      #ifdef BOOST_SIMD_OS_LINUX
+      int fd = ::open("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq", O_RDONLY);
+      if(fd < 0)
+        return;
+
+      char buffer[256];
+      ssize_t sz = ::read(fd, buffer, sizeof buffer);
+      ::close(fd);
+      if(sz < 0)
+        return;
+
+      buffer[sz-1] = '\0';
+      cur_cpu_freq = ::strtoul(buffer, NULL, 10)*1000;
+      #endif
+    }
+  };
+
+  static cur_cpu_freq_scoped cur_cpu_freq_init;
+
+  NT2_SDK_TIMING_DECL
+  BOOST_DISPATCH_NOTHROW unsigned long get_cur_cpu_freq ()
+  {
+    return(cur_cpu_freq);
+  }
+
+  NT2_SDK_TIMING_DECL
+  BOOST_DISPATCH_NOTHROW void compute_time_distance(cycles_t &cycles_start
+                                                   , cycles_t &cycles_end
+                                                   , time_quantum_t &time_start
+                                                   , time_quantum_t& time_end
+                                                   , time_quantum_t& elapsed_time)
+  {
+    #ifdef __ANDROID__
+      if ( cycles_end<cycles_start )
+        cycles_end += ULONG_MAX;
+
+      if (time_end-time_start>ULONG_MAX)
+      {
+        int num_overflows = ( time_end-time_start ) / ULONG_MAX;
+        cycles_end += ULONG_MAX * num_overflows;
+      }
+      else if ( elapsed_time == 0 )
+      {
+        elapsed_time = ( cycles_end - cycles_start ) / get_cur_cpu_freq();
+      }
+    #endif
   }
 }
 

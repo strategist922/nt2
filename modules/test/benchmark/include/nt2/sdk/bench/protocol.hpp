@@ -105,17 +105,19 @@ namespace nt2 { namespace bench
        * experiment_is_immutable or not */
       typename details::experiment_copy<Experiment>::type local(e);
 
-      time_quantum_t const time_start  ( time_quantum() );
-      cycles_t       const cycles_start( read_cycles() );
+      time_quantum_t    const time_start  ( time_quantum() );
+      cycles_t          const cycles_start( read_cycles() );
 
       local();
 
-      cycles_t       const cycles_end( read_cycles() );
-      time_quantum_t const time_end  ( time_quantum() );
+      cycles_t                cycles_end( read_cycles() );
+      time_quantum_t          time_end  ( time_quantum() );
 
-      cycles_t       const burned_cycles( cycles_end - cycles_start );
-      time_quantum_t const elapsed_time ( time_end   - time_start   );
+      time_quantum_t          elapsed_time ( time_end   - time_start  );
 
+      compute_time_distance(cycles_start, cycles_end, time_start, time_end, elapsed_time);
+
+      cycles_t          const burned_cycles( cycles_end - cycles_start );
       t(to_microseconds(elapsed_time));
       c(burned_cycles);
 
