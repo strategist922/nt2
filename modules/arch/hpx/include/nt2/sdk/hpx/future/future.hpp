@@ -33,14 +33,14 @@ namespace nt2
     template<class Site, class result_type>
     struct make_future<tag::hpx_<Site> , result_type>
     {
-         typedef  hpx::lcos::future<result_type> type;
+         typedef  hpx::lcos::unique_future<result_type> type;
     };
 
     template< class Site>
     struct make_ready_future_impl< tag::hpx_<Site> >
     {
         template< typename result_type >
-        inline hpx::lcos::future<result_type>
+        inline hpx::lcos::unique_future<result_type>
         call(BOOST_FWD_REF(result_type) value)
         {
            return hpx::make_ready_future
