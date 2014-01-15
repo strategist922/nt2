@@ -23,13 +23,13 @@ namespace nt2 { namespace details
     class hpx_future
     {
         BOOST_COPYABLE_AND_MOVABLE(hpx_future)
-        hpx::lcos::future<result_type> f_;
+        hpx::lcos::unique_future<result_type> f_;
 
     public:
         hpx_future(){}
 
-        hpx_future(BOOST_FWD_REF(hpx::lcos::future<result_type>) f)
-        :f_(boost::forward< hpx::lcos::future<result_type> > (f) )
+        hpx_future(BOOST_FWD_REF(hpx::lcos::unique_future<result_type>) f)
+        :f_(boost::forward< hpx::lcos::unique_future<result_type> > (f) )
         {}
 
         // Compiler-generated copy constructor...
