@@ -57,13 +57,13 @@ namespace nt2
 #define N BOOST_PP_ITERATION()
 
 #define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) \
-hpx::lcos::future<A##n> const & a##n
+hpx::lcos::unique_future<A##n> const & a##n
 
 #define HPX_WAIT_ALL_FUTURE_VAR(z, n, t) a##n
 
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
-        hpx::lcos::future<int>
+        hpx::lcos::unique_future<int>
         call( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG, ~))
         {
             return hpx::when_all \
