@@ -42,7 +42,7 @@ namespace nt2
     struct make_ready_future_impl< tag::hpx_<Site> >
     {
         template< typename result_type >
-        inline hpx::lcos::unique_future<result_type>
+        inline details::hpx_future<result_type>
         call(BOOST_FWD_REF(result_type) value)
         {
           return

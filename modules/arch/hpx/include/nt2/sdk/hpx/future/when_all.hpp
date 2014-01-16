@@ -58,16 +58,13 @@ namespace nt2
 
 #define POINT(a,b) a.b
 
-#define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) \
-hpx::lcos::unique_future<A##n> const & a##n
-
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::hpx_future<A##n> const & a##n
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) POINT(a##n,f_)
 
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
         hpx::lcos::unique_future<int>
-        call( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG, ~))
+        call( BOOST_PP_ENUM(N, NT2_FUTURE_FORWARD_ARGS, ~))
         {
             return details::hpx_future<int>(
               hpx::lcos::local::dataflow( \
