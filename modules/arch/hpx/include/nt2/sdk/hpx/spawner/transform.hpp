@@ -12,8 +12,6 @@
 
 #if defined(NT2_USE_HPX)
 
-#include <hpx/lcos/future_wait.hpp>
-
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/hpx/future/future.hpp>
@@ -49,7 +47,7 @@ namespace nt2
             std::size_t leftover = size % grain;
             std::size_t nblocks  = size/grain;
 
-            std::vector< hpx::lcos::unique_future<void> > barrier;
+            std::vector< future > barrier;
             barrier.reserve(nblocks);
 
             #ifndef BOOST_NO_EXCEPTIONS
@@ -66,10 +64,14 @@ namespace nt2
               std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
 
               // Call operation
-              barrier.push_back ( hpx::async(w, begin+n*grain, chunk) );
+              barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
             }
 
-            hpx::wait_all(barrier);
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+                // Call operation
+                barrier[n].get();
+            }
 
             #ifndef BOOST_NO_EXCEPTIONS
             }
