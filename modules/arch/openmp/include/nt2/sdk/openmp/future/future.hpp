@@ -43,14 +43,14 @@ namespace nt2
     {
         template< typename result_type >
         inline details::openmp_future<result_type>
-        call(BOOST_FWD_REF(result_type) value)
+        call(result_type value)
         {
             details::openmp_future<result_type> future_res;
             result_type & result( *(future_res.res_) );
 
             #pragma omp task shared(result,value) depend(out: result)
             {
-                result = boost::forward<result_type>(value);
+                result = value;
             }
 
             future_res.attach_task();
