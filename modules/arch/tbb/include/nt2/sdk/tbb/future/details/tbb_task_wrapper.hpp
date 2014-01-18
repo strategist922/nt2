@@ -43,10 +43,10 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
+#define NT2_FUTURE_FORWARD_ARGS(z,n,t) A##n a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) a##n##_
-#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) a##n##_(boost::forward<A##n>(a##n))
-#define NT2_FUTURE_FORWARD_ARGS4(z,n,t) const A##n a##n##_;
+#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) a##n##_(a##n)
+#define NT2_FUTURE_FORWARD_ARGS4(z,n,t) A##n a##n##_;
 
         template<class F, \
           typename result_type \
@@ -55,7 +55,7 @@ namespace nt2
         struct BOOST_PP_CAT(tbb_task_wrapper,N)
         {
             BOOST_PP_CAT(tbb_task_wrapper,N) \
-              (F & f, \
+              ( F & f, \
                 result_type & res\
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))

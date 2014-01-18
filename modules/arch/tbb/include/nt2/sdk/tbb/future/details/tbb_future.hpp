@@ -221,7 +221,7 @@ namespace nt2
                       details::tbb_task_wrapper1<
                         F,
                         then_result_type,
-                        result_type
+                        result_type const &
                         >
                       (f,*(then_future.res_),*res_ )
                    );
