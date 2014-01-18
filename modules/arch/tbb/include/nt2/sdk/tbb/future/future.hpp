@@ -21,6 +21,8 @@
 
 #include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -58,8 +60,8 @@ namespace nt2
             details::tbb_future<result_type> future_res;
 
             future_res.res_ = \
-              boost::shared_ptr<result_type> \
-                ( new result_type(value) );
+              boost::make_shared<result_type> \
+                ( boost::forward<result_type>(value) );
 
             details::empty_body f;
 
