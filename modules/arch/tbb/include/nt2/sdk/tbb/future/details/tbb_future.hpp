@@ -84,12 +84,12 @@ namespace nt2
                 return task_queue_;
             }
 
-            // Interface publique
             static boost::shared_ptr<bool> getGraphIsCompleted ()
             {
                 if (NULL == graph_is_completed_)
                 {
-                    graph_is_completed_ = new boost::shared_ptr<bool>(new bool(false));
+                    graph_is_completed_ = \
+                      new boost::shared_ptr<bool>(new bool(false));
                     printf("Create new isready with value %d\n",**graph_is_completed_);
                 }
                 return *graph_is_completed_;
@@ -160,7 +160,7 @@ namespace nt2
         boost::shared_ptr<bool> *
         tbb_future_base::graph_is_completed_ = NULL;
 
-        template<typename result_type>
+        template<typename result_type, typename previous_type = void>
         struct tbb_future : public tbb_future_base
         {
             typedef typename tbb::flow::continue_node<\
@@ -168,6 +168,14 @@ namespace nt2
 
             tbb_future() : node_(NULL),res_(new result_type)
             {}
+
+            void attach_previous_value(
+              boost::shared_ptr<previous_type>
+                pres const &)
+            {
+                pres_ = pres;
+            }
+
 
             void attach_task(node_type * node)
             {
@@ -203,7 +211,10 @@ namespace nt2
             {
                 typedef typename boost::result_of<F>::type then_result_type;
 
-                details::tbb_future<then_result_type> then_future;
+                details::tbb_future<then_result_type,result_type>
+                  then_future;
+
+                then_future.attach_previous_value(res_);
 
                 node_type * c = new node_type
                   ( *getWork(),
@@ -212,11 +223,8 @@ namespace nt2
                         then_result_type,
                         result_type
                         >
-                      (f,
-                        *(then_future.res_),
-                        boost::forward<result_type>( *(this->res_) )
-                        )
-                  );
+                      (f,*(then_future.res_),*res_ )
+                   );
 
                 getTaskQueue()->push_back(c);
 
@@ -229,6 +237,7 @@ namespace nt2
 
             node_type * node_;
             boost::shared_ptr<result_type> res_;
+            boost::shared_ptr<previous_type> pres_;
             boost::shared_ptr<bool> ready_;
         };
     }
