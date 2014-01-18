@@ -68,7 +68,7 @@ namespace nt2
 
       void attach_previous_value(
         boost::shared_ptr<previous_type>
-        pres const &)
+        const & pres)
       {
           pres_ = pres;
       }

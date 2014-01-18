@@ -60,7 +60,7 @@ namespace nt2
                     printf("Create new start task\n");
                     start_task_ =
                     new tbb::flow::broadcast_node
-                    <tbb::flow::continue_msg>(*getWork());
+                    <tbb::flow::continue_msg>();
                 }
                 return (start_task_);
             }
@@ -171,7 +171,7 @@ namespace nt2
 
             void attach_previous_value(
               boost::shared_ptr<previous_type>
-                pres const &)
+                const & pres)
             {
                 pres_ = pres;
             }
