@@ -22,6 +22,7 @@
 
 #include <boost/move/utility.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 namespace nt2
 {
@@ -60,7 +61,7 @@ namespace nt2
                     printf("Create new start task\n");
                     start_task_ =
                     new tbb::flow::broadcast_node
-                    <tbb::flow::continue_msg>();
+                    <tbb::flow::continue_msg>(*getWork());
                 }
                 return (start_task_);
             }
@@ -160,7 +161,7 @@ namespace nt2
         boost::shared_ptr<bool> *
         tbb_future_base::graph_is_completed_ = NULL;
 
-        template<typename result_type, typename previous_type = void>
+        template<typename result_type, typename previous_future = int>
         struct tbb_future : public tbb_future_base
         {
             typedef typename tbb::flow::continue_node<\
@@ -169,11 +170,9 @@ namespace nt2
             tbb_future() : node_(NULL),res_(new result_type)
             {}
 
-            void attach_previous_value(
-              boost::shared_ptr<previous_type>
-                const & pres)
+            void attach_previous_future(previous_future const & pfuture)
             {
-                pres_ = pres;
+                pfuture_ = boost::make_shared<previous_future> (pfuture);
             }
 
 
@@ -206,15 +205,15 @@ namespace nt2
             }
 
             template<typename F>
-            tbb_future<typename boost::result_of<F>::type>
+            details::tbb_future<typename boost::result_of<F>::type>
             then(F& f)
             {
                 typedef typename boost::result_of<F>::type then_result_type;
 
-                details::tbb_future<then_result_type,result_type>
+                details::tbb_future<then_result_type,tbb_future>
                   then_future;
 
-                then_future.attach_previous_value(res_);
+                then_future.attach_previous_future(*this);
 
                 node_type * c = new node_type
                   ( *getWork(),
@@ -237,7 +236,7 @@ namespace nt2
 
             node_type * node_;
             boost::shared_ptr<result_type> res_;
-            boost::shared_ptr<previous_type> pres_;
+            boost::shared_ptr<previous_future> pfuture_;
             boost::shared_ptr<bool> ready_;
         };
     }

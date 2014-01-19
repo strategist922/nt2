@@ -14,6 +14,9 @@
 
 #include <omp.h>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+
 namespace nt2
 {
   namespace tag
@@ -60,17 +63,15 @@ namespace nt2
   boost::shared_ptr<bool> *
   openmp_future_base::graph_is_completed_ = NULL;
 
-  template<typename result_type, typename previous_type=void>
+  template<typename result_type, typename previous_future=int>
   struct openmp_future : openmp_future_base
   {
       openmp_future() : res_(new result_type)
       {}
 
-      void attach_previous_value(
-        boost::shared_ptr<previous_type>
-        const & pres)
+      void attach_previous_future(previous_future const & pfuture)
       {
-          pres_ = pres;
+          pfuture_ = boost::make_shared<previous_future> (pfuture);
       }
 
       void attach_task()
@@ -105,9 +106,9 @@ namespace nt2
       {
           typedef typename boost::result_of<F>::type then_result_type;
 
-          details::openmp_future<then_result_type,result_type> then_future;
+          details::openmp_future<then_result_type,previous_future> then_future;
 
-          then_future.attach_previous_value(res_);
+          then_future.attach_previous_future(*this);
 
           result_type & prev( *res_ );
           then_result_type & next( *(then_future.res_) );
@@ -122,7 +123,7 @@ namespace nt2
           return then_future;
       }
 
-      boost::shared_ptr<previous_type> pres_;
+      boost::shared_ptr<previous_future> pfuture_;
       boost::shared_ptr<result_type> res_;
       boost::shared_ptr<bool> ready_;
 
