@@ -86,7 +86,7 @@ namespace nt2
           typename boost::result_of<\
             F(BOOST_PP_ENUM_PARAMS(N, A))>::type \
             >::type
-        call(F & f\
+        call(BOOST_FWD_REF(F) f\
           BOOST_PP_COMMA_IF(N)\
           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
           )

@@ -65,16 +65,16 @@ namespace nt2
                        F(BOOST_PP_ENUM_PARAMS(N, A))\
                        >::type\
                        >::type
-    async( F & f\
-         BOOST_PP_COMMA_IF(N)\
-         BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
+    async( BOOST_FWD_REF(F) f\
+           BOOST_PP_COMMA_IF(N)\
+           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)\
        )
     {
-    return async_impl<Arch>().call(f\
-                                   BOOST_PP_COMMA_IF(N)\
-                                   BOOST_PP_ENUM(N,\
-                                   NT2_FUTURE_FORWARD_ARGS2, ~)\
-                                  );
+        return async_impl<Arch>().call(boost::forward<F>(f) \
+                                       BOOST_PP_COMMA_IF(N)\
+                                       BOOST_PP_ENUM(N,\
+                                       NT2_FUTURE_FORWARD_ARGS2, ~)\
+                                      );
     }
 
 #if BOOST_PP_GREATER(N,0)

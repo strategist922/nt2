@@ -110,7 +110,7 @@ namespace nt2
             F(BOOST_PP_ENUM_PARAMS(N, A)) \
             >::type \
           >::type
-        call(F & f \
+        call(BOOST_FWD_REF(F) f \
           BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~) \
           )
@@ -132,7 +132,7 @@ namespace nt2
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM_PARAMS(N,A) \
                 > \
-                (f, *(future_res.res_) \
+                ( boost::forward<F>(f), *(future_res.res_) \
                   BOOST_PP_COMMA_IF(N) \
                   BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
                   ) \
