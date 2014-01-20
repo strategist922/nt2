@@ -46,7 +46,6 @@ namespace nt2
             {
                 if (NULL == nt2_graph_)
                 {
-                   printf("Create new graph\n");
                    nt2_graph_ = new tbb::flow::graph;
                 }
 
@@ -58,10 +57,9 @@ namespace nt2
             {
                 if (NULL == start_task_)
                 {
-                    printf("Create new start task\n");
                     start_task_ =
                     new tbb::flow::broadcast_node
-                    <tbb::flow::continue_msg>(*getWork());
+                    <tbb::flow::continue_msg>();
                 }
                 return (start_task_);
             }
@@ -73,8 +71,6 @@ namespace nt2
             {
                 if (NULL == task_queue_)
                 {
-                    printf("Create new task queue\n");
-
                     task_queue_ = new std::vector< \
                     tbb::flow::continue_node< \
                     tbb::flow::continue_msg> * \
@@ -91,7 +87,6 @@ namespace nt2
                 {
                     graph_is_completed_ = \
                       new boost::shared_ptr<bool>(new bool(false));
-                    printf("Create new isready with value %d\n",**graph_is_completed_);
                 }
                 return *graph_is_completed_;
             }

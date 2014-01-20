@@ -22,6 +22,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/dispatch/details/parameters.hpp>
 
 namespace nt2
 {
@@ -43,9 +44,9 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) A##n a##n
+#define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) a##n##_
-#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) a##n##_(a##n)
+#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) a##n##_(boost::forward<A##n>(a##n))
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) A##n a##n##_;
 
         template<class F, \
