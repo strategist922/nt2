@@ -63,12 +63,13 @@ namespace nt2
   boost::shared_ptr<bool> *
   openmp_future_base::graph_is_completed_ = NULL;
 
-  template<typename result_type, typename previous_future=int>
+  template<typename result_type>
   struct openmp_future : openmp_future_base
   {
       openmp_future() : res_(new result_type)
       {}
 
+      template<typename previous_future>
       void attach_previous_future(previous_future const & pfuture)
       {
           pfuture_ = boost::make_shared<previous_future> (pfuture);
@@ -101,12 +102,12 @@ namespace nt2
       }
 
       template<typename F>
-      openmp_future<typename boost::result_of<F>::type>
+      openmp_future<typename boost::result_of<F(result_type)>::type>
       then(F& f)
       {
           typedef typename boost::result_of<F>::type then_result_type;
 
-          details::openmp_future<then_result_type,previous_future> then_future;
+          details::openmp_future<then_result_type> then_future;
 
           then_future.attach_previous_future(*this);
 
@@ -123,7 +124,7 @@ namespace nt2
           return then_future;
       }
 
-      boost::shared_ptr<previous_future> pfuture_;
+      boost::shared_ptr<void> pfuture_;
       boost::shared_ptr<result_type> res_;
       boost::shared_ptr<bool> ready_;
 

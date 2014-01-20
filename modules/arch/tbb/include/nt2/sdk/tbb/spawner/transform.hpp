@@ -14,17 +14,46 @@
 
 #include <tbb/tbb.h>
 #include <nt2/sdk/tbb/blocked_range.hpp>
-#include <tbb/flow_graph.h>
-#include <tbb/scalable_allocator.h>
-
 #include <nt2/sdk/shared_memory/spawner.hpp>
 
 #include <nt2/sdk/tbb/future/future.hpp>
-#include <nt2/sdk/tbb/future/when_all.hpp>
+#include <cstdio>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
 #endif
+
+struct p1
+{
+    typedef int result_type;
+
+    int operator()()
+    {
+        return 1;
+    }
+};
+
+struct p2
+{
+    typedef int result_type;
+
+    int operator()(int value)
+    {
+        return value*2;
+    }
+};
+
+struct p3
+{
+    typedef int result_type;
+
+    int operator()(int value)
+    {
+        printf("Result is: %d\n",value);
+        return value;
+    }
+};
+
 
 namespace nt2
 {
@@ -87,45 +116,17 @@ namespace nt2
 //            }
 //#endif
 
-/****************************************************************************/
+        typedef typename
+        nt2::details::tbb_future<int> future;
 
-            typedef typename
-            nt2::make_future< Arch,int >::type future;
+        p1 w1;
+        p2 w2;
 
-            std::size_t nblocks  = size/grain;
-            std::size_t ibound   = nblocks * grain;
-            std::size_t leftover = size % grain;
+        future f1 = async<Arch>(w1);
+        future f2 = f1.then(w2);
 
-            std::vector< future > barrier;
-            barrier.reserve(nblocks+1);
+        f2.get();
 
-            #ifndef BOOST_NO_EXCEPTIONS
-            boost::exception_ptr exception;
-
-            try
-            {
-            #endif
-
-            for(std::size_t n=0;n<nblocks;++n)
-            {
-                std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
-                // Call operation
-                barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
-            }
-
-            for(std::size_t n=0;n<nblocks;++n)
-            {
-                // Call operation
-                barrier[n].get();
-            }
-
-            #ifndef BOOST_NO_EXCEPTIONS
-            }
-            catch(...)
-            {
-                exception = boost::current_exception();
-            }
-            #endif
         }
     };
 }

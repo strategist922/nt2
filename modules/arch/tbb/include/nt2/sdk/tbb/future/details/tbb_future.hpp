@@ -18,11 +18,11 @@
 #include <vector>
 #include <cstdio>
 
-#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
-
 #include <boost/move/utility.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+
+#include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
 namespace nt2
 {
@@ -161,7 +161,7 @@ namespace nt2
         boost::shared_ptr<bool> *
         tbb_future_base::graph_is_completed_ = NULL;
 
-        template<typename result_type, typename previous_future = int>
+        template<typename result_type>
         struct tbb_future : public tbb_future_base
         {
             typedef typename tbb::flow::continue_node<\
@@ -170,6 +170,7 @@ namespace nt2
             tbb_future() : node_(NULL),res_(new result_type)
             {}
 
+            template< typename previous_future>
             void attach_previous_future(previous_future const & pfuture)
             {
                 pfuture_ = boost::make_shared<previous_future> (pfuture);
@@ -205,12 +206,15 @@ namespace nt2
             }
 
             template<typename F>
-            details::tbb_future<typename boost::result_of<F>::type>
+            details::tbb_future<
+              typename boost::result_of<F(result_type)>::type
+              >
             then(F& f)
             {
-                typedef typename boost::result_of<F>::type then_result_type;
+                typedef typename boost::result_of<F(result_type)>::type
+                  then_result_type;
 
-                details::tbb_future<then_result_type,tbb_future>
+                details::tbb_future<then_result_type>
                   then_future;
 
                 then_future.attach_previous_future(*this);
@@ -236,7 +240,7 @@ namespace nt2
 
             node_type * node_;
             boost::shared_ptr<result_type> res_;
-            boost::shared_ptr<previous_future> pfuture_;
+            boost::shared_ptr<void> pfuture_;
             boost::shared_ptr<bool> ready_;
         };
     }
