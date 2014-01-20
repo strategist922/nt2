@@ -17,6 +17,8 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
+#include <boost/dispatch/details/parameters.hpp>
+#include <boost/utility/result_of.hpp>
 
 namespace nt2
 {
