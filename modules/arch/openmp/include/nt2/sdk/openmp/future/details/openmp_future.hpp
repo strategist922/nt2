@@ -14,6 +14,7 @@
 
 #include <omp.h>
 
+#include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
@@ -103,7 +104,7 @@ namespace nt2
 
       template<typename F>
       openmp_future<typename boost::result_of<F(result_type)>::type>
-      then(F& f)
+      then(BOOST_FWD_REF(F) f)
       {
           typedef typename boost::result_of<F>::type then_result_type;
 

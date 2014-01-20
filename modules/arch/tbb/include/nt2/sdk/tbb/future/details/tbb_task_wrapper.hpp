@@ -55,11 +55,11 @@ namespace nt2
         struct BOOST_PP_CAT(tbb_task_wrapper,N)
         {
             BOOST_PP_CAT(tbb_task_wrapper,N) \
-              ( F & f, \
+              ( BOOST_FWD_REF(F) f, \
                 result_type & res\
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
-            : f_(f),res_(res) \
+            : f_( boost::forward<F>(f) ),res_(res) \
               BOOST_PP_COMMA_IF(N) \
               BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
             {}
@@ -69,7 +69,7 @@ namespace nt2
                 res_ = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
             }
 
-            F & f_;
+            F f_;
             result_type & res_;
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
 

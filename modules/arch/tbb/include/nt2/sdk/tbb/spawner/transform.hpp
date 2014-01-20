@@ -27,7 +27,7 @@ struct p1
 {
     typedef int result_type;
 
-    int operator()()
+    int operator()() const
     {
         return 1;
     }
@@ -37,7 +37,7 @@ struct p2
 {
     typedef int result_type;
 
-    int operator()(int value)
+    int operator()(int value) const
     {
         return value*2;
     }
@@ -117,13 +117,10 @@ namespace nt2
 //#endif
 
         typedef typename
-        nt2::details::tbb_future<int> future;
+          nt2::details::tbb_future<int> future;
 
-        p1 w1;
-        p2 w2;
-
-        future f1 = async<Arch>(w1);
-        future f2 = f1.then(w2);
+        future f1 = async<Arch>(p1());
+        future f2 = f1.then(p2());
 
         f2.get();
 

@@ -68,11 +68,13 @@ namespace nt2 { namespace details
         // Overload of then method
         template<typename F>
         hpx_future<typename boost::result_of<F>::type>
-        then(F& f)
+        then(BOOST_FWD_REF(F) f)
         {
             return hpx_future(
               hpx::lcos::local::dataflow( \
-                hpx::util::unwrapped(f),f_) \
+                hpx::util::unwrapped(
+                  boost::forward<F>(f)
+                ),f_) \
               );
         }
     };

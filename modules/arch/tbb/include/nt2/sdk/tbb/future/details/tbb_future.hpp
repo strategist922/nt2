@@ -209,7 +209,7 @@ namespace nt2
             details::tbb_future<
               typename boost::result_of<F(result_type)>::type
               >
-            then(F& f)
+            then(BOOST_FWD_REF(F) f)
             {
                 typedef typename boost::result_of<F(result_type)>::type
                   then_result_type;
@@ -226,7 +226,9 @@ namespace nt2
                         then_result_type,
                         result_type const &
                         >
-                      (f,*(then_future.res_),*res_ )
+                   (boost::forward<F>(f)
+                    , *(then_future.res_)
+                    , *res_ )
                    );
 
                 getTaskQueue()->push_back(c);
