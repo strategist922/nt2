@@ -22,6 +22,7 @@
 #include <boost/move/move.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/utility/result_of.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
