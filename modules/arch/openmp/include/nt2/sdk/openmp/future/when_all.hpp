@@ -67,9 +67,8 @@ details::openmp_future<int> call\
        depend( out : result )
     {
         result = 0;
+        *(future_res.ready_) = true;
     }
-
-    future_res.attach_task();
 
     return future_res;
 }

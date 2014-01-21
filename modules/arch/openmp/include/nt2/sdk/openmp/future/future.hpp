@@ -53,8 +53,6 @@ namespace nt2
                 result = value;
             }
 
-            future_res.attach_task();
-
             return future_res;
         }
     };
@@ -107,9 +105,9 @@ namespace nt2
             {
                 result = f(\
                   BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
-            }
 
-            future_res.attach_task();
+                *(future_res.ready_) = true;
+            }
 
             return future_res;
           }
