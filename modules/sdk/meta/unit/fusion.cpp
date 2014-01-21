@@ -29,7 +29,7 @@ NT2_TEST_CASE_TPL(hierarchy_of_ref_cref, NT2_TYPES)
   using boost::array;
   using boost::mpl::_;
   using nt2::meta::hierarchy_of;
-  using namespace nt2::ext;
+  using namespace nt2::BOOST_SIMD_EXT_NS;
 
   typedef array<T,7> base;
   typedef typename hierarchy_of<base>::type        hvalue;
@@ -49,7 +49,7 @@ NT2_TEST_CASE(hierarchy_of_array)
   using boost::array;
   using boost::is_same;
   using nt2::meta::hierarchy_of;
-  using namespace nt2::ext;
+  using namespace nt2::BOOST_SIMD_EXT_NS;
 
   typedef hierarchy_of< array<double,7> >::type base;
 
