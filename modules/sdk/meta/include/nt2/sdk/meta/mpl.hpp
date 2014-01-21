@@ -12,6 +12,7 @@
 #include <boost/dispatch/meta/mpl.hpp>
 #include <nt2/sdk/meta/hierarchy_of.hpp>
 #include <nt2/sdk/meta/enable_if_type.hpp>
+#include <boost/simd/sdk/simd/extensions.hpp>
 
 namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {

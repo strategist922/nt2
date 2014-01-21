@@ -13,6 +13,7 @@
 #include <boost/dispatch/meta/is_iterator.hpp>
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 #include <boost/pointee.hpp>
+#include <boost/simd/sdk/simd/extensions.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some hierarchies
