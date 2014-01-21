@@ -11,6 +11,7 @@
 
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 #include <boost/dispatch/meta/property_of.hpp>
+#include <boost/simd/sdk/simd/extensions.hpp>
 
 namespace boost { namespace dispatch { namespace meta
 {

@@ -13,6 +13,7 @@
 #include <nt2/sdk/meta/primitive_of.hpp>
 
 #include <boost/dispatch/meta/as.hpp>
+#include <boost/simd/sdk/simd/extensions.hpp>
 
 namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {

@@ -20,6 +20,8 @@
 
 #include <boost/dispatch/meta/ignore_unused.hpp>
 
+#include <boost/simd/sdk/simd/extensions.hpp>
+
 namespace boost { namespace simd
 {
   namespace tag

@@ -15,6 +15,7 @@
 #include <boost/dispatch/dsl/category.hpp>
 #include <boost/dispatch/meta/proxy.hpp>
 #include <boost/dispatch/meta/hierarchy_of.hpp>
+#include <boost/simd/sdk/simd/extensions.hpp>
 
 namespace nt2
 {
