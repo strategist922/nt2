@@ -46,6 +46,7 @@ namespace nt2
             {
                 if (NULL == nt2_graph_)
                 {
+                   printf("Create new graph\n");
                    nt2_graph_ = new tbb::flow::graph;
                 }
 
@@ -57,6 +58,7 @@ namespace nt2
             {
                 if (NULL == start_task_)
                 {
+                    printf("Create new start task\n");
                     start_task_ =
                     new tbb::flow::broadcast_node
                     <tbb::flow::continue_msg>();
@@ -71,6 +73,8 @@ namespace nt2
             {
                 if (NULL == task_queue_)
                 {
+                    printf("Create new task queue\n");
+
                     task_queue_ = new std::vector< \
                     tbb::flow::continue_node< \
                     tbb::flow::continue_msg> * \
@@ -81,12 +85,12 @@ namespace nt2
                 return task_queue_;
             }
 
-            static boost::shared_ptr<bool> getGraphIsCompleted ()
+            static bool getGraphIsCompleted ()
             {
                 if (NULL == graph_is_completed_)
                 {
-                    graph_is_completed_ = \
-                      new boost::shared_ptr<bool>(new bool(false));
+                    graph_is_completed_ = new bool(false);
+                    printf("Create new isready with value %d\n",*graph_is_completed_);
                 }
                 return *graph_is_completed_;
             }
@@ -137,8 +141,7 @@ namespace nt2
             > *
               task_queue_;
 
-            static boost::shared_ptr<bool> *
-              graph_is_completed_;
+            static bool * graph_is_completed_;
         };
 
         tbb::flow::graph *
@@ -153,8 +156,7 @@ namespace nt2
         > *
         tbb_future_base::task_queue_ = NULL;
 
-        boost::shared_ptr<bool> *
-        tbb_future_base::graph_is_completed_ = NULL;
+        bool * tbb_future_base::graph_is_completed_ = NULL;
 
         template<typename result_type>
         struct tbb_future : public tbb_future_base
@@ -162,7 +164,8 @@ namespace nt2
             typedef typename tbb::flow::continue_node<\
             tbb::flow::continue_msg> node_type;
 
-            tbb_future() : node_(NULL),res_(new result_type)
+            tbb_future()
+            : node_(NULL),res_(new result_type),ready_(new bool(false))
             {}
 
             template< typename previous_future>
@@ -175,7 +178,6 @@ namespace nt2
             void attach_task(node_type * node)
             {
                 node_ = node;
-                ready_ = getGraphIsCompleted();
             }
 
             bool is_ready() const
@@ -185,11 +187,10 @@ namespace nt2
 
             void wait()
             {
-                if(!is_ready())
+                if(!getGraphIsCompleted())
                 {
                     getStart()->try_put(tbb::flow::continue_msg());
                     getWork()->wait_for_all();
-                    *ready_ = true;
                     kill_graph();
                 }
             }
@@ -209,8 +210,10 @@ namespace nt2
                 typedef typename boost::result_of<F(result_type)>::type
                   then_result_type;
 
-                details::tbb_future<then_result_type>
-                  then_future;
+                typedef typename details::tbb_future<then_result_type>
+                  then_future_type;
+
+                then_future_type then_future;
 
                 then_future.attach_previous_future(*this);
 
@@ -218,13 +221,11 @@ namespace nt2
                   ( *getWork(),
                       details::tbb_task_wrapper1<
                         F,
-                        then_result_type,
-                        result_type const &
+                        then_future_type &,
+                        tbb_future const &
                         >
-                   (boost::forward<F>(f)
-                    , *(then_future.res_)
-                    , *res_ )
-                   );
+                   (boost::forward<F>(f), then_future, *this )
+                  );
 
                 getTaskQueue()->push_back(c);
 

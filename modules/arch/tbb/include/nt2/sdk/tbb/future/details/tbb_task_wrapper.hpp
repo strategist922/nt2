@@ -28,6 +28,8 @@ namespace nt2
 {
     namespace details
     {
+
+
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, \
 "nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp") \
@@ -50,28 +52,31 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) A##n a##n##_;
 
         template<class F, \
-          typename result_type \
+          typename future_type \
           BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM_PARAMS(N, typename A) >
         struct BOOST_PP_CAT(tbb_task_wrapper,N)
         {
             BOOST_PP_CAT(tbb_task_wrapper,N) \
               ( BOOST_FWD_REF(F) f, \
-                result_type & res\
+                future_type const & future_result\
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
-            : f_( boost::forward<F>(f) ),res_(res) \
+            : f_( boost::forward<F>(f) ),future_result_(future_result) \
               BOOST_PP_COMMA_IF(N) \
               BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
             {}
 
             void operator()( tbb::flow::continue_msg ) const
             {
-                res_ = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
+                *(future_result_.res_) = \
+                  f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
+
+                *(future_result_.ready_) = true;
             }
 
             F f_;
-            result_type & res_;
+            future_type future_result_;
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
 
             private:
