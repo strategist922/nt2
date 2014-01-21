@@ -25,6 +25,7 @@
 #define BOOST_SIMD_DETECTED
 #define BOOST_SIMD_LRB
 #define BOOST_SIMD_LRB_FAMILY
+#define BOOST_SIMD_EXT_NS             ext_lrb
 #define BOOST_SIMD_STRING             "LRB"
 #define BOOST_SIMD_STRING_LIST        "LRB"
 #define BOOST_SIMD_BYTES              64

@@ -24,6 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #define BOOST_SIMD_DETECTED
 #define BOOST_SIMD_ALTIVEC
+#define BOOST_SIMD_EXT_NS             ext_qpx
 #define BOOST_SIMD_STRING             "QPX"
 #define BOOST_SIMD_STRING_LIST        "QPX"
 #define BOOST_SIMD_VMX_FAMILY

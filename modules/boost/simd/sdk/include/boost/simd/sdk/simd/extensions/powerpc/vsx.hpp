@@ -47,6 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #define BOOST_SIMD_DETECTED
 #define BOOST_SIMD_ALTIVEC
+#define BOOST_SIMD_EXT_NS             ext_vsx
 #define BOOST_SIMD_STRING             "VSX"
 #define BOOST_SIMD_STRING_LIST        "VMX VSX"
 #define BOOST_SIMD_VMX_FAMILY

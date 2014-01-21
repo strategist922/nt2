@@ -33,6 +33,7 @@
 #define BOOST_SIMD_DETECTED
 #define BOOST_SIMD_AVX2
 #define BOOST_SIMD_SSE_FAMILY
+#define BOOST_SIMD_EXT_NS             ext_avx2
 #define BOOST_SIMD_STRING             "AVX2"
 #define BOOST_SIMD_STRING_LIST        "SSE2 SSE3 SSSE3 SSE4_1 SSE4_2 AVX FMA3 AVX2"
 #define BOOST_SIMD_BYTES              32

@@ -56,7 +56,7 @@ namespace boost { namespace dispatch { namespace meta
 
 } } }
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   using boost::dispatch::meta::simd_;
   using boost::dispatch::meta::logical_;

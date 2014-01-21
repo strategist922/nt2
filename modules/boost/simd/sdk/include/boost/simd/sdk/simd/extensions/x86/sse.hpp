@@ -25,6 +25,7 @@
 #define BOOST_SIMD_DETECTED
 #define BOOST_SIMD_SSE
 #define BOOST_SIMD_SSE_FAMILY
+#define BOOST_SIMD_EXT_NS             ext_sse
 #define BOOST_SIMD_STRING             "SSE"
 #define BOOST_SIMD_STRING_LIST        "SSE"
 #define BOOST_SIMD_BYTES              16

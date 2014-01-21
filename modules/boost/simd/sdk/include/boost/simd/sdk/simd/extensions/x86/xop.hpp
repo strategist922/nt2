@@ -29,6 +29,7 @@
 #define BOOST_SIMD_DETECTED
 #define BOOST_SIMD_XOP
 #define BOOST_SIMD_SSE_FAMILY
+#define BOOST_SIMD_EXT_NS             ext_xop
 #define BOOST_SIMD_STRING             "XOP"
 #define BOOST_SIMD_STRING_LIST        "SSE2 SSE3 SSE4A SSSE3 SSE4_1 SSE4_2 AVX FMA4 XOP"
 #define BOOST_SIMD_BYTES              32

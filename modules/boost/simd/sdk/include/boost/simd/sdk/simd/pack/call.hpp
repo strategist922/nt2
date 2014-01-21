@@ -12,7 +12,7 @@
 #include <boost/simd/sdk/functor/preprocessor/call.hpp>
 #include <boost/proto/make_expr.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   // constants
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION(pure_constant_<Func>, tag::formal_
