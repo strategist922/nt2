@@ -32,13 +32,13 @@ NT2_TEST_CASE( hierarchy )
 
   NT2_TEST_EXPR_TYPE( (nt2::tag::meshgrid_() )
                     , (nth_hierarchy<_,int_<1> >)
-                    , (nt2::ext::tieable_< nt2::tag::meshgrid_ >
+                    , (nt2::BOOST_SIMD_EXT_NS::tieable_< nt2::tag::meshgrid_ >
                       )
                     );
 
   NT2_TEST_EXPR_TYPE( (nt2::tag::meshgrid_() )
                     , (nth_hierarchy<_,int_<2> >)
-                    , (nt2::ext::unspecified_<nt2::tag::meshgrid_>)
+                    , (nt2::BOOST_SIMD_EXT_NS::unspecified_<nt2::tag::meshgrid_>)
                     );
 }
 

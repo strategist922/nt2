@@ -30,24 +30,24 @@ NT2_TEST_CASE( hierarchy )
 
   NT2_TEST_EXPR_TYPE( (nt2::tag::colon_() )
                     , (nth_hierarchy<_,int_<1> >)
-                    , (nt2::ext::state_constant_< nt2::tag::colon_ >
+                    , (nt2::BOOST_SIMD_EXT_NS::state_constant_< nt2::tag::colon_ >
                       )
                     );
 
   NT2_TEST_EXPR_TYPE( (nt2::tag::colon_() )
                     , (nth_hierarchy<_,int_<2> >)
-                    , (nt2::ext::constant_< nt2::tag::colon_ >
+                    , (nt2::BOOST_SIMD_EXT_NS::constant_< nt2::tag::colon_ >
                       )
                     );
 
   NT2_TEST_EXPR_TYPE( (nt2::tag::colon_() )
                     , (nth_hierarchy<_,int_<3> >)
-                    , (nt2::ext::elementwise_<nt2::tag::colon_>)
+                    , (nt2::BOOST_SIMD_EXT_NS::elementwise_<nt2::tag::colon_>)
                     );
 
   NT2_TEST_EXPR_TYPE( (nt2::tag::colon_() )
                     , (nth_hierarchy<_,int_<4> >)
-                    , (nt2::ext::unspecified_<nt2::tag::colon_>)
+                    , (nt2::BOOST_SIMD_EXT_NS::unspecified_<nt2::tag::colon_>)
                     );
 }
 

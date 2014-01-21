@@ -155,7 +155,7 @@ NT2_TEST_CASE_TPL ( logical_hierarchy_of, BOOST_SIMD_TYPES )
 {
   using boost::is_same;
   using boost::simd::logical;
-  using boost::simd::ext::logical_;
+  using boost::simd::BOOST_SIMD_EXT_NS::logical_;
   using boost::dispatch::meta::scalar_;
   using boost::dispatch::meta::hierarchy_of;
 
@@ -171,7 +171,7 @@ NT2_TEST_CASE_TPL ( logical_hierarchy_of_simd, BOOST_SIMD_SIMD_TYPES )
   using boost::simd::native;
   using boost::simd::logical;
   using boost::dispatch::meta::simd_;
-  using boost::simd::ext::logical_;
+  using boost::simd::BOOST_SIMD_EXT_NS::logical_;
   using boost::dispatch::meta::hierarchy_of;
 
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
