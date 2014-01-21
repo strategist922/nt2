@@ -51,6 +51,7 @@ namespace nt2
             #pragma omp task shared(result,value) depend(out: result)
             {
                 result = value;
+                *(future_res.ready_) = true;
             }
 
             return future_res;
