@@ -30,7 +30,7 @@ namespace boost { namespace dispatch { namespace meta
   template<class T,class Sign = void> struct  upgrade;
 } } }
 
-namespace boost { namespace dispatch { namespace ext
+namespace boost { namespace dispatch { namespace details
 {
   template<typename Type, typename Sign, typename Enable = void>
   struct upgrade
@@ -85,7 +85,7 @@ namespace boost { namespace dispatch { namespace meta
   // with an optional sign change
   //////////////////////////////////////////////////////////////////////////////
   template<class T,class Sign>
-  struct  upgrade : ext::upgrade<T, Sign > {};
+  struct  upgrade : details::upgrade<T, Sign > {};
 
   template<class T, class Sign>
   struct upgrade<T&,Sign> : upgrade<T,Sign> {};

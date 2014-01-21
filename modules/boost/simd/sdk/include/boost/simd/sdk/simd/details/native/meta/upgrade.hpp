@@ -16,7 +16,7 @@
 #include <boost/dispatch/meta/primitive_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost { namespace dispatch { namespace BOOST_SIMD_EXT_NS
+namespace boost { namespace dispatch { namespace details
 {
 
   ////////////////////////////////////////////////////////////////////////////

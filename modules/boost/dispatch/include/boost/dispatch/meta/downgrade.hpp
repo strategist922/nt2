@@ -74,7 +74,7 @@ namespace boost { namespace dispatch { namespace meta
   template< class T, class Sign = void> struct  downgrade;
 } } }
 
-namespace boost { namespace dispatch { namespace ext
+namespace boost { namespace dispatch { namespace details
 {
   template<typename Type, typename Sign, typename Enable = void>
   struct downgrade
@@ -124,7 +124,7 @@ namespace boost { namespace dispatch { namespace ext
 namespace boost { namespace dispatch { namespace meta
 {
   template<class T,class Sign>
-  struct  downgrade               : ext::downgrade<T, Sign> {};
+  struct  downgrade               : details::downgrade<T, Sign> {};
 
   template<class T, class Sign>
   struct downgrade<T&,Sign>       : downgrade<T,Sign> {};

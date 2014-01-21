@@ -28,7 +28,7 @@ namespace boost { namespace dispatch { namespace meta
   template<class T> struct sign_of;
 } } }
 
-namespace boost { namespace dispatch { namespace ext
+namespace boost { namespace dispatch { namespace details
 {
   template<class T, class Enable = void>
   struct  sign_of
@@ -56,8 +56,8 @@ namespace boost { namespace dispatch { namespace ext
 
 namespace boost { namespace dispatch { namespace meta
 {
-  template<class T> struct  sign_of           : ext::sign_of<T> {};
-  template<class T> struct  sign_of<T&>       : sign_of <T>     {};
-  template<class T> struct  sign_of<T const>  : sign_of <T>     {};
+  template<class T> struct  sign_of           : details::sign_of<T> {};
+  template<class T> struct  sign_of<T&>       : sign_of <T>         {};
+  template<class T> struct  sign_of<T const>  : sign_of <T>         {};
 } } }
 #endif

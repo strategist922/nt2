@@ -15,7 +15,7 @@
 #include <boost/utility/enable_if.hpp>
 
 
-namespace boost { namespace dispatch { namespace BOOST_SIMD_EXT_NS
+namespace boost { namespace dispatch { namespace details
 {
     template< class Type
             , std::size_t Cardinal
