@@ -45,7 +45,6 @@ namespace nt2
       void wait()
       {
          #pragma omp taskwait
-         kill_graph();
       }
 
       result_type get()
