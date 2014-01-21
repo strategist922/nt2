@@ -20,6 +20,18 @@
 #include <nt2/sdk/unit/tests/type_expr.hpp>
 #include <nt2/sdk/unit/tests/exceptions.hpp>
 
+namespace nt2
+{
+    namespace tag
+    {
+        template<class T> struct tbb_;
+    }
+}
+
+typedef typename boost::dispatch::default_site<void>::type Site;
+typedef typename nt2::tag::tbb_<Site> Arch;
+typedef typename nt2::make_future< Arch,int >::type future;
+
 struct p1
 {
     typedef int result_type;
@@ -34,9 +46,9 @@ struct p2
 {
     typedef int result_type;
 
-    int operator()(int value) const
+    int operator()(future value) const
     {
-        return value*2;
+        return value.get()*2;
     }
 };
 
@@ -44,9 +56,9 @@ struct p3
 {
     typedef int result_type;
 
-    int operator()(int value) const
+    int operator()(future value) const
     {
-        return value*3;
+        return value.get()*3;
     }
 };
 
@@ -54,27 +66,14 @@ struct p4
 {
     typedef int result_type;
 
-    int operator()(int dep) const
+    int operator()(future dep) const
     {
         return 50;
     }
 };
 
-namespace nt2
-{
-    namespace tag
-    {
-        template<class T> struct tbb_;
-    }
-}
-
 NT2_TEST_CASE( then_future )
 {
-  typedef typename boost::dispatch::default_site<void>::type Site;
-  typedef typename nt2::tag::tbb_<Site> Arch;
-
-  typedef typename nt2::make_future< Arch,int >::type future;
-
   future f1 = nt2::async<Arch>(p1());
   future f2 = f1.then(p2());
   future f3 = f2.then(p3());
@@ -91,11 +90,11 @@ NT2_TEST_CASE( then_future )
   p2 w2;
   p3 w3;
 
-  future f5 = nt2::async<Arch>(w1);
-  future f6 = f5.then(w2);
-  future f7 = f6.then(w3);
+  future f5 = nt2::async<Arch>(boost::move(w1));
+  future f6 = f5.then(boost::move(w2));
+  future f7 = f6.then(boost::move(w3));
 
-  future f8 = nt2::async<Arch>(w1).then(w2).then(w3);
+  future f8 = nt2::async<Arch>(boost::move(w1)).then(boost::move(w2)).then(boost::move(w3));
 
   int value3 = f7.get();
   int value4 = f8.get();
@@ -106,11 +105,6 @@ NT2_TEST_CASE( then_future )
 
 NT2_TEST_CASE( make_ready_future )
 {
-  typedef typename boost::dispatch::default_site<void>::type Site;
-  typedef typename nt2::tag::tbb_<Site> Arch;
-
-  typedef typename nt2::make_future< Arch,int >::type future;
-
   future f1 = nt2::make_ready_future<Arch,int>(12);
 
   int value1 = f1.get();
@@ -128,10 +122,6 @@ NT2_TEST_CASE( make_ready_future )
 
 NT2_TEST_CASE( when_all_future )
 {
-  typedef typename boost::dispatch::default_site<void>::type Site;
-  typedef typename nt2::tag::tbb_<Site> Arch;
-  typedef typename nt2::make_future< Arch,int >::type future;
-
   future f1 = nt2::make_ready_future<Arch,int>(12);
   future f2 = nt2::make_ready_future<Arch,int>(24);
   future f3 = nt2::make_ready_future<Arch,int>(48);
