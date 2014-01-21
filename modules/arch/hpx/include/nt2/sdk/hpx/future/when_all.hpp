@@ -32,7 +32,7 @@ namespace nt2
             typedef int result_type;
 
             template< typename T>
-            int operator()(T&)
+            int operator()(T) const
             {
                 return 0;
             }
@@ -59,7 +59,7 @@ namespace nt2
 #define N BOOST_PP_ITERATION()
 
 #define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) \
-hpx::lcos::unique_future<A##n> const & a##n
+hpx::lcos::unique_future<A##n> & a##n
 
 #define HPX_WAIT_ALL_FUTURE_VAR(z, n, t) a##n
 

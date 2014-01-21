@@ -43,12 +43,9 @@ namespace nt2
     {
         template< typename result_type >
         inline hpx::lcos::unique_future<result_type>
-        call(BOOST_FWD_REF(result_type) value)
+        call(result_type value)
         {
-          return
-              hpx::make_ready_future( \
-                boost::forward<result_type>(value) \
-                );
+          return  hpx::make_ready_future(value);
         }
     };
 
