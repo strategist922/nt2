@@ -36,10 +36,9 @@ namespace nt2
 
     template< typename Arch, typename result_type>
     inline typename make_future< Arch,result_type>::type
-    make_ready_future(BOOST_FWD_REF(result_type) value)
+    make_ready_future(result_type const & value)
     {
-       return make_ready_future_impl<Arch>().call \
-        (boost::forward<result_type>(value));
+       return make_ready_future_impl<Arch>().call(value);
     }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
