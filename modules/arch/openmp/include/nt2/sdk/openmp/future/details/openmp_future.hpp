@@ -25,45 +25,8 @@ namespace nt2
     template<class T> struct openmp_;
   }
 
-    namespace details
-    {
-        class openmp_future_base
-        {
-        protected:
-
-            openmp_future_base () {}
-            ~openmp_future_base () {}
-
-        public:
-
-            static bool getGraphIsCompleted ()
-            {
-                if (NULL == graph_is_completed_)
-                {
-                    graph_is_completed_ = new bool(false);
-                    printf("Create new isready with value %d\n",*graph_is_completed_);
-                }
-                return *graph_is_completed_;
-            }
-
-            static void kill_graph ()
-            {
-                if (NULL != graph_is_completed_)
-                {
-                    delete graph_is_completed_;
-                    graph_is_completed_ = NULL;
-                }
-            }
-
-        private:
-
-            static bool * graph_is_completed_;
-        };
-
-  bool * openmp_future_base::graph_is_completed_ = NULL;
-
   template<typename result_type>
-  struct openmp_future : openmp_future_base
+  struct openmp_future
   {
       openmp_future() : res_(new result_type),ready_(new bool(false))
       {}
@@ -81,11 +44,8 @@ namespace nt2
 
       void wait()
       {
-          if(!getGraphIsCompleted())
-          {
-              #pragma omp taskwait
-              kill_graph();
-          }
+         #pragma omp taskwait
+         kill_graph();
       }
 
       result_type get()
