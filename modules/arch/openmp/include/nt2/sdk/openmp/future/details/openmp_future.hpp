@@ -10,7 +10,7 @@
 #ifndef NT2_SDK_OPENMP_FUTURE_DETAILS_OPENMP_FUTURE_HPP_INCLUDED
 #define NT2_SDK_OPENMP_FUTURE_DETAILS_OPENMP_FUTURE_HPP_INCLUDED
 
-#if defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 3.1 */
+#if defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
 
 #include <omp.h>
 
@@ -36,12 +36,12 @@ namespace nt2
 
         public:
 
-            static boost::shared_ptr<bool> getGraphIsCompleted ()
+            static bool getGraphIsCompleted ()
             {
                 if (NULL == graph_is_completed_)
                 {
-                    graph_is_completed_ = new boost::shared_ptr<bool>(new bool(false));
-                    printf("Create new isready with value %d\n",**graph_is_completed_);
+                    graph_is_completed_ = new bool(false);
+                    printf("Create new isready with value %d\n",*graph_is_completed_);
                 }
                 return *graph_is_completed_;
             }
@@ -57,28 +57,21 @@ namespace nt2
 
         private:
 
-            static boost::shared_ptr<bool> *
-            graph_is_completed_;
+            static bool * graph_is_completed_;
         };
 
-  boost::shared_ptr<bool> *
-  openmp_future_base::graph_is_completed_ = NULL;
+  bool * openmp_future_base::graph_is_completed_ = NULL;
 
   template<typename result_type>
   struct openmp_future : openmp_future_base
   {
-      openmp_future() : res_(new result_type)
+      openmp_future() : res_(new result_type),ready_(new bool(false))
       {}
 
       template<typename previous_future>
       void attach_previous_future(previous_future const & pfuture)
       {
           pfuture_ = boost::make_shared<previous_future> (pfuture);
-      }
-
-      void attach_task()
-      {
-          ready_ = getGraphIsCompleted();
       }
 
       bool is_ready() const
@@ -88,10 +81,9 @@ namespace nt2
 
       void wait()
       {
-          if(!is_ready())
+          if(!getGraphIsCompleted())
           {
               #pragma omp taskwait
-              *ready_ = true;
               kill_graph();
           }
       }
@@ -115,12 +107,11 @@ namespace nt2
           result_type & prev( *res_ );
           then_result_type & next( *(then_future.res_) );
 
-          #pragma omp task shared(f,next) depend(in: prev) depend(out: next)
+          #pragma omp task shared(f,then_future) depend(in: prev) depend(out: next)
           {
-              next = f(prev);
+              next = f(then_future);
+              *(then_future.ready_) = true;
           }
-
-          then_future.attach_task();
 
           return then_future;
       }
