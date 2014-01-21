@@ -29,7 +29,7 @@ namespace boost { namespace simd
     using boost::dispatch::tag::cpu_;
   }
 
-namespace ext
+namespace BOOST_SIMD_EXT_NS
 {
   // Base hierarchies
   using boost::dispatch::meta::proxy_;

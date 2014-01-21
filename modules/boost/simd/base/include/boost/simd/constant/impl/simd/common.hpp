@@ -23,7 +23,7 @@
 // Forward all constant call to the SIMD version of themselves that splat
 // the appropriate scalar constants into a proper SIMD vector.
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // By default we splat the constant contained into the extracted value from

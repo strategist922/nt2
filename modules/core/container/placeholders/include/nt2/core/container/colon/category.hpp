@@ -35,7 +35,7 @@ namespace boost { namespace dispatch { namespace meta
   };
 } } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   using boost::dispatch::meta::colon_;
 } }

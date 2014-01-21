@@ -39,7 +39,7 @@ namespace boost { namespace dispatch { namespace meta
   };
 } } }
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   using boost::dispatch::meta::constant_;
   using boost::dispatch::meta::pure_constant_;

@@ -18,7 +18,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/assert.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // resize expression internal extension points

@@ -20,7 +20,7 @@
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   #define BOOST_DISPATCH_FOLD_0(z,n,t) BOOST_PP_COMMA_IF(n) BOOST_PP_TUPLE_ELEM(4, 0, t) BOOST_PP_TUPLE_ELEM(4, 2, t)(z,n,BOOST_PP_TUPLE_ELEM(4, 3, t))
   #define BOOST_DISPATCH_FOLD_1(z,n,t) t

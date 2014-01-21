@@ -52,7 +52,7 @@ namespace nt2
     // For any given reduction function tag RED, the registration of their
     // size_of is simply :
     //
-    // namespace nt2 { namespace ext
+    // namespace nt2 { namespace BOOST_SIMD_EXT_NS
     // {
     //  template<class Domain, class Expr, int N>
     //  struct size_of<RED,Domain,N,Expr> : meta::reduction_size<Expr, N>
@@ -109,7 +109,7 @@ namespace nt2
     // For any given reduction function tag RED, the registration of their
     // value_type is simply :
     //
-    // namespace nt2 { namespace ext
+    // namespace nt2 { namespace BOOST_SIMD_EXT_NS
     // {
     //  template<class Domain, class Expr, int N>
     //  struct value_type<RED,Domain,N,Expr> : reduction_value<RED,Expr>

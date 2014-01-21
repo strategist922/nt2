@@ -18,7 +18,7 @@ namespace nt2 { namespace meta
   // For any given reshaping function tag RSH, the registration of their
   // size_of is simply :
   //
-  // namespace nt2 { namespace ext
+  // namespace nt2 { namespace BOOST_SIMD_EXT_NS
   // {
   //  template<class Domain, class Expr, int N>
   //  struct size_of<RSH,Domain,N,Expr> : meta::reshaping_size_of<Expr>

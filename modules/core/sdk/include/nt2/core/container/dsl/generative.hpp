@@ -21,7 +21,7 @@ namespace nt2 { namespace meta
   // For any given generative function tag GEN, the specialization of their
   // value_type is :
   //
-  // namespace nt2 { namespace ext
+  // namespace nt2 { namespace BOOST_SIMD_EXT_NS
   // {
   //  template<class Domain, class Expr, int N>
   //  struct value_type<GEN,Domain,N,Expr> : meta::generative_value<Expr>
@@ -40,7 +40,7 @@ namespace nt2 { namespace meta
   // For any given generative function tag GEN, the specialization of their
   // size_of is simply :
   //
-  // namespace nt2 { namespace ext
+  // namespace nt2 { namespace BOOST_SIMD_EXT_NS
   // {
   //  template<class Domain, class Expr, int N>
   //  struct size_of<GEN,Domain,N,Expr> : meta::generative_size<Expr>

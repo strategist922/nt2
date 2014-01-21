@@ -17,7 +17,7 @@ namespace nt2 { namespace details
   template<class Tag, class Domain, int N, class Expr> struct value_type;
 } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //==========================================================================
   /*!

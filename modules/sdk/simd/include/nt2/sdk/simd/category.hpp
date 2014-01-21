@@ -13,7 +13,7 @@
 #include <boost/simd/sdk/simd/logical.hpp>
 #include <boost/simd/constant/hierarchy.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   using boost::simd::ext::simd_;
   using boost::simd::ext::logical_;

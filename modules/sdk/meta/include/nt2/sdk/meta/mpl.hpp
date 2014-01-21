@@ -13,7 +13,7 @@
 #include <nt2/sdk/meta/hierarchy_of.hpp>
 #include <nt2/sdk/meta/enable_if_type.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   using boost::dispatch::meta::mpl_integral_;
 } }

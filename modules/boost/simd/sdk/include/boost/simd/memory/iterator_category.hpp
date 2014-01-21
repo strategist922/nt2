@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 BOOST_DISPATCH_REGISTER_HIERARCHY(iterator_)
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   using boost::dispatch::meta::iterator_;
 } } }

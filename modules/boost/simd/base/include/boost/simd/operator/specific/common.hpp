@@ -56,13 +56,14 @@ namespace boost { namespace simd { namespace details
 #pragma wave option(preserve: 2, line: 0, output: "preprocessed/common.hpp")
 #undef BOOST_SIMD_MAP_LOG
 #undef BOOST_FORCEINLINE
+#undef BOOST_SIMD_EXT_NS
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Register all tag and extension agnostic call for common code sharing
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   #define M0(z,n,t) (A##n)
   #define M1(z,n,t) (unspecified_<A##n>)

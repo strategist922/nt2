@@ -17,7 +17,7 @@ namespace nt2
 {
   namespace tag { struct table_; }
 
-  namespace ext
+  namespace BOOST_SIMD_EXT_NS
   {
     template<typename Tag, typename Domain, int Arity, typename Expr>
     struct kind_of

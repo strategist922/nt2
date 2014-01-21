@@ -11,7 +11,7 @@
 
 #include <nt2/sdk/meta/hierarchy_of.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //==========================================================================
   /*!

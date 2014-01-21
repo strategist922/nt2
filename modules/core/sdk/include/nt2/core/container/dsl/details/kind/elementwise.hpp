@@ -15,7 +15,7 @@
 #include <boost/proto/detail/deduce_domain.hpp>
 #include <boost/proto/traits.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // default kind_of for 0-2 arity

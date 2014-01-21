@@ -11,7 +11,7 @@
 
 #include <boost/simd/sdk/functor/hierarchy.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   using boost::simd::ext::tieable_;
 } }

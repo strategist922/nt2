@@ -14,7 +14,7 @@
 #include <nt2/dsl/functions/terminal.hpp>
 #include <boost/proto/traits.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //==========================================================================
   /*!

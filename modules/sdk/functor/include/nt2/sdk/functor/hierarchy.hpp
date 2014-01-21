@@ -35,7 +35,7 @@ namespace nt2
     using boost::dispatch::tag::cpu_;
   }
 
-namespace ext
+namespace BOOST_SIMD_EXT_NS
 {
   // Function object
   template<class Sig, class Site, class Enable = void>

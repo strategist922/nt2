@@ -23,7 +23,7 @@ namespace nt2
     using boost::dispatch::meta::hierarchy_of;
   }
 
-namespace ext
+namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Basic hierarchies to be forwarded here
