@@ -18,7 +18,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/assert.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - double load without offset
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::load_

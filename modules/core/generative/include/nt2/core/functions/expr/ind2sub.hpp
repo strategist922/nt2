@@ -17,7 +17,7 @@
 #include <nt2/sdk/meta/value_as.hpp>
 #include <nt2/sdk/meta/size_as.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template <class Domain, class Expr, int N>
   struct  value_type<tag::ind2sub_,Domain,N,Expr>

@@ -48,7 +48,7 @@ namespace nt2
 
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct size_of<tag::rot90_, Domain, 1, Expr>

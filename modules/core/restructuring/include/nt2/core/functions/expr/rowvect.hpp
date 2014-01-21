@@ -12,7 +12,7 @@
 #include <nt2/core/functions/rowvect.hpp>
 #include <nt2/core/container/dsl/forward.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates linearize_ from expression + of_size

@@ -16,7 +16,7 @@
 #include <nt2/include/functions/simd/multiplies.hpp>
 #include <nt2/include/constants/half.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tolerant_round_, tag::cpu_
                             , (A0)

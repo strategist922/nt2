@@ -33,7 +33,7 @@
 #include BOOST_PP_ITERATE()
 #undef FUNCTION_PARAMS
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct value_type<tag::assign_, Domain, 2, Expr>

@@ -12,7 +12,7 @@
 #include <boost/simd/arithmetic/functions/toint.hpp>
 #include <boost/dispatch/meta/as_integer.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::toint_, boost::simd::tag::sse2_ , (A0)
                             , ((simd_<single_<A0>,boost::simd::tag::sse_>))

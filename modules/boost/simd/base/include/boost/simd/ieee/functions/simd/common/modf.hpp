@@ -12,7 +12,7 @@
 #include <boost/simd/include/functions/simd/trunc.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
     BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::modf_, tag::cpu_
                                       , (A0)(X)

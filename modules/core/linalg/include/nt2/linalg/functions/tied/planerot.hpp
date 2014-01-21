@@ -17,7 +17,7 @@
 #include <nt2/include/functions/hypot.hpp>
 #include <nt2/include/constants/zero.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of planerot is called whenever a tie(...) = planerot(...) is captured

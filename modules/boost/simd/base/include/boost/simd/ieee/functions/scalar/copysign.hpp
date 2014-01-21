@@ -14,7 +14,7 @@
 #include <boost/simd/include/functions/scalar/signnz.hpp>
 #include <boost/simd/sdk/math.hpp>
 #include <boost/math/special_functions/sign.hpp>
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::copysign_, tag::cpu_
                             , (A0)

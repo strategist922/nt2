@@ -23,7 +23,7 @@
 #include <nt2/sdk/meta/as_index.hpp>
 #include <boost/utility/swap.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // transpose scalar
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::transpose_, tag::cpu_

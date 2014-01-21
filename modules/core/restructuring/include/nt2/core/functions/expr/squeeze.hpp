@@ -15,7 +15,7 @@
 #include <nt2/core/container/dsl.hpp>
 #include <nt2/include/functions/length.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates squeeze

@@ -13,7 +13,7 @@
 #include <nt2/core/functions/aggregate.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::function_index_, tag::cpu_
                             , (I)(N)(Sz)(Idx)

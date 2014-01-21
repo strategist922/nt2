@@ -14,7 +14,7 @@
 #include <boost/simd/include/constants/allbits.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( simd::tag::True, tag::cpu_, (A0)(X)
                                     , ((target_< simd_< logical_<A0>,X> >))

@@ -15,7 +15,7 @@
 #include <boost/simd/include/functions/simd/mask2logical.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   // FIXME: only enable if sizeof(A0) == sizeof(as_arithmetic<A0>::type)
   // but what do we do if A0 is logical. We have also to enforce that

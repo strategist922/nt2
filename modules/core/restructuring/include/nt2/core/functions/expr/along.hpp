@@ -14,7 +14,7 @@
 #include <nt2/include/functions/along_index.hpp>
 #include <nt2/core/container/dsl/generator.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct size_of<nt2::tag::along_, Domain, 2, Expr>
@@ -37,7 +37,7 @@ namespace nt2 { namespace ext
   };
 } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::along_, tag::cpu_,
                               (A0)(A1),

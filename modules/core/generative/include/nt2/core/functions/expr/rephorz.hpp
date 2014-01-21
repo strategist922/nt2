@@ -12,7 +12,7 @@
 #include <nt2/core/functions/rephorz.hpp>
 #include <nt2/core/container/dsl.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates rephorz from 1 expression

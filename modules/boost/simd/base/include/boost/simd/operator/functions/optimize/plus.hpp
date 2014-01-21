@@ -15,7 +15,7 @@
 #include <boost/dispatch/dsl/category.hpp>
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::plus_ , tag::formal_, (D)(A0)(A1)
                                    , ((node_<A0, boost::simd::tag::multiplies_, mpl::long_<2> , D>))(unspecified_<A1>)

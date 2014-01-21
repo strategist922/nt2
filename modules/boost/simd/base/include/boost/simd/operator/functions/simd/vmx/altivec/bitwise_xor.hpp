@@ -13,7 +13,7 @@
 #include <boost/simd/operator/functions/bitwise_xor.hpp>
 #include <boost/simd/include/functions/simd/bitwise_cast.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::bitwise_xor_, boost::simd::tag::vmx_, (A0)(A1)
                             , ((simd_<arithmetic_<A0>,boost::simd::tag::vmx_>))

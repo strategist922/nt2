@@ -10,7 +10,7 @@
 #define BOOST_SIMD_ARITHMETIC_FUNCTIONS_GENERIC_CONJ_HPP_INCLUDED
 #include <boost/simd/arithmetic/functions/conj.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION(boost::simd::tag::conj_, tag::cpu_,
                        (A0),

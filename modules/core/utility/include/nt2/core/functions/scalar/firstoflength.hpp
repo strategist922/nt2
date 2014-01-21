@@ -12,7 +12,7 @@
 #include <nt2/core/functions/firstoflength.hpp>
 #include <boost/mpl/size_t.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::firstoflength_, tag::cpu_
                               , (A0)(A1), (scalar_< unspecified_<A0> >)(scalar_< integer_<A1> >)

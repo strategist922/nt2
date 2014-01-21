@@ -15,7 +15,7 @@
 #include <nt2/include/functions/assign.hpp>
 #include <nt2/include/functions/tie.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of tr_solve is called whenever a tie(...) = tr_solve(...) is captured

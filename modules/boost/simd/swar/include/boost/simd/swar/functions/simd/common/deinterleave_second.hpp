@@ -12,7 +12,7 @@
 #include <boost/simd/swar/functions/deinterleave_second.hpp>
 #include <boost/simd/sdk/meta/cardinal_of.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::deinterleave_second_, tag::cpu_
                                     , (A0)(A1)(X)

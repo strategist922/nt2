@@ -11,7 +11,7 @@
 
 #include <boost/simd/reduction/functions/prod.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::prod_, tag::cpu_
                                     , (A0)

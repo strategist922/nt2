@@ -21,7 +21,7 @@
 #include <boost/dispatch/meta/upgrade.hpp>
 #include <boost/dispatch/meta/as_unsigned.hpp>
 #
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::muls_, tag::cpu_
                             , (A0)

@@ -75,7 +75,7 @@ namespace nt2
     template < class A0, class K, class T > struct orthog_return{};
   }
 #define NT2_ORTHOG(V, K, Body)                                      \
-  namespace ext                                                     \
+  namespace BOOST_SIMD_EXT_NS                                                     \
   {                                                                 \
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::orthog##K##_, tag::cpu_,  \
                                 (A0)(T),                            \

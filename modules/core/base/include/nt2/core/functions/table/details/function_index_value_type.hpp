@@ -12,7 +12,7 @@
 #include <nt2/core/functions/function_index.hpp>
 #include <nt2/core/container/dsl/value_type.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Extension of value_type to handle function_index call nodes

@@ -17,7 +17,7 @@
 #include <boost/simd/include/functions/simd/fma.hpp>
 #include <boost/simd/include/constants/half.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::average_, tag::cpu_
                                    , (A0)(X)

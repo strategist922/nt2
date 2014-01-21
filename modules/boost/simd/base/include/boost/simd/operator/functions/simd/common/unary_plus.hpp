@@ -9,7 +9,7 @@
 #ifndef BOOST_SIMD_OPERATOR_FUNCTIONS_SIMD_COMMON_UNARY_PLUS_HPP_INCLUDED
 #define BOOST_SIMD_OPERATOR_FUNCTIONS_SIMD_COMMON_UNARY_PLUS_HPP_INCLUDED
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::unary_plus_, tag::cpu_, (A0)(X)
                             , ((simd_<arithmetic_<A0>,X>))

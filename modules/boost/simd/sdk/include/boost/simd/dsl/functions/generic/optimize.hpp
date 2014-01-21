@@ -20,7 +20,7 @@
 //==============================================================================
 // Recognition of expressions
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_REGISTER_DISPATCH_TO( boost::simd::tag::optimize_, tag::formal_
                             , (A0)

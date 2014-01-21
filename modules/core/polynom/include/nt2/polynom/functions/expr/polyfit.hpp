@@ -45,7 +45,7 @@ namespace nt2 {
   };
 
 
-  namespace ext
+  namespace BOOST_SIMD_EXT_NS
   {
     //============================================================================
     // This version of polyfit is called whenever a tie(...) = balance(...) is captured

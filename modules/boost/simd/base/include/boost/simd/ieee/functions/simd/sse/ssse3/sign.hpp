@@ -12,7 +12,7 @@
 #include <boost/simd/ieee/functions/sign.hpp>
 #include <boost/simd/ieee/functions/simd/common/sign.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION(boost::simd::tag::sign_, boost::simd::tag::ssse3_,
                        (A0),

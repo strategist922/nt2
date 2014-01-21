@@ -16,7 +16,7 @@
 #include <nt2/sdk/meta/size_as.hpp>
 #include <boost/assert.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr, int N>
   struct  size_of<nt2::tag::tri1u_,Domain,N,Expr>

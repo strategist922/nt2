@@ -18,7 +18,7 @@
 #include <boost/simd/include/functions/scalar/is_gez.hpp>
 #include <boost/assert.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::predecessor_, tag::cpu_
                             , (A0)

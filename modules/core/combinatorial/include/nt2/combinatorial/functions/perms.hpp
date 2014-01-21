@@ -61,7 +61,7 @@ namespace nt2 { namespace tag
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::perms_, perms, 1)
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   template<class Domain, class Expr,  int N>

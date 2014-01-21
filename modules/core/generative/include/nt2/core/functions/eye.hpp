@@ -166,7 +166,7 @@ namespace nt2
   #endif
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr, int N>
   struct  value_type<tag::eye_,Domain,N,Expr>

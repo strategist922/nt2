@@ -23,7 +23,7 @@
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/sizeof.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::saturate_, tag::cpu_
                                       , (A0)(T)

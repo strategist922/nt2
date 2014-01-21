@@ -31,7 +31,7 @@ namespace nt2
   #undef M0
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class X>
   struct  size_of<nt2::tag::repmat_,Domain,N,X>

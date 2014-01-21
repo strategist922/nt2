@@ -16,7 +16,7 @@
 #include <boost/simd/include/functions/simd/bitwise_or.hpp>
 #include <boost/dispatch/meta/downgrade.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::groups_, boost::simd::tag::sse4_1_, (A0)
                             , ((simd_<uint32_<A0>,boost::simd::tag::sse_>))

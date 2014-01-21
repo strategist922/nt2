@@ -14,7 +14,7 @@
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 #include <boost/simd/memory/functions/details/check_ptr.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - Stream double without offset
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::stream_

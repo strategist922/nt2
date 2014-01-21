@@ -18,7 +18,7 @@
 #include <boost/simd/sdk/simd/meta/is_native.hpp>
 #include <boost/mpl/not.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - Scalar store and store are equivalent
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::store_

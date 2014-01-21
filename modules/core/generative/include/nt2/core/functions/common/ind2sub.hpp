@@ -23,7 +23,7 @@
 #include <nt2/include/functions/numel.hpp>
 #endif
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ind2sub_, tag::cpu_
                             , (A0)(N0)(A1)(N1)

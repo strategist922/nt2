@@ -25,7 +25,7 @@
 #pragma warning(disable: 4308) // negative integral conversion
 #endif
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - Load register of SIMD double without offset
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::aligned_load_

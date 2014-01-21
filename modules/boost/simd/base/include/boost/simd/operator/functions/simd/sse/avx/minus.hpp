@@ -12,7 +12,7 @@
 
 #include <boost/simd/operator/functions/minus.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::minus_, boost::simd::tag::avx_
                             , (A0)
@@ -29,7 +29,7 @@ namespace boost { namespace simd { namespace ext
   };
 } } }
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::minus_, boost::simd::tag::avx_
                             , (A0)

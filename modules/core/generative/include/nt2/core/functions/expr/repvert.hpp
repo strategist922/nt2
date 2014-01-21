@@ -11,7 +11,7 @@
 
 #include <nt2/core/functions/repvert.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates repvert from 1 expression

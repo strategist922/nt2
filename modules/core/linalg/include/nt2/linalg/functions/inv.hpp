@@ -40,7 +40,7 @@ namespace nt2 { namespace tag
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::inv_, inv, 2)
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr,  int N> //N == 1 only
   struct  size_of<tag::inv_, Domain, N, Expr>

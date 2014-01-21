@@ -10,7 +10,7 @@
 #define BOOST_SIMD_OPERATOR_FUNCTIONS_SIMD_VMX_ALTIVEC_COMPLEMENT_HPP_INCLUDED
 #ifdef BOOST_SIMD_HAS_VMX_SUPPORT
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::complement_, boost::simd::tag::vmx_, (A0)
                             , ((simd_<arithmetic_<A0>,boost::simd::tag::vmx_>))

@@ -16,7 +16,7 @@
 #include <nt2/include/functions/multiplies.hpp>
 #include <nt2/include/constants/one.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct  size_of<boost::simd::tag::prod_,Domain,1,Expr>

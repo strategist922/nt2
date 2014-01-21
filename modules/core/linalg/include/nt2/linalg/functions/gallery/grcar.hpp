@@ -14,7 +14,7 @@
 #include <nt2/include/functions/triu.hpp>
 #include <nt2/include/functions/from_diag.hpp>
 
-namespace nt2 {namespace ext
+namespace nt2 {namespace BOOST_SIMD_EXT_NS
 {
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::grcar_, tag::cpu_,

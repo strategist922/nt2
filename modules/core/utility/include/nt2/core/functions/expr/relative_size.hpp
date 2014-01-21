@@ -14,7 +14,7 @@
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/core/functions/details/colon.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Compute indexing size using any expression in the non 1D cases

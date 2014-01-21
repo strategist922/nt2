@@ -96,7 +96,7 @@ namespace nt2
   #endif
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   template<class Domain, int N, class Expr>

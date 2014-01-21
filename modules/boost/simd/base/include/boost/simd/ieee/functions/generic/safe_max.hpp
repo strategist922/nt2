@@ -15,7 +15,7 @@
 #include <boost/simd/include/constants/sqrtvalmax.hpp>
 #include <boost/simd/include/constants/inf.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::safe_max_, tag::cpu_
                                     , (A0), (generic_< floating_<A0> >)

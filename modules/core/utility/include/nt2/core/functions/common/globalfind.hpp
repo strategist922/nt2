@@ -15,7 +15,7 @@
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/sdk/memory/container_shared_ref.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::globalfind_, tag::cpu_

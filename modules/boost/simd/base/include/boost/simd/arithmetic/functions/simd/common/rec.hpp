@@ -16,7 +16,7 @@
 #include <boost/simd/include/functions/simd/if_else_allbits.hpp>
 
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::rec_, tag::cpu_
                             , (A0)(X)

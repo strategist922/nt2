@@ -15,7 +15,7 @@
 #include <nt2/include/functions/assign.hpp>
 #include <nt2/include/functions/tie.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of full_lu_solve is called whenever a tie(...) = full_lu_solve(...) is captured

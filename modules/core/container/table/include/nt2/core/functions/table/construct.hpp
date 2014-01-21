@@ -17,7 +17,7 @@
 #include <nt2/sdk/memory/copy.hpp>
 #include <boost/simd/memory/iterator_category.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   using boost::dispatch::meta::iterator_;
 

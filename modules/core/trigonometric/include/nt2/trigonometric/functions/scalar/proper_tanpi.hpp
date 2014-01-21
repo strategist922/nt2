@@ -19,7 +19,7 @@
 #include <nt2/include/functions/rec.hpp>
 #include <nt2/include/functions/is_nan.hpp>
 // compute atan (pi*x)  for -1/2 <= x << 1/2 else return nan
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::proper_tanpi_, tag::cpu_
                             , (A0)

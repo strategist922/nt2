@@ -14,7 +14,7 @@
 #include <nt2/core/container/dsl/domain.hpp>
 #include <boost/proto/expr.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // size is that of left-hand side
   template<class Domain, class Expr>

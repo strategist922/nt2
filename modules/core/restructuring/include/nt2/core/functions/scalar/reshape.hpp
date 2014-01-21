@@ -26,7 +26,7 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   #define M6(z,n,t)  A##n const&                                               \
   BOOST_PP_IF ( BOOST_PP_EQUAL(n,t)                                            \

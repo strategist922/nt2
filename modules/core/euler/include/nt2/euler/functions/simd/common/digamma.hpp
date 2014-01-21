@@ -45,7 +45,7 @@
 #include <nt2/include/constants/pi.hpp>
 #include <nt2/include/constants/two.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::digamma_, tag::cpu_
                             , (A0)(X)

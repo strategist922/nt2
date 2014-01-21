@@ -13,7 +13,7 @@
 #include <nt2/core/container/extremum/category.hpp>
 #include <nt2/core/functions/details/colon.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates colon from a pair of [low,begin_/end_+offset]

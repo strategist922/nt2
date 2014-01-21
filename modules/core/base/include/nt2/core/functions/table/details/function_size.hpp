@@ -13,7 +13,7 @@
 #include <nt2/core/functions/function_index.hpp>
 #include <nt2/sdk/meta/size_as.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Size of a function call node depends of the indexers

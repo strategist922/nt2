@@ -17,7 +17,7 @@
 #include <nt2/core/utility/as_subscript.hpp>
 #include <nt2/sdk/memory/container_shared_ref.hpp>
 #include <boost/fusion/include/make_vector.hpp>
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::findi_, tag::cpu_

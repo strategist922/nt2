@@ -15,7 +15,7 @@
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/core/utility/of_size/mpl_value.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   template<class Domain, int N, class Expr>

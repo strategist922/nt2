@@ -23,7 +23,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template <class Domain, class Expr, int N>
   struct  value_type<tag::sub2ind_,Domain,N,Expr>

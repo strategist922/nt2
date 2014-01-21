@@ -14,7 +14,7 @@
 #include <boost/simd/sdk/simd/meta/retarget.hpp>
 #include <boost/simd/sdk/meta/is_upgradable.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::split_multiplies_

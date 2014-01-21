@@ -13,7 +13,7 @@
 #include <nt2/include/functions/scalar/erfinv.hpp>
 #include <nt2/include/functions/scalar/oneminus.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::erfcinv_, tag::cpu_
                             , (A0)

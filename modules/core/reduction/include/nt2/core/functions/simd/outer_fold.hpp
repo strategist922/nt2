@@ -22,7 +22,7 @@
 #endif
 
 #ifndef BOOST_SIMD_NO_SIMD
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Partial outer_fold with offset/size

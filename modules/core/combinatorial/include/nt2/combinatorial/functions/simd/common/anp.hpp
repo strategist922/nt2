@@ -21,7 +21,7 @@
 //moreover the commented part induce in short errors in clang
 // results depending on cout being there or not
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 //   NT2_FUNCTOR_IMPLEMENTATION(nt2::tag::anp_, tag::cpu_,
 //                       (A0)(X),

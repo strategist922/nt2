@@ -16,7 +16,7 @@
 #include <nt2/include/functions/size.hpp>
 #include <nt2/include/functions/colon.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::krylov_, tag::cpu_,

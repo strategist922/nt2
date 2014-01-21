@@ -22,7 +22,7 @@
 #include <boost/mpl/equal_to.hpp>
 #include <iterator>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - Regular SIMD store
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::aligned_store_

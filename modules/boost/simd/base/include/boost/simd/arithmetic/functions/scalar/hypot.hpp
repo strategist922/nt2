@@ -26,7 +26,7 @@
 #include <boost/simd/sdk/meta/make_dependent.hpp>
 #include <boost/dispatch/meta/as_integer.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   template < class T, class I = typename dispatch::meta::as_integer<T, signed>::type>
   struct hypot_constants;

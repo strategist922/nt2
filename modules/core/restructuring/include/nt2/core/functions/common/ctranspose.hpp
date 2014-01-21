@@ -18,7 +18,7 @@
 #include <nt2/include/functions/run.hpp>
 #include <nt2/sdk/functor/preprocessor/dispatch.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // ctranspose scalar
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ctranspose_, tag::cpu_

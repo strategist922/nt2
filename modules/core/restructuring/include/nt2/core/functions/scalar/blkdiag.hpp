@@ -14,7 +14,7 @@
 #include <nt2/include/functions/diag_of.hpp>
 #include <nt2/include/functions/horzcat.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::blkdiag_, tag::cpu_, (A0)

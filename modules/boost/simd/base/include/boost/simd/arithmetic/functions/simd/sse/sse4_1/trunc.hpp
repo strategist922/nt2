@@ -12,7 +12,7 @@
 
 #include <boost/simd/arithmetic/functions/trunc.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::trunc_, boost::simd::tag::sse4_1_
                             , (A0)

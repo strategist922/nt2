@@ -18,7 +18,7 @@
 #include <nt2/core/functions/of_size.hpp>
 #include <nt2/include/functions/firstnonsingleton.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::cdiff_, tag::cpu_,

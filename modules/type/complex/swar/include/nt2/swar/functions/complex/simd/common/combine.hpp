@@ -14,7 +14,7 @@
 #include <nt2/include/functions/imag.hpp>
 #include <boost/simd/sdk/simd/meta/vector_of.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( boost::simd::tag::combine_
                             , tag::cpu_

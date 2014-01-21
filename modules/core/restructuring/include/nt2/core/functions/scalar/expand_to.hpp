@@ -19,7 +19,7 @@
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   #define M2(z,n,t) (A##n)
   #define M1(z,n,t) (scalar_< integer_<A##n> >)

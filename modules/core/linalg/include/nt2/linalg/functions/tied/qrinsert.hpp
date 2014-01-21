@@ -21,7 +21,7 @@
 #include <nt2/include/functions/conj.hpp>
 #include <nt2/include/functions/planerot.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Capture a tie(l, u, p) = qrinsert(...) at assign time and resolve to optimized call

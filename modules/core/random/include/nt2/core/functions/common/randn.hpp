@@ -13,7 +13,7 @@
 #include <nt2/include/functions/run.hpp>
 #include <nt2/core/utility/randstream.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // randn evaluation

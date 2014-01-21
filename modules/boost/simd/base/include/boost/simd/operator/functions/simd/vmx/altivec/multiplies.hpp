@@ -17,7 +17,7 @@
 #include <boost/simd/include/constants/mzero.hpp>
 #include <boost/simd/include/constants/zero.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::multiplies_, boost::simd::tag::vmx_, (A0)
                             , ((simd_<single_<A0>,boost::simd::tag::vmx_>))

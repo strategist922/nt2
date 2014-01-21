@@ -24,7 +24,7 @@
 #include <nt2/include/constants/pi.hpp>
 #include <boost/simd/sdk/config.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::atan2_, tag::cpu_

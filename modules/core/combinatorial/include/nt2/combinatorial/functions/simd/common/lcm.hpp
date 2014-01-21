@@ -17,7 +17,7 @@
 #include <nt2/include/functions/simd/selinc.hpp>
 #include <nt2/include/functions/simd/is_eqz.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION(nt2::tag::lcm_, tag::cpu_,
                       (A0)(X),

@@ -14,7 +14,7 @@
 #include <boost/simd/sdk/functor/hierarchy.hpp>
 #include <boost/dispatch/attributes.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::insert_

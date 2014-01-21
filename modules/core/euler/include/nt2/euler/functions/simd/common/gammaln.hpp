@@ -13,7 +13,7 @@
 #include <nt2/sdk/meta/adapted_traits.hpp>
 #include <nt2/include/functions/simd/tofloat.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::gammaln_, tag::cpu_
                             , (A0)(X)

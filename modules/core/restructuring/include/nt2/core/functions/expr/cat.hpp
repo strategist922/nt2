@@ -13,7 +13,7 @@
 #include <nt2/core/functions/cat.hpp>
 #include <nt2/include/functions/arecatcompatible.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates cat from 2 expressions

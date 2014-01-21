@@ -34,7 +34,7 @@ namespace nt2
   NT2_FUNCTION_IMPLEMENTATION(tag::planerot_, planerot, 1)
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct  size_of<tag::planerot_,Domain,N,Expr>

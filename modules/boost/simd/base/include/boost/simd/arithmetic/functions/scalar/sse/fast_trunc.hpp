@@ -12,7 +12,7 @@
 #if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
 #include <boost/simd/arithmetic/functions/fast_trunc.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::fast_trunc_
                                    , boost::simd::tag::sse_

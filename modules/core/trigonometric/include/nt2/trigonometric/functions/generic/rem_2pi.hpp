@@ -34,7 +34,7 @@
 #include <nt2/trigonometric/functions/scalar/impl/trigo/selection_tags.hpp>
 #include <nt2/sdk/meta/as_floating.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
 

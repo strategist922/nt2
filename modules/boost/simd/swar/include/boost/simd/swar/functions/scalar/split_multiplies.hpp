@@ -12,7 +12,7 @@
 #include <boost/simd/swar/functions/split_multiplies.hpp>
 #include <boost/dispatch/meta/upgrade.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::split_multiplies_, tag::cpu_
                                     , (A0)

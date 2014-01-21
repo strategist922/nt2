@@ -15,7 +15,7 @@
 #include <boost/simd/include/functions/simd/make.hpp>
 #include <boost/simd/include/functions/simd/fma.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::enumerate_, tag::cpu_
                                     , (X)(T)

@@ -13,7 +13,7 @@
 #include <nt2/core/container/dsl/forward.hpp>
 #include <nt2/include/functions/extent.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::length_, tag::cpu_
                             , (A0)

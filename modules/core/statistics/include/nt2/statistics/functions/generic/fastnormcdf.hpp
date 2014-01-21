@@ -28,7 +28,7 @@
 #include <nt2/include/constants/invsqrt_2pi.hpp>
 #include <nt2/sdk/meta/scalar_of.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::fastnormcdf_, tag::cpu_
                             , (A0)

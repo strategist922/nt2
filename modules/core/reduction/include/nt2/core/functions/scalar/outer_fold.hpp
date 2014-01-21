@@ -33,7 +33,7 @@ namespace nt2 { namespace details
  }
 }}
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Global outer_fold

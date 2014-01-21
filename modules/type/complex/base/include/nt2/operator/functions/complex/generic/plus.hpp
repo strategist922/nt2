@@ -18,7 +18,7 @@
 // for optimize
 #include <nt2/include/functions/fma.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // complex/complex
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::plus_, tag::cpu_, (A0)

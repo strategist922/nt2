@@ -13,7 +13,7 @@
 #include <boost/simd/operator/functions/bitwise_or.hpp>
 #include <boost/simd/include/functions/simd/genmask.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::bitwise_or_, boost::simd::tag::avx_
                             , (A0)(A1)

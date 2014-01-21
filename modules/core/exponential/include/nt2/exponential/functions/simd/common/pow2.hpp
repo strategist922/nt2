@@ -21,7 +21,7 @@
 #include <nt2/include/constants/zero.hpp>
 #include <boost/dispatch/meta/as_floating.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::pow2_, tag::cpu_
                             , (A0)(A1)(X)
@@ -39,7 +39,7 @@ namespace nt2 { namespace ext
 } }
 
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::pow2_, tag::cpu_
                             , (A0)(X)

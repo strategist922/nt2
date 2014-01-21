@@ -91,7 +91,7 @@ namespace nt2 { namespace tag
   NT2_FUNCTION_IMPLEMENTATION(tag::polyfit_, polyfit, 2)
 }
 
- namespace nt2 { namespace ext
+ namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   template<class Domain, int N, class Expr>

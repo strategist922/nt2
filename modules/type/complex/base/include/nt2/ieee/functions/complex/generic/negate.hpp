@@ -16,7 +16,7 @@
 #include <nt2/include/functions/if_else_zero.hpp>
 #include <nt2/include/functions/unary_minus.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION(nt2::tag::negate_, tag::cpu_,
                              (A0)(A1),

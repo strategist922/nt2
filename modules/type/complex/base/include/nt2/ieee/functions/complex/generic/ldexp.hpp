@@ -15,7 +15,7 @@
 #include <nt2/sdk/complex/meta/as_complex.hpp>
 #include <nt2/sdk/complex/meta/as_real.hpp>
 
-namespace nt2  { namespace ext
+namespace nt2  { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ldexp_, tag::cpu_, (A0)(A1)
                             , (generic_< complex_ < floating_<A0> > >)

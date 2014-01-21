@@ -22,7 +22,7 @@
 #include <boost/array.hpp>
 #include <boost/assert.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct size_of<nt2::tag::along_index_, Domain, 3 ,Expr>
@@ -51,7 +51,7 @@ namespace nt2 { namespace ext
   };
 } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::along_index_, tag::cpu_,
                               (A0)(A1)(A2),

@@ -30,7 +30,7 @@
 // perhaps divs for signed integral types must invoke correct Valmin entry and invoke  divfix
 // also call simply divfix for unsigned
 // also rdivide has to be defined as divs for float and as divfix for integers
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::divs_, tag::cpu_, (A0)(X)
                             , ((simd_<floating_<A0>,X>))

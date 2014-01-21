@@ -14,7 +14,7 @@
 #include <boost/simd/swar/functions/details/butterfly.hpp>
 #include <boost/simd/sdk/simd/category.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   // Regular, generic SIMD version
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::all_reduce_

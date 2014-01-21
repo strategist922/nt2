@@ -16,7 +16,7 @@
 //==============================================================================
 // make for double
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::make_, boost::simd::tag::avx_, (A0)
                             , ((target_< simd_< double_<A0>, boost::simd::tag::avx_ > >))
@@ -32,7 +32,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // make for 64bits integers
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::make_, boost::simd::tag::avx_, (A0)
                             , ((target_< simd_< ints64_<A0>, boost::simd::tag::avx_ > >))
@@ -60,7 +60,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // make for float
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::make_, boost::simd::tag::avx_, (A0)
                             , ((target_< simd_< single_<A0>, boost::simd::tag::avx_ > >))
@@ -76,7 +76,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // make for 32 bits integer
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::make_, boost::simd::tag::avx_, (A0)
                             , ((target_< simd_< ints32_<A0>, boost::simd::tag::avx_ > >))
@@ -92,7 +92,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // make for 16 bits integer
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::make_, boost::simd::tag::avx_, (A0)
                             , ((target_< simd_< ints16_<A0>, boost::simd::tag::avx_ > >))
@@ -109,7 +109,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // make for 8 bits integer
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::make_, boost::simd::tag::avx_, (A0)
                             , ((target_< simd_< ints8_<A0>, boost::simd::tag::avx_ > >))

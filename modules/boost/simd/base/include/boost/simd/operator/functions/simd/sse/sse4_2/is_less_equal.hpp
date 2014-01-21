@@ -14,7 +14,7 @@
 #include <boost/simd/include/functions/simd/logical_not.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::is_less_equal_, boost::simd::tag::sse4_2_
                             , (A0)

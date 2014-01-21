@@ -19,7 +19,7 @@
 #include <nt2/linalg/functions/details/tr_solve.hpp>
 #include <nt2/sdk/error/warning.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::solvers::tr_solve_, tag::cpu_
                               , (A0)(A1)(A2)(A3)(A4)

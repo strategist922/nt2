@@ -12,7 +12,7 @@
 #include <boost/simd/swar/functions/enumerate.hpp>
 #include <boost/simd/include/constants/zero.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::enumerate_, tag::cpu_
                                     , (T)

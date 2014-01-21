@@ -24,7 +24,7 @@
 //==============================================================================
 namespace nt2 { namespace details { template<class T> struct pispace; } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates pispace from a pair of [low,up]

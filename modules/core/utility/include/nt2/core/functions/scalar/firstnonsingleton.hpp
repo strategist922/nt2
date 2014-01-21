@@ -12,7 +12,7 @@
 #include <nt2/core/functions/firstnonsingleton.hpp>
 #include <boost/mpl/size_t.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::firstnonsingleton_, tag::cpu_
                             , (A0), (scalar_< unspecified_<A0> >)

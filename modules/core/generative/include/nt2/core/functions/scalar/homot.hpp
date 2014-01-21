@@ -14,7 +14,7 @@
 #include <nt2/sdk/meta/constant_adaptor.hpp>
 #include <nt2/core/functions/details/homot.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::homot_, tag::cpu_
                             , (A0)(Seq)

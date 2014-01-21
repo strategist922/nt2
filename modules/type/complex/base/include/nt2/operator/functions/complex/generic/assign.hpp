@@ -14,7 +14,7 @@
 #include <nt2/sdk/meta/real_of.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION_IF( nt2::tag::assign_, tag::cpu_
                                , (A0)(A1)

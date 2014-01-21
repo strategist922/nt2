@@ -24,7 +24,7 @@
 #include <boost/simd/include/constants/int_splat.hpp>
 #include <boost/simd/sdk/meta/make_dependent.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
 
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::shift_right_, boost::simd::tag::sse2_

@@ -49,7 +49,7 @@ result_type eval( A0 const& a0, A0 const& a1                                   \
 }                                                                              \
 /**/
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::shuffle_, tag::cpu_
                                       , (A0)(X)(P)

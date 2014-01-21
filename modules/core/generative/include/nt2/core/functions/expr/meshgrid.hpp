@@ -17,7 +17,7 @@
 #include <nt2/core/utility/of_size/mpl_value.hpp>
 #include <nt2/include/functions/numel.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template <class Domain, class Expr, int N>
   struct  value_type<tag::meshgrid_,Domain,N,Expr>

@@ -11,7 +11,7 @@
 #include <boost/simd/arithmetic/functions/touint.hpp>
 #include <boost/dispatch/meta/as_integer.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::touint_, tag::cpu_ , (A0)
                             , (scalar_< integer_<A0> >)

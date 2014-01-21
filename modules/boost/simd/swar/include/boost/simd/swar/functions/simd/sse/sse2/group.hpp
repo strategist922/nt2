@@ -13,7 +13,7 @@
 #include <boost/simd/swar/functions/group.hpp>
 #include <boost/dispatch/meta/downgrade.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Implementation when type A0 is double

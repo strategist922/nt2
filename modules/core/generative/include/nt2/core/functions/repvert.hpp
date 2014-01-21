@@ -27,7 +27,7 @@ namespace nt2
   NT2_FUNCTION_IMPLEMENTATION(nt2::tag::repvert_, repvert, 2)
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct  value_type<nt2::tag::repvert_,Domain,N,Expr>

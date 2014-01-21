@@ -14,7 +14,7 @@
 #include <nt2/include/functions/norminv.hpp>
 #include <nt2/include/functions/randn.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates normrnd from expression (support size(a) + type calls)

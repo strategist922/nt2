@@ -38,7 +38,7 @@
 #include <nt2/include/constants/eps.hpp>
 #include <nt2/core/container/table/table.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::randcorr_, tag::cpu_,

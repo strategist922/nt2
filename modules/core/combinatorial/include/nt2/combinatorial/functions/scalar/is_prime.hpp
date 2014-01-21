@@ -25,7 +25,7 @@
 #include <nt2/sdk/meta/as_logical.hpp>
 #include <nt2/core/container/table/table.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::is_prime_, tag::cpu_
                             , (A0)

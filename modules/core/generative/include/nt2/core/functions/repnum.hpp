@@ -35,7 +35,7 @@ namespace nt2
   #undef M0
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr, int N>
   struct  value_type<tag::repnum_,Domain,N,Expr>

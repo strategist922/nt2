@@ -16,7 +16,7 @@
 #include <boost/simd/memory/iterator_category.hpp>
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - Scalar stream and store are equivalent
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::stream_

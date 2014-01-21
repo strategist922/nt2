@@ -13,7 +13,7 @@
 #include <boost/simd/include/functions/scalar/is_unord.hpp>
 #include <boost/simd/include/constants/nan.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::min_, tag::cpu_
                             , (A0)

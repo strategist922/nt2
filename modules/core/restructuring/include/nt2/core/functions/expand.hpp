@@ -60,7 +60,7 @@ namespace nt2
   #undef M0
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   template<class Domain, class Expr, int N>

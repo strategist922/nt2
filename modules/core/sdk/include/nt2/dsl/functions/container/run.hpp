@@ -29,7 +29,7 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <numeric>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Element-wise operations go to transform

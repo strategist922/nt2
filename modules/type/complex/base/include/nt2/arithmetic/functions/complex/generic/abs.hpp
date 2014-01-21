@@ -30,7 +30,7 @@
 #include <nt2/include/functions/simd/unary_minus.hpp>
 #include <nt2/include/constants/inf.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::abs_, tag::cpu_, (A0)
                             , (generic_< complex_< floating_<A0> > >)

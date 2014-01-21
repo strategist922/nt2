@@ -17,7 +17,7 @@
 #include <nt2/include/functions/simd/sqrt.hpp>
 #include <nt2/include/constants/ten.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::db2mag_, tag::cpu_
                             , (A0)

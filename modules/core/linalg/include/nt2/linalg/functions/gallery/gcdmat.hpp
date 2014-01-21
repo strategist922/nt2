@@ -15,7 +15,7 @@
 #include <nt2/include/functions/colvect.hpp>
 #include <nt2/include/functions/cast.hpp>
 
-namespace nt2 {namespace ext
+namespace nt2 {namespace BOOST_SIMD_EXT_NS
 {
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::gcdmat_, tag::cpu_,

@@ -15,7 +15,7 @@
 #include <nt2/sdk/meta/tieable_hierarchy.hpp>
 #include <boost/simd/sdk/meta/iterate.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // run tie(...) does nothing (doesn't make sense to evaluate it)

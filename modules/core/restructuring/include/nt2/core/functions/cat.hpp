@@ -47,7 +47,7 @@ namespace nt2
   }
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   /// Computes the extent of a cat expression as being the "concatenation" of

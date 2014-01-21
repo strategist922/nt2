@@ -15,7 +15,7 @@
 #include <boost/simd/sdk/meta/cardinal_of.hpp>
 #include <boost/mpl/equal_to.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF ( boost::simd::tag::seladd_, tag::cpu_, (A0)(A1)(X)
                                 , (boost::mpl::equal_to < boost::simd::meta::cardinal_of<A0>

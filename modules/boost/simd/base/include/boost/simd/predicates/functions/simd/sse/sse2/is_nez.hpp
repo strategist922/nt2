@@ -17,7 +17,7 @@
 #include <boost/dispatch/meta/downgrade.hpp>
 #include <boost/simd/swar/functions/details/shuffle.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::is_nez_
                                     , boost::simd::tag::sse2_

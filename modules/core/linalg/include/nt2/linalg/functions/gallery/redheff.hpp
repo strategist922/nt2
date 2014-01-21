@@ -31,7 +31,7 @@ namespace nt2
     };
   }
 
-  namespace ext
+  namespace BOOST_SIMD_EXT_NS
   {
 
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::redheff_, tag::cpu_,

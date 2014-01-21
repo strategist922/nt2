@@ -14,7 +14,7 @@
 #include <nt2/include/functions/assign.hpp>
 #include <nt2/include/functions/tie.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of svd is called whenever a tie(u, w, v) = svd(a, ...) is captured

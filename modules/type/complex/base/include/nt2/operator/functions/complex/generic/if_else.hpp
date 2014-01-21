@@ -20,7 +20,7 @@
 #include <nt2/include/functions/real.hpp>
 #include <nt2/include/functions/imag.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //complex/complex 1 -1
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::if_else_, tag::cpu_, (A0)

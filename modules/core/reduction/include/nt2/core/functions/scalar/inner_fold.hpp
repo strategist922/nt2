@@ -15,7 +15,7 @@
 #include <nt2/include/functions/scalar/numel.hpp>
 #include <nt2/include/functor.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
   //============================================================================

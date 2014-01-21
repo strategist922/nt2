@@ -12,7 +12,7 @@
 #include <nt2/core/functions/extent.hpp>
 #include <nt2/core/utility/of_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::extent_, tag::cpu_
                             , (A0), (unspecified_<A0>)

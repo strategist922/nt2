@@ -17,7 +17,7 @@
 #include <boost/dispatch/attributes.hpp>
 #include <boost/simd/meta/is_pointing_to.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - double SIMD store without offset
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::store_

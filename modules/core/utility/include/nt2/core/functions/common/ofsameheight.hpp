@@ -13,7 +13,7 @@
 #include <nt2/core/container/dsl/forward.hpp>
 #include <nt2/include/functions/height.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ofsameheight_, tag::cpu_
                             , (A0)(A1)

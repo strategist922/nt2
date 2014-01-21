@@ -18,7 +18,7 @@
 #include <boost/dispatch/attributes.hpp>
 #include <boost/dispatch/meta/mpl.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - Regular scalar store with offset
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::aligned_store_, tag::cpu_

@@ -16,7 +16,7 @@
 #include <nt2/include/functions/simd/ilog2.hpp>
 #include <boost/simd/sdk/simd/meta/is_native.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::log2_, tag::cpu_
                             , (A0)

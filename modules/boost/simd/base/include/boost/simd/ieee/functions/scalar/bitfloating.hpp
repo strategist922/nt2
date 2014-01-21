@@ -15,7 +15,7 @@
 #include <boost/simd/include/constants/signmask.hpp>
 #include <boost/dispatch/meta/as_floating.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION(boost::simd::tag::bitfloating_, tag::cpu_,
                              (A0),

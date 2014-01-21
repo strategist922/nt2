@@ -28,7 +28,7 @@
 #include <nt2/include/functions/simd/if_zero_else.hpp>
 #endif
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::sincpi_, boost::simd::tag::simd_
                             , (A0)(X)

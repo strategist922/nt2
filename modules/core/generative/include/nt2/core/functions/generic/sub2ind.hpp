@@ -26,7 +26,7 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
    #define BOOST_PP_FILENAME_1 "nt2/core/functions/generic/sub2ind.hpp"
    #define BOOST_PP_ITERATION_LIMITS (2, BOOST_PP_INC(NT2_MAX_DIMENSIONS))

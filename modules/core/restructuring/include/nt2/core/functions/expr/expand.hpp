@@ -14,7 +14,7 @@
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/include/functions/as_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - expand from ast + fusion sequence as size
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::expand_, tag::cpu_

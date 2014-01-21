@@ -12,7 +12,7 @@
 
 #include <boost/simd/constant/constants/zero.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( simd::tag::Zero, boost::simd::tag::sse2_, (A0)
                                     , ((target_< simd_< single_<A0>, boost::simd::tag::sse_> >))

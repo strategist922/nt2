@@ -19,7 +19,7 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/dispatch/meta/result_of.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   #define M0(z, n, t) (A##n)
   #define M1(z, n, t) (generic_< unspecified_<A##n> >)

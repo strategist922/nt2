@@ -17,7 +17,7 @@
 #include <boost/simd/sdk/meta/scalar_of.hpp>
 #include <boost/dispatch/meta/upgrade.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::split_low_
                                       , tag::cpu_

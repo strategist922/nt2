@@ -9,7 +9,7 @@
 #ifndef BOOST_SIMD_OPERATOR_FUNCTIONS_SCALAR_MINUS_HPP_INCLUDED
 #define BOOST_SIMD_OPERATOR_FUNCTIONS_SCALAR_MINUS_HPP_INCLUDED
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::minus_, tag::cpu_, (A0)
                             , (scalar_< arithmetic_<A0> >)

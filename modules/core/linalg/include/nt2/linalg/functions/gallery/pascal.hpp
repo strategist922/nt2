@@ -22,7 +22,7 @@
 #include <nt2/include/constants/one.hpp>
 #include <nt2/core/container/dsl.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //1
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::pascal_, tag::cpu_,

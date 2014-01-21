@@ -13,7 +13,7 @@
 #include <nt2/trigonometric/functions/simd/common/impl/trigo.hpp>
 #include <boost/simd/sdk/simd/meta/is_native.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::cotpi_, tag::cpu_
                             , (A0)

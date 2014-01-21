@@ -13,7 +13,7 @@
 #include <boost/simd/include/functions/scalar/bitwise_and.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::is_not_equal_with_equal_nans_
                                    , tag::cpu_, (A0)

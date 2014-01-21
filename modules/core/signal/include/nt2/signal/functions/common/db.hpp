@@ -18,7 +18,7 @@
 #include <nt2/include/functions/simd/sqr.hpp>
 #include <nt2/include/constants/ten.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // voltage is the default
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::db_, tag::cpu_

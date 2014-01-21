@@ -19,7 +19,7 @@
 // shuffle_epi8 instead of the SSE2 web of shuffles required for those
 // types.
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::all_reduce_
                                     , boost::simd::tag::simd_

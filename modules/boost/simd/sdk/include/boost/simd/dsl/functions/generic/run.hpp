@@ -25,7 +25,7 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/selection/min.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /* Adapt Data with Expr whenever it is a target */
   template<class Expr, class Data>

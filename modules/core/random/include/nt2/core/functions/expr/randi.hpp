@@ -14,7 +14,7 @@
 #include <nt2/core/include/functions/as_size.hpp>
 #include <nt2/core/include/functions/numel.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // imax + size
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::randi_, tag::cpu_

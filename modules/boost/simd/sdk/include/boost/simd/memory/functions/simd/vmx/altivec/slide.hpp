@@ -15,7 +15,7 @@
 #include <boost/dispatch/meta/mpl.hpp>
 #include <boost/dispatch/attributes.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - slide between scalar values
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::slide_

@@ -18,7 +18,7 @@
 #include <nt2/include/functions/scalar/fuzzy_equal.hpp>
 #include <nt2/include/functions/scalar/tolerant_floor.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   /// Generates colon from a pair of [low,up]

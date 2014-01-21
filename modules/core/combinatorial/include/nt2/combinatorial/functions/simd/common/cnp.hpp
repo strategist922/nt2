@@ -17,7 +17,7 @@
 #include <nt2/include/functions/simd/group.hpp>
 #include <nt2/sdk/meta/upgrade.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 //   NT2_FUNCTOR_IMPLEMENTATION(nt2::tag::cnp_, tag::cpu_,
 //                       (A0)(X),

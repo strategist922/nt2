@@ -11,7 +11,7 @@
 
 #include <nt2/core/functions/colvect.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::colvect_, tag::cpu_, (A0)

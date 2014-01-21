@@ -12,7 +12,7 @@
 #include <nt2/boolean/functions/if_zero_else_one.hpp>
 #include <nt2/include/functions/is_nez.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::if_zero_else_one_, tag::cpu_, (A0)
                             ,  (generic_< complex_<floating_<A0> > >)

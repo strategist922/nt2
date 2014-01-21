@@ -14,7 +14,7 @@
 #include <boost/simd/include/functions/simd/interleave_first.hpp>
 #include <boost/simd/include/functions/simd/interleave_second.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::split_multiplies_
                                    , boost::simd::tag::sse4_1_

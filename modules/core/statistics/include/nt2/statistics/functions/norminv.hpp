@@ -100,7 +100,7 @@ namespace nt2 { namespace tag
   /// @overload
   NT2_FUNCTION_IMPLEMENTATION(tag::norminv_,  norminv, 4)
 }
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   template<class Domain, int N, class Expr>

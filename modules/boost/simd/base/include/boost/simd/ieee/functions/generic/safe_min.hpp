@@ -13,7 +13,7 @@
 #include <boost/simd/include/functions/simd/abs.hpp>
 #include <boost/simd/include/constants/sqrtsmallestposval.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
 
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::safe_min_, tag::cpu_

@@ -24,7 +24,7 @@
 #include <boost/simd/sdk/meta/scalar_of.hpp>
 #include <boost/simd/sdk/simd/meta/is_logical_mask.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // With no idea what we're doing, just fill the vector piecewise

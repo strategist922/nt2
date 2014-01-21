@@ -29,7 +29,7 @@
 
 #define MKN(N) simd::bitwise_cast<vtype##N>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION(boost::simd::tag::ilogb_, boost::simd::tag::sse2_,
                         (A0),

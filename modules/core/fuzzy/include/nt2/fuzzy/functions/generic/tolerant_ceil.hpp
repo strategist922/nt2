@@ -11,7 +11,7 @@
 #include <nt2/fuzzy/functions/tolerant_ceil.hpp>
 #include <nt2/include/functions/simd/tolerant_floor.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tolerant_ceil_, tag::cpu_
                             , (A0)

@@ -27,7 +27,7 @@
 #include <nt2/include/functions/simd/bitwise_and.hpp>
 #include <nt2/include/functions/simd/minus.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION(nt2::tag::rem_pio2_medium_, tag::cpu_,
                              (A0)(A1),

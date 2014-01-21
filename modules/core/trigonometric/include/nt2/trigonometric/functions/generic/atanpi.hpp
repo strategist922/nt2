@@ -12,7 +12,7 @@
 #include <nt2/include/functions/atan.hpp>
 #include <nt2/include/constants/invpi.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::atanpi_, tag::cpu_
                             , (A0)

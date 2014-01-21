@@ -74,7 +74,7 @@ namespace nt2 { namespace tag
 
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr,  int N>
   struct  size_of<tag::randcolu_, Domain, N, Expr> : meta::boxed_size<Expr, 3>

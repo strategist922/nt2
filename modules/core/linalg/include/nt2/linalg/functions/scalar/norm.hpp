@@ -36,7 +36,7 @@
 // *  normF  denotes the  Frobenius norm of a matrix (square root of sum of
 // *  squares).  Note that  max(abs(A(i,j)))  is not a consistent matrix norm.
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::norm_, tag::cpu_,
                               (A0)(A1),

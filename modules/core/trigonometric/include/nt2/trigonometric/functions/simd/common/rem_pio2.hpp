@@ -20,7 +20,7 @@
 #include <nt2/sdk/meta/cardinal_of.hpp>
 #include <boost/simd/preprocessor/aligned_type.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 
 

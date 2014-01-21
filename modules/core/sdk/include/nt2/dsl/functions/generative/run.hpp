@@ -13,7 +13,7 @@
 #include <nt2/sdk/simd/category.hpp>
 #include <nt2/sdk/meta/generative_hierarchy.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // generator terminal with a position in read mode

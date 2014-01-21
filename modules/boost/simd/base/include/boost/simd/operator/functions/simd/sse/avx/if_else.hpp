@@ -15,7 +15,7 @@
 #include <boost/simd/sdk/meta/as_logical.hpp>
 #include <boost/dispatch/meta/as_floating.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::if_else_, boost::simd::tag::avx_
                             , (A0)(A1)

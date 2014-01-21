@@ -13,7 +13,7 @@
 #include <boost/simd/arithmetic/functions/muls.hpp>
 #include <boost/simd/sdk/simd/meta/retarget.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::muls_, boost::simd::tag::avx_
                                    , (A0)

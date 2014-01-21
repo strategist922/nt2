@@ -12,7 +12,7 @@
 #include <boost/simd/constant/constants/false.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( simd::tag::False, tag::cpu_, (A0)
                                     , ((target_< scalar_< logical_<A0> > >))

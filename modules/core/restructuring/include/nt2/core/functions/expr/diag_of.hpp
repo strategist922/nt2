@@ -14,7 +14,7 @@
 #include <nt2/core/container/dsl.hpp>
 #include <nt2/include/functions/ismatrix.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::diag_of_, tag::cpu_, (A0), ((ast_<A0, nt2::container::domain>)) )

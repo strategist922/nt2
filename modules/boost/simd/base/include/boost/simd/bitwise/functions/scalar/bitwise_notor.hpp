@@ -16,7 +16,7 @@
 #include <boost/dispatch/meta/as_integer.hpp>
 #include <boost/mpl/bool.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::bitwise_notor_, tag::cpu_, (A0)(A1),
                                  (boost::mpl::bool_<sizeof(A0) == sizeof(A1)>)

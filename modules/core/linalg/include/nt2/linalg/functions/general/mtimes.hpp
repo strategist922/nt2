@@ -55,7 +55,7 @@ namespace nt2 { namespace tag
   };
 } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N,class Expr>
   struct size_of<tag::mtimes_, Domain, N, Expr>
@@ -106,7 +106,7 @@ namespace nt2 { namespace ext
   };
 } }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::mtimes_, tag::cpu_
                             , (A0)(A1)

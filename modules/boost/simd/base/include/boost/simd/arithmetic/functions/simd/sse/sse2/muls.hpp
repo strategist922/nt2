@@ -29,7 +29,7 @@
 /* No native groups for 64-bit SSE;
  * we use bit tricks instead of calling saturate. */
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::muls_, boost::simd::tag::sse2_
                                    , (A0)

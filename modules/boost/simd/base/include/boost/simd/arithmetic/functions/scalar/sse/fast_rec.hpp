@@ -14,7 +14,7 @@
 #include <boost/simd/include/functions/scalar/refine_rec.hpp>
 #include <boost/simd/sdk/config.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::fast_rec_
                                     , boost::simd::tag::sse_

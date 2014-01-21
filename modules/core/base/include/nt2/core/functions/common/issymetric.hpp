@@ -17,7 +17,7 @@
 #include <nt2/include/functions/first_index.hpp>
 #include <nt2/include/functions/is_not_equal.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::issymetric_, tag::cpu_
                             , (A0)

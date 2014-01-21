@@ -15,7 +15,7 @@
 #include <nt2/include/functions/tie.hpp>
 #include <cstring>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of balance is called whenever a tie(...) = balance(...) is captured

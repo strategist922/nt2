@@ -14,7 +14,7 @@
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 #include <boost/dispatch/functor/preprocessor/dispatch.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - If no stream intrinsic, do a classical store.
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::stream_

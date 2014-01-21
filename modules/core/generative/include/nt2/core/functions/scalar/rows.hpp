@@ -14,7 +14,7 @@
 #include <nt2/core/functions/details/rows.hpp>
 #include <nt2/core/include/functions/as_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   #define M2(z,n,t) (BOOST_PP_CAT(A,n))
   #define M1(z,n,t) (scalar_< arithmetic_<BOOST_PP_CAT(A,n)> >)

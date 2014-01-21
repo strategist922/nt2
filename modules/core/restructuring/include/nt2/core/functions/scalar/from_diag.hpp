@@ -12,7 +12,7 @@
 
 #include <nt2/core/functions/from_diag.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // from_diag build a diagonal matrix from a scalar

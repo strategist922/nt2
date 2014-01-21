@@ -21,7 +21,7 @@
 #include <nt2/sdk/meta/value_as.hpp>
 #include <nt2/sdk/meta/boxed_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct size_of<tag::rando_, Domain, 2, Expr>

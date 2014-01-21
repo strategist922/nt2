@@ -19,7 +19,7 @@
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // randi(imax)
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::randi_, tag::cpu_

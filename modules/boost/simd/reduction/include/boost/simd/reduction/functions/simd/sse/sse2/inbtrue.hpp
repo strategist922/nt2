@@ -16,7 +16,7 @@
 #include <boost/simd/sdk/meta/make_dependent.hpp>
 #include <boost/dispatch/meta/as_floating.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Implementation when type A0 is arithmetic_

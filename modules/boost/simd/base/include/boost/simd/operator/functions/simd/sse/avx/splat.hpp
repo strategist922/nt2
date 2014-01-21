@@ -15,7 +15,7 @@
 //==============================================================================
 // Implementation when type A0 is double
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::splat_, boost::simd::tag::avx_, (A0)(A1)
                             , (scalar_< fundamental_<A0> >)
@@ -33,7 +33,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // Implementation when type A0 is float
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::splat_, boost::simd::tag::avx_, (A0)(A1)
                             , (scalar_< fundamental_<A0> >)
@@ -51,7 +51,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // Implementation when type A0 is ints8
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::splat_, boost::simd::tag::avx_, (A0)(A1)
                             , (scalar_< fundamental_<A0> >)
@@ -69,7 +69,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // Implementation when type A0 is ints16
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::splat_, boost::simd::tag::avx_, (A0)(A1)
                             , (scalar_< fundamental_<A0> >)
@@ -87,7 +87,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // Implementation when type A0 is ints32
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::splat_, boost::simd::tag::avx_, (A0)(A1)
                             , (scalar_< fundamental_<A0> >)
@@ -105,7 +105,7 @@ namespace boost { namespace simd { namespace ext
 //==============================================================================
 // Implementation when type A0 is ints64
 //==============================================================================
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::splat_, boost::simd::tag::avx_, (A0)(A1)
                             , (scalar_< fundamental_<A0> >)

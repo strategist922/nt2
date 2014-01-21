@@ -21,7 +21,7 @@
 
 #include <boost/simd/sdk/simd/native.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::log10_
                                    , boost::simd::tag::sse_
@@ -100,7 +100,7 @@ namespace nt2 { namespace ext
 #endif
 #if defined(BOOST_SIMD_HAS_AVX_SUPPORT)
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::log10_,  boost::simd::tag::avx_
                             , (A0)

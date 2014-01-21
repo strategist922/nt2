@@ -14,7 +14,7 @@
 #include <boost/fusion/include/std_pair.hpp>
 #include <boost/mpl/not.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::split_multiplies_
                                       , tag::cpu_

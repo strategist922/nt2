@@ -16,7 +16,7 @@
 #include <boost/simd/sdk/config/compiler.hpp>
 #include <boost/simd/sdk/config.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::max_, boost::simd::tag::sse2_, (A0)
                             , ((simd_<double_<A0>,boost::simd::tag::sse_>))

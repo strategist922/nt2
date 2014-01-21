@@ -12,7 +12,7 @@
 #include <boost/simd/boolean/functions/negifnot.hpp>
 #include <boost/simd/include/functions/scalar/is_nez.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::negifnot_, tag::cpu_, (A0)(A1)
                             , (scalar_< unspecified_<A0> >)

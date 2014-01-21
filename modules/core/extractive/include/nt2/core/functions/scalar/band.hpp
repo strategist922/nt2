@@ -13,7 +13,7 @@
 #include <nt2/include/constants/zero.hpp>
 #include <boost/assert.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::band_, tag::cpu_

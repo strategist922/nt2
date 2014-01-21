@@ -14,7 +14,7 @@
 #include <boost/simd/include/functions/simd/raw_rec.hpp>
 #include <boost/simd/include/functions/simd/refine_rec.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   // Single precision fast_rec is computable from the raw_rec + 1 NR step
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION (  boost::simd::tag::fast_rec_, tag::cpu_

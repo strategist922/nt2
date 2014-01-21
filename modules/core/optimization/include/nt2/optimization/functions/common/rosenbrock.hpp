@@ -25,7 +25,7 @@
 #include <nt2/optimization/functions/details/ros_impl.hpp>
 
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::rosenbrock_, tag::cpu_
                               , (F)(A)(O)

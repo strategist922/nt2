@@ -15,7 +15,7 @@
 #include <nt2/core/functions/details/delta.hpp>
 #include <nt2/core/include/functions/as_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::deltaf_, tag::cpu_
                             , (A0)(A1)(D1)(D2)(T)

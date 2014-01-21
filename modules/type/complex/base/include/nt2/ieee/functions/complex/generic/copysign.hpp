@@ -17,7 +17,7 @@
 #include <nt2/include/functions/sign.hpp>
 #include <nt2/include/functions/real.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION(nt2::tag::copysign_, tag::cpu_,
                              (A0),

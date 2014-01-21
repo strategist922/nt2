@@ -13,7 +13,7 @@
 #include <nt2/include/functions/expand_to.hpp>
 #include <nt2/core/utility/max_extent.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::sx_, tag::cpu_,
                               (A0)(A1)(A2),

@@ -31,7 +31,7 @@
 #include <nt2/sdk/meta/as_integer.hpp>
 #include <nt2/include/functions/bitwise_cast.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // complex/complex
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::divides_, tag::cpu_, (A0)

@@ -13,7 +13,7 @@
 #include <boost/simd/reduction/functions/sum.hpp>
 #include <boost/simd/include/constants/one.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::sum_, tag::cpu_
                                     , (A0)

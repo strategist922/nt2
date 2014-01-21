@@ -18,7 +18,7 @@
 #include <nt2/sdk/complex/dry.hpp>
 #include <nt2/sdk/complex/meta/as_real.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // complex
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::is_real_, tag::cpu_, (A0)

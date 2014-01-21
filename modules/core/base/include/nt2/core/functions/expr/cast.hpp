@@ -23,7 +23,7 @@
 #include <nt2/sdk/meta/as_signed.hpp>
 #include <nt2/sdk/meta/adapted_traits.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // scalar impl general
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::cast_, tag::cpu_

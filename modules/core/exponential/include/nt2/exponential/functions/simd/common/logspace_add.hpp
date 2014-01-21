@@ -21,7 +21,7 @@
 #include <nt2/include/functions/simd/is_nan.hpp>
 #include <nt2/include/functions/simd/plus.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::logspace_add_, tag::cpu_
                             , (A0)(X)

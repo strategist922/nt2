@@ -16,7 +16,7 @@
 #include <nt2/include/functions/conj.hpp>
 #include <nt2/include/functions/multiplies.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::dot_, tag::cpu_

@@ -21,7 +21,7 @@
 #include <boost/fusion/include/transform_view.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::run_, tag::cpu_
                             , (Expr)(State)(Data)(Arity)

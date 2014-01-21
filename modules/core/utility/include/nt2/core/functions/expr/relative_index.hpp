@@ -19,7 +19,7 @@
 #include <nt2/sdk/meta/scalar_of.hpp>
 #include <boost/simd/sdk/simd/meta/vector_of.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // When indexing an expression, evaluate a type with right cardinal then convert

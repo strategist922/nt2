@@ -22,7 +22,7 @@
 #include <nt2/sdk/complex/complex.hpp>
 #include <nt2/sdk/meta/as_logical.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // complex/complex
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::is_less_equal_, tag::cpu_, (A0)

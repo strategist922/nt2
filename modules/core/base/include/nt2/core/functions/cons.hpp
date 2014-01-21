@@ -28,6 +28,7 @@ namespace nt2
 #if defined(__WAVE__) && defined(NT2_CREATE_PREPROCESSED_FILES) && __INCLUDE_LEVEL__ == 0
 #pragma wave option(preserve: 2, line: 0, output: "preprocessed/cons.hpp")
 #undef BOOST_FORCEINLINE
+#undef BOOST_SIMD_EXT_NS
 #endif
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, ( 1, BOOST_PP_LIMIT_ITERATION-1, "nt2/core/functions/cons.hpp"))

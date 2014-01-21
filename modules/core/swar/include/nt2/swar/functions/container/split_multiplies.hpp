@@ -22,7 +22,7 @@
 #include <nt2/include/functions/bitwise_and.hpp>
 #endif
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
 // can't statically know we have enough data for split
 #if 0

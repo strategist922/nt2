@@ -12,7 +12,7 @@
 #include <nt2/core/functions/vertcat.hpp>
 #include <nt2/include/functions/cat.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates vertcat from 1 variable

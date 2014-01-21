@@ -14,7 +14,7 @@
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/include/functions/extent.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::isvectoralong_, tag::cpu_
                             , (A0)(A1)

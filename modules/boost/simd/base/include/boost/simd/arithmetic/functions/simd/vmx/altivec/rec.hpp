@@ -22,7 +22,7 @@
 #include <boost/simd/include/constants/zero.hpp>
 #endif
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::rec_
                                    , boost::simd::tag::vmx_

@@ -13,7 +13,7 @@
 #include <nt2/core/functions/diag_of.hpp>
 #include <nt2/core/container/table/table.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::diag_of_, tag::cpu_

@@ -153,7 +153,7 @@ namespace nt2
 namespace nt2
 {
   /// INTERNAL ONLY
-  namespace ext
+  namespace BOOST_SIMD_EXT_NS
   {
     template<class Domain, class Expr, int N>
     struct  value_type<tag::Zero,Domain,N,Expr>

@@ -18,7 +18,7 @@
 #include <boost/mpl/not.hpp>
 #include <cstring>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
 #ifdef BOOST_SIMD_NO_STRICT_ALIASING
 
@@ -65,7 +65,7 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_REGISTER_TO_IF((boost)(simd)(ext), boost::simd::tag::bitwise_cast_, tag::cpu_, (A0)(A1)
+  BOOST_DISPATCH_REGISTER_TO_IF((boost)(simd)(BOOST_SIMD_EXT_NS), boost::simd::tag::bitwise_cast_, tag::cpu_, (A0)(A1)
                             , (is_same<A0, typename A1::type>)
                             , (generic_< unspecified_<A0> >)
                               (target_< unspecified_<A1> >)

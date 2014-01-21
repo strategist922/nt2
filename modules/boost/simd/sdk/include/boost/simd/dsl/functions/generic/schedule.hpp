@@ -43,7 +43,7 @@ namespace boost { namespace simd { namespace meta
 
 } } }
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   template<class Tag, class State>
   struct with_state

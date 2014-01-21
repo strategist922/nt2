@@ -12,7 +12,7 @@
 #include <nt2/core/functions/function_index.hpp>
 #include <nt2/core/functions/table/details/make_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Size of a function_index call node is depends of the indexers

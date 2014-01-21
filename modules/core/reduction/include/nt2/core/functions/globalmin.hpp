@@ -78,7 +78,7 @@ namespace nt2
 }
 
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::globalmin_, tag::cpu_, (A0), (unspecified_<A0>) )

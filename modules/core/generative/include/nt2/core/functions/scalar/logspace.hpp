@@ -16,7 +16,7 @@
 #include <nt2/include/constants/log10_pi.hpp>
 #include <nt2/include/constants/pi.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::logspace_, tag::cpu_

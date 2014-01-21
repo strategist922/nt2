@@ -12,7 +12,7 @@
 
 #include <climits>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   template<class T>
   struct char_helper_impl

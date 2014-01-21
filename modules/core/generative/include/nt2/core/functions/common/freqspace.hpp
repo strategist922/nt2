@@ -19,7 +19,7 @@
 #include <nt2/options.hpp>
 #include <boost/mpl/bool.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of freqspace is called whenever a tie(...) = freqspace(...) is

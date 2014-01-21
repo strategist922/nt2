@@ -15,7 +15,7 @@
 #include <nt2/core/functions/of_size.hpp>
 #include <nt2/core/functions/details/linspace.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::linspace_, tag::cpu_

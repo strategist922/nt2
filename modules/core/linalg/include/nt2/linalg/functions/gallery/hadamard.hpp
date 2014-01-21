@@ -25,7 +25,7 @@
 #include <nt2/include/functions/ones.hpp>
 #include <nt2/include/constants/half.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::hadamard_, tag::cpu_
                             , (A0)(T)

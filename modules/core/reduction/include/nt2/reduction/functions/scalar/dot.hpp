@@ -15,7 +15,7 @@
 #include <nt2/sdk/meta/as_floating.hpp>
 #include <nt2/sdk/meta/as_real.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::dot_, tag::cpu_

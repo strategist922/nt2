@@ -13,7 +13,7 @@
 #include <nt2/core/container/dsl.hpp>
 #include <nt2/include/functions/as_size.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY : resize_ from expression + of_size
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::resize_, tag::cpu_

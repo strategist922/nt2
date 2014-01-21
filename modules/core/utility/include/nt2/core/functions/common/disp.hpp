@@ -13,7 +13,7 @@
 #include <nt2/include/functions/disp.hpp>
 #include <iostream>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::disp_, tag::cpu_
                             , (A0)

@@ -13,7 +13,7 @@
 #include <boost/simd/include/functions/scalar/saturate.hpp>
 #include <boost/dispatch/meta/downgrade.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::groups_, tag::cpu_
                                    , (A0)

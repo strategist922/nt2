@@ -18,7 +18,7 @@
 #include <nt2/core/utility/as_subscript.hpp>
 #include <nt2/core/utility/as_index.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct  value_type<nt2::tag::line_,Domain,N,Expr>

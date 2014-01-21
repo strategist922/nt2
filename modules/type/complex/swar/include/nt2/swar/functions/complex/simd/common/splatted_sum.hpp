@@ -15,7 +15,7 @@
 #include <nt2/include/functions/plus.hpp>
 #include <nt2/sdk/complex/meta/as_real.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::splatted_sum_, tag::cpu_
                             , (A0)(X)

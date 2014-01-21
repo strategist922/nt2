@@ -20,7 +20,7 @@
 #include <boost/simd/sdk/meta/is_upgradable.hpp>
 #include <boost/dispatch/meta/upgrade.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION_IF( boost::simd::tag::divround2even_, tag::cpu_, (A0)(X)
                                       , (simd::meta::is_upgradable_as_real_on_ext<A0, X>)

@@ -11,7 +11,7 @@
 #include <boost/simd/boolean/functions/logical_andnot.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::logical_andnot_, tag::cpu_
                             , (A0)(A1)

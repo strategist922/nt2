@@ -19,7 +19,7 @@
 #include <boost/dispatch/meta/scalar_of.hpp>
 #include <boost/mpl/equal_to.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - SIMD load via Scalar emulation without offset
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::load_

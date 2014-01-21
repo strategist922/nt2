@@ -34,7 +34,7 @@
 #include <nt2/sdk/meta/as_floating.hpp>
 #include <boost/simd/sdk/config.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::atan2_, boost::simd::tag::simd_
                             , (A0)(X)

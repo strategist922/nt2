@@ -12,7 +12,7 @@
 #include <boost/simd/arithmetic/functions/sqr_abs.hpp>
 #include <boost/simd/include/functions/simd/sqr.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::sqr_abs_, tag::cpu_
                             , (A0)

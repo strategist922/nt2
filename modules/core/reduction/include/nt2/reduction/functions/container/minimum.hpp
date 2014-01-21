@@ -16,7 +16,7 @@
 #include <nt2/include/functions/min.hpp>
 #include <nt2/include/constants/valmax.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, class Expr>
   struct  size_of<boost::simd::tag::minimum_,Domain,1,Expr>

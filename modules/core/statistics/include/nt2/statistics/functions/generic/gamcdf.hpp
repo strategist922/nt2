@@ -27,7 +27,7 @@
 #include <nt2/include/functions/tie.hpp>
 #include <nt2/core/container/table/table.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::gamcdf0_, tag::cpu_
                               , (A0)(A1)

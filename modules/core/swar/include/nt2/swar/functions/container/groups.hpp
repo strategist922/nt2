@@ -19,7 +19,7 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/comparison.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // groups
   NT2_FUNCTOR_IMPLEMENTATION_IF( nt2::tag::run_, tag::cpu_

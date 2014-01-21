@@ -12,7 +12,7 @@
 #include <nt2/signal/functions/zero_crossing_rate.hpp>
 #include <nt2/include/constants/zero.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::zero_crossing_rate_, tag::cpu_,
                               (A0),

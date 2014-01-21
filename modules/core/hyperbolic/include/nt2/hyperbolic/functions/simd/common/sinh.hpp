@@ -20,7 +20,7 @@
 #include <nt2/include/functions/simd/if_else.hpp>
 #include <nt2/include/functions/simd/is_eqz.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::sinh_, tag::cpu_
                             , (A0)(X)
@@ -41,7 +41,7 @@ namespace nt2 { namespace ext
 /////////////////////////////////////////////////////////////////////////////
 // Implementation when type A0 is floating_
 /////////////////////////////////////////////////////////////////////////////
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::sinh_, tag::cpu_
                             , (A0)(X)

@@ -14,7 +14,7 @@
 #include <nt2/include/functions/bitwise_cast.hpp>
 #include <nt2/sdk/meta/scalar_of.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( boost::simd::tag::extract_, tag::cpu_, (A0)(A1)(X)
                             , ((simd_< dry_ < arithmetic_<A0> >, X >))

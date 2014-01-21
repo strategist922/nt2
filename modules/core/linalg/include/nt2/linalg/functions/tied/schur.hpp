@@ -14,7 +14,7 @@
 #include <nt2/include/functions/cast.hpp>
 #include <nt2/include/functions/tie.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // This version of schur is called whenever a tie(a,p) = schur(...) is captured

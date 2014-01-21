@@ -17,7 +17,7 @@
 #include <boost/simd/include/functions/simd/logical_not.hpp>
 #include <boost/simd/sdk/meta/as_logical.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION( boost::simd::tag::is_equal_with_equal_nans_, boost::simd::tag::vmx_, (A0)
                             , ((simd_<floating_<A0>, boost::simd::tag::vmx_>))

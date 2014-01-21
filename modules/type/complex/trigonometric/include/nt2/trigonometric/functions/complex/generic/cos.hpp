@@ -30,7 +30,7 @@
 #include <nt2/include/functions/bitwise_cast.hpp>
 /* ccos (x + I * y) = cos (x) * cosh (y) - I * (sin (x) * sinh (y)) */
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::cos_, tag::cpu_, (A0)
                             , (generic_< complex_< arithmetic_<A0> > >)

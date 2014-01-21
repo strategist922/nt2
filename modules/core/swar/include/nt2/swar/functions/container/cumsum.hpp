@@ -16,7 +16,7 @@
 #include <nt2/core/container/dsl/size.hpp>
 #include <nt2/core/container/dsl/value_type.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct size_of<boost::simd::tag::cumsum_,Domain, N,Expr>

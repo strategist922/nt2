@@ -63,7 +63,7 @@ namespace nt2
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::find_, find, 3)
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct  size_of<tag::find_,Domain,N,Expr>

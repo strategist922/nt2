@@ -20,7 +20,7 @@
 #include <nt2/sdk/complex/meta/as_dry.hpp>
 #include <nt2/sdk/complex/meta/as_real.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   // complex/complex
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::is_not_equal_with_equal_nans_, tag::cpu_, (A0)(A1)

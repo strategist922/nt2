@@ -13,7 +13,7 @@
 #include <nt2/include/constants/zero.hpp>
 #include <nt2/include/constants/one.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tri1l_, tag::cpu_, (A0)(A1)
                             , (scalar_< unspecified_<A0> >)

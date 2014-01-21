@@ -14,7 +14,7 @@
 #include <nt2/core/functions/of_size.hpp>
 #include <nt2/core/container/table/table.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::diff_, tag::cpu_

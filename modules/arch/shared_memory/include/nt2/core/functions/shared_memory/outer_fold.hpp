@@ -17,7 +17,7 @@
 #include <nt2/sdk/config/cache.hpp>
 #include <cstddef>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION ( nt2::tag::outer_fold_, (nt2::tag::shared_memory_<BackEnd,Site>)
                              , (Out)(In)(Neutral)(Bop)(Uop)(BackEnd)(Site)

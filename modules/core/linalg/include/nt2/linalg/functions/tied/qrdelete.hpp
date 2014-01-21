@@ -21,7 +21,7 @@
 #include <nt2/include/functions/cons.hpp>
 #include <nt2/include/functions/planerot.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Capture a tie(l, u, p) = qrdelete(...) at assign time and resolve to optimized call

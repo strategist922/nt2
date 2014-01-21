@@ -16,7 +16,7 @@
 #include <nt2/sdk/shared_memory/worker/inner_fold.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Generates inner_fold

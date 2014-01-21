@@ -22,7 +22,7 @@
 #include <nt2/include/functions/linsolve.hpp>
 #include <nt2/include/functions/eye.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct  size_of<tag::deconv_,Domain,N,Expr>

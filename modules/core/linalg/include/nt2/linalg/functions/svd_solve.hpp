@@ -89,7 +89,7 @@ namespace nt2
   }
 }
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   template<class Domain, int N, class Expr>
   struct  size_of<tag::svd_solve_,Domain,N,Expr>

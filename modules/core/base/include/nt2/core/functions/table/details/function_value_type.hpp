@@ -15,7 +15,7 @@
 #include <boost/dispatch/dsl/semantic_of.hpp>
 #include <boost/proto/traits.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // Extension of value_type to handle function call nodes

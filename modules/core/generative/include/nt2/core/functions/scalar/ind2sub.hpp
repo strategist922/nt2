@@ -13,7 +13,7 @@
 #include <nt2/include/functions/as_size.hpp>
 #include <nt2/core/container/dsl.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   /// INTERNAL ONLY - ind2sub(size,IND)
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ind2sub_, tag::cpu_

@@ -13,7 +13,7 @@
 #include <boost/simd/include/functions/simd/if_zero_else.hpp>
 #include <boost/simd/include/constants/one.hpp>
 
-namespace boost { namespace simd { namespace ext
+namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
 {
   BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::if_zero_else_one_
                                       , tag::cpu_

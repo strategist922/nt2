@@ -12,7 +12,7 @@
 #include <nt2/dsl/functions/run.hpp>
 #include <nt2/sdk/meta/reshaping_hierarchy.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   //============================================================================
   // reshaping expression forward to its inner member

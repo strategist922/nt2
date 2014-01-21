@@ -13,7 +13,7 @@
 #include <nt2/include/functions/if_zero_else_one.hpp>
 #include <nt2/include/functions/plus.hpp>
 
-namespace nt2 { namespace ext
+namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ifnotinc_, tag::cpu_, (A0)(A1)
                             , (generic_< unspecified_<A0> >)
