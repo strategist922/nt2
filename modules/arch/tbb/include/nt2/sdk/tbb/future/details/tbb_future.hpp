@@ -85,16 +85,6 @@ namespace nt2
                 return task_queue_;
             }
 
-            static bool getGraphIsCompleted ()
-            {
-                if (NULL == graph_is_completed_)
-                {
-                    graph_is_completed_ = new bool(false);
-                    printf("Create new isready with value %d\n",*graph_is_completed_);
-                }
-                return *graph_is_completed_;
-            }
-
             static void kill_graph ()
             {
                 if (NULL != nt2_graph_)
@@ -119,13 +109,7 @@ namespace nt2
                     delete task_queue_;
                     task_queue_ = NULL;
                 }
-
-                if (NULL != graph_is_completed_)
-                {
-                    delete graph_is_completed_;
-                    graph_is_completed_ = NULL;
-                }
-            }
+              }
 
             private:
 
@@ -140,8 +124,6 @@ namespace nt2
             tbb::flow::continue_msg> * \
             > *
               task_queue_;
-
-            static bool * graph_is_completed_;
         };
 
         tbb::flow::graph *
@@ -155,8 +137,6 @@ namespace nt2
         tbb::flow::continue_msg> * \
         > *
         tbb_future_base::task_queue_ = NULL;
-
-        bool * tbb_future_base::graph_is_completed_ = NULL;
 
         template<typename result_type>
         struct tbb_future : public tbb_future_base
@@ -187,12 +167,9 @@ namespace nt2
 
             void wait()
             {
-                if(!getGraphIsCompleted())
-                {
-                    getStart()->try_put(tbb::flow::continue_msg());
-                    getWork()->wait_for_all();
-                    kill_graph();
-                }
+                getStart()->try_put(tbb::flow::continue_msg());
+                getWork()->wait_for_all();
+                kill_graph();
             }
 
             result_type get()
