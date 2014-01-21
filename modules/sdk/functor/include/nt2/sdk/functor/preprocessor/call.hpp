@@ -16,12 +16,12 @@
 #define NT2_FUNCTOR_CALL_REPEAT(N) BOOST_DISPATCH_CALL_REPEAT(N)
 
 #define NT2_FUNCTOR_IMPLEMENTATION(Tag,Site,Types,Seq)                         \
-BOOST_DISPATCH_IMPLEMENT((nt2)(ext),Tag,Site,Types,Seq)
+BOOST_DISPATCH_IMPLEMENT((nt2)(BOOST_SIMD_EXT_NS),Tag,Site,Types,Seq)
 
 #define NT2_FUNCTOR_IMPLEMENTATION_TPL(Tag,Site,Types,Seq)                     \
-BOOST_DISPATCH_IMPLEMENT_TPL((nt2)(ext),Tag,Site,Types,Seq)
+BOOST_DISPATCH_IMPLEMENT_TPL((nt2)(BOOST_SIMD_EXT_NS),Tag,Site,Types,Seq)
 
 #define NT2_FUNCTOR_IMPLEMENTATION_IF(Tag,Site,Types,Cond,Seq)                 \
-BOOST_DISPATCH_IMPLEMENT_IF((nt2)(ext),Tag,Site,Types,Cond,Seq)
+BOOST_DISPATCH_IMPLEMENT_IF((nt2)(BOOST_SIMD_EXT_NS),Tag,Site,Types,Cond,Seq)
 
 #endif
