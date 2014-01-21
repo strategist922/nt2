@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct digamma_ : ext::elementwise_<digamma_>
+    struct digamma_ : BOOST_SIMD_EXT_NS::elementwise_<digamma_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<digamma_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<digamma_> parent;
     };
   }
   /*!

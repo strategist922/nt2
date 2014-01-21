@@ -17,10 +17,10 @@ namespace nt2
     /*!
       @brief Tag for the db2pow functor
     **/
-    struct db2pow_ : ext::elementwise_<db2pow_>
+    struct db2pow_ : BOOST_SIMD_EXT_NS::elementwise_<db2pow_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<db2pow_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<db2pow_> parent;
     };
   }
   /*!

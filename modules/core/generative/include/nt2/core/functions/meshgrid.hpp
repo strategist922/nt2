@@ -25,10 +25,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct meshgrid_ : ext::tieable_<meshgrid_>
+    struct meshgrid_ : BOOST_SIMD_EXT_NS::tieable_<meshgrid_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<meshgrid_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<meshgrid_> parent;
     };
   }
 

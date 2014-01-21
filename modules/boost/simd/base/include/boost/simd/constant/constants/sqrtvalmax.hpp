@@ -26,10 +26,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Sqrtvalmax : ext::pure_constant_<Sqrtvalmax>
+    struct Sqrtvalmax : BOOST_SIMD_EXT_NS::pure_constant_<Sqrtvalmax>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Sqrtvalmax> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Sqrtvalmax> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

@@ -12,10 +12,10 @@
 
 namespace nt2 { namespace tag
   {
-    struct rem_pio2_medium_ : ext::elementwise_<rem_pio2_medium_>
+    struct rem_pio2_medium_ : BOOST_SIMD_EXT_NS::elementwise_<rem_pio2_medium_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<rem_pio2_medium_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<rem_pio2_medium_> parent;
     };
   }
   /*!

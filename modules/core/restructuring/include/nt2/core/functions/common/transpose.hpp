@@ -69,7 +69,7 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
                              , (A0)
                              , (nt2::details::is_definitely_row_vector<typename A0::extent_type>)
                              , ((ast_<A0, nt2::container::domain>))
-                             , nt2::ext::transpose_row_vector<A0>
+                             , nt2::BOOST_SIMD_EXT_NS::transpose_row_vector<A0>
                              );
 
   template<class A0>
@@ -81,7 +81,7 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
                              , (A0)
                              , (nt2::details::is_definitely_col_vector<typename A0::extent_type>)
                              , ((ast_<A0, nt2::container::domain>))
-                             , nt2::ext::transpose_col_vector<A0>
+                             , nt2::BOOST_SIMD_EXT_NS::transpose_col_vector<A0>
                              );
 
   // transpose implementation

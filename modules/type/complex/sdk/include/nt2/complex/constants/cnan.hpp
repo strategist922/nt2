@@ -59,10 +59,10 @@ namespace nt2
      * \brief Define the tag Cnan of functor Cnan
      *        in namespace nt2::tag for toolbox complex
     **/
-    struct Cnan : ext::constant_<Cnan>
+    struct Cnan : BOOST_SIMD_EXT_NS::constant_<Cnan>
     {
       typedef std::complex<double> default_type;
-      typedef ext::constant_<Cnan> parent;
+      typedef BOOST_SIMD_EXT_NS::constant_<Cnan> parent;
     };
   }
 

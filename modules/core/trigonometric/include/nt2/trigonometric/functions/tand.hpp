@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct tand_ : ext::elementwise_<tand_> { typedef ext::elementwise_<tand_> parent; };
+    struct tand_ : BOOST_SIMD_EXT_NS::elementwise_<tand_> { typedef BOOST_SIMD_EXT_NS::elementwise_<tand_> parent; };
   }
   /*!
     tangent of the input in degrees.

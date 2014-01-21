@@ -18,9 +18,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct rephorz_ : ext::elementwise_<rephorz_>
+    struct rephorz_ : BOOST_SIMD_EXT_NS::elementwise_<rephorz_>
     {
-      typedef ext::elementwise_<rephorz_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<rephorz_> parent;
     };
   }
 

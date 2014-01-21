@@ -33,7 +33,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag inv_ of functor inv
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct inv_ :  ext::unspecified_<inv_> { typedef ext::unspecified_<inv_> parent; };
+    struct inv_ :  BOOST_SIMD_EXT_NS::unspecified_<inv_> { typedef BOOST_SIMD_EXT_NS::unspecified_<inv_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::inv_, inv, 1)

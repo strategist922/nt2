@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct fnma_ : ext::elementwise_<fnma_>
+    struct fnma_ : BOOST_SIMD_EXT_NS::elementwise_<fnma_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fnma_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fnma_> parent;
     };
   }
 

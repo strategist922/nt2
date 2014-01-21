@@ -25,9 +25,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct indices_ : ext::state_constant_<indices_>
+    struct indices_ : BOOST_SIMD_EXT_NS::state_constant_<indices_>
     {
-      typedef ext::state_constant_<indices_>  parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<indices_>  parent;
       typedef double                          default_type;
     };
   }

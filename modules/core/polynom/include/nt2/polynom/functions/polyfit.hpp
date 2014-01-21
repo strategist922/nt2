@@ -26,10 +26,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct polyfit_ : ext::tieable_<polyfit_>
+    struct polyfit_ : BOOST_SIMD_EXT_NS::tieable_<polyfit_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<polyfit_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<polyfit_> parent;
     };
   }
   /*!

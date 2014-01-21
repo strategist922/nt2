@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct polyval_ : ext::tieable_<polyval_>
+    struct polyval_ : BOOST_SIMD_EXT_NS::tieable_<polyval_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<polyval_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<polyval_> parent;
     };
   }
 

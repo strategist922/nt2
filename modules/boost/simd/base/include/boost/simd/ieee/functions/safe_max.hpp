@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct safe_max_ : ext::elementwise_<safe_max_>
+    struct safe_max_ : BOOST_SIMD_EXT_NS::elementwise_<safe_max_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<safe_max_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<safe_max_> parent;
     };
   }
   /*!

@@ -32,10 +32,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct expand_ : ext::elementwise_<expand_>
+    struct expand_ : BOOST_SIMD_EXT_NS::elementwise_<expand_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<expand_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<expand_> parent;
     };
   }
 

@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct expni_ : ext::elementwise_<expni_> { typedef ext::elementwise_<expni_> parent; };
+    struct expni_ : BOOST_SIMD_EXT_NS::elementwise_<expni_> { typedef BOOST_SIMD_EXT_NS::elementwise_<expni_> parent; };
   }
   /*!
     Computes the exponential integral function

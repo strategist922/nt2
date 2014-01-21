@@ -26,10 +26,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct colon_ : ext::state_constant_<colon_>
+    struct colon_ : BOOST_SIMD_EXT_NS::state_constant_<colon_>
     {
       /// @brief Parent hierarchy
-      typedef ext::state_constant_<colon_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<colon_> parent;
 
       /// @brief default value type for untyped calls
       typedef double                      default_type;
@@ -42,9 +42,9 @@ namespace nt2
     };
 
     /// INTERNAL ONLY
-    struct relative_colon_ : ext::elementwise_<relative_colon_>
+    struct relative_colon_ : BOOST_SIMD_EXT_NS::elementwise_<relative_colon_>
     {
-      typedef ext::elementwise_<relative_colon_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<relative_colon_> parent;
     };
   }
 

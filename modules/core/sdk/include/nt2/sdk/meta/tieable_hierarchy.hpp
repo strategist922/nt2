@@ -13,7 +13,7 @@
 
 namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
-  using boost::simd::ext::tieable_;
+  using boost::simd::BOOST_SIMD_EXT_NS::tieable_;
 } }
 
 #endif

@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct if_zero_else_ : ext::elementwise_<if_zero_else_>
+    struct if_zero_else_ : BOOST_SIMD_EXT_NS::elementwise_<if_zero_else_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<if_zero_else_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<if_zero_else_> parent;
     };
   }
   /*!

@@ -28,9 +28,9 @@ namespace boost { namespace simd
   namespace tag
   {
     /// @brief Hierarchy tag for frexp function
-    struct frexp_ : ext::elementwise_<frexp_>
+    struct frexp_ : BOOST_SIMD_EXT_NS::elementwise_<frexp_>
     {
-      typedef ext::elementwise_<frexp_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<frexp_> parent;
     };
   }
 

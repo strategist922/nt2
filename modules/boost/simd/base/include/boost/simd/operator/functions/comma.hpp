@@ -25,10 +25,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct comma_ : ext::elementwise_<comma_>
+    struct comma_ : BOOST_SIMD_EXT_NS::elementwise_<comma_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<comma_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<comma_> parent;
     };
   }
   /*!

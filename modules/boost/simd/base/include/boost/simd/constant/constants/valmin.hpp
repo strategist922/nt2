@@ -33,10 +33,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Valmin : ext::pure_constant_<Valmin>
+    struct Valmin : BOOST_SIMD_EXT_NS::pure_constant_<Valmin>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Valmin> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Valmin> parent;
 
     /// INTERNAL ONLY
       template<class Target, class Dummy=void>

@@ -23,10 +23,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct quasi_ : ext::unspecified_<quasi_>
+    struct quasi_ : BOOST_SIMD_EXT_NS::unspecified_<quasi_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<quasi_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<quasi_> parent;
     };
   }
   /*!

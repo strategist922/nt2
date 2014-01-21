@@ -18,9 +18,9 @@ namespace nt2
     /*!
       @brief Tag for bsxfun functor
      **/
-    struct arrayfun_ : ext::elementwise_<arrayfun_>
+    struct arrayfun_ : BOOST_SIMD_EXT_NS::elementwise_<arrayfun_>
     {
-      typedef ext::elementwise_<arrayfun_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<arrayfun_> parent;
     };
   }
 

@@ -26,9 +26,9 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct sub2ind_ : ext::elementwise_<sub2ind_>
+    struct sub2ind_ : BOOST_SIMD_EXT_NS::elementwise_<sub2ind_>
     {
-      typedef ext::elementwise_<sub2ind_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<sub2ind_> parent;
     };
   }
 

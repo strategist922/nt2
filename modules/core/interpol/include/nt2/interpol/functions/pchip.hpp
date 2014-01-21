@@ -26,10 +26,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct pchip_ : ext::unspecified_<pchip_>
+    struct pchip_ : BOOST_SIMD_EXT_NS::unspecified_<pchip_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<pchip_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<pchip_> parent;
     };
   }
   /*!

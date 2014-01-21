@@ -305,7 +305,7 @@ namespace nt2 { namespace container
     //==========================================================================
     template<class Sz> BOOST_FORCEINLINE void resize(Sz const& sz)
     {
-      ext::resize< typename boost::dispatch::meta::
+      BOOST_SIMD_EXT_NS::resize< typename boost::dispatch::meta::
                    hierarchy_of<proto_tag>::type
                  , domain
                  , proto_arity_c
@@ -316,7 +316,7 @@ namespace nt2 { namespace container
 
     template<class Sz> BOOST_FORCEINLINE void resize(Sz const& sz) const
     {
-      ext::resize< typename boost::dispatch::meta::
+      BOOST_SIMD_EXT_NS::resize< typename boost::dispatch::meta::
                    hierarchy_of<proto_tag>::type
                  , domain
                  , proto_arity_c

@@ -59,10 +59,10 @@ namespace nt2
      * \brief Define the tag Sqrti of functor Sqrti
      *        in namespace nt2::tag for toolbox complex
     **/
-    struct Sqrti : ext::constant_<Sqrti>
+    struct Sqrti : BOOST_SIMD_EXT_NS::constant_<Sqrti>
     {
       typedef std::complex<double> default_type;
-      typedef ext::constant_<Sqrti> parent;
+      typedef BOOST_SIMD_EXT_NS::constant_<Sqrti> parent;
     };
   }
 

@@ -24,15 +24,15 @@ namespace nt2
   {
     namespace factorization
     {
-      struct poly_ : ext::unspecified_<factorization::poly_>
+      struct poly_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::poly_>
       {
-        typedef ext::unspecified_<factorization::poly_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::poly_> parent;
       };
     }
 
-    struct poly_ :  ext::unspecified_<poly_>
+    struct poly_ :  BOOST_SIMD_EXT_NS::unspecified_<poly_>
     {
-      typedef ext::unspecified_<poly_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<poly_>  parent;
     };
   }
 

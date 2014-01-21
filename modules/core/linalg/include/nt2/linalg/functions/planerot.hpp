@@ -21,9 +21,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct planerot_ :  ext::tieable_<planerot_>
+    struct planerot_ :  BOOST_SIMD_EXT_NS::tieable_<planerot_>
     {
-      typedef ext::tieable_<planerot_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<planerot_>  parent;
     };
   }
 

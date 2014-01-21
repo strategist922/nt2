@@ -15,10 +15,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct romberg_ : ext::unspecified_<romberg_>
+    struct romberg_ : BOOST_SIMD_EXT_NS::unspecified_<romberg_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<romberg_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<romberg_> parent;
     };
 
     // definition  of abstol constant for romberg method

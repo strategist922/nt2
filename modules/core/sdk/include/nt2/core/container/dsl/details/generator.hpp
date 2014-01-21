@@ -51,14 +51,14 @@ namespace nt2 { namespace details
   //==========================================================================
   template<class Tag, class Domain, int Arity, class Expr> struct generator
   {
-    typedef typename ext::value_type<Tag, Domain, Arity, Expr>::type  value_type;
-    typedef typename ext::size_of<Tag,Domain,Arity,Expr>::result_type extent_type;
+    typedef typename BOOST_SIMD_EXT_NS::value_type<Tag, Domain, Arity, Expr>::type  value_type;
+    typedef typename BOOST_SIMD_EXT_NS::size_of<Tag,Domain,Arity,Expr>::result_type extent_type;
     typedef typename meta::strip<extent_type>::type                   size_type;
     typedef typename meta::kind_of<Expr>::type                        kind_type;
 
     typedef typename boost::mpl::
     eval_if < boost::is_same< size_type, _0D >
-            , ext::value_type<Tag, Domain, Arity, Expr>
+            , BOOST_SIMD_EXT_NS::value_type<Tag, Domain, Arity, Expr>
             , boost::dispatch::meta::
               transfer_qualifiers
                     < memory::container < kind_type

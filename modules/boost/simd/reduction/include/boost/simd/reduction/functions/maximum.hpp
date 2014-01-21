@@ -27,10 +27,10 @@ namespace boost { namespace simd
     struct max_;
     struct Maxinit;
 
-    struct maximum_ : ext::reduction_<maximum_, tag::max_, tag::Maxinit>
+    struct maximum_ : BOOST_SIMD_EXT_NS::reduction_<maximum_, tag::max_, tag::Maxinit>
     {
       /// @brief Parent hierarchy
-      typedef ext::reduction_<maximum_, tag::max_, tag::Maxinit> parent;
+      typedef BOOST_SIMD_EXT_NS::reduction_<maximum_, tag::max_, tag::Maxinit> parent;
     };
   }
   /*!

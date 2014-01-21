@@ -21,10 +21,10 @@ namespace nt2 {  namespace tag
      @par Models:
         Hierarchy
    **/
-    struct conv_ : ext::unspecified_<conv_>
+    struct conv_ : BOOST_SIMD_EXT_NS::unspecified_<conv_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<conv_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<conv_>  parent;
     };
   }
   /*!

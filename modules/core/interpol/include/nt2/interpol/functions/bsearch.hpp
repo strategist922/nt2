@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct bsearch_ : ext::unspecified_<bsearch_>
+    struct bsearch_ : BOOST_SIMD_EXT_NS::unspecified_<bsearch_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<bsearch_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<bsearch_> parent;
     };
   }
   /*!

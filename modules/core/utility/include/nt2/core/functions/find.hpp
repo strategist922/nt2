@@ -35,9 +35,9 @@ namespace nt2
     /*!
       @brief Tag for the find functor
     **/
-    struct find_ : ext::tieable_<find_>
+    struct find_ : BOOST_SIMD_EXT_NS::tieable_<find_>
     {
-      typedef ext::tieable_<find_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<find_> parent;
     };
   }
 

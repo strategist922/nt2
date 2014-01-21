@@ -15,9 +15,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct quadgk_ : ext::unspecified_<quadgk_>
+    struct quadgk_ : BOOST_SIMD_EXT_NS::unspecified_<quadgk_>
     {
-      typedef ext::unspecified_<quadgk_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<quadgk_> parent;
     };
     // definition  of abstol constant for quadgk method
     /// INTERNAL ONLY

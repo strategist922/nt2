@@ -20,9 +20,9 @@ namespace boost { namespace simd
      * \brief Define the tag enumerate_ of functor enumerate
      *        in namespace boost::simd::tag for toolbox boost.simd.enumerate
     **/
-    struct enumerate_ : ext::unspecified_<enumerate_>
+    struct enumerate_ : BOOST_SIMD_EXT_NS::unspecified_<enumerate_>
     {
-      typedef ext::unspecified_<enumerate_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<enumerate_> parent;
     };
   }
 

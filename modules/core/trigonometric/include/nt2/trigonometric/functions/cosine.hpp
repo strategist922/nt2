@@ -21,9 +21,9 @@ namespace nt2 { namespace tag
         Hierarchy
    **/
     template <class T>
-    struct cosine_ : ext::elementwise_< cosine_<T> >
+    struct cosine_ : BOOST_SIMD_EXT_NS::elementwise_< cosine_<T> >
     {
-      typedef ext::elementwise_< cosine_<T> > parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_< cosine_<T> > parent;
     };
   }
   /*!

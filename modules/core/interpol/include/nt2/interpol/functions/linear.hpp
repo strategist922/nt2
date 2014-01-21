@@ -26,10 +26,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct linear_ : ext::unspecified_<linear_>
+    struct linear_ : BOOST_SIMD_EXT_NS::unspecified_<linear_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<linear_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<linear_> parent;
     };
   }
   /*!

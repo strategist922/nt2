@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fast_ldexp_ : ext::elementwise_<fast_ldexp_>
+    struct fast_ldexp_ : BOOST_SIMD_EXT_NS::elementwise_<fast_ldexp_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fast_ldexp_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fast_ldexp_> parent;
     };
   }
   /*!

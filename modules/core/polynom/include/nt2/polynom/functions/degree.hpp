@@ -20,10 +20,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct degree_ : ext::elementwise_<degree_>
+    struct degree_ : BOOST_SIMD_EXT_NS::elementwise_<degree_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<degree_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<degree_> parent;
     };
   }
   /*!

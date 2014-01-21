@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct deconv_ : ext::tieable_<deconv_>
+    struct deconv_ : BOOST_SIMD_EXT_NS::tieable_<deconv_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<deconv_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<deconv_> parent;
     };
   }
   /*!

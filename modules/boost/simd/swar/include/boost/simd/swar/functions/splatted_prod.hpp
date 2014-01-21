@@ -22,10 +22,10 @@ namespace boost { namespace simd
 
       Represents the splatted_prod function in generic contexts.
     **/
-    struct splatted_prod_ : ext::unspecified_<splatted_prod_>
+    struct splatted_prod_ : BOOST_SIMD_EXT_NS::unspecified_<splatted_prod_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<splatted_prod_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<splatted_prod_> parent;
     };
   }
 

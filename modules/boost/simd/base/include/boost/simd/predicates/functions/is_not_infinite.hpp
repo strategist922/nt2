@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_not_infinite_ : ext::elementwise_<is_not_infinite_>
+    struct is_not_infinite_ : BOOST_SIMD_EXT_NS::elementwise_<is_not_infinite_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_not_infinite_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_not_infinite_> parent;
     };}
   /*!
     TODO Put description here

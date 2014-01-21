@@ -21,9 +21,9 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct unifpdf_ : ext::elementwise_<unifpdf_>
+    struct unifpdf_ : BOOST_SIMD_EXT_NS::elementwise_<unifpdf_>
     {
-      typedef ext::elementwise_<unifpdf_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<unifpdf_> parent;
     };
   }
   /*!

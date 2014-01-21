@@ -22,10 +22,10 @@ namespace tag
       @par Models:
       Hierarchy
     **/
-    struct abss_ : ext::elementwise_<abss_>
+    struct abss_ : BOOST_SIMD_EXT_NS::elementwise_<abss_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<abss_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<abss_> parent;
     };
   }
   /*!

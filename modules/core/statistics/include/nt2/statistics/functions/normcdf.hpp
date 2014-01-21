@@ -29,15 +29,15 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct normcdf_ : ext::tieable_<normcdf_>
+    struct normcdf_ : BOOST_SIMD_EXT_NS::tieable_<normcdf_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<normcdf_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<normcdf_> parent;
     };
-    struct normcdf0_ : ext::elementwise_<normcdf0_>
+    struct normcdf0_ : BOOST_SIMD_EXT_NS::elementwise_<normcdf0_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<normcdf0_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<normcdf0_> parent;
     };
   }
   /*!

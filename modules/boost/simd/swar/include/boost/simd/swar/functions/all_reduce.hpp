@@ -22,10 +22,10 @@ namespace boost { namespace simd
 
       Represents the all_reduce function in generic contexts.
     **/
-    struct all_reduce_ : ext::unspecified_<all_reduce_>
+    struct all_reduce_ : BOOST_SIMD_EXT_NS::unspecified_<all_reduce_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<all_reduce_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<all_reduce_> parent;
     };
   }
 

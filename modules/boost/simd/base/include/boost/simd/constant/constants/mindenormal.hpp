@@ -34,10 +34,10 @@ namespace boost { namespace simd
     struct Smallestposval;
     typedef Smallestposval Mindenormal;
     #else
-    struct Mindenormal : ext::pure_constant_<Mindenormal>
+    struct Mindenormal : BOOST_SIMD_EXT_NS::pure_constant_<Mindenormal>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Mindenormal> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Mindenormal> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct gammainc_ : ext::elementwise_<gammainc_> { typedef ext::elementwise_<gammainc_> parent; };
+    struct gammainc_ : BOOST_SIMD_EXT_NS::elementwise_<gammainc_> { typedef BOOST_SIMD_EXT_NS::elementwise_<gammainc_> parent; };
   }
   /*!
     Incomplete Gamma function

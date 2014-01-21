@@ -44,9 +44,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag qmult_ of functor qmult
      *        in namespace nt2::tag for toolbox algebra
      **/
-    struct qmult_ : ext::unspecified_<qmult_>
+    struct qmult_ : BOOST_SIMD_EXT_NS::unspecified_<qmult_>
     {
-      typedef ext::unspecified_<qmult_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<qmult_> parent;
     };
   }
 

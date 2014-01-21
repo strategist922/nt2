@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_invalid_ : ext::elementwise_<is_invalid_>
+    struct is_invalid_ : BOOST_SIMD_EXT_NS::elementwise_<is_invalid_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_invalid_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_invalid_> parent;
     };}
   /*!
     Returns True if a0 is inf, -inf or nan else returns False

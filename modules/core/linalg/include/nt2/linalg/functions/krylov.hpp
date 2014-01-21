@@ -50,9 +50,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag krylov_ of functor krylov
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct krylov_ : ext::unspecified_<krylov_>
+    struct krylov_ : BOOST_SIMD_EXT_NS::unspecified_<krylov_>
     {
-      typedef ext::unspecified_<krylov_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<krylov_>  parent;
     };
   }
 

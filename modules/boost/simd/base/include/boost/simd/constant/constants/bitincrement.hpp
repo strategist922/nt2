@@ -28,10 +28,10 @@ namespace boost { namespace simd
       @par Models:
       Hierarchy
     **/
-    struct Bitincrement : ext::pure_constant_<Bitincrement>
+    struct Bitincrement : BOOST_SIMD_EXT_NS::pure_constant_<Bitincrement>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Bitincrement> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Bitincrement> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

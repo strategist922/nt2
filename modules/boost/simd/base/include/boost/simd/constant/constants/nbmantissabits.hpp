@@ -26,10 +26,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Nbmantissabits : ext::pure_constant_<Nbmantissabits>
+    struct Nbmantissabits : BOOST_SIMD_EXT_NS::pure_constant_<Nbmantissabits>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Nbmantissabits> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Nbmantissabits> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

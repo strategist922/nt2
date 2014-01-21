@@ -26,10 +26,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct colvect_ : ext::reshaping_<colvect_>
+    struct colvect_ : BOOST_SIMD_EXT_NS::reshaping_<colvect_>
     {
       /// @brief Parent hierarchy
-      typedef ext::reshaping_<colvect_> parent;
+      typedef BOOST_SIMD_EXT_NS::reshaping_<colvect_> parent;
     };
   }
   /*!

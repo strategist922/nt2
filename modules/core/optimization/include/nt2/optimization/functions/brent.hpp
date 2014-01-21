@@ -24,10 +24,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct brent_ : ext::unspecified_<brent_>
+    struct brent_ : BOOST_SIMD_EXT_NS::unspecified_<brent_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<brent_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<brent_> parent;
     };
   }
   /*!

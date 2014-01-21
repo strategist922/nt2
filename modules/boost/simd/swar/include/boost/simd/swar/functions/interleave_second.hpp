@@ -24,10 +24,10 @@ namespace boost { namespace simd {
      @par Models:
         Hierarchy
    **/
-    struct interleave_second_ : ext::unspecified_<interleave_second_>
+    struct interleave_second_ : BOOST_SIMD_EXT_NS::unspecified_<interleave_second_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<interleave_second_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<interleave_second_> parent;
     };
   }
 

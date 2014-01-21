@@ -104,13 +104,13 @@ namespace boost { namespace dispatch { namespace meta
   {
     typedef typename remove_const<Origin>::type stripped;
     typedef typename mpl::if_< is_same< simd::logical<T>, stripped >, stripped, Origin >::type origin_;
-    typedef meta::scalar_< simd::ext::logical_<origin_> >  type;
+    typedef meta::scalar_< simd::BOOST_SIMD_EXT_NS::logical_<origin_> >  type;
   };
 
   template<class T, class Origin>
   struct property_of< simd::logical<T>, Origin>
   {
-    typedef simd::ext::logical_<Origin> type;
+    typedef simd::BOOST_SIMD_EXT_NS::logical_<Origin> type;
   };
 
   template<class T>

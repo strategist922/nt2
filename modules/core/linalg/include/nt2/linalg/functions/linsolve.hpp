@@ -72,15 +72,15 @@ namespace nt2
   {
     namespace factorization
     {
-      struct linsolve_ : ext::unspecified_<factorization::linsolve_>
+      struct linsolve_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::linsolve_>
       {
-        typedef ext::unspecified_<factorization::linsolve_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::linsolve_> parent;
       };
     }
 
-    struct linsolve_ :  ext::tieable_<linsolve_>
+    struct linsolve_ :  BOOST_SIMD_EXT_NS::tieable_<linsolve_>
     {
-      typedef ext::tieable_<linsolve_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<linsolve_>  parent;
     };
   }
 

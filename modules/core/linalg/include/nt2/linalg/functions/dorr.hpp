@@ -58,9 +58,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag dorr_ of functor dorr
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct dorr_ : ext::tieable_<dorr_>
+    struct dorr_ : BOOST_SIMD_EXT_NS::tieable_<dorr_>
     {
-      typedef ext::tieable_<dorr_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<dorr_>  parent;
     };
   }
 

@@ -24,8 +24,8 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
   #define M0(z, n, t) (A##n)
   #define M1(z, n, t) (generic_< unspecified_<A##n> >)
 
-  #define M3(z, n, t) typename meta::call<tag::run_(typename boost::proto::result_of::child_c<Expr&, n+1>::type, State const&, typename boost::simd::ext::adapt_data<typename boost::proto::result_of::child_c<Expr, n+1>::type, Data>::type)>::type
-  #define M4(z, n, t) nt2::run(boost::proto::child_c<n+1>(expr), state, boost::simd::ext::adapt_data<typename boost::proto::result_of::child_c<Expr, n+1>::type, Data>::call(data))
+  #define M3(z, n, t) typename meta::call<tag::run_(typename boost::proto::result_of::child_c<Expr&, n+1>::type, State const&, typename boost::simd::BOOST_SIMD_EXT_NS::adapt_data<typename boost::proto::result_of::child_c<Expr, n+1>::type, Data>::type)>::type
+  #define M4(z, n, t) nt2::run(boost::proto::child_c<n+1>(expr), state, boost::simd::BOOST_SIMD_EXT_NS::adapt_data<typename boost::proto::result_of::child_c<Expr, n+1>::type, Data>::call(data))
 
   #define M2(z, n, t)                                                                              \
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::arrayfun_, tag::cpu_                                       \

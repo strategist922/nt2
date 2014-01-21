@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct tolerant_ceil_ : ext::elementwise_<tolerant_ceil_>
+    struct tolerant_ceil_ : BOOST_SIMD_EXT_NS::elementwise_<tolerant_ceil_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<tolerant_ceil_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<tolerant_ceil_> parent;
     };
   }
   /*!

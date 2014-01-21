@@ -21,10 +21,10 @@ namespace nt2
     /*!
       @brief Tag for the cdiff function
     **/
-    struct cdiff_ : ext::elementwise_<cdiff_>
+    struct cdiff_ : BOOST_SIMD_EXT_NS::elementwise_<cdiff_>
     {
       /// @brief Parent hierarchy
-      typedef  ext::elementwise_<cdiff_> parent;
+      typedef  BOOST_SIMD_EXT_NS::elementwise_<cdiff_> parent;
     };
   }
   /*!

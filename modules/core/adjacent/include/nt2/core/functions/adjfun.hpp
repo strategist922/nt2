@@ -21,10 +21,10 @@ namespace nt2
     /*!
       @brief Tag for adjfun functor
     **/
-    struct adjfun_ : ext::elementwise_<adjfun_>
+    struct adjfun_ : BOOST_SIMD_EXT_NS::elementwise_<adjfun_>
     {
       /// @brief Parent hierarchy
-      typedef  ext::elementwise_<adjfun_> parent;
+      typedef  BOOST_SIMD_EXT_NS::elementwise_<adjfun_> parent;
     };
   }
 

@@ -36,9 +36,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct tie_ : ext::elementwise_<tie_>
+    struct tie_ : BOOST_SIMD_EXT_NS::elementwise_<tie_>
     {
-      typedef ext::elementwise_<tie_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<tie_> parent;
     };
   }
 

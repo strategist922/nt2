@@ -24,10 +24,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct is_greater_equal_ : ext::elementwise_<is_greater_equal_>
+    struct is_greater_equal_ : BOOST_SIMD_EXT_NS::elementwise_<is_greater_equal_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_greater_equal_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_greater_equal_> parent;
     };
   }
   /*!

@@ -54,9 +54,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag chebspec_ of functor chebspec
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct chebspec_ :  ext::unspecified_<chebspec_>
+    struct chebspec_ :  BOOST_SIMD_EXT_NS::unspecified_<chebspec_>
     {
-      typedef ext::unspecified_<chebspec_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<chebspec_> parent;
     };
   }
 

@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct genmask_ : ext::elementwise_<genmask_>
+    struct genmask_ : BOOST_SIMD_EXT_NS::elementwise_<genmask_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<genmask_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<genmask_> parent;
     };
   }
   /*!

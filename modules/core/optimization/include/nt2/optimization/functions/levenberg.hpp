@@ -24,10 +24,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct levenberg_ : ext::unspecified_<levenberg_>
+    struct levenberg_ : BOOST_SIMD_EXT_NS::unspecified_<levenberg_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<levenberg_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<levenberg_> parent;
     };
   }
   /*!

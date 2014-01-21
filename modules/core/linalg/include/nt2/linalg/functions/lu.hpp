@@ -24,15 +24,15 @@ namespace nt2
   {
     namespace factorization
     {
-      struct lu_ : ext::unspecified_<factorization::lu_>
+      struct lu_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::lu_>
       {
-        typedef ext::unspecified_<factorization::lu_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::lu_> parent;
       };
     }
 
-    struct lu_ : ext::tieable_<lu_>
+    struct lu_ : BOOST_SIMD_EXT_NS::tieable_<lu_>
     {
-      typedef ext::tieable_<lu_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<lu_>  parent;
     };
   }
 

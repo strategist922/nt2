@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct minnum_ : ext::elementwise_<minnum_>
+    struct minnum_ : BOOST_SIMD_EXT_NS::elementwise_<minnum_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<minnum_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<minnum_> parent;
     };
   }
   /*!

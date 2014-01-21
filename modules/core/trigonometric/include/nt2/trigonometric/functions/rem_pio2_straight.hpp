@@ -13,9 +13,9 @@
 namespace nt2 { namespace tag
   {
     /// @brief Hierarchy tag for rem_pio2_straight function
-    struct rem_pio2_straight_ : ext::elementwise_<rem_pio2_straight_>
+    struct rem_pio2_straight_ : BOOST_SIMD_EXT_NS::elementwise_<rem_pio2_straight_>
     {
-      typedef ext::elementwise_<rem_pio2_straight_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<rem_pio2_straight_> parent;
     };
   }
   /*!

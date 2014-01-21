@@ -27,10 +27,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct perms_ : ext::unspecified_<perms_>
+    struct perms_ : BOOST_SIMD_EXT_NS::unspecified_<perms_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<perms_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<perms_> parent;
     };
   }
   /*!

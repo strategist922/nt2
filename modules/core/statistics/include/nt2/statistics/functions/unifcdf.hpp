@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct unifcdf_ : ext::elementwise_<unifcdf_>
+    struct unifcdf_ : BOOST_SIMD_EXT_NS::elementwise_<unifcdf_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<unifcdf_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<unifcdf_> parent;
     };
   }
   /*!

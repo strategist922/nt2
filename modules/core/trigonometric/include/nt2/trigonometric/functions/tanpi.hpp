@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct tanpi_ : ext::elementwise_<tanpi_>
+    struct tanpi_ : BOOST_SIMD_EXT_NS::elementwise_<tanpi_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<tanpi_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<tanpi_> parent;
     };
   }
   /*!

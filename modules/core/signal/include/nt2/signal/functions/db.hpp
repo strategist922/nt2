@@ -19,10 +19,10 @@ namespace nt2
     /*!
       @brief Tag for the db functor
     **/
-    struct db_ : ext::elementwise_<db_>
+    struct db_ : BOOST_SIMD_EXT_NS::elementwise_<db_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<db_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<db_> parent;
     };
   }
 

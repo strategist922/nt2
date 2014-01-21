@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct rem_2pi_ : ext::elementwise_<rem_2pi_> { typedef ext::elementwise_<rem_2pi_> parent; };
+    struct rem_2pi_ : BOOST_SIMD_EXT_NS::elementwise_<rem_2pi_> { typedef BOOST_SIMD_EXT_NS::elementwise_<rem_2pi_> parent; };
   }
   /*!
     compute the remainder modulo \f$2\pi\f$.

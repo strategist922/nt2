@@ -52,7 +52,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag circul_ of functor circul
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct circul_ : ext::unspecified_<circul_> { typedef ext::unspecified_<circul_> parent; };
+    struct circul_ : BOOST_SIMD_EXT_NS::unspecified_<circul_> { typedef BOOST_SIMD_EXT_NS::unspecified_<circul_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::circul_, circul, 1)

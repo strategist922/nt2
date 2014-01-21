@@ -23,9 +23,9 @@ namespace nt2
     /*!
       @brief Tag for the complexify functor
     **/
-    struct complexify_ : ext::elementwise_<complexify_>
+    struct complexify_ : BOOST_SIMD_EXT_NS::elementwise_<complexify_>
     {
-      typedef ext::elementwise_<complexify_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<complexify_> parent;
     };
   }
   NT2_FUNCTION_IMPLEMENTATION(tag::complexify_, complexify, 1)

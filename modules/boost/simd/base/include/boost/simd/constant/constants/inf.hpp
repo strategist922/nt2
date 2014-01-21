@@ -32,10 +32,10 @@ namespace boost { namespace simd
    **/
     struct Valmax;
 
-    struct Inf : ext::pure_constant_<Inf>
+    struct Inf : BOOST_SIMD_EXT_NS::pure_constant_<Inf>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Inf> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Inf> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

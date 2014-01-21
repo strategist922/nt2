@@ -31,17 +31,17 @@
 //==============================================================================
 #if defined(DOXYGEN_ONLY)
 #define BOOST_SIMD_CONSTANT_REGISTER(TAG,TYPE,INT,FLOAT,DOUBLE) \
-struct TAG  : boost::simd::ext::pure_constant_<TAG>             \
+struct TAG  : boost::simd::BOOST_SIMD_EXT_NS::pure_constant_<TAG>             \
 {                                                               \
-  typedef boost::simd::ext::pure_constant_<TAG> parent;         \
+  typedef boost::simd::BOOST_SIMD_EXT_NS::pure_constant_<TAG> parent;         \
   typedef TYPE default_type;                                    \
 };                                                              \
 /**/
 #else
 #define BOOST_SIMD_CONSTANT_REGISTER(TAG,TYPE,INT,FLOAT,DOUBLE)             \
-struct TAG : boost::simd::ext::pure_constant_<TAG>                          \
+struct TAG : boost::simd::BOOST_SIMD_EXT_NS::pure_constant_<TAG>                          \
 {                                                                           \
-  typedef boost::simd::ext::pure_constant_<TAG> parent;                     \
+  typedef boost::simd::BOOST_SIMD_EXT_NS::pure_constant_<TAG> parent;                     \
   typedef TYPE default_type;                                                \
   template<class T, class D=void> struct apply                              \
     : boost::simd::meta::int_c<typename T::type,typename T::type(INT)> {};  \

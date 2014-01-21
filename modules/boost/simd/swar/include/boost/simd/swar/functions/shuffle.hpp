@@ -33,10 +33,10 @@ namespace boost { namespace simd
       @par Models:
       Hierarchy
     **/
-    struct shuffle_ : ext::unspecified_<shuffle_>
+    struct shuffle_ : BOOST_SIMD_EXT_NS::unspecified_<shuffle_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<shuffle_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<shuffle_> parent;
     };
   }
 

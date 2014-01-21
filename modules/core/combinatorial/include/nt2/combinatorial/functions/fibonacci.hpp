@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fibonacci_ : ext::unspecified_<fibonacci_>
+    struct fibonacci_ : BOOST_SIMD_EXT_NS::unspecified_<fibonacci_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<fibonacci_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<fibonacci_> parent;
     };
   }
   /*!

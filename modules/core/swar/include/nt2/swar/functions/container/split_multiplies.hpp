@@ -69,8 +69,8 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
     {
       typedef typename boost::proto::result_of::child_c<A0&, 0>::value_type child0;
       typedef typename boost::proto::result_of::child_c<A0&, 1>::value_type child1;
-      return nt2::multiplies( nt2::splat<result_type>(nt2::run(boost::proto::child_c<0>(a0), p, boost::simd::ext::adapt_data<child0, Data>::call(data)))
-                            , nt2::splat<result_type>(nt2::run(boost::proto::child_c<1>(a0), p, boost::simd::ext::adapt_data<child1, Data>::call(data)))
+      return nt2::multiplies( nt2::splat<result_type>(nt2::run(boost::proto::child_c<0>(a0), p, boost::simd::BOOST_SIMD_EXT_NS::adapt_data<child0, Data>::call(data)))
+                            , nt2::splat<result_type>(nt2::run(boost::proto::child_c<1>(a0), p, boost::simd::BOOST_SIMD_EXT_NS::adapt_data<child1, Data>::call(data)))
                             );
     }
   };

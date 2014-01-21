@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_odd_ : ext::elementwise_<is_odd_>
+    struct is_odd_ : BOOST_SIMD_EXT_NS::elementwise_<is_odd_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_odd_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_odd_> parent;
     };}
   /*!
     Returns True or False according a0 is odd or not.

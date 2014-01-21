@@ -54,9 +54,9 @@ namespace nt2
      * \brief Define the tag kms_ of functor kms
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct kms_ :  ext::unspecified_<kms_>
+    struct kms_ :  BOOST_SIMD_EXT_NS::unspecified_<kms_>
     {
-      typedef ext::unspecified_<kms_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<kms_> parent;
     };
   }
 

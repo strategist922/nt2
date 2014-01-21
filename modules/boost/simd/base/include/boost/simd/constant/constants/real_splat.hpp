@@ -32,13 +32,13 @@ namespace boost { namespace simd
         Hierarchy
    **/
     template<boost::simd::uint32_t F,boost::simd::uint64_t D>
-    struct Realpattern : ext::pure_constant_< Realpattern<F, D> >
+    struct Realpattern : BOOST_SIMD_EXT_NS::pure_constant_< Realpattern<F, D> >
     {
       /// @brief Constant default type
       typedef double default_type;
 
       /// @brief Parent hierarchy
-      typedef ext::pure_constant_< Realpattern<F, D> > parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_< Realpattern<F, D> > parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void> struct apply {};

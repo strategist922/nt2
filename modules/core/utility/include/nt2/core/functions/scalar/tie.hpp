@@ -57,8 +57,8 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
 #define M1(z,n,t) (A##n)
 #define M2(z,n,t) (unspecified_<A##n>)
 #define M2b(z,n,t) (generic_< unspecified_<A##n> >)
-#define M3(z,n,t) typename ext::as_child_ref<A##n>::type
-#define M4(z,n,t) ext::as_child_ref<A##n>::call(a##n)
+#define M3(z,n,t) typename BOOST_SIMD_EXT_NS::as_child_ref<A##n>::type
+#define M4(z,n,t) BOOST_SIMD_EXT_NS::as_child_ref<A##n>::call(a##n)
 
 #define M0(z,n,t)                                                              \
 NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tie_, BOOST_PP_TUPLE_ELEM(2,0,t)         \

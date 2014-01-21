@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_not_imag_ : ext::elementwise_<is_not_imag_>
+    struct is_not_imag_ : BOOST_SIMD_EXT_NS::elementwise_<is_not_imag_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_not_imag_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_not_imag_> parent;
     };}
   /*!
     Returns True or False according a0 is real or not.

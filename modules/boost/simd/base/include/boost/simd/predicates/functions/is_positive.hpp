@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_positive_ : ext::elementwise_<is_positive_>
+    struct is_positive_ : BOOST_SIMD_EXT_NS::elementwise_<is_positive_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_positive_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_positive_> parent;
     };}
   /*!
     Returns True if a0 is positive else False.

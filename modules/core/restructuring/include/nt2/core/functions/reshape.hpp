@@ -24,10 +24,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct reshape_ : ext::reshaping_<reshape_>
+    struct reshape_ : BOOST_SIMD_EXT_NS::reshaping_<reshape_>
     {
       /// @brief Parent hierarchy
-      typedef ext::reshaping_<reshape_> parent;
+      typedef BOOST_SIMD_EXT_NS::reshaping_<reshape_> parent;
     };
   }
 

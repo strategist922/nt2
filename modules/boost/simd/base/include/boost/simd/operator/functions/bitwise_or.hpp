@@ -25,10 +25,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct bitwise_or_ : ext::elementwise_<bitwise_or_>
+    struct bitwise_or_ : BOOST_SIMD_EXT_NS::elementwise_<bitwise_or_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<bitwise_or_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<bitwise_or_> parent;
     };
   }
   /*!

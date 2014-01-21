@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fast_cosd_ : ext::elementwise_<fast_cosd_>
+    struct fast_cosd_ : BOOST_SIMD_EXT_NS::elementwise_<fast_cosd_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fast_cosd_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fast_cosd_> parent;
     };
   }
   /*!

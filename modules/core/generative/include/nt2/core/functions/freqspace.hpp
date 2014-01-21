@@ -23,9 +23,9 @@ namespace nt2
     /*!
       @brief Tag for the freqspace functor
     **/
-    struct freqspace_ : ext::tieable_<freqspace_>
+    struct freqspace_ : BOOST_SIMD_EXT_NS::tieable_<freqspace_>
     {
-      typedef ext::tieable_<freqspace_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<freqspace_> parent;
     };
   }
 

@@ -24,15 +24,15 @@ namespace nt2
   {
     namespace factorization
     {
-      struct balance_ : ext::unspecified_<factorization::balance_>
+      struct balance_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::balance_>
       {
-        typedef ext::unspecified_<factorization::balance_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::balance_> parent;
       };
     }
 
-    struct balance_ :  ext::tieable_<balance_>
+    struct balance_ :  BOOST_SIMD_EXT_NS::tieable_<balance_>
     {
-      typedef ext::tieable_<balance_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<balance_>  parent;
     };
   }
 

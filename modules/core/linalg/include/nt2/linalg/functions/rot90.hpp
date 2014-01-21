@@ -38,7 +38,7 @@ namespace nt2
      * \brief Define the tag rot90_ of functor rot90
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct rot90_   :  ext::unspecified_<rot90_> { typedef ext::unspecified_<rot90_> parent; };
+    struct rot90_   :  BOOST_SIMD_EXT_NS::unspecified_<rot90_> { typedef BOOST_SIMD_EXT_NS::unspecified_<rot90_> parent; };
     struct rot90_0_ :  tag::formal_              { typedef tag::formal_ parent;              };
 
   }

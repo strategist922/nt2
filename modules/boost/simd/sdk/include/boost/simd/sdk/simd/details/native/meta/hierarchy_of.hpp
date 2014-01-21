@@ -23,7 +23,7 @@ namespace boost { namespace dispatch { namespace meta
   {
     typedef typename remove_const<Origin>::type stripped;
     typedef typename mpl::if_< is_same< simd::native<T, X>, stripped >, stripped, Origin>::type origin_;
-    typedef simd::ext::simd_<typename property_of<T, origin_>::type, X> type;
+    typedef simd::BOOST_SIMD_EXT_NS::simd_<typename property_of<T, origin_>::type, X> type;
   };
 } } }
 

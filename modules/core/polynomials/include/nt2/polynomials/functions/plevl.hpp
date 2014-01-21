@@ -16,7 +16,7 @@
 // and not a part of the polynomial
 namespace nt2 { namespace tag
   {
-    struct plevl_ : ext::elementwise_<plevl_> { typedef ext::elementwise_<plevl_> parent; };
+    struct plevl_ : BOOST_SIMD_EXT_NS::elementwise_<plevl_> { typedef BOOST_SIMD_EXT_NS::elementwise_<plevl_> parent; };
   }
   NT2_FUNCTION_IMPLEMENTATION(tag::plevl_, plevl, 2)
   NT2_FUNCTION_IMPLEMENTATION(tag::plevl_, p1evl, 2)

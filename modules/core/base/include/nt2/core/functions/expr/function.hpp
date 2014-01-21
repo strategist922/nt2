@@ -209,7 +209,7 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
 
 #define M1(z,n,t) (I##n)
 #define M2(z,n,t) (unspecified_<I##n>)
-#define M3(z,n,t) typename nt2::ext::function_find<A0, I##n>::type
+#define M3(z,n,t) typename nt2::BOOST_SIMD_EXT_NS::function_find<A0, I##n>::type
 #define M4(z,n,t) function_find<A0, I##n>::call(a0, i##n)
 
 #define M0(z,n,t)                                                                                  \

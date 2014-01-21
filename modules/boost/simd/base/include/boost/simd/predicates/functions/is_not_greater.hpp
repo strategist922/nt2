@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_not_greater_ : ext::elementwise_<is_not_greater_>
+    struct is_not_greater_ : BOOST_SIMD_EXT_NS::elementwise_<is_not_greater_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_not_greater_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_not_greater_> parent;
     };}
   /*!
     Returns True if a0 is not greater than a1 else returns False.

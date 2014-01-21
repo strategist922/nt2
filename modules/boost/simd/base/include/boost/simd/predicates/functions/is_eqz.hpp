@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_eqz_ : ext::elementwise_<is_eqz_>
+    struct is_eqz_ : BOOST_SIMD_EXT_NS::elementwise_<is_eqz_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_eqz_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_eqz_> parent;
     };}
   /*!
     Returns True or False according a0 is zero or not.

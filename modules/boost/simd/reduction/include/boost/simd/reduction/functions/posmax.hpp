@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct posmax_ : ext::unspecified_<posmax_>
+    struct posmax_ : BOOST_SIMD_EXT_NS::unspecified_<posmax_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<posmax_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<posmax_> parent;
     };
   }
   /*!

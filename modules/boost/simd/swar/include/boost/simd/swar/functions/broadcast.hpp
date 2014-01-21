@@ -27,10 +27,10 @@ namespace boost { namespace simd { namespace tag
 
       Hierarchy
     **/
-    struct broadcast_ : ext::unspecified_<broadcast_>
+    struct broadcast_ : BOOST_SIMD_EXT_NS::unspecified_<broadcast_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<broadcast_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<broadcast_> parent;
     };
   }
 

@@ -19,9 +19,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct function_ : ext::elementwise_<function_>
+    struct function_ : BOOST_SIMD_EXT_NS::elementwise_<function_>
     {
-      typedef ext::elementwise_<function_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<function_> parent;
     };
   }
 

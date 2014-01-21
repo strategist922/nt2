@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct remround_ : ext::elementwise_<remround_>
+    struct remround_ : BOOST_SIMD_EXT_NS::elementwise_<remround_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<remround_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<remround_> parent;
     };
   }
   /*!

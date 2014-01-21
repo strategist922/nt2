@@ -30,10 +30,10 @@ namespace boost { namespace simd
 
       Represents the splatted_maximum function in generic contexts.
     **/
-    struct splatted_maximum_ : ext::unspecified_<splatted_maximum_>
+    struct splatted_maximum_ : BOOST_SIMD_EXT_NS::unspecified_<splatted_maximum_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<splatted_maximum_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<splatted_maximum_> parent;
     };
   }
   /*!

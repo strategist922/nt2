@@ -28,10 +28,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Signmask : ext::pure_constant_<Signmask>
+    struct Signmask : BOOST_SIMD_EXT_NS::pure_constant_<Signmask>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Signmask> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Signmask> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

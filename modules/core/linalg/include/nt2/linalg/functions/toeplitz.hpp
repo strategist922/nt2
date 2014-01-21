@@ -47,7 +47,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag toeplitz_ of functor toeplitz
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct toeplitz_ : ext::unspecified_<toeplitz_> { typedef ext::unspecified_<toeplitz_> parent; };
+    struct toeplitz_ : BOOST_SIMD_EXT_NS::unspecified_<toeplitz_> { typedef BOOST_SIMD_EXT_NS::unspecified_<toeplitz_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::toeplitz_, toeplitz, 1)

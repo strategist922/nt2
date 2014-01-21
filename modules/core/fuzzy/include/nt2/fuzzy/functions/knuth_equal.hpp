@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct knuth_equal_ : ext::elementwise_<knuth_equal_>
+    struct knuth_equal_ : BOOST_SIMD_EXT_NS::elementwise_<knuth_equal_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<knuth_equal_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<knuth_equal_> parent;
     };
   }
   /*!

@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct ratfracder_ : ext::tieable_<ratfracder_>
+    struct ratfracder_ : BOOST_SIMD_EXT_NS::tieable_<ratfracder_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<ratfracder_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<ratfracder_> parent;
     };
   }
   /*!

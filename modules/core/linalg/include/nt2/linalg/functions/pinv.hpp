@@ -38,7 +38,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag pinv_ of functor pinv
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct pinv_ :  ext::unspecified_<pinv_> { typedef ext::unspecified_<pinv_> parent; };
+    struct pinv_ :  BOOST_SIMD_EXT_NS::unspecified_<pinv_> { typedef BOOST_SIMD_EXT_NS::unspecified_<pinv_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::pinv_, pinv, 1)

@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_included_c_ : ext::unspecified_<is_included_c_>
+    struct is_included_c_ : BOOST_SIMD_EXT_NS::unspecified_<is_included_c_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<is_included_c_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<is_included_c_> parent;
     };
   }
   /*!

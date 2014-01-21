@@ -19,7 +19,7 @@ namespace boost { namespace simd
 {
   namespace tag
   {
-    struct terminal_    : ext::elementwise_<terminal_> { typedef ext::elementwise_<terminal_> parent; };
+    struct terminal_    : BOOST_SIMD_EXT_NS::elementwise_<terminal_> { typedef BOOST_SIMD_EXT_NS::elementwise_<terminal_> parent; };
     struct dereference_ : terminal_{ typedef terminal_ parent; };
   }
 

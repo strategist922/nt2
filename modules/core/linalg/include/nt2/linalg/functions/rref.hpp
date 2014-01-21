@@ -40,15 +40,15 @@ namespace nt2 { namespace tag
     **/
     namespace factorization
     {
-      struct rref_ : ext::unspecified_<factorization::rref_>
+      struct rref_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::rref_>
       {
-        typedef ext::unspecified_<factorization::rref_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::rref_> parent;
       };
     }
 
-    struct rref_ :  ext::tieable_<rref_>
+    struct rref_ :  BOOST_SIMD_EXT_NS::tieable_<rref_>
     {
-      typedef ext::tieable_<rref_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<rref_>  parent;
     };
   }
 

@@ -15,10 +15,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct quadl_ : ext::unspecified_<quadl_>
+    struct quadl_ : BOOST_SIMD_EXT_NS::unspecified_<quadl_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<quadl_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<quadl_> parent;
     };
     // definition  of abstol constant for integ method
   /// INTERNAL ONLY

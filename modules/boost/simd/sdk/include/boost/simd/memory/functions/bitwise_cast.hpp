@@ -23,10 +23,10 @@ namespace boost { namespace simd
 
       Represents the bitwise_cast function in generic contexts.
     **/
-    struct bitwise_cast_ : ext::elementwise_<bitwise_cast_>
+    struct bitwise_cast_ : BOOST_SIMD_EXT_NS::elementwise_<bitwise_cast_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<bitwise_cast_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<bitwise_cast_> parent;
     };
   }
 

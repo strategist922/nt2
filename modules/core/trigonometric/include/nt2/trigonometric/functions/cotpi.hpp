@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct cotpi_ : ext::elementwise_<cotpi_>
+    struct cotpi_ : BOOST_SIMD_EXT_NS::elementwise_<cotpi_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<cotpi_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<cotpi_> parent;
     };
   }
   /*!

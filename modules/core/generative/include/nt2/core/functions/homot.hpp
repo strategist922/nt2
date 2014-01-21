@@ -21,9 +21,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct  homot_ : ext::state_constant_<homot_>
+    struct  homot_ : BOOST_SIMD_EXT_NS::state_constant_<homot_>
     {
-      typedef ext::state_constant_<homot_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<homot_> parent;
     };
   }
 

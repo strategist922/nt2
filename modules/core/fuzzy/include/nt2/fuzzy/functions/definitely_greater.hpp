@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct definitely_greater_ : ext::elementwise_<definitely_greater_>
+    struct definitely_greater_ : BOOST_SIMD_EXT_NS::elementwise_<definitely_greater_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<definitely_greater_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<definitely_greater_> parent;
     };
   }
   /*!

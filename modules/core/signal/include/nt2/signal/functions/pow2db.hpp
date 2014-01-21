@@ -15,10 +15,10 @@ namespace nt2 { namespace tag
     /*!
       @brief Tag for the pow2db functor
     **/
-    struct pow2db_ : ext::elementwise_<pow2db_>
+    struct pow2db_ : BOOST_SIMD_EXT_NS::elementwise_<pow2db_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<pow2db_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<pow2db_> parent;
     };
   }
   /*!

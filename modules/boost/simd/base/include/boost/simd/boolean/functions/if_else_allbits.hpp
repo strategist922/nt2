@@ -23,10 +23,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct if_else_allbits_ : ext::elementwise_<if_else_allbits_>
+    struct if_else_allbits_ : BOOST_SIMD_EXT_NS::elementwise_<if_else_allbits_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<if_else_allbits_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<if_else_allbits_> parent;
     };
   }
   /*!

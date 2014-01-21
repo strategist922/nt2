@@ -23,10 +23,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct mtimes_ : ext::unspecified_<mtimes_>
+    struct mtimes_ : BOOST_SIMD_EXT_NS::unspecified_<mtimes_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<mtimes_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<mtimes_> parent;
     };
   }
 

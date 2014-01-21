@@ -28,10 +28,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct  blkdiag_ : ext::elementwise_<blkdiag_>
+    struct  blkdiag_ : BOOST_SIMD_EXT_NS::elementwise_<blkdiag_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<blkdiag_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<blkdiag_> parent;
     };
   }
   /*!

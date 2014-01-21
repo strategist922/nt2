@@ -23,10 +23,10 @@ namespace boost { namespace simd
       @par Models:
       Hierarchy
     **/
-    struct refine_rec_ : ext::elementwise_<refine_rec_>
+    struct refine_rec_ : BOOST_SIMD_EXT_NS::elementwise_<refine_rec_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<refine_rec_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<refine_rec_> parent;
     };
   }
 

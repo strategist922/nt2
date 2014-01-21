@@ -23,10 +23,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct split_low_ : ext::unspecified_<split_low_>
+    struct split_low_ : BOOST_SIMD_EXT_NS::unspecified_<split_low_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<split_low_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<split_low_> parent;
     };
   }
 

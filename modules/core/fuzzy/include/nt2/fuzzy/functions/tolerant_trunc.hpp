@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct tolerant_trunc_ : ext::elementwise_<tolerant_trunc_> { typedef ext::elementwise_<tolerant_trunc_> parent; };
+    struct tolerant_trunc_ : BOOST_SIMD_EXT_NS::elementwise_<tolerant_trunc_> { typedef BOOST_SIMD_EXT_NS::elementwise_<tolerant_trunc_> parent; };
   }
   /*!
     Computes the truncation with a tolerance of 3 ulps using Hagerty's FL5 function.

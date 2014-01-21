@@ -32,10 +32,10 @@ namespace boost { namespace simd
       @par Models:
       Hierarchy
     **/
-    struct Maxinit : ext::pure_constant_<Maxinit>
+    struct Maxinit : BOOST_SIMD_EXT_NS::pure_constant_<Maxinit>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Maxinit> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Maxinit> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

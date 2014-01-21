@@ -25,9 +25,9 @@ namespace nt2
     /*!
      * \brief Define the tag rand_ of functor rand
      **/
-    struct rand_ : ext::unspecified_<rand_>
+    struct rand_ : BOOST_SIMD_EXT_NS::unspecified_<rand_>
     {
-      typedef ext::unspecified_<rand_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<rand_>  parent;
     };
   }
 

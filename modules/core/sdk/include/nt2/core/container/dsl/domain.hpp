@@ -34,7 +34,7 @@ namespace nt2 { namespace meta
     struct false_type { char dummy[2]; };
 
     template<typename X>
-    static true_type call(ext::elementwise_<X> const&);
+    static true_type call(BOOST_SIMD_EXT_NS::elementwise_<X> const&);
     static false_type call(...);
 
     typedef typename boost::dispatch::meta::hierarchy_of<T>::type Tag;

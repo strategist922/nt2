@@ -55,7 +55,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag invol_ of functor invol
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct invol_ :   ext::unspecified_<invol_> { typedef  ext::unspecified_<invol_> parent; };
+    struct invol_ :   BOOST_SIMD_EXT_NS::unspecified_<invol_> { typedef  BOOST_SIMD_EXT_NS::unspecified_<invol_> parent; };
   }
 
   NT2_FUNCTION_IMPLEMENTATION(tag::invol_, invol, 1)

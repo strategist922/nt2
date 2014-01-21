@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fuzzy_greater_or_equal_ : ext::elementwise_<fuzzy_greater_or_equal_>
+    struct fuzzy_greater_or_equal_ : BOOST_SIMD_EXT_NS::elementwise_<fuzzy_greater_or_equal_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fuzzy_greater_or_equal_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fuzzy_greater_or_equal_> parent;
     };
   }
   /*!

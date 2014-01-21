@@ -22,10 +22,10 @@ namespace boost { namespace simd
 
       Represents the slice function in generic contexts.
     **/
-    struct slice_ : ext::unspecified_<slice_>
+    struct slice_ : BOOST_SIMD_EXT_NS::unspecified_<slice_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<slice_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<slice_> parent;
     };
   }
 

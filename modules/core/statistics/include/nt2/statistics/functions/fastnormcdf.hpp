@@ -23,10 +23,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct fastnormcdf_ : ext::elementwise_<fastnormcdf_>
+    struct fastnormcdf_ : BOOST_SIMD_EXT_NS::elementwise_<fastnormcdf_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fastnormcdf_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fastnormcdf_> parent;
     };
   }
   /*!

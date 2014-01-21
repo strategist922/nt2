@@ -20,10 +20,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct polyint_ : ext::elementwise_<polyint_>
+    struct polyint_ : BOOST_SIMD_EXT_NS::elementwise_<polyint_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<polyint_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<polyint_> parent;
     };
   }
   /*!

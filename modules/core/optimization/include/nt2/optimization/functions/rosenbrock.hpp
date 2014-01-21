@@ -24,10 +24,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct rosenbrock_ : ext::unspecified_<rosenbrock_>
+    struct rosenbrock_ : BOOST_SIMD_EXT_NS::unspecified_<rosenbrock_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<rosenbrock_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<rosenbrock_> parent;
     };
   }
   /*!

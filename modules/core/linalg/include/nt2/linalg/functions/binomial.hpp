@@ -51,7 +51,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag binomial_ of functor binomial
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct binomial_ : ext::unspecified_<binomial_> { typedef ext::unspecified_<binomial_> parent; };
+    struct binomial_ : BOOST_SIMD_EXT_NS::unspecified_<binomial_> { typedef BOOST_SIMD_EXT_NS::unspecified_<binomial_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::binomial_, binomial, 1)

@@ -19,9 +19,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct linspace_ : ext::state_constant_<linspace_>
+    struct linspace_ : BOOST_SIMD_EXT_NS::state_constant_<linspace_>
     {
-      typedef ext::state_constant_<linspace_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<linspace_> parent;
     };
   }
 

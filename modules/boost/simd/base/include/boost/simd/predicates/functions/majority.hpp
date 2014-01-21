@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct majority_ : ext::elementwise_<majority_>
+    struct majority_ : BOOST_SIMD_EXT_NS::elementwise_<majority_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<majority_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<majority_> parent;
     };}
   /*!
     Returns True if at least two inputs are not zero else False.

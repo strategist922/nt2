@@ -20,10 +20,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct polyder_ : ext::elementwise_<polyder_>
+    struct polyder_ : BOOST_SIMD_EXT_NS::elementwise_<polyder_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<polyder_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<polyder_> parent;
     };
   }
   /*!

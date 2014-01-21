@@ -22,10 +22,10 @@ namespace boost { namespace simd
 
       Represents the combine function in generic contexts.
     **/
-    struct combine_ : ext::unspecified_<combine_>
+    struct combine_ : BOOST_SIMD_EXT_NS::unspecified_<combine_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<combine_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<combine_> parent;
     };
   }
 

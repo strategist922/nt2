@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fast_sincospi_ : ext::elementwise_<fast_sincospi_> { typedef ext::elementwise_<fast_sincospi_> parent; };
+    struct fast_sincospi_ : BOOST_SIMD_EXT_NS::elementwise_<fast_sincospi_> { typedef BOOST_SIMD_EXT_NS::elementwise_<fast_sincospi_> parent; };
   }
   /*!
     Computes simultaneously sine and cosine from angle in \f$\pi\f$ multiples

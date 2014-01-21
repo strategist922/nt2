@@ -27,9 +27,9 @@ namespace nt2
     /*!
      * \brief Define the tag randi_ of functor randi
      **/
-    struct randi_ : ext::unspecified_<randi_>
+    struct randi_ : BOOST_SIMD_EXT_NS::unspecified_<randi_>
     {
-      typedef ext::unspecified_<randi_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<randi_>  parent;
     };
   }
 

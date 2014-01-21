@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct meanof_ : ext::elementwise_<meanof_>
+    struct meanof_ : BOOST_SIMD_EXT_NS::elementwise_<meanof_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<meanof_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<meanof_> parent;
     };
   }
   /*!

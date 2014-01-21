@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fast_gamma_ : ext::elementwise_<fast_gamma_>
+    struct fast_gamma_ : BOOST_SIMD_EXT_NS::elementwise_<fast_gamma_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fast_gamma_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fast_gamma_> parent;
     };
   }
   /*!

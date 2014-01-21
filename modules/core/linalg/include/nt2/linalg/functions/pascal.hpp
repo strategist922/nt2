@@ -60,9 +60,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag pascal_ of functor pascal
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct pascal_ :  ext::unspecified_<pascal_>
+    struct pascal_ :  BOOST_SIMD_EXT_NS::unspecified_<pascal_>
     {
-      typedef ext::unspecified_<pascal_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<pascal_> parent;
     };
   }
 

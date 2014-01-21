@@ -23,10 +23,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct mask2logical_ : ext::elementwise_<mask2logical_>
+    struct mask2logical_ : BOOST_SIMD_EXT_NS::elementwise_<mask2logical_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<mask2logical_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<mask2logical_> parent;
     };
   }
 

@@ -26,10 +26,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct nearest_ : ext::unspecified_<nearest_>
+    struct nearest_ : BOOST_SIMD_EXT_NS::unspecified_<nearest_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<nearest_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<nearest_> parent;
     };
   }
   /*!

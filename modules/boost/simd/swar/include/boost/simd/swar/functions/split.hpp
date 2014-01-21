@@ -23,10 +23,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct split_ : ext::elementwise_<split_>
+    struct split_ : BOOST_SIMD_EXT_NS::elementwise_<split_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<split_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<split_> parent;
     };
   }
 

@@ -56,7 +56,7 @@ namespace nt2
      * \brief Define the tag proj_ of functor proj
      *        in namespace nt2::tag for toolbox complex
     **/
-    struct proj_ : ext::elementwise_<proj_> { typedef ext::elementwise_<proj_> parent; };
+    struct proj_ : BOOST_SIMD_EXT_NS::elementwise_<proj_> { typedef BOOST_SIMD_EXT_NS::elementwise_<proj_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::proj_, proj, 1)

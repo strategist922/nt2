@@ -18,9 +18,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct repvert_ : ext::elementwise_<repvert_>
+    struct repvert_ : BOOST_SIMD_EXT_NS::elementwise_<repvert_>
     {
-      typedef ext::elementwise_<repvert_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<repvert_> parent;
     };
   }
 

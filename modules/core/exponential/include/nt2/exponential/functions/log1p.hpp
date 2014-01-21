@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct log1p_ : ext::elementwise_<log1p_> { typedef ext::elementwise_<log1p_> parent; };
+    struct log1p_ : BOOST_SIMD_EXT_NS::elementwise_<log1p_> { typedef BOOST_SIMD_EXT_NS::elementwise_<log1p_> parent; };
   }
   /*!
     natural logarithm of 1+a0: \f$\log(1+a_0)\f$

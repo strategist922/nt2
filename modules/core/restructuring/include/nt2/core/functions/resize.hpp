@@ -24,10 +24,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct resize_ : ext::elementwise_<resize_>
+    struct resize_ : BOOST_SIMD_EXT_NS::elementwise_<resize_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<resize_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<resize_> parent;
     };
   }
 

@@ -42,9 +42,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag rando_ of functor rando
      *        in namespace nt2::tag for toolbox algebra
      **/
-    struct rando_ : ext::unspecified_<rando_>
+    struct rando_ : BOOST_SIMD_EXT_NS::unspecified_<rando_>
     {
-      typedef ext::unspecified_<rando_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<rando_> parent;
     };
 }
 

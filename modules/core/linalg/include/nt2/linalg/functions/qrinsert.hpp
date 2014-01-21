@@ -22,9 +22,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct qrinsert_ :  ext::tieable_<qrinsert_>
+    struct qrinsert_ :  BOOST_SIMD_EXT_NS::tieable_<qrinsert_>
     {
-      typedef ext::tieable_<qrinsert_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<qrinsert_>  parent;
     };
   }
 

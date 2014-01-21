@@ -21,9 +21,9 @@ namespace boost { namespace simd
   namespace tag
   {
     /// @brief Hierarchy tag for two_add function
-    struct two_add_ : ext::elementwise_<two_add_>
+    struct two_add_ : BOOST_SIMD_EXT_NS::elementwise_<two_add_>
     {
-      typedef ext::elementwise_<two_add_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<two_add_> parent;
     };
   }
 

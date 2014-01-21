@@ -22,10 +22,10 @@ namespace boost { namespace simd
 
       Represents the splatted_sum function in generic contexts.
     **/
-    struct splatted_sum_ : ext::unspecified_<splatted_sum_>
+    struct splatted_sum_ : BOOST_SIMD_EXT_NS::unspecified_<splatted_sum_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<splatted_sum_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<splatted_sum_> parent;
     };
   }
 

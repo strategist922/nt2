@@ -13,9 +13,9 @@
 namespace nt2 { namespace tag
   {
     /// @brief Hierarchy tag for sinhcosh function
-    struct sinhcosh_ : ext::elementwise_<sinhcosh_>
+    struct sinhcosh_ : BOOST_SIMD_EXT_NS::elementwise_<sinhcosh_>
     {
-      typedef ext::elementwise_<sinhcosh_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<sinhcosh_> parent;
     };
   }
   /*!

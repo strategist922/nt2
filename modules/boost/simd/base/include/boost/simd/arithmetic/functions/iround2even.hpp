@@ -20,10 +20,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct iround2even_ : ext::elementwise_<iround2even_>
+    struct iround2even_ : BOOST_SIMD_EXT_NS::elementwise_<iround2even_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<iround2even_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<iround2even_> parent;
     };
   }
   /*!

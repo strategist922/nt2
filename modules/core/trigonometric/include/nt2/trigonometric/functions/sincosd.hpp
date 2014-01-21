@@ -13,10 +13,10 @@
 namespace nt2 { namespace tag
   {
     /// @brief Hierarchy tag for sincosd function
-    struct sincosd_ : ext::elementwise_<sincosd_>
+    struct sincosd_ : BOOST_SIMD_EXT_NS::elementwise_<sincosd_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<sincosd_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<sincosd_> parent;
     };
   }
   /*!

@@ -22,10 +22,10 @@ namespace nt2 {
      @par Models:
         Hierarchy
    **/
-    struct asinpi_ : ext::elementwise_<asinpi_>
+    struct asinpi_ : BOOST_SIMD_EXT_NS::elementwise_<asinpi_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<asinpi_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<asinpi_> parent;
     };
   }
   /*!

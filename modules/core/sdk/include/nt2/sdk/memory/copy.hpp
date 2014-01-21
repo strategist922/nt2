@@ -22,9 +22,9 @@ namespace nt2 { namespace memory
   template<class In, class Out> inline void copy(In begin, In end, Out dst)
   {
 #if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) && BOOST_WORKAROUND(BOOST_MSVC, < 1600)
-    stdext::unchecked_copy(begin,end,dst);
+    stdBOOST_SIMD_EXT_NS::unchecked_copy(begin,end,dst);
 #elif BOOST_WORKAROUND(BOOST_MSVC, > 1500)
-    std::copy(begin,end, stdext::make_unchecked_array_iterator(dst));
+    std::copy(begin,end, stdBOOST_SIMD_EXT_NS::make_unchecked_array_iterator(dst));
 #else
     std::copy(begin,end,dst);
 #endif

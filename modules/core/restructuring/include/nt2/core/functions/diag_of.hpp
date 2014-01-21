@@ -29,16 +29,16 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct diag_of_ : ext::elementwise_<diag_of_>
+    struct diag_of_ : BOOST_SIMD_EXT_NS::elementwise_<diag_of_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<diag_of_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<diag_of_> parent;
     };
 
-    struct offset_diag_of_ : ext::elementwise_<offset_diag_of_>
+    struct offset_diag_of_ : BOOST_SIMD_EXT_NS::elementwise_<offset_diag_of_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<offset_diag_of_>  parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<offset_diag_of_>  parent;
     };
   }
 

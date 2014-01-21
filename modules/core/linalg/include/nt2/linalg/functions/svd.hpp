@@ -20,15 +20,15 @@ namespace nt2
   {
     namespace factorization
     {
-      struct svd_ : ext::unspecified_<factorization::svd_>
+      struct svd_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::svd_>
       {
-        typedef ext::unspecified_<factorization::svd_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::svd_> parent;
       };
     }
 
-    struct svd_ : ext::unspecified_<svd_>
+    struct svd_ : BOOST_SIMD_EXT_NS::unspecified_<svd_>
     {
-       typedef ext::tieable_<svd_>  parent;
+       typedef BOOST_SIMD_EXT_NS::tieable_<svd_>  parent;
     };
   }
 

@@ -24,10 +24,10 @@ namespace boost { namespace simd {
      @par Models:
         Hierarchy
    **/
-    struct repeat_upper_half_ : ext::unspecified_<repeat_upper_half_>
+    struct repeat_upper_half_ : BOOST_SIMD_EXT_NS::unspecified_<repeat_upper_half_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<repeat_upper_half_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<repeat_upper_half_> parent;
     };
   }
   /*!

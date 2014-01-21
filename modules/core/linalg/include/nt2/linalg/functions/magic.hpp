@@ -40,7 +40,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag magic_ of functor magic
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct magic_ : ext::unspecified_<magic_> { typedef ext::unspecified_<magic_> parent; };
+    struct magic_ : BOOST_SIMD_EXT_NS::unspecified_<magic_> { typedef BOOST_SIMD_EXT_NS::unspecified_<magic_> parent; };
   }
 
   NT2_FUNCTION_IMPLEMENTATION(tag::magic_, magic, 1)

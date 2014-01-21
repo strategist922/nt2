@@ -32,10 +32,10 @@ namespace boost { namespace simd
    **/
     struct Valmin;
 
-    struct Minf : ext::pure_constant_<Minf>
+    struct Minf : BOOST_SIMD_EXT_NS::pure_constant_<Minf>
     {
       typedef double                    default_type;
-      typedef ext::pure_constant_<Minf> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Minf> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

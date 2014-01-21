@@ -41,9 +41,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag invhilb_ of functor invhilb
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct invhilb_ : ext::unspecified_<invhilb_>
+    struct invhilb_ : BOOST_SIMD_EXT_NS::unspecified_<invhilb_>
     {
-      typedef ext::unspecified_<invhilb_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<invhilb_> parent;
     };
   }
 

@@ -63,9 +63,9 @@ namespace nt2 { namespace tag
     {
       typedef boost::dispatch::tag::formal_ parent;
     };
-     struct randcorr_ : ext::unspecified_<randcorr_>
+     struct randcorr_ : BOOST_SIMD_EXT_NS::unspecified_<randcorr_>
     {
-      typedef ext::unspecified_<randcorr_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<randcorr_> parent;
     };
   }
 

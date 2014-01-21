@@ -57,7 +57,7 @@ namespace nt2
      * \brief Define the tag mul_i_ of functor mul_i
      *        in namespace nt2::tag for toolbox complex
     **/
-    struct mul_i_ : ext::elementwise_<mul_i_> { typedef ext::elementwise_<mul_i_> parent; };
+    struct mul_i_ : BOOST_SIMD_EXT_NS::elementwise_<mul_i_> { typedef BOOST_SIMD_EXT_NS::elementwise_<mul_i_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::mul_i_, mul_i, 1)

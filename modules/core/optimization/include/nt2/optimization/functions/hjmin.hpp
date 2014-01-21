@@ -24,9 +24,9 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-      struct hjmin_ : ext::unspecified_<hjmin_>
+      struct hjmin_ : BOOST_SIMD_EXT_NS::unspecified_<hjmin_>
     {
-      typedef ext::unspecified_<hjmin_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<hjmin_> parent;
     };
   }
   /*!

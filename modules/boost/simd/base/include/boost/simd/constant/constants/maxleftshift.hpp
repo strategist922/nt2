@@ -27,10 +27,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Maxleftshift : ext::pure_constant_<Maxleftshift>
+    struct Maxleftshift : BOOST_SIMD_EXT_NS::pure_constant_<Maxleftshift>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Maxleftshift> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Maxleftshift> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

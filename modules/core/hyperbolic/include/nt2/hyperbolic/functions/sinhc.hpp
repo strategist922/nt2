@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct sinhc_ : ext::elementwise_<sinhc_> { typedef ext::elementwise_<sinhc_> parent; };
+    struct sinhc_ : BOOST_SIMD_EXT_NS::elementwise_<sinhc_> { typedef BOOST_SIMD_EXT_NS::elementwise_<sinhc_> parent; };
   }
   /*!
     Returns hyperbolic cardinal sine: \f$\frac{\sinh(a_0)}{a_0}\f$.

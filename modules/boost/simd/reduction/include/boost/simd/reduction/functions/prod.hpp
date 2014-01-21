@@ -23,10 +23,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct prod_ : ext::reduction_<prod_, tag::multiplies_, tag::One>
+    struct prod_ : BOOST_SIMD_EXT_NS::reduction_<prod_, tag::multiplies_, tag::One>
     {
       /// @brief Parent hierarchy
-      typedef ext::reduction_<prod_, tag::multiplies_, tag::One> parent;
+      typedef BOOST_SIMD_EXT_NS::reduction_<prod_, tag::multiplies_, tag::One> parent;
     };
   }
   /*!

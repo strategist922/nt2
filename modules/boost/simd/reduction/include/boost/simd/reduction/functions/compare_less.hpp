@@ -24,10 +24,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct compare_less_ : ext::unspecified_<compare_less_>
+    struct compare_less_ : BOOST_SIMD_EXT_NS::unspecified_<compare_less_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<compare_less_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<compare_less_> parent;
     };
   }
   /*!

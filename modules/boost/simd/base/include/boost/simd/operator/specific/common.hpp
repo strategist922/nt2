@@ -184,7 +184,7 @@ namespace boost { namespace simd { namespace BOOST_SIMD_EXT_NS
                                                 >
                                       )
                                     , BOOST_PP_REPEAT(n,M1,~)
-                                    , (boost::simd::ext::BOOST_PP_CAT(splat_or_map, n)< Tag, BOOST_PP_ENUM_PARAMS(n, A) >)
+                                    , (boost::simd::BOOST_SIMD_EXT_NS::BOOST_PP_CAT(splat_or_map, n)< Tag, BOOST_PP_ENUM_PARAMS(n, A) >)
                                     )
 
 #undef n

@@ -47,7 +47,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag hankel_ of functor hankel
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct hankel_ : ext::unspecified_<hankel_> { typedef ext::unspecified_<hankel_> parent; };
+    struct hankel_ : BOOST_SIMD_EXT_NS::unspecified_<hankel_> { typedef BOOST_SIMD_EXT_NS::unspecified_<hankel_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::hankel_, hankel, 1)

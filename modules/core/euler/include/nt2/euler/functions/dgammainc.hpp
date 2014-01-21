@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct dgammainc_ : ext::elementwise_<dgammainc_>
+    struct dgammainc_ : BOOST_SIMD_EXT_NS::elementwise_<dgammainc_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<dgammainc_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<dgammainc_> parent;
     };
   }
   /*!

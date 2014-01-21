@@ -23,10 +23,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct transpose_ : ext::elementwise_<transpose_>
+    struct transpose_ : BOOST_SIMD_EXT_NS::elementwise_<transpose_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<transpose_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<transpose_> parent;
     };
   }
   /*!

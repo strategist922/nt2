@@ -27,10 +27,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct True : ext::pure_constant_<True>
+    struct True : BOOST_SIMD_EXT_NS::pure_constant_<True>
     {
       typedef logical<double> default_type;
-      typedef ext::pure_constant_<True> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<True> parent;
     };
   }
   /*!

@@ -29,7 +29,7 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
   {
     typedef typename Data::type                                     result_type;
     typedef typename boost::proto::result_of::child_c<A0&, 0>::value_type   v_t;
-    typedef typename boost::simd::ext::adapt_data<v_t,Data>::type      target_t;
+    typedef typename boost::simd::BOOST_SIMD_EXT_NS::adapt_data<v_t,Data>::type      target_t;
 
     BOOST_FORCEINLINE result_type
     operator()(A0 const& a0, State const& p, Data const&) const

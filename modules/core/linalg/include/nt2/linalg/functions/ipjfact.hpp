@@ -56,9 +56,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag ipjfact_ of functor ipjfact
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct ipjfact_ : ext::tieable_<ipjfact_>
+    struct ipjfact_ : BOOST_SIMD_EXT_NS::tieable_<ipjfact_>
     {
-      typedef ext::tieable_<ipjfact_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<ipjfact_>  parent;
     };
   }
 

@@ -24,10 +24,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct neldermead_ : ext::unspecified_<neldermead_>
+    struct neldermead_ : BOOST_SIMD_EXT_NS::unspecified_<neldermead_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<neldermead_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<neldermead_> parent;
     };
   }
   /*!

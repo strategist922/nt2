@@ -25,10 +25,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct ind2sub_ : ext::tieable_<ind2sub_>
+    struct ind2sub_ : BOOST_SIMD_EXT_NS::tieable_<ind2sub_>
     {
       /// @brief Parent hierarchy
-      typedef ext::tieable_<ind2sub_> parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<ind2sub_> parent;
     };
   }
 

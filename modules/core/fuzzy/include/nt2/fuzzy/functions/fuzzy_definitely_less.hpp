@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fuzzy_definitely_less_ : ext::elementwise_<fuzzy_definitely_less_>
+    struct fuzzy_definitely_less_ : BOOST_SIMD_EXT_NS::elementwise_<fuzzy_definitely_less_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fuzzy_definitely_less_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fuzzy_definitely_less_> parent;
     };
   }
   /*!

@@ -14,10 +14,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct rem_pio2_cephes_ : ext::elementwise_<rem_pio2_cephes_>
+    struct rem_pio2_cephes_ : BOOST_SIMD_EXT_NS::elementwise_<rem_pio2_cephes_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<rem_pio2_cephes_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<rem_pio2_cephes_> parent;
     };
   }
   /*!

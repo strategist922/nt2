@@ -26,10 +26,10 @@ namespace boost { namespace simd
     struct logical_or_;
     struct False;
 
-    struct any_ : ext::reduction_<any_, tag::logical_or_, tag::False>
+    struct any_ : BOOST_SIMD_EXT_NS::reduction_<any_, tag::logical_or_, tag::False>
     {
       /// @brief Parent hierarchy
-      typedef ext::reduction_<any_, tag::logical_or_, tag::False> parent;
+      typedef BOOST_SIMD_EXT_NS::reduction_<any_, tag::logical_or_, tag::False> parent;
     };
   }
   /*!

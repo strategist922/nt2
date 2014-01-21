@@ -18,9 +18,9 @@ namespace nt2
      * \brief Define the tag mpower_ of functor mpower
      *        in namespace nt2::tag for toolbox algebra
      **/
-    struct mpower_ :  ext::unspecified_<mpower_>
+    struct mpower_ :  BOOST_SIMD_EXT_NS::unspecified_<mpower_>
     {
-      typedef ext::unspecified_<mpower_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<mpower_>  parent;
     };
   }
   /**

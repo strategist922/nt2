@@ -55,7 +55,7 @@ namespace nt2
      * \brief Define the tag imag_ of functor imag
      *        in namespace nt2::tag for toolbox complex
     **/
-    struct imag_ : ext::elementwise_<imag_> { typedef ext::elementwise_<imag_> parent; };
+    struct imag_ : BOOST_SIMD_EXT_NS::elementwise_<imag_> { typedef BOOST_SIMD_EXT_NS::elementwise_<imag_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::imag_, imag, 1)

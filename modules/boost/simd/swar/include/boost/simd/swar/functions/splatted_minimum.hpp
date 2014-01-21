@@ -22,10 +22,10 @@ namespace boost { namespace simd
 
       Represents the splatted_minimum function in generic contexts.
     **/
-    struct splatted_minimum_ : ext::unspecified_<splatted_minimum_>
+    struct splatted_minimum_ : BOOST_SIMD_EXT_NS::unspecified_<splatted_minimum_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<splatted_minimum_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<splatted_minimum_> parent;
     };
   }
 

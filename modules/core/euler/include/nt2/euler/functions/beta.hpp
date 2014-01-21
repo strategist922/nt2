@@ -24,10 +24,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct beta_ : ext::elementwise_<beta_>
+    struct beta_ : BOOST_SIMD_EXT_NS::elementwise_<beta_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<beta_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<beta_> parent;
     };
   }
   /*!

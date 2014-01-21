@@ -48,9 +48,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag bandred_ of functor bandred
      *        in namespace nt2::tag for toolbox algebra
      **/
-    struct bandred_ : ext::unspecified_<bandred_>
+    struct bandred_ : BOOST_SIMD_EXT_NS::unspecified_<bandred_>
     {
-      typedef ext::unspecified_<bandred_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<bandred_> parent;
     };
 }
 

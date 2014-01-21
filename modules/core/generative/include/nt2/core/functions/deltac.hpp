@@ -37,10 +37,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct deltac_ : ext::state_constant_<deltac_>
+    struct deltac_ : BOOST_SIMD_EXT_NS::state_constant_<deltac_>
     {
       /// @brief Parent hierarchy
-      typedef ext::state_constant_<deltac_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<deltac_> parent;
 
       /// @brief default value type for untyped calls
       typedef double                      default_type;

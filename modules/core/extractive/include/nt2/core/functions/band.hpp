@@ -24,10 +24,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct band_ : ext::elementwise_<band_>
+    struct band_ : BOOST_SIMD_EXT_NS::elementwise_<band_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<band_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<band_> parent;
     };
   }
 

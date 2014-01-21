@@ -27,10 +27,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct flipud_ : ext::elementwise_<flipud_>
+    struct flipud_ : BOOST_SIMD_EXT_NS::elementwise_<flipud_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<flipud_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<flipud_> parent;
     };
   }
   /*!

@@ -63,9 +63,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag clement_ of functor clement
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct clement_ :  ext::unspecified_<clement_>
+    struct clement_ :  BOOST_SIMD_EXT_NS::unspecified_<clement_>
     {
-      typedef ext::unspecified_<clement_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<clement_> parent;
     };
   }
 

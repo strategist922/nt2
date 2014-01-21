@@ -26,10 +26,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Limitexponent : ext::pure_constant_<Limitexponent>
+    struct Limitexponent : BOOST_SIMD_EXT_NS::pure_constant_<Limitexponent>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Limitexponent> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Limitexponent> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

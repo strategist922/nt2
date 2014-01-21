@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct tolerant_round_ : ext::elementwise_<tolerant_round_> { typedef ext::elementwise_<tolerant_round_> parent; };
+    struct tolerant_round_ : BOOST_SIMD_EXT_NS::elementwise_<tolerant_round_> { typedef BOOST_SIMD_EXT_NS::elementwise_<tolerant_round_> parent; };
   }
   /*!
     Computes the rounding with a tolerance of 3 ulps using Hagerty's FL5 function.

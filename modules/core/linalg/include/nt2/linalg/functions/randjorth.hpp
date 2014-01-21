@@ -52,9 +52,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag randjorth_ of functor randjorth
      *        in namespace nt2::tag for toolbox algebra
      **/
-    struct randjorth_ : ext::unspecified_<randjorth_>
+    struct randjorth_ : BOOST_SIMD_EXT_NS::unspecified_<randjorth_>
     {
-      typedef ext::unspecified_<randjorth_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<randjorth_> parent;
     };
 }
 

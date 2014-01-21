@@ -12,10 +12,10 @@
 
 namespace nt2 { namespace tag
   {
-    struct sincospi_ : ext::elementwise_<sincospi_>
+    struct sincospi_ : BOOST_SIMD_EXT_NS::elementwise_<sincospi_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<sincospi_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<sincospi_> parent;
     };
   }
   /*!

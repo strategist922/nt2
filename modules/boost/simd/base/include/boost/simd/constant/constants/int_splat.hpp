@@ -28,9 +28,9 @@ namespace boost { namespace simd
         Hierarchy
    **/
     template<boost::simd::int64_t I>
-    struct Intpattern : ext::pure_constant_< Intpattern<I> >
+    struct Intpattern : BOOST_SIMD_EXT_NS::pure_constant_< Intpattern<I> >
     {
-      typedef ext::pure_constant_< Intpattern<I> > parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_< Intpattern<I> > parent;
       template<class Target, class Dummy=void>
       /// INTERNAL ONLY
       struct apply : meta::int_c< typename Target::type

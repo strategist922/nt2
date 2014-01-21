@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct polyadd_ : ext::elementwise_<polyadd_>
+    struct polyadd_ : BOOST_SIMD_EXT_NS::elementwise_<polyadd_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<polyadd_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<polyadd_> parent;
     };
   }
   /*!

@@ -16,9 +16,9 @@ namespace boost { namespace simd
   namespace tag
   {
     /// @brief Hierarchy tag for split_multiplies function
-    struct split_multiplies_ : ext::elementwise_<split_multiplies_>
+    struct split_multiplies_ : BOOST_SIMD_EXT_NS::elementwise_<split_multiplies_>
     {
-      typedef ext::elementwise_<split_multiplies_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<split_multiplies_> parent;
     };
   }
 

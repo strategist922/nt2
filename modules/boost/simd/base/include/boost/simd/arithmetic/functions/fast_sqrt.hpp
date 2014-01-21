@@ -24,10 +24,10 @@ namespace boost { namespace simd
       @par Models:
       Hierarchy
     **/
-    struct fast_sqrt_ : ext::elementwise_<fast_sqrt_>
+    struct fast_sqrt_ : BOOST_SIMD_EXT_NS::elementwise_<fast_sqrt_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fast_sqrt_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fast_sqrt_> parent;
     };
   }
  /*!

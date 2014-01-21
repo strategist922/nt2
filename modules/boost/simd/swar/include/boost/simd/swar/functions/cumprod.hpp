@@ -24,10 +24,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct cumprod_ : ext::cumulative_<cumprod_, tag::multiplies_, tag::One>
+    struct cumprod_ : BOOST_SIMD_EXT_NS::cumulative_<cumprod_, tag::multiplies_, tag::One>
     {
       /// @brief Parent hierarchy
-      typedef ext::cumulative_<cumprod_, tag::multiplies_, tag::One> parent;
+      typedef BOOST_SIMD_EXT_NS::cumulative_<cumprod_, tag::multiplies_, tag::One> parent;
     };
   }
   /*!

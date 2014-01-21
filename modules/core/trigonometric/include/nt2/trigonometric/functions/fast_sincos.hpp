@@ -23,10 +23,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct fast_sincos_ : ext::elementwise_<fast_sincos_>
+    struct fast_sincos_ : BOOST_SIMD_EXT_NS::elementwise_<fast_sincos_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fast_sincos_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fast_sincos_> parent;
     };
   }
   /*!

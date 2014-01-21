@@ -25,10 +25,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct logical_notand_ : ext::elementwise_<logical_notand_>
+    struct logical_notand_ : BOOST_SIMD_EXT_NS::elementwise_<logical_notand_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<logical_notand_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<logical_notand_> parent;
     };
   }
   /*!

@@ -20,10 +20,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct cos_ : ext::elementwise_<cos_>
+    struct cos_ : BOOST_SIMD_EXT_NS::elementwise_<cos_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<cos_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<cos_> parent;
     };
   }
   /*!

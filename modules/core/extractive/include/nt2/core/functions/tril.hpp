@@ -23,10 +23,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct tril_ : ext::elementwise_<tril_>
+    struct tril_ : BOOST_SIMD_EXT_NS::elementwise_<tril_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<tril_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<tril_> parent;
     };
   }
 

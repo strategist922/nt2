@@ -19,9 +19,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct pispace_ : ext::state_constant_<pispace_>
+    struct pispace_ : BOOST_SIMD_EXT_NS::state_constant_<pispace_>
     {
-      typedef ext::state_constant_<pispace_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<pispace_> parent;
     };
   }
 

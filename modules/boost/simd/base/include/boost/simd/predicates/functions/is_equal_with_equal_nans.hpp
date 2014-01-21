@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_equal_with_equal_nans_ : ext::elementwise_<is_equal_with_equal_nans_>
+    struct is_equal_with_equal_nans_ : BOOST_SIMD_EXT_NS::elementwise_<is_equal_with_equal_nans_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_equal_with_equal_nans_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_equal_with_equal_nans_> parent;
     };}
   /*!
     Returns True or False according a0 and a1 are equal or not.

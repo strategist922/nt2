@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct dawson_ : ext::elementwise_<dawson_>
+    struct dawson_ : BOOST_SIMD_EXT_NS::elementwise_<dawson_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<dawson_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<dawson_> parent;
     };
   }
   /*!

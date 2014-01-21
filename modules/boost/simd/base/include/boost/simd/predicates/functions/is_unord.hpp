@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_unord_ : ext::elementwise_<is_unord_>
+    struct is_unord_ : BOOST_SIMD_EXT_NS::elementwise_<is_unord_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_unord_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_unord_> parent;
     };}
   /*!
     Returns True if a0 or a1 is nan.

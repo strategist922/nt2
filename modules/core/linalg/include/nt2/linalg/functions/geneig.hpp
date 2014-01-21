@@ -36,15 +36,15 @@ namespace nt2
   {
     namespace factorization
     {
-      struct geneig_ : ext::unspecified_<factorization::geneig_>
+      struct geneig_ : BOOST_SIMD_EXT_NS::unspecified_<factorization::geneig_>
       {
-        typedef ext::unspecified_<factorization::geneig_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<factorization::geneig_> parent;
       };
     }
 
-    struct geneig_ : ext::tieable_<geneig_>
+    struct geneig_ : BOOST_SIMD_EXT_NS::tieable_<geneig_>
     {
-      typedef ext::tieable_<geneig_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<geneig_>  parent;
     };
   }
 

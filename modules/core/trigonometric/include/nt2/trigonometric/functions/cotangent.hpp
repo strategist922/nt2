@@ -22,10 +22,10 @@ namespace nt2 { namespace tag
         Hierarchy
    **/
     template <class T>
-    struct cotangent_ : ext::elementwise_< cotangent_<T> >
+    struct cotangent_ : BOOST_SIMD_EXT_NS::elementwise_< cotangent_<T> >
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_< cotangent_<T> > parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_< cotangent_<T> > parent;
     };
   }
   /*!

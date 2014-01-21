@@ -68,9 +68,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag house_ of functor house
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct house_ : ext::tieable_<house_>
+    struct house_ : BOOST_SIMD_EXT_NS::tieable_<house_>
     {
-      typedef ext::tieable_<house_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<house_>  parent;
     };
   }
 

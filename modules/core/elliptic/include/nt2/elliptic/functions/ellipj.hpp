@@ -13,9 +13,9 @@
 namespace nt2 { namespace tag
   {
     /// @brief Hierarchy tag for ellipj function
-    struct ellipj_ : ext::elementwise_<ellipj_>
+    struct ellipj_ : BOOST_SIMD_EXT_NS::elementwise_<ellipj_>
     {
-      typedef ext::elementwise_<ellipj_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<ellipj_> parent;
     };
   }
   /*!

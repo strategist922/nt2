@@ -42,7 +42,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag chow_ of functor chow
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct chow_ : ext::unspecified_<chow_> { typedef ext::unspecified_<chow_> parent; };
+    struct chow_ : BOOST_SIMD_EXT_NS::unspecified_<chow_> { typedef BOOST_SIMD_EXT_NS::unspecified_<chow_> parent; };
   }
 
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::chow_, chow, 1)

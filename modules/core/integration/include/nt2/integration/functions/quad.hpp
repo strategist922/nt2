@@ -15,10 +15,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct quad_ : ext::unspecified_<quad_>
+    struct quad_ : BOOST_SIMD_EXT_NS::unspecified_<quad_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<quad_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<quad_> parent;
     };
 
     // definition  of abstol constant for quad method

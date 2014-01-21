@@ -22,10 +22,10 @@ namespace boost { namespace simd {
       @par Models:
       Hierarchy
     **/
-    struct divround2even_ : ext::elementwise_<divround2even_>
+    struct divround2even_ : BOOST_SIMD_EXT_NS::elementwise_<divround2even_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<divround2even_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<divround2even_> parent;
     };
   }
   /*!

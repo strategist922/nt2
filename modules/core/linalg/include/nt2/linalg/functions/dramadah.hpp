@@ -61,9 +61,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag dramadah_ of functor dramadah
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct dramadah_ :  ext::unspecified_<dramadah_>
+    struct dramadah_ :  BOOST_SIMD_EXT_NS::unspecified_<dramadah_>
     {
-      typedef ext::unspecified_<dramadah_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<dramadah_> parent;
     };
   }
 

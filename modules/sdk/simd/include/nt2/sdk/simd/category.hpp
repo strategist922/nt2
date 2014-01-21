@@ -15,13 +15,13 @@
 
 namespace nt2 { namespace BOOST_SIMD_EXT_NS
 {
-  using boost::simd::ext::simd_;
-  using boost::simd::ext::logical_;
+  using boost::simd::BOOST_SIMD_EXT_NS::simd_;
+  using boost::simd::BOOST_SIMD_EXT_NS::logical_;
 
-  using boost::simd::ext::elementwise_;
-  using boost::simd::ext::reduction_;
-  using boost::simd::ext::cumulative_;
-  using boost::simd::ext::constant_;
+  using boost::simd::BOOST_SIMD_EXT_NS::elementwise_;
+  using boost::simd::BOOST_SIMD_EXT_NS::reduction_;
+  using boost::simd::BOOST_SIMD_EXT_NS::cumulative_;
+  using boost::simd::BOOST_SIMD_EXT_NS::constant_;
 } }
 
 #endif

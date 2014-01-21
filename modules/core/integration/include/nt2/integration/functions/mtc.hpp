@@ -15,10 +15,10 @@ namespace nt2
 {
   namespace tag
   {
-    struct mtc_ : ext::unspecified_<mtc_>
+    struct mtc_ : BOOST_SIMD_EXT_NS::unspecified_<mtc_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<mtc_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<mtc_> parent;
     };
   }
 

@@ -21,7 +21,7 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct fast_iround2even_ : ext::elementwise_<fast_iround2even_> { typedef ext::elementwise_<fast_iround2even_> parent; };
+    struct fast_iround2even_ : BOOST_SIMD_EXT_NS::elementwise_<fast_iround2even_> { typedef BOOST_SIMD_EXT_NS::elementwise_<fast_iround2even_> parent; };
   }
   /*!
     Convert to integer by rounding using round2even.

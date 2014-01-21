@@ -16,9 +16,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag logm_ of functor logm
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct logm_ :   ext::unspecified_<logm_>
+    struct logm_ :   BOOST_SIMD_EXT_NS::unspecified_<logm_>
     {
-      typedef ext::unspecified_<logm_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<logm_>  parent;
     };
   }
   /**

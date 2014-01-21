@@ -24,10 +24,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct squeeze_ : ext::reshaping_<squeeze_>
+    struct squeeze_ : BOOST_SIMD_EXT_NS::reshaping_<squeeze_>
     {
       /// @brief Parent hierarchy
-      typedef ext::reshaping_<squeeze_> parent;
+      typedef BOOST_SIMD_EXT_NS::reshaping_<squeeze_> parent;
     };
   }
 

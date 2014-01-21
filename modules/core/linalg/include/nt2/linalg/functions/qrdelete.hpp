@@ -22,9 +22,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct qrdelete_ :  ext::tieable_<qrdelete_>
+    struct qrdelete_ :  BOOST_SIMD_EXT_NS::tieable_<qrdelete_>
     {
-      typedef ext::tieable_<qrdelete_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<qrdelete_>  parent;
     };
   }
 

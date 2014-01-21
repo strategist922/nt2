@@ -12,7 +12,7 @@
 
 namespace nt2 { namespace tag
   {
-    struct tchebeval_ : ext::elementwise_<tchebeval_> { typedef ext::elementwise_<tchebeval_> parent; };
+    struct tchebeval_ : BOOST_SIMD_EXT_NS::elementwise_<tchebeval_> { typedef BOOST_SIMD_EXT_NS::elementwise_<tchebeval_> parent; };
   }
   NT2_FUNCTION_IMPLEMENTATION(tag::tchebeval_, tchebeval, 2)
 }

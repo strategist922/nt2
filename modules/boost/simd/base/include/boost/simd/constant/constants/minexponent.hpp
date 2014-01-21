@@ -26,10 +26,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Minexponent : ext::pure_constant_<Minexponent>
+    struct Minexponent : BOOST_SIMD_EXT_NS::pure_constant_<Minexponent>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Minexponent> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Minexponent> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

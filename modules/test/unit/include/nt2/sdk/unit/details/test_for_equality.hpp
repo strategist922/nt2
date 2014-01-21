@@ -104,11 +104,11 @@ namespace nt2 { namespace details
       if(std::distance(a.begin(),a.end()) == std::distance(b.begin(),b.end()))
       {
 #if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) && BOOST_WORKAROUND(BOOST_MSVC, < 1600)
-        return stdext::unchecked_equal(a.begin(),a.end(),b.begin(),check_());
+        return stdBOOST_SIMD_EXT_NS::unchecked_equal(a.begin(),a.end(),b.begin(),check_());
 #elif BOOST_WORKAROUND(BOOST_MSVC, > 1500)
 
       return std::equal ( a.begin(), a.end()
-                        , stdext::make_unchecked_array_iterator(b.begin())
+                        , stdBOOST_SIMD_EXT_NS::make_unchecked_array_iterator(b.begin())
                         , check_()
                         );
 #else

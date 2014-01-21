@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct sinc_ : ext::elementwise_<sinc_>
+    struct sinc_ : BOOST_SIMD_EXT_NS::elementwise_<sinc_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<sinc_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<sinc_> parent;
     };
   }
   /*!

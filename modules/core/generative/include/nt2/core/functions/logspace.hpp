@@ -27,9 +27,9 @@ namespace nt2
 
   namespace tag
   {
-    struct logspace_ : ext::state_constant_<logspace_>
+    struct logspace_ : BOOST_SIMD_EXT_NS::state_constant_<logspace_>
     {
-      typedef ext::state_constant_<logspace_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<logspace_> parent;
     };
   }
 

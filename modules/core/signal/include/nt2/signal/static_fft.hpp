@@ -1076,7 +1076,7 @@ private:
     template <class Context>
     struct forward_real_transformer_t : transformer_t<Context>
     {
-        forward_real_transformer_t( typename Context::parameter0_t const param0, typename Context::parameter1_t const param1 ) : transformer_t<Context>( param0, param1 ) {}
+        forward_real_transformer_t( typename ContBOOST_SIMD_EXT_NS::parameter0_t const param0, typename ContBOOST_SIMD_EXT_NS::parameter1_t const param1 ) : transformer_t<Context>( param0, param1 ) {}
 
         template <typename FFTSizeExponent>
         void operator()( FFTSizeExponent ) const
@@ -1084,9 +1084,9 @@ private:
             static std::size_t const P = FFTSizeExponent::value;
             static std::size_t const N = 1 << P;
 
-            transformer_t<Context>::operator()( typename Context::template complex_P<P>() );
+            transformer_t<Context>::operator()( typename ContBOOST_SIMD_EXT_NS::template complex_P<P>() );
 
-            Context:: template separate<N>( this->context_parameter0_, this->context_parameter1_, Zero<vector_t>() );
+            ContBOOST_SIMD_EXT_NS:: template separate<N>( this->context_parameter0_, this->context_parameter1_, Zero<vector_t>() );
         }
     }; // forward_real_transformer_t
 
@@ -1103,7 +1103,7 @@ private:
         /// pass (and xor with) the "twiddle flipper/negator/conjugator"
         /// constant.
         ///                                   (05.06.2012.) (Domagoj Saric)
-        backward_real_transformer_t( typename Context::parameter0_t const p_reals, typename Context::parameter1_t const p_imags )
+        backward_real_transformer_t( typename ContBOOST_SIMD_EXT_NS::parameter0_t const p_reals, typename ContBOOST_SIMD_EXT_NS::parameter1_t const p_imags )
             : transformer_t<Context>( p_imags, p_reals ) {}
 
         template <typename FFTSizeExponent>
@@ -1116,9 +1116,9 @@ private:
             /// with the separate() procedure so we must "swap back" the data
             /// pointers and pass the appropriate "twiddle conjugator" constant.
             ///                               (06.06.2012.) (Domagoj Saric)
-            Context:: template separate<N>( this->context_parameter1_, this->context_parameter0_, Mzero<vector_t>() );
+            ContBOOST_SIMD_EXT_NS:: template separate<N>( this->context_parameter1_, this->context_parameter0_, Mzero<vector_t>() );
 
-            transformer_t<Context>::operator()( typename Context::template complex_P<P>() );
+            transformer_t<Context>::operator()( typename ContBOOST_SIMD_EXT_NS::template complex_P<P>() );
        }
     }; // backward_real_transformer_t
 
@@ -1766,25 +1766,25 @@ namespace detail
     BOOST_DISPATCH_NOINLINE
     void BOOST_FASTCALL butterfly_loop
     (
-        typename Context::parameter0_t                                 const param0,
-        typename Context::parameter1_t                                 const param1,
-        typename Context::twiddles     const * BOOST_DISPATCH_RESTRICT       p_w_param,
+        typename ContBOOST_SIMD_EXT_NS::parameter0_t                                 const param0,
+        typename ContBOOST_SIMD_EXT_NS::parameter1_t                                 const param1,
+        typename ContBOOST_SIMD_EXT_NS::twiddles     const * BOOST_DISPATCH_RESTRICT       p_w_param,
         unsigned int                                                   const N
     )
     {
         boost::simd::prefetch_temporary( p_w_param );
 
     #ifdef NT2_FFT_USE_INDEXED_BUTTERFLY_LOOP
-        typename Context::twiddles const * BOOST_DISPATCH_RESTRICT                                         p_w( p_w_param );
+        typename ContBOOST_SIMD_EXT_NS::twiddles const * BOOST_DISPATCH_RESTRICT                                         p_w( p_w_param );
     #else
-        typename boost::simd::details::make_extra_pointer_register<typename Context::twiddles const>::type p_w( p_w_param );
+        typename boost::simd::details::make_extra_pointer_register<typename ContBOOST_SIMD_EXT_NS::twiddles const>::type p_w( p_w_param );
     #endif // NT2_FFT_USE_INDEXED_BUTTERFLY_LOOP
 
         Context context( param0, param1, N );
 
         do
         {
-            Decimation:: template butterfly<typename Context::vector_t>
+            Decimation:: template butterfly<typename ContBOOST_SIMD_EXT_NS::vector_t>
             (
                 context. template r<0>(), context. template i<0>(),
                 context. template r<1>(), context. template i<1>(),
@@ -2361,8 +2361,8 @@ namespace detail
     struct danielson_lanczos
     {
     public:
-        typedef typename Context::parameter0_t parameter0_t;
-        typedef typename Context::parameter1_t parameter1_t;
+        typedef typename ContBOOST_SIMD_EXT_NS::parameter0_t parameter0_t;
+        typedef typename ContBOOST_SIMD_EXT_NS::parameter1_t parameter1_t;
 
         BOOST_DISPATCH_NOTHROW_NOALIAS
         static void BOOST_FASTCALL apply( parameter0_t const param0, parameter1_t const param1 )
@@ -2384,13 +2384,13 @@ namespace detail
         }
 
         BOOST_DISPATCH_NOTHROW_NOALIAS BOOST_FORCEINLINE
-        static void BOOST_FASTCALL apply( typename Context::parameter0_t const param0, typename Context::parameter1_t const param1, step_butterfly const & )
+        static void BOOST_FASTCALL apply( typename ContBOOST_SIMD_EXT_NS::parameter0_t const param0, typename ContBOOST_SIMD_EXT_NS::parameter1_t const param1, step_butterfly const & )
         {
             butterfly_loop<Decimation, Context>
             (
                 param0,
                 param1,
-                Context:: template twiddle_factors<N>(),
+                ContBOOST_SIMD_EXT_NS:: template twiddle_factors<N>(),
                 N
             );
         }
@@ -2409,9 +2409,9 @@ namespace detail
         static unsigned const N = 8;
 
         BOOST_DISPATCH_NOTHROW_NOALIAS
-        static void BOOST_FASTCALL apply( typename Context::parameter0_t const param0, typename Context::parameter1_t const param1 )
+        static void BOOST_FASTCALL apply( typename ContBOOST_SIMD_EXT_NS::parameter0_t const param0, typename ContBOOST_SIMD_EXT_NS::parameter1_t const param1 )
         {
-            typedef typename Context::vector_t vector_t;
+            typedef typename ContBOOST_SIMD_EXT_NS::vector_t vector_t;
 
             //...zzz...uses internal knowledge about the parameter0 and
             //...zzz...parameter1 of the used Context...
@@ -2437,11 +2437,11 @@ namespace detail
         typedef dif Decimation;
 
         BOOST_DISPATCH_NOTHROW_NOALIAS
-        static void BOOST_FASTCALL apply( typename Context::parameter0_t const p_reals, typename Context::parameter1_t const p_imags )
+        static void BOOST_FASTCALL apply( typename ContBOOST_SIMD_EXT_NS::parameter0_t const p_reals, typename ContBOOST_SIMD_EXT_NS::parameter1_t const p_imags )
         {
-            typedef typename Context::vector_t vector_t;
+            typedef typename ContBOOST_SIMD_EXT_NS::vector_t vector_t;
 
-            split_radix_twiddles<vector_t> const * BOOST_DISPATCH_RESTRICT const p_w( Context:: template twiddle_factors<N>() );
+            split_radix_twiddles<vector_t> const * BOOST_DISPATCH_RESTRICT const p_w( ContBOOST_SIMD_EXT_NS:: template twiddle_factors<N>() );
             boost::simd::prefetch_temporary( p_w );
         #ifdef _MSC_VER
             _ReadWriteBarrier();
@@ -2544,9 +2544,9 @@ namespace detail
         typedef dit Decimation;
 
         BOOST_DISPATCH_NOTHROW_NOALIAS
-        static void BOOST_FASTCALL apply( typename Context::parameter0_t const p_reals, typename Context::parameter1_t const p_imags )
+        static void BOOST_FASTCALL apply( typename ContBOOST_SIMD_EXT_NS::parameter0_t const p_reals, typename ContBOOST_SIMD_EXT_NS::parameter1_t const p_imags )
         {
-            typedef typename Context::vector_t vector_t;
+            typedef typename ContBOOST_SIMD_EXT_NS::vector_t vector_t;
 
             //...zzz...uses internal knowledge about the parameter0 and
             //...zzz...parameter1 of the used Context...
@@ -2566,7 +2566,7 @@ namespace detail
             (
                 p_reals,
                 p_imags,
-                Context:: template twiddle_factors<N>(),
+                ContBOOST_SIMD_EXT_NS:: template twiddle_factors<N>(),
                 N
             );
         }
@@ -2604,7 +2604,7 @@ namespace detail
     template <class Decimation, class Context, typename T, unsigned count_of_T>
     struct danielson_lanczos<1, Decimation, Context, T, count_of_T>
     {
-        static void apply( typename Context::parameter0_t, typename Context::parameter1_t )
+        static void apply( typename ContBOOST_SIMD_EXT_NS::parameter0_t, typename ContBOOST_SIMD_EXT_NS::parameter1_t )
         {
             BOOST_STATIC_ASSERT_MSG( sizeof(Decimation) && false, "Recursion should have been terminated before." );
         }

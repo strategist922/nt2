@@ -36,7 +36,7 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
 namespace nt2 { namespace container
 {
   template<class Domain>
-  struct size_transform : details::trait_transform< ext::size_of, Domain >
+  struct size_transform : details::trait_transform< BOOST_SIMD_EXT_NS::size_of, Domain >
   {};
 } }
 

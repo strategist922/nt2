@@ -16,9 +16,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag expm_ of functor expm
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct expm_ :   ext::unspecified_<expm_>
+    struct expm_ :   BOOST_SIMD_EXT_NS::unspecified_<expm_>
     {
-      typedef ext::unspecified_<expm_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<expm_>  parent;
     };
   }
   /**

@@ -20,9 +20,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct outer_scan_ : ext::unspecified_<outer_scan_>
+    struct outer_scan_ : BOOST_SIMD_EXT_NS::unspecified_<outer_scan_>
     {
-      typedef ext::unspecified_<outer_scan_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<outer_scan_> parent;
     };
   }
 

@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct bits_ : ext::elementwise_<bits_>
+    struct bits_ : BOOST_SIMD_EXT_NS::elementwise_<bits_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<bits_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<bits_> parent;
     };
   }
   /*!

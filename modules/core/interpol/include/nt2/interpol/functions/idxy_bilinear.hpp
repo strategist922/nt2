@@ -26,10 +26,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct idxy_bilinear_ : ext::unspecified_<idxy_bilinear_>
+    struct idxy_bilinear_ : BOOST_SIMD_EXT_NS::unspecified_<idxy_bilinear_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<idxy_bilinear_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<idxy_bilinear_> parent;
     };
   }
   /*!

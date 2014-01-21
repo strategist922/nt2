@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hieerarchy
     **/
-    struct reversebits_ : ext::elementwise_<reversebits_>
+    struct reversebits_ : BOOST_SIMD_EXT_NS::elementwise_<reversebits_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<reversebits_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<reversebits_> parent;
     };
   }
   /*!

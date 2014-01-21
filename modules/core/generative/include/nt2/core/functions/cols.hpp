@@ -31,10 +31,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct cols_ : ext::state_constant_<cols_>
+    struct cols_ : BOOST_SIMD_EXT_NS::state_constant_<cols_>
     {
       /// @brief Parent hierarchy
-      typedef ext::state_constant_<cols_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<cols_> parent;
 
       /// @brief default value type for untyped calls
       typedef double                      default_type;

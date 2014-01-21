@@ -27,10 +27,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct flipdim_ : ext::elementwise_<flipdim_>
+    struct flipdim_ : BOOST_SIMD_EXT_NS::elementwise_<flipdim_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<flipdim_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<flipdim_> parent;
     };
   }
   /*!

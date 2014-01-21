@@ -64,9 +64,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag kahan_ of functor kahan
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct kahan_ :  ext::unspecified_<kahan_>
+    struct kahan_ :  BOOST_SIMD_EXT_NS::unspecified_<kahan_>
     {
-      typedef ext::unspecified_<kahan_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<kahan_> parent;
     };
   }
 

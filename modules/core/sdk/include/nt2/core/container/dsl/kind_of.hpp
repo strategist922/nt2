@@ -30,7 +30,7 @@ namespace nt2
   {
     template<typename Expr>
     struct  kind_of
-          : ext::kind_of< typename boost::dispatch::meta::
+          : BOOST_SIMD_EXT_NS::kind_of< typename boost::dispatch::meta::
                                            hierarchy_of < typename boost::proto
                                                           ::tag_of<Expr>::type
                                                         >::type

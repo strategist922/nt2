@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    //    struct is_prime_ : ext::elementwise_<is_prime_> { typedef ext::elementwise_<is_prime_> parent; };
+    //    struct is_prime_ : BOOST_SIMD_EXT_NS::elementwise_<is_prime_> { typedef BOOST_SIMD_EXT_NS::elementwise_<is_prime_> parent; };
     struct is_prime_ : tag::formal_
     {
       /// @brief Parent hierarchy

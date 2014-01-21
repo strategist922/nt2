@@ -29,10 +29,10 @@ namespace nt2
      @par Models:
         Hierarchy
    **/
-    struct ifvectvert_ : ext::reshaping_<ifvectvert_>
+    struct ifvectvert_ : BOOST_SIMD_EXT_NS::reshaping_<ifvectvert_>
     {
       /// @brief Parent hierarchy
-      typedef ext::reshaping_<ifvectvert_> parent;
+      typedef BOOST_SIMD_EXT_NS::reshaping_<ifvectvert_> parent;
     };
   }
   /*!

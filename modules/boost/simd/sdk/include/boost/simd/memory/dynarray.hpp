@@ -49,9 +49,9 @@ namespace boost { namespace simd
       #endif
 
       #if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) && BOOST_WORKAROUND(BOOST_MSVC, < 1600)
-        stdext::unchecked_uninitialized_copy(other.begin(), other.end(), this->begin());
+        stdBOOST_SIMD_EXT_NS::unchecked_uninitialized_copy(other.begin(), other.end(), this->begin());
       #elif BOOST_WORKAROUND(BOOST_MSVC, > 1500)
-        std::uninitialized_copy(other.begin(), other.end(), stdext::make_unchecked_array_iterator(this->begin()));
+        std::uninitialized_copy(other.begin(), other.end(), stdBOOST_SIMD_EXT_NS::make_unchecked_array_iterator(this->begin()));
       #else
         std::uninitialized_copy(other.begin(), other.end(), this->begin());
       #endif
@@ -71,9 +71,9 @@ namespace boost { namespace simd
       BOOST_ASSERT_MSG( this->size() == other.size(), "assignment between dynarrays of different sizes" );
 
     #if BOOST_WORKAROUND(BOOST_MSVC, >= 1400) && BOOST_WORKAROUND(BOOST_MSVC, < 1600)
-      stdext::unchecked_copy(other.begin(), other.end(), this->begin());
+      stdBOOST_SIMD_EXT_NS::unchecked_copy(other.begin(), other.end(), this->begin());
     #elif BOOST_WORKAROUND(BOOST_MSVC, > 1500)
-      std::copy(other.begin(), other.end(), stdext::make_unchecked_array_iterator(this->begin()));
+      std::copy(other.begin(), other.end(), stdBOOST_SIMD_EXT_NS::make_unchecked_array_iterator(this->begin()));
     #else
       std::copy(other.begin(), other.end(), this->begin());
     #endif

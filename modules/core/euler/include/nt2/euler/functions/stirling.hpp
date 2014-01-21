@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct stirling_ : ext::elementwise_<stirling_>
+    struct stirling_ : BOOST_SIMD_EXT_NS::elementwise_<stirling_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<stirling_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<stirling_> parent;
     };
   }
   /*!

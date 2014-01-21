@@ -23,10 +23,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct sum_ : ext::reduction_<sum_, tag::plus_, tag::Zero>
+    struct sum_ : BOOST_SIMD_EXT_NS::reduction_<sum_, tag::plus_, tag::Zero>
     {
       /// @brief Parent hierarchy
-      typedef ext::reduction_<sum_, tag::plus_, tag::Zero> parent;
+      typedef BOOST_SIMD_EXT_NS::reduction_<sum_, tag::plus_, tag::Zero> parent;
     };
   }
   /*!

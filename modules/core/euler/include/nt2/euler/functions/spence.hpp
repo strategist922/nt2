@@ -21,7 +21,7 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct spence_ : ext::elementwise_<spence_> { typedef ext::elementwise_<spence_> parent; };
+    struct spence_ : BOOST_SIMD_EXT_NS::elementwise_<spence_> { typedef BOOST_SIMD_EXT_NS::elementwise_<spence_> parent; };
   }
   /*!
     Computes the spence function or dilogarithm

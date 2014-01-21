@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    template <class T> struct tangent_ : ext::elementwise_< tangent_<T> >
+    template <class T> struct tangent_ : BOOST_SIMD_EXT_NS::elementwise_< tangent_<T> >
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_< tangent_<T> > parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_< tangent_<T> > parent;
     };
   }
   /*!

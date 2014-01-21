@@ -28,10 +28,10 @@ namespace nt2
       @par Models:
       Hierarchy
     **/
-    struct fill_pattern_ : ext::elementwise_<fill_pattern_>
+    struct fill_pattern_ : BOOST_SIMD_EXT_NS::elementwise_<fill_pattern_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fill_pattern_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fill_pattern_> parent;
     };
   }
 

@@ -26,9 +26,9 @@ namespace nt2
     /*!
       @brief Tag for rows functor
      **/
-    struct rows_ : ext::state_constant_<rows_>
+    struct rows_ : BOOST_SIMD_EXT_NS::state_constant_<rows_>
     {
-      typedef ext::state_constant_<rows_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<rows_> parent;
       typedef double                      default_type;
     };
   }

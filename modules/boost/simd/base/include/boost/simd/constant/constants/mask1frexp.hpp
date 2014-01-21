@@ -26,10 +26,10 @@ namespace boost { namespace simd
      @par Models:
         Hierarchy
    **/
-    struct Mask1frexp : ext::pure_constant_<Mask1frexp>
+    struct Mask1frexp : BOOST_SIMD_EXT_NS::pure_constant_<Mask1frexp>
     {
       typedef double default_type;
-      typedef ext::pure_constant_<Mask1frexp> parent;
+      typedef BOOST_SIMD_EXT_NS::pure_constant_<Mask1frexp> parent;
 
       /// INTERNAL ONLY
       template<class Target, class Dummy=void>

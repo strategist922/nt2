@@ -68,9 +68,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag randsvd_ of functor randsvd
      *        in namespace nt2::tag for toolbox algebra
      **/
-     struct randsvd_ : ext::unspecified_<randsvd_>
+     struct randsvd_ : BOOST_SIMD_EXT_NS::unspecified_<randsvd_>
     {
-      typedef ext::unspecified_<randsvd_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<randsvd_> parent;
     };
   }
 

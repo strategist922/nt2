@@ -59,10 +59,10 @@ namespace nt2
      * \brief Define the tag I of functor I
      *        in namespace nt2::tag for toolbox complex
     **/
-    struct I : ext::constant_<I>
+    struct I : BOOST_SIMD_EXT_NS::constant_<I>
     {
       typedef std::complex<double> default_type;
-      typedef ext::constant_<I> parent;
+      typedef BOOST_SIMD_EXT_NS::constant_<I> parent;
     };
   }
 

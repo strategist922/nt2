@@ -18,9 +18,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct  repmat_ : ext::elementwise_<repmat_>
+    struct  repmat_ : BOOST_SIMD_EXT_NS::elementwise_<repmat_>
     {
-      typedef ext::elementwise_<repmat_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<repmat_> parent;
     };
   }
   #define M0(z,n,t)                                                           \

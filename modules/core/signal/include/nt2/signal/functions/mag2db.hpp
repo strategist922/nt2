@@ -17,10 +17,10 @@ namespace nt2
     /*!
       @brief Tag for the mag2db functor
     **/
-    struct mag2db_ : ext::elementwise_<mag2db_>
+    struct mag2db_ : BOOST_SIMD_EXT_NS::elementwise_<mag2db_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<mag2db_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<mag2db_> parent;
     };
   }
   /*!

@@ -32,9 +32,9 @@ namespace nt2
     /*!
       @brief Tag for aggregate functor
     **/
-    struct aggregate_ : ext::elementwise_<aggregate_>
+    struct aggregate_ : BOOST_SIMD_EXT_NS::elementwise_<aggregate_>
     {
-      typedef ext::elementwise_<aggregate_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<aggregate_> parent;
     };
   }
 

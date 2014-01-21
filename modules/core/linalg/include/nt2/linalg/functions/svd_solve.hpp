@@ -28,15 +28,15 @@ namespace nt2
   {
     namespace solvers
     {
-      struct svd_solve_ : ext::unspecified_<solvers::svd_solve_>
+      struct svd_solve_ : BOOST_SIMD_EXT_NS::unspecified_<solvers::svd_solve_>
       {
-        typedef ext::unspecified_<solvers::svd_solve_> parent;
+        typedef BOOST_SIMD_EXT_NS::unspecified_<solvers::svd_solve_> parent;
       };
     }
 
-    struct svd_solve_ :  ext::tieable_<svd_solve_>
+    struct svd_solve_ :  BOOST_SIMD_EXT_NS::tieable_<svd_solve_>
     {
-      typedef ext::tieable_<svd_solve_>  parent;
+      typedef BOOST_SIMD_EXT_NS::tieable_<svd_solve_>  parent;
     };
   }
 

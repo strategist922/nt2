@@ -21,9 +21,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct  repnum_ : ext::state_constant_<repnum_>
+    struct  repnum_ : BOOST_SIMD_EXT_NS::state_constant_<repnum_>
     {
-      typedef ext::state_constant_<repnum_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<repnum_> parent;
     };
   }
 

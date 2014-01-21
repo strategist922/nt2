@@ -67,9 +67,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag condex_ of functor condex
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct condex_ : ext::unspecified_<condex_>
+    struct condex_ : BOOST_SIMD_EXT_NS::unspecified_<condex_>
     {
-      typedef ext::unspecified_<condex_>  parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<condex_>  parent;
     };
   }
 

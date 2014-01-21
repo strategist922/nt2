@@ -45,9 +45,9 @@ namespace nt2 { namespace tag
      * \brief Define the tag sobol_ of functor sobol
      *        in namespace nt2::tag for toolbox algebra
     **/
-    struct sobol_ :  ext::unspecified_<sobol_>
+    struct sobol_ :  BOOST_SIMD_EXT_NS::unspecified_<sobol_>
     {
-      typedef ext::unspecified_<sobol_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<sobol_> parent;
     };
   }
   NT2_FUNCTION_IMPLEMENTATION(tag::sobol_, sobol, 2)

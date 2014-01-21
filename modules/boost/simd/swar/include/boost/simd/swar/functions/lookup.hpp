@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct lookup_ : ext::unspecified_<lookup_>
+    struct lookup_ : BOOST_SIMD_EXT_NS::unspecified_<lookup_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<lookup_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<lookup_> parent;
     };
   }
   /*!

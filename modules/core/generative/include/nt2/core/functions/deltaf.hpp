@@ -21,9 +21,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct  deltaf_ : ext::state_constant_<deltaf_>
+    struct  deltaf_ : BOOST_SIMD_EXT_NS::state_constant_<deltaf_>
     {
-      typedef ext::state_constant_<deltaf_> parent;
+      typedef BOOST_SIMD_EXT_NS::state_constant_<deltaf_> parent;
       typedef double                 default_type;
     };
   }

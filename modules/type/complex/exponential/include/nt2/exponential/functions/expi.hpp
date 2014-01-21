@@ -54,7 +54,7 @@ namespace nt2 { namespace tag
      * \brief Define the tag expi_ of functor expi
      *        in namespace nt2::tag for toolbox expionential
     **/
-    struct expi_ : ext::elementwise_<expi_> { typedef ext::elementwise_<expi_> parent; };
+    struct expi_ : BOOST_SIMD_EXT_NS::elementwise_<expi_> { typedef BOOST_SIMD_EXT_NS::elementwise_<expi_> parent; };
   }
   NT2_FUNCTION_IMPLEMENTATION(tag::expi_, expi, 1)
 }

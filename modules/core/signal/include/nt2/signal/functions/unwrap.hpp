@@ -41,9 +41,9 @@ namespace nt2
      * \brief Define the tag unwrap_ of functor unwrap
      *        in namespace nt2::tag for toolbox signal
     **/
-    struct unwrap_ : ext::unspecified_<unwrap_>
+    struct unwrap_ : BOOST_SIMD_EXT_NS::unspecified_<unwrap_>
     {
-      typedef ext::unspecified_<unwrap_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<unwrap_> parent;
     };
   }
   NT2_FUNCTION_IMPLEMENTATION(tag::unwrap_, unwrap, 1)

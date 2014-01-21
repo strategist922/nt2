@@ -22,10 +22,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_even_ : ext::elementwise_<is_even_>
+    struct is_even_ : BOOST_SIMD_EXT_NS::elementwise_<is_even_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<is_even_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<is_even_> parent;
     };}
   /*!
     Returns True or False according a0 is even or not.

@@ -18,10 +18,10 @@
 namespace nt2 { namespace tag
   {
 
-    template < class T > struct sinecosine_ : ext::elementwise_< sinecosine_<T> >
+    template < class T > struct sinecosine_ : BOOST_SIMD_EXT_NS::elementwise_< sinecosine_<T> >
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_< sinecosine_<T> > parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_< sinecosine_<T> > parent;
     };
   }
   /*!

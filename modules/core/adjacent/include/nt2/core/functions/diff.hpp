@@ -21,10 +21,10 @@ namespace nt2
     /*!
       @brief tag for diff functor
     **/
-    struct diff_ : ext::elementwise_<diff_>
+    struct diff_ : BOOST_SIMD_EXT_NS::elementwise_<diff_>
     {
       /// @brief Parent hierarchy
-      typedef  ext::elementwise_<diff_> parent;
+      typedef  BOOST_SIMD_EXT_NS::elementwise_<diff_> parent;
     };
   }
   /*!

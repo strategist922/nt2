@@ -20,10 +20,10 @@ namespace boost { namespace simd { namespace tag
       @par Models:
       Hierarchy
     **/
-    struct bitwise_select_ : ext::elementwise_<bitwise_select_>
+    struct bitwise_select_ : BOOST_SIMD_EXT_NS::elementwise_<bitwise_select_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<bitwise_select_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<bitwise_select_> parent;
     };
   }
   /*!

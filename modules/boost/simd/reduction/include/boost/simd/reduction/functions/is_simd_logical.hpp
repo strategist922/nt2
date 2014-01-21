@@ -21,10 +21,10 @@ namespace boost { namespace simd { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct is_simd_logical_ : ext::unspecified_<is_simd_logical_>
+    struct is_simd_logical_ : BOOST_SIMD_EXT_NS::unspecified_<is_simd_logical_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<is_simd_logical_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<is_simd_logical_> parent;
     };
   }
   /*!

@@ -25,10 +25,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct polyvalm_ : ext::unspecified_<polyvalm_>
+    struct polyvalm_ : BOOST_SIMD_EXT_NS::unspecified_<polyvalm_>
     {
       /// @brief Parent hierarchy
-      typedef ext::unspecified_<polyvalm_> parent;
+      typedef BOOST_SIMD_EXT_NS::unspecified_<polyvalm_> parent;
     };
   }
   /*!

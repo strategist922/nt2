@@ -21,10 +21,10 @@ namespace nt2
   namespace tag
   {
     /// Tag for @c cat functor
-    struct cat_ : ext::elementwise_<cat_>
+    struct cat_ : BOOST_SIMD_EXT_NS::elementwise_<cat_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<cat_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<cat_> parent;
     };
   }
 

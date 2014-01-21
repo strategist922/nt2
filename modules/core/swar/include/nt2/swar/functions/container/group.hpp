@@ -60,7 +60,7 @@ namespace nt2 { namespace BOOST_SIMD_EXT_NS
     result_type operator()(A0& a0, State const& p, Data const& data) const
     {
       typedef typename boost::proto::result_of::child_c<A0&, 0>::value_type child0;
-      return nt2::splat<result_type>(nt2::run(boost::proto::child_c<0>(a0), p, boost::simd::ext::adapt_data<child0, Data>::call(data)));
+      return nt2::splat<result_type>(nt2::run(boost::proto::child_c<0>(a0), p, boost::simd::BOOST_SIMD_EXT_NS::adapt_data<child0, Data>::call(data)));
     }
   };
 } }

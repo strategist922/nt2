@@ -24,9 +24,9 @@ namespace nt2
     /*!
       @brief Tag for whereij functor
      **/
-    struct whereij_ : ext::elementwise_<whereij_>
+    struct whereij_ : BOOST_SIMD_EXT_NS::elementwise_<whereij_>
     {
-      typedef ext::elementwise_<whereij_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<whereij_> parent;
     };
   }
 

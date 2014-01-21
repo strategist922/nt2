@@ -26,10 +26,10 @@ namespace boost { namespace simd
     struct min_;
     struct Valmax;
 
-    struct minimum_ : ext::reduction_<minimum_, tag::min_, tag::Valmax>
+    struct minimum_ : BOOST_SIMD_EXT_NS::reduction_<minimum_, tag::min_, tag::Valmax>
     {
       /// @brief Parent hierarchy
-      typedef ext::reduction_<minimum_, tag::min_, tag::Valmax> parent;
+      typedef BOOST_SIMD_EXT_NS::reduction_<minimum_, tag::min_, tag::Valmax> parent;
     };
   }
   /*!

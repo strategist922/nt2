@@ -21,10 +21,10 @@ namespace nt2 { namespace tag
      @par Models:
         Hierarchy
    **/
-    struct fuzzy_definitely_not_equal_ : ext::elementwise_<fuzzy_definitely_not_equal_>
+    struct fuzzy_definitely_not_equal_ : BOOST_SIMD_EXT_NS::elementwise_<fuzzy_definitely_not_equal_>
     {
       /// @brief Parent hierarchy
-      typedef ext::elementwise_<fuzzy_definitely_not_equal_> parent;
+      typedef BOOST_SIMD_EXT_NS::elementwise_<fuzzy_definitely_not_equal_> parent;
     };
   }
   /*!
