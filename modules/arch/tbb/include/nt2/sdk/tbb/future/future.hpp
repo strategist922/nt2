@@ -65,6 +65,8 @@ namespace nt2
               boost::make_shared<result_type> \
                 ( boost::forward<result_type>(value) );
 
+            *(future_res.ready_) = true;
+
             details::empty_body f;
 
             node_type * node = new node_type \
