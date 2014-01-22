@@ -31,9 +31,9 @@ namespace nt2
 {
   namespace tag
   {
-    struct pplus_ : ext::elementwise_<pplus_>
+    struct pplus_ : BOOST_SIMD_EXT_NSBOOST_SIMD_EXT_NS::elementwise_<pplus_>
     {
-     typedef ext::elementwise_<pplus_> parent;
+     typedef BOOST_SIMD_EXT_NS::elementwise_<pplus_> parent;
     };
   }
 
@@ -42,7 +42,7 @@ namespace nt2
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL(tag::pplus_, pplus, (A0&)(A1 const&), 2)
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL(tag::pplus_, pplus, (A0 const&)(A1 const&), 2)
 
-  namespace ext
+  namespace BOOST_SIMD_EXT_NS
   {
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::pplus_, tag::cpu_, (A0)
                               , (scalar_< unspecified_<A0> >)
