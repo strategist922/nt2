@@ -31,7 +31,7 @@ namespace nt2
 {
   namespace tag
   {
-    struct pplus_ : BOOST_SIMD_EXT_NSBOOST_SIMD_EXT_NS::elementwise_<pplus_>
+    struct pplus_ : BOOST_SIMD_EXT_NS::elementwise_<pplus_>
     {
      typedef BOOST_SIMD_EXT_NS::elementwise_<pplus_> parent;
     };
