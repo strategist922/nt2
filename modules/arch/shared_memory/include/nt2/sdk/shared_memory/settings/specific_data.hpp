@@ -61,10 +61,4 @@ namespace nt2
   };
 }
 
-
-typedef typename specific_data<
-          typename  boost::dispatch::default_site<Type>::type
-          , Type
-          >::type specific_data_type;
-
 #endif

@@ -18,6 +18,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
+#include <cstdio>
+
 namespace nt2
 {
   namespace tag
@@ -25,62 +27,65 @@ namespace nt2
     template<class T> struct openmp_;
   }
 
-  template<typename result_type>
-  struct openmp_future
+  namespace details
   {
-      openmp_future() : res_(new result_type),ready_(new bool(false))
-      {}
+    template<typename result_type>
+    struct openmp_future
+    {
+       openmp_future() : res_(new result_type),ready_(new bool(false))
+       {}
 
-      template<typename previous_future>
-      void attach_previous_future(previous_future const & pfuture)
-      {
-          pfuture_ = boost::make_shared<previous_future> (pfuture);
-      }
+       template<typename previous_future>
+       void attach_previous_future(previous_future const & pfuture)
+       {
+           pfuture_ = boost::make_shared<previous_future> (pfuture);
+       }
 
-      bool is_ready() const
-      {
-          return *ready_;
-      }
+       bool is_ready() const
+       {
+           return *ready_;
+       }
 
-      void wait()
-      {
-         #pragma omp taskwait
-      }
+       void wait()
+       {
+          printf("Attente ...\n");
+          #pragma omp taskwait
+       }
 
-      result_type get()
-      {
-          if(!is_ready()) wait();
-          return *res_;
-      }
+       result_type get()
+       {
+           if(!is_ready()) wait();
+           return *res_;
+       }
 
-      template<typename F>
-      openmp_future<typename boost::result_of<F(result_type)>::type>
-      then(BOOST_FWD_REF(F) f)
-      {
-          typedef typename boost::result_of<F>::type then_result_type;
+       template<typename F>
+       openmp_future<typename boost::result_of<F(result_type)>::type>
+       then(BOOST_FWD_REF(F) f)
+       {
+           typedef typename boost::result_of<F(result_type)>::type then_result_type;
 
-          details::openmp_future<then_result_type> then_future;
+           details::openmp_future<then_result_type> then_future;
 
-          then_future.attach_previous_future(*this);
+           then_future.attach_previous_future(*this);
 
-          result_type & prev( *res_ );
-          then_result_type & next( *(then_future.res_) );
+           result_type & prev( *res_ );
+           then_result_type & next( *(then_future.res_) );
 
-          #pragma omp task shared(f,then_future) depend(in: prev) depend(out: next)
-          {
-              next = f(then_future);
-              *(then_future.ready_) = true;
-          }
+           #pragma omp task shared(f,prev,next,then_future) depend(in: prev) depend(out: next)
+           {
+               next = f(*this);
+               *(then_future.ready_) = true;
+           }
 
-          return then_future;
-      }
+           return then_future;
+       }
 
-      boost::shared_ptr<void> pfuture_;
-      boost::shared_ptr<result_type> res_;
-      boost::shared_ptr<bool> ready_;
+       boost::shared_ptr<void> pfuture_;
+       boost::shared_ptr<result_type> res_;
+       boost::shared_ptr<bool> ready_;
 
-   };
-  }
+     };
+   }
  }
 
  #endif
