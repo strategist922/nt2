@@ -14,6 +14,8 @@
 
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/shared_memory/details/then_worker.hpp>
+
 #include <nt2/sdk/hpx/future/future.hpp>
 #include <nt2/sdk/hpx/future/when_all.hpp>
 
@@ -31,6 +33,8 @@ namespace nt2
         template<class T> struct hpx_;
     }
 
+
+
     template<class Site>
     struct spawner< tag::transform_, tag::hpx_<Site> >
     {
@@ -45,11 +49,12 @@ namespace nt2
             typedef typename
             nt2::make_future< Arch,int >::type future;
 
+            std::vector<future> & futures_in (w.in_.specifics().futures_);
+            std::vector<future> & futures_out (w.out_.specifics().futures_);
+
             std::size_t leftover = size % grain;
             std::size_t nblocks  = size/grain;
-
-            std::vector< future > barrier;
-            barrier.reserve(nblocks);
+            futures_out.reserve(nblocks);
 
             #ifndef BOOST_NO_EXCEPTIONS
             boost::exception_ptr exception;
@@ -58,19 +63,36 @@ namespace nt2
             {
             #endif
 
-            for(std::size_t n=0;n<nblocks;++n)
+            if(futures_in.empty())
             {
-              std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
 
-              // Call operation
-              barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
+                for(std::size_t n=0;n<nblocks;++n)
+                {
+                  std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+
+                  // Call operation
+                  futures_out.push_back ( async<Arch>(w, begin+n*grain, chunk) );
+                }
             }
 
-            for(std::size_t n=0;n<nblocks;++n)
+            else
             {
-                // Call operation
-                barrier[n].get();
+                nblocks = futures_in.size();
+
+                for(std::size_t n=0;n<nblocks;++n)
+                {
+                  std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+
+                  // Call operation
+                  futures_out.push_back(
+                    futures_in[n].then(
+                        details::then_worker<Worker,Arch>
+                        (w,begin+n*grain, chunk)
+                    )
+                  );
+                }
             }
+
 
             #ifndef BOOST_NO_EXCEPTIONS
             }
