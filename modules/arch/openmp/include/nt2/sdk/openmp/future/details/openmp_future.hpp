@@ -46,15 +46,18 @@ namespace nt2
            return *ready_;
        }
 
-       void wait()
+       inline void wait()
        {
-          printf("Attente ...\n");
           #pragma omp taskwait
        }
 
        result_type get()
        {
-           if(!is_ready()) wait();
+           if(!is_ready())
+           {
+             wait();
+           }
+
            return *res_;
        }
 
@@ -68,13 +71,13 @@ namespace nt2
 
            then_future.attach_previous_future(*this);
 
-           result_type & prev( *res_ );
-           then_result_type & next( *(then_future.res_) );
+           bool & prev( *ready_ );
+           bool & next( *(then_future.ready_) );
 
            #pragma omp task shared(f,prev,next,then_future) depend(in: prev) depend(out: next)
            {
-               next = f(*this);
-               *(then_future.ready_) = true;
+               *(then_future.res_) = f(*this);
+               next = true;
            }
 
            return then_future;

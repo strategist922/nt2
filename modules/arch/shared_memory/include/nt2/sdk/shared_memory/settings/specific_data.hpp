@@ -10,8 +10,9 @@
 #define NT2_SDK_SHARED_MEMORY_SETTINGS_SPECIFIC_DATA_HPP_INCLUDED
 
 #include <nt2/core/settings/specific_data.hpp>
-#include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/sdk/shared_memory.hpp>
+
+#include <boost/swap.hpp>
 
 #include <vector>
 
@@ -22,30 +23,23 @@ namespace nt2 { namespace details {
   {
     typedef typename nt2::make_future< Arch,int >::type future;
 
-    container_has_futures()
-    {}
-
-    container_has_futures(container_has_futures const& s)
-    {}
-
-    ~specific_data()
-    {}
-
     inline void swap(container_has_futures& src)
     {
+      boost::swap(futures_,src.futures_);
     }
 
-    //===========================================
-    //
-    //===========================================
     inline void synchronize()
     {
+        for(std::size_t n=0;n<futures.size();++n)
+        {
+            futures_[n].get();
+        }
     }
 
     //===========================================
     // vector of Futures
     //===========================================
-    std::vector<future> futures;
+    std::vector<future> futures_;
 
   };
 
