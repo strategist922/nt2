@@ -46,12 +46,12 @@ namespace nt2
         call(result_type value)
         {
             details::openmp_future<result_type> future_res;
-            result_type & result( *(future_res.res_) );
+            bool & next( *(future_res.ready_) );
 
-            #pragma omp task shared(result,value) depend(out: result)
+            #pragma omp task shared(next,value) depend(out: next)
             {
-                result = value;
-                *(future_res.ready_) = true;
+                *(future_res.res_) = value;
+                next = true;
             }
 
             return future_res;
@@ -96,18 +96,18 @@ namespace nt2
 
             details::openmp_future<result_type> future_res;
 
-            result_type & result( *(future_res.res_) );
+            bool & next( *(future_res.ready_) );
 
             #pragma omp task \
-               shared(f,result \
+               shared(f,next \
                  BOOST_PP_COMMA_IF(N)\
                  BOOST_PP_ENUM_PARAMS(N, a)) \
-               depend(out: result)
+               depend(out: next)
             {
-                result = f(\
+                *(future_res.res_) = f(\
                   BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
 
-                *(future_res.ready_) = true;
+                next = true;
             }
 
             return future_res;

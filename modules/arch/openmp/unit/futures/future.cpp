@@ -74,71 +74,90 @@ struct p4
 
 NT2_TEST_CASE( then_future )
 {
-  future f1 = nt2::async<Arch>(p1());
-  future f2 = f1.then(p2());
-  future f3 = f2.then(p3());
 
-  future f4 = nt2::async<Arch>(p1()).then(p2()).then(p3());
+  #pragma omp parallel
+  {
+    #pragma omp single
+    {
+      future f1 = nt2::async<Arch>(p1());
+      future f2 = f1.then(p2());
+      future f3 = f2.then(p3());
 
-  int value1 = f3.get();
-  int value2 = f4.get();
+      future f4 = nt2::async<Arch>(p1()).then(p2()).then(p3());
 
-  NT2_TEST_EQUAL(value1,6) ;
-  NT2_TEST_EQUAL(value2,6) ;
+      int value1 = f3.get();
+      int value2 = f4.get();
 
-  p1 w1;
-  p2 w2;
-  p3 w3;
+      NT2_TEST_EQUAL(value1,6) ;
+      NT2_TEST_EQUAL(value2,6) ;
 
-  future f5 = nt2::async<Arch>(boost::move(w1));
-  future f6 = f5.then(boost::move(w2));
-  future f7 = f6.then(boost::move(w3));
+      p1 w1;
+      p2 w2;
+      p3 w3;
 
-  future f8 = nt2::async<Arch>(boost::move(w1)).then(boost::move(w2)).then(boost::move(w3));
+      future f5 = nt2::async<Arch>(boost::move(w1));
+      future f6 = f5.then(boost::move(w2));
+      future f7 = f6.then(boost::move(w3));
 
-  int value3 = f7.get();
-  int value4 = f8.get();
+      future f8 = nt2::async<Arch>(boost::move(w1)).then(boost::move(w2)).then(boost::move(w3));
 
-  NT2_TEST_EQUAL(value3,6) ;
-  NT2_TEST_EQUAL(value4,6) ;
+      int value3 = f7.get();
+      int value4 = f8.get();
+
+      NT2_TEST_EQUAL(value3,6) ;
+      NT2_TEST_EQUAL(value4,6) ;
+
+      }
+    }
 }
 
 NT2_TEST_CASE( make_ready_future )
 {
-  future f1 = nt2::make_ready_future<Arch,int>(12);
+  #pragma omp parallel
+  {
+     #pragma omp single
+     {
+       future f1 = nt2::make_ready_future<Arch,int>(12);
 
-  int value1 = f1.get();
+       int value1 = f1.get();
 
-  NT2_TEST_EQUAL(value1,12) ;
+       NT2_TEST_EQUAL(value1,12) ;
 
-  int initial_value = 12;
+       int initial_value = 12;
 
-  future f2 = nt2::make_ready_future<Arch,int>(initial_value);
+       future f2 = nt2::make_ready_future<Arch,int>(initial_value);
 
-  int value2 = f2.get();
+       int value2 = f2.get();
 
-  NT2_TEST_EQUAL(value2,12) ;
+       NT2_TEST_EQUAL(value2,12) ;
+     }
+  }
 }
 
 NT2_TEST_CASE( when_all_future )
 {
-  future f1 = nt2::make_ready_future<Arch,int>(12);
-  future f2 = nt2::make_ready_future<Arch,int>(24);
-  future f3 = nt2::make_ready_future<Arch,int>(48);
+  #pragma omp parallel
+  {
+     #pragma omp single
+     {
+       future f1 = nt2::make_ready_future<Arch,int>(12);
+       future f2 = nt2::make_ready_future<Arch,int>(24);
+       future f3 = nt2::make_ready_future<Arch,int>(48);
 
-  future f4 = nt2::when_all<Arch>(f1,f2,f3);
-  future f5 = f4.then(p4());
-  int value1 = f5.get();
+       future f4 = nt2::when_all<Arch>(f1,f2,f3);
+       future f5 = f4.then(p4());
+       int value1 = f5.get();
 
-  NT2_TEST_EQUAL(value1,50) ;
+       NT2_TEST_EQUAL(value1,50) ;
 
-  future f6 = nt2::make_ready_future<Arch,int>(12);
-  future f7 = nt2::make_ready_future<Arch,int>(24);
-  future f8 = nt2::make_ready_future<Arch,int>(48);
+       future f6 = nt2::make_ready_future<Arch,int>(12);
+       future f7 = nt2::make_ready_future<Arch,int>(24);
+       future f8 = nt2::make_ready_future<Arch,int>(48);
 
-  future f9 = nt2::when_all<Arch>(f6,f7,f8).then(p4());
-  int value2 = f9.get();
+       future f9 = nt2::when_all<Arch>(f6,f7,f8).then(p4());
+       int value2 = f9.get();
 
-  NT2_TEST_EQUAL(value2,50) ;
-
+       NT2_TEST_EQUAL(value2,50) ;
+     }
+  }
 }
