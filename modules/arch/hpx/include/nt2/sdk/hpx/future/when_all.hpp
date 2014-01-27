@@ -25,6 +25,8 @@
 
 #include <vector>
 
+#include <vector>
+
 namespace nt2
 {
 
@@ -94,3 +96,4 @@ namespace nt2
 #undef N
 
 #endif
+
