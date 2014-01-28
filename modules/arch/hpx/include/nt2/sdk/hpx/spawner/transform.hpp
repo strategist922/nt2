@@ -15,6 +15,7 @@
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/shared_memory/details/then_worker.hpp>
+#include <nt2/sdk/shared_memory/settings/specific_data.hpp>
 
 #include <nt2/sdk/hpx/future/future.hpp>
 #include <nt2/sdk/hpx/future/when_all.hpp>
@@ -44,16 +45,17 @@ namespace nt2
         spawner() {}
 
         template<typename Worker>
-        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain_out)
         {
             typedef typename
             nt2::make_future< Arch,int >::type future;
 
-            std::vector<future> & futures_in (w.in_.specifics().futures_);
-            std::vector<future> & futures_out (w.out_.specifics().futures_);
+            std::size_t nblocks  = size/grain_out;
+            std::size_t leftover = size % grain_out;
+            std::size_t grain_in = boost::proto::value(w.in_).specifics().grain_;
 
-            std::size_t leftover = size % grain;
-            std::size_t nblocks  = size/grain;
+            std::vector<future> & futures_in  ( boost::proto::value(w.in_).specifics().futures_ );
+            std::vector<future> & futures_out ( boost::proto::value(w.out_).specifics().futures_ );
             futures_out.reserve(nblocks);
 
             #ifndef BOOST_NO_EXCEPTIONS
@@ -66,33 +68,35 @@ namespace nt2
             if(futures_in.empty())
             {
 
+
                 for(std::size_t n=0;n<nblocks;++n)
                 {
-                  std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+                  std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
                   // Call operation
-                  futures_out.push_back ( async<Arch>(w, begin+n*grain, chunk) );
+                  futures_out.push_back ( async<Arch>(w, begin+n*grain_out, chunk) );
                 }
             }
 
             else
             {
-                nblocks = futures_in.size();
-
                 for(std::size_t n=0;n<nblocks;++n)
                 {
-                  std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+                   std::size_t begin = grain_in*n/grain_out;
+                   std::size_t end = grain_in*(n+1)/grain_out;
+                   std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
-                  // Call operation
-                  futures_out.push_back(
-                    futures_in[n].then(
-                        details::then_worker<Worker,Arch>
-                        (w,begin+n*grain, chunk)
-                    )
+                   // Call operation
+                   futures_out.push_back(
+                     when_all<Arch>(&futures_in[begin],&futures_in[end])
+                      .then(details::then_worker<Worker,Arch>
+                        (w,begin+n*grain_out, chunk)
+                       )
                   );
                 }
             }
 
+            boost::proto::value(w.out_).specifics().grain_ = grain_out;
 
             #ifndef BOOST_NO_EXCEPTIONS
             }

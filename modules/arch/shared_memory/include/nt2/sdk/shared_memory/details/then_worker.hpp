@@ -25,12 +25,13 @@ namespace nt2 { namespace details {
                     std::size_t begin,
                     std::size_t size
                     )
-        :w_(w),begin_(begin)
+        :w_(w),begin_(begin),size_(size)
         {}
 
         int operator()(future) const
         {
-            w(begin,size);
+            w_(begin_,size_);
+            return 0;
         }
 
         Worker & w_;

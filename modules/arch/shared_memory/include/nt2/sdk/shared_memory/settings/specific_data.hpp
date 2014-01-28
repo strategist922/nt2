@@ -10,6 +10,7 @@
 #define NT2_SDK_SHARED_MEMORY_SETTINGS_SPECIFIC_DATA_HPP_INCLUDED
 
 #include <nt2/core/settings/specific_data.hpp>
+#include <nt2/sdk/memory/forward/container.hpp>
 #include <nt2/sdk/shared_memory.hpp>
 
 #include <boost/swap.hpp>
@@ -26,11 +27,12 @@ namespace nt2 { namespace details {
     inline void swap(container_has_futures& src)
     {
       boost::swap(futures_,src.futures_);
+      boost::swap(grain_,src.grain_);
     }
 
     inline void synchronize()
     {
-        for(std::size_t n=0;n<futures.size();++n)
+        for(std::size_t n=0;n<futures_.size();++n)
         {
             futures_[n].get();
         }
@@ -40,6 +42,7 @@ namespace nt2 { namespace details {
     // vector of Futures
     //===========================================
     std::vector<future> futures_;
+    std::size_t grain_;
 
   };
 
@@ -47,8 +50,8 @@ namespace nt2 { namespace details {
 
 namespace nt2
 {
-  template <typename Arch,typename Site>
-  struct specific_data<Site, Arch >
+  template <typename Site,typename Arch>
+  struct specific_data < Site,tag::shared_memory_<Arch, Site> >
   {
     typedef typename
     details::container_has_futures<Arch> type;
