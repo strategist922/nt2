@@ -36,8 +36,12 @@ namespace nt2
     {
         struct empty_functor
         {
-            void operator()() const
-            {}
+            typedef int result_type;
+
+            int operator()() const
+            {
+              return 0;
+            }
         };
     }
 
@@ -51,23 +55,22 @@ namespace nt2
         details::tbb_future< std::vector<Future> >
         call( BOOST_FWD_REF(std::vector<Future>) lazy_values )
         {
-          typedef typename std::vector<Future> result_type;
+           typedef typename details::tbb_future<int> future;
 
-          details::tbb_future<result_type> future_res;
+           future future_res;
 
-          details::empty_body f;
-          node_type * c = new node_type( *future_res.getWork(), f );
-          future_res.getTaskQueue()->push_back(c);
+           node_type * c = new node_type( *future_res.getWork(),
+             details::tbb_task_wrapper0<details::empty_functor,future>
+               (details::empty_functor(), future_res)
+             );
 
-          for (std::size_t i=0; i<lazy_values.size(); i++)
-          {
-            tbb::flow::make_edge(*(lazy_values[i].node_),*c);
-            future_res.attach_task(c);
-          }
+           for (std::size_t i=0; i<lazy_values.size(); i++)
+           {
+             tbb::flow::make_edge(*(lazy_values[i].node_),*c);
+             future_res.attach_task(c);
+           }
 
-          future_res.res_ = boost::make_shared(new result_type(lazy_values));
-
-          return future_res;
+           return future_res;
         }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
@@ -88,36 +91,20 @@ namespace nt2
 
 #define POINT(a,b) a.b
 
-#define NT2_FUTURE_TEMPLATE(z, n, t) details::tbb_future<A##n>
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::tbb_future<A##n> const & a##n
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*(POINT(a##n,node_)),*c);
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
-        details::tbb_future<\
-          boost::tuple<\
-            BOOST_PP_ENUM(N,NT2_FUTURE_TEMPLATE, ~)\
-            >\
-          >
+        details::tbb_future<int>
         call( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
         {
-            typedef typename boost::tuple< \
-              BOOST_PP_ENUM(N,NT2_FUTURE_TEMPLATE, ~) > \
-              result_type;
-
-            typedef typename details::tbb_future<result_type> future;
+            typedef typename details::tbb_future<int> future;
 
             future future_res;
 
-            future_res.res_  = boost::make_shared< result_type > \
-                ( boost::make_tuple(BOOST_PP_ENUM_PARAMS(N,a)) );
-
-// node_type * c = new node_type( *future_res.getWork(),
-//   details::tbb_task_wrapper0<details::empty_functor,future>
-//     (details::empty_functor(), future_res)
-//   );
-
             node_type * c = new node_type( *future_res.getWork(),
-              details::empty_body()
+              details::tbb_task_wrapper0<details::empty_functor,future>
+                (details::empty_functor(), future_res)
               );
 
             future_res.getTaskQueue()->push_back(c);
@@ -129,7 +116,6 @@ namespace nt2
             return future_res;
          }
 
-#undef NT2_FUTURE_TEMPLATE
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS1
 
