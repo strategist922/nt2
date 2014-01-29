@@ -19,6 +19,17 @@
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/dispatch/details/parameters.hpp>
 #include <boost/utility/result_of.hpp>
+#include <boost/tuple/tuple.hpp>
+
+
+#if defined(NT2_USE_HPX)
+#include <hpx/util/tuple.hpp>
+#define SHARED_MEMORY_TUPLE HPX_STD_TUPLE
+#else
+#include <boost/tuple/tuple.hpp>
+#define SHARED_MEMORY_TUPLE boost::tuple
+#endif
+
 
 namespace nt2
 {
@@ -56,8 +67,9 @@ namespace nt2
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
+#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) A##n & a##n
 
-    template< typename Arch,typename F \
+    template< typename Arch,typename F\
               BOOST_PP_COMMA_IF(N)\
               BOOST_PP_ENUM_PARAMS(N, typename A)\
           >
@@ -81,21 +93,21 @@ namespace nt2
 #if BOOST_PP_GREATER(N,0)
 
     template< typename Arch,\
-    BOOST_PP_ENUM_PARAMS(N, typename A)\
-    >
-    inline typename make_future< Arch,int>::type
-    when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
+              BOOST_PP_ENUM_PARAMS(N, typename A)\
+              >
+    inline typename make_future< Arch,\
+      SHARED_MEMORY_TUPLE<BOOST_PP_ENUM_PARAMS(N,A)> \
+      >::type
+    when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~))
     {
-    return when_all_impl<Arch>().call(\
-                                      BOOST_PP_ENUM(N,\
-                                      NT2_FUTURE_FORWARD_ARGS2, ~)\
-                                     );
+      return when_all_impl<Arch>().call(BOOST_PP_ENUM_PARAMS(N,a));
     }
 
 #endif
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS2
+#undef NT2_FUTURE_FORWARD_ARGS3
 
 #endif
 

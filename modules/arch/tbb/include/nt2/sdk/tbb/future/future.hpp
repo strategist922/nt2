@@ -34,7 +34,6 @@
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
-#include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
 namespace nt2
 {
@@ -56,9 +55,6 @@ namespace nt2
         inline details::tbb_future<result_type>
         call(BOOST_FWD_REF(result_type) value)
         {
-            typedef typename tbb::flow::continue_node< \
-            tbb::flow::continue_msg> node_type;
-
             details::tbb_future<result_type> future_res;
 
             future_res.res_ = \
@@ -67,16 +63,7 @@ namespace nt2
 
             *(future_res.ready_) = true;
 
-            details::empty_body f;
-
-            node_type * node = new node_type \
-              ( *(future_res.getWork()),f );
-
-            future_res.getTaskQueue()->push_back(node);
-
-            tbb::flow::make_edge(*(future_res.getStart()),*node);
-
-            future_res.attach_task(node);
+            future_res.attach_task(future_res.getStart());
 
             return future_res;
         }
