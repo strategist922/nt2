@@ -25,6 +25,8 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 
+#define ARCH_TUPLE
+
 namespace nt2
 {
     namespace tag

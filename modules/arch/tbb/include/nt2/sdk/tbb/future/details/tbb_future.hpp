@@ -23,6 +23,7 @@
 #include <boost/make_shared.hpp>
 
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
+#include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
 namespace nt2
 {
@@ -53,15 +54,16 @@ namespace nt2
                 return nt2_graph_;
             }
 
-            static tbb::flow::broadcast_node
+            static tbb::flow::continue_node
             <tbb::flow::continue_msg> *getStart ()
             {
                 if (NULL == start_task_)
                 {
                     printf("Create new start task\n");
                     start_task_ =
-                    new tbb::flow::broadcast_node
-                    <tbb::flow::continue_msg>();
+                    new tbb::flow::continue_node
+                    <tbb::flow::continue_msg>
+                    (*getWork(), details::empty_body());
                 }
                 return (start_task_);
             }
@@ -116,7 +118,7 @@ namespace nt2
             static tbb::flow::graph *
               nt2_graph_;
 
-            static tbb::flow::broadcast_node<tbb::flow::continue_msg> *
+            static tbb::flow::continue_node<tbb::flow::continue_msg> *
               start_task_;
 
             static std::vector< \
@@ -129,7 +131,7 @@ namespace nt2
         tbb::flow::graph *
         tbb_future_base::nt2_graph_ = NULL;
 
-        tbb::flow::broadcast_node<tbb::flow::continue_msg> *
+        tbb::flow::continue_node<tbb::flow::continue_msg> *
         tbb_future_base::start_task_ = NULL;
 
         std::vector< \
@@ -204,10 +206,9 @@ namespace nt2
                    (boost::forward<F>(f), then_future, *this )
                   );
 
-                getTaskQueue()->push_back(c);
-
                 tbb::flow::make_edge(*node_,*c);
 
+                getTaskQueue()->push_back(c);
                 then_future.attach_task(c);
 
                 return then_future;
