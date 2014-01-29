@@ -95,9 +95,7 @@ namespace nt2
     template< typename Arch,\
               BOOST_PP_ENUM_PARAMS(N, typename A)\
               >
-    inline typename make_future< Arch,\
-      SHARED_MEMORY_TUPLE<BOOST_PP_ENUM_PARAMS(N,A)> \
-      >::type
+    inline typename make_future< Arch,int>::type
     when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~))
     {
       return when_all_impl<Arch>().call(BOOST_PP_ENUM_PARAMS(N,a));
