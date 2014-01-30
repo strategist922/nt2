@@ -66,6 +66,15 @@ namespace nt2
                                  ).then(details::empty_body());
         }
 
+        template <typename Iterator>
+        inline hpx::lcos::unique_future<int>
+        call( BOOST_FWD_REF(Iterator) begin, BOOST_FWD_REF(Iterator) end )
+        {
+            return hpx::when_all( boost::forward<Iterator>(begin),\
+                                  boost::forward<Iterator>(end)\
+                                ).then(details::empty_body());
+        }
+
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 1, BOOST_DISPATCH_MAX_ARITY, \
 "nt2/sdk/hpx/future/when_all.hpp") \

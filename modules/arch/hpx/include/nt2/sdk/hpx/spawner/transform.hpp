@@ -50,12 +50,15 @@ namespace nt2
             typedef typename
             nt2::make_future< Arch,int >::type future;
 
+            typedef typename
+            std::vector<future>::iterator Iterator;
+
             std::size_t nblocks  = size/grain_out;
             std::size_t leftover = size % grain_out;
-            std::size_t grain_in = boost::proto::value(w.in_).specifics().grain_;
+            std::size_t grain_in = boost::proto::child_c<0>(w.in_).specifics().grain_;
 
-            std::vector<future> & futures_in  ( boost::proto::value(w.in_).specifics().futures_ );
-            std::vector<future> & futures_out ( boost::proto::value(w.out_).specifics().futures_ );
+            std::vector<future> & futures_in  ( boost::proto::child_c<0>(w.in_).specifics().futures_ );
+            std::vector<future> & futures_out ( boost::proto::child_c<0>(w.out_).specifics().futures_ );
             futures_out.reserve(nblocks);
 
             #ifndef BOOST_NO_EXCEPTIONS
@@ -67,8 +70,6 @@ namespace nt2
 
             if(futures_in.empty())
             {
-
-
                 for(std::size_t n=0;n<nblocks;++n)
                 {
                   std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
@@ -82,21 +83,23 @@ namespace nt2
             {
                 for(std::size_t n=0;n<nblocks;++n)
                 {
-                   std::size_t begin = grain_in*n/grain_out;
-                   std::size_t end = grain_in*(n+1)/grain_out;
                    std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
+                   Iterator begin_dep = futures_in.begin() + (grain_out*n)/grain_in;
+                   Iterator end_dep   = ( (grain_out*n + chunk)%grain_in )
+                     ? futures_in.begin() + (grain_out*n +chunk)/grain_in + 1
+                     : futures_in.begin() + (grain_out*n +chunk)/grain_in;
+
                    // Call operation
-                   futures_out.push_back(
-                     when_all<Arch>(&futures_in[begin],&futures_in[end])
-                      .then(details::then_worker<Worker,Arch>
+                   futures_out.push_back( when_all<Arch>(begin_dep,end_dep)
+                     .then(details::then_worker<Worker,Arch>
                         (w,begin+n*grain_out, chunk)
-                       )
-                  );
+                     )
+                   );
                 }
             }
 
-            boost::proto::value(w.out_).specifics().grain_ = grain_out;
+            boost::proto::child_c<0>(w.out_).specifics().grain_ = grain_out;
 
             #ifndef BOOST_NO_EXCEPTIONS
             }
