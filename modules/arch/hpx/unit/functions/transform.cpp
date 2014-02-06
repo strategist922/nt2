@@ -22,7 +22,7 @@ NT2_TEST_CASE_TPL( direct_transform, NT2_TYPES )
   nt2::table<T> out( nt2::of_size(5,7) );
   nt2::table<T> in = nt2::ones( nt2::of_size(5,7), nt2::meta::as_<T>() );
 
-  nt2::transform(out, in+in);
+  nt2::transform(out, in+in+T(3));
 
   for(std::size_t i=1;i<=nt2::numel(out);++i)
     NT2_TEST_EQUAL(out(i), in(i)+in(i));
