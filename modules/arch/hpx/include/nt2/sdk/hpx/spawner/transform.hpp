@@ -12,54 +12,56 @@
 
 #if defined(NT2_USE_HPX)
 
+#include <nt2/sdk/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
-#include <nt2/sdk/shared_memory/future.hpp>
-#include <nt2/sdk/shared_memory/details/then_worker.hpp>
-#include <nt2/sdk/shared_memory/settings/specific_data.hpp>
+#include <nt2/sdk/hpx/settings/specific_data.hpp>
+#include <nt2/sdk/shared_memory/details/aggregate_futures.hpp>
 
 #include <nt2/sdk/hpx/future/future.hpp>
 #include <nt2/sdk/hpx/future/when_all.hpp>
 
+#include <nt2/sdk/shared_memory/details/then_worker.hpp>
+#include <nt2/sdk/shared_memory/details/proto_data_with_futures.hpp>
+#include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
+
 #include <vector>
+#include <iostream>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
 #endif
+
 
 namespace nt2
 {
     namespace tag
     {
         struct transform_;
-        template<class T> struct hpx_;
     }
-
-
 
     template<class Site>
     struct spawner< tag::transform_, tag::hpx_<Site> >
     {
-
-        typedef typename tag::hpx_<Site> Arch;
 
         spawner() {}
 
         template<typename Worker>
         void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain_out)
         {
-            typedef typename
-            nt2::make_future< Arch,int >::type future;
+            typedef typename tag::hpx_<Site> Arch;
 
             typedef typename
-            std::vector<future>::iterator Iterator;
+            nt2::make_future< Arch ,int >::type future;
 
             std::size_t nblocks  = size/grain_out;
             std::size_t leftover = size % grain_out;
-            std::size_t grain_in = boost::proto::child_c<0>(w.in_).specifics().grain_;
+            std::size_t grain_in;
 
-            std::vector<future> & futures_in  ( boost::proto::child_c<0>(w.in_).specifics().futures_ );
-            std::vector<future> & futures_out ( boost::proto::child_c<0>(w.out_).specifics().futures_ );
-            futures_out.reserve(nblocks);
+            details::container_has_futures<Arch> tmp;
+            tmp.grain_ = grain_out;
+            tmp.futures_.reserve(nblocks);
+
+            details::aggregate_futures aggregate_f;
 
             #ifndef BOOST_NO_EXCEPTIONS
             boost::exception_ptr exception;
@@ -68,38 +70,44 @@ namespace nt2
             {
             #endif
 
-            if(futures_in.empty())
-            {
-                for(std::size_t n=0;n<nblocks;++n)
-                {
-                  std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
-                  // Call operation
-                  futures_out.push_back ( async<Arch>(w, begin+n*grain_out, chunk) );
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+                std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
+
+                details::proto_data_with_futures<future>
+                data_in(n*grain_out,chunk);
+
+                aggregate_f(w.in_,0,data_in);
+
+                if(data_in.futures_.empty())
+                {
+                    // Call operation
+                    tmp.futures_.push_back (
+                      async<Arch>(w, begin+n*grain_out, chunk)
+                    );
+                    std::cout<<"Launch async "<<n<<std::endl;
+                }
+
+                else
+                {
+                    // Call operation
+                    tmp.futures_.push_back(
+                      when_all<Arch>(data_in.futures_)
+                        .then(details::then_worker<Worker,Arch>
+                           (w,begin+n*grain_out, chunk)
+                         )
+                    );
+                    std::cout<<"Launch continuation "<<n<<std::endl;
                 }
             }
 
-            else
+            for(std::size_t n=0;n<nblocks;++n)
             {
-                for(std::size_t n=0;n<nblocks;++n)
-                {
-                   std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
-
-                   Iterator begin_dep = futures_in.begin() + (grain_out*n)/grain_in;
-                   Iterator end_dep   = ( (grain_out*n + chunk)%grain_in )
-                     ? futures_in.begin() + (grain_out*n +chunk)/grain_in + 1
-                     : futures_in.begin() + (grain_out*n +chunk)/grain_in;
-
-                   // Call operation
-                   futures_out.push_back( when_all<Arch>(begin_dep,end_dep)
-                     .then(details::then_worker<Worker,Arch>
-                        (w,begin+n*grain_out, chunk)
-                     )
-                   );
-                }
+                tmp.futures_[n].get();
             }
 
-            boost::proto::child_c<0>(w.out_).specifics().grain_ = grain_out;
+            boost::proto::value(w.out_).specifics().swap(tmp);
 
             #ifndef BOOST_NO_EXCEPTIONS
             }
@@ -108,6 +116,8 @@ namespace nt2
                 exception = boost::current_exception();
             }
             #endif
+
+
         }
     };
 }
