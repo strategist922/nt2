@@ -19,7 +19,6 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/dispatch/details/parameters.hpp>
 

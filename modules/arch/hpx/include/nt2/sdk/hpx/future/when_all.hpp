@@ -67,7 +67,7 @@ namespace nt2
         }
 
         template <typename Iterator>
-        inline hpx::lcos::unique_future<int>
+        inline hpx::lcos::shared_future<int>
         call( BOOST_FWD_REF(Iterator) begin, BOOST_FWD_REF(Iterator) end )
         {
             return hpx::when_all( boost::forward<Iterator>(begin),\

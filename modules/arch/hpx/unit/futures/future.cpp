@@ -20,7 +20,6 @@
 #include <nt2/sdk/unit/tests/type_expr.hpp>
 #include <nt2/sdk/unit/tests/exceptions.hpp>
 
-#include <hpx/util/tuple.hpp>
 
 namespace nt2
 {
