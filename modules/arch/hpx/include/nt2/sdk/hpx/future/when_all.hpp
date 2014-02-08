@@ -22,22 +22,24 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 
+#include <vector>
+
 namespace nt2
 {
 
     namespace details
     {
-      struct empty_body
-      {
-        typedef int result_type;
-
-        template <typename T>
-        int operator()(T) const
+        struct empty_body
         {
-           return 0;
-        }
+            typedef int result_type;
 
-      };
+            template <typename T>
+            int operator()(T) const
+            {
+                return 0;
+            }
+
+        };
     }
 
     template<class Site>
@@ -45,12 +47,20 @@ namespace nt2
     {
 
         template <typename Future>
-        inline hpx::lcos::unique_future< std::vector<Future> >
-        call( BOOST_FWD_REF(std::vector<Future>) lazy_values )
+        inline hpx::lcos::shared_future<int >
+        call( std::vector<Future> & lazy_values )
         {
-            return hpx::when_all( boost::forward< std::vector<Future> >(\
-                                    lazy_values)\
-                                ).then(details::empty_body());
+            return hpx::when_all(lazy_values)
+            .then(details::empty_body());
+        }
+
+        template <typename Iterator>
+        inline hpx::lcos::shared_future<int>
+        call( BOOST_FWD_REF(Iterator) begin, BOOST_FWD_REF(Iterator) end )
+        {
+            return hpx::when_all( boost::forward<Iterator>(begin),\
+                                 boost::forward<Iterator>(end)\
+                                 ).then(details::empty_body());
         }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
@@ -69,13 +79,14 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) hpx::lcos::unique_future<A##n> & a##n
+#define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) hpx::lcos::shared_future<A##n> & a##n
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
-        inline hpx::lcos::unique_future<int>
+        inline hpx::lcos::shared_future<int>
         call( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG, ~))
         {
-            return hpx::when_all(BOOST_PP_ENUM_PARAMS(N,a)).then(details::empty_body());
+            return hpx::when_all(BOOST_PP_ENUM_PARAMS(N,a)
+                                ).then(details::empty_body());
         }
 
 #undef HPX_WAIT_ALL_FUTURE_ARG
