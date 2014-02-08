@@ -115,5 +115,6 @@ namespace nt2
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS2
+#undef N
 
 #endif

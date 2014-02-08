@@ -76,5 +76,6 @@ details::openmp_future<int> call\
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS1
 #undef NT2_FUTURE_FORWARD_ARGS2
+#undef N
 
 #endif
