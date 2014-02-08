@@ -35,17 +35,17 @@ namespace nt2
     template<class Site, class result_type>
     struct make_future<tag::hpx_<Site> , result_type>
     {
-        typedef typename hpx::lcos::unique_future<result_type> type;
+        typedef typename hpx::lcos::shared_future<result_type> type;
     };
 
     template< class Site>
     struct make_ready_future_impl< tag::hpx_<Site> >
     {
         template< typename result_type >
-        inline hpx::lcos::unique_future<result_type>
+        inline hpx::lcos::shared_future<result_type>
         call(result_type value)
         {
-          return  hpx::make_ready_future(value);
+            return  hpx::make_ready_future(value);
         }
     };
 
@@ -69,23 +69,23 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
         template< typename F \
-          BOOST_PP_COMMA_IF(N) \
-          BOOST_PP_ENUM_PARAMS(N, typename A) >
+        BOOST_PP_COMMA_IF(N) \
+        BOOST_PP_ENUM_PARAMS(N, typename A) >
         inline typename make_future< \
-          tag::hpx_<Site>,\
-          typename boost::result_of< \
-            F(BOOST_PP_ENUM_PARAMS(N, A)) \
-            >::type \
-          >::type
+        tag::hpx_<Site>,\
+        typename boost::result_of< \
+        F(BOOST_PP_ENUM_PARAMS(N, A)) \
+        >::type \
+        >::type
         call(BOOST_FWD_REF(F) f \
-          BOOST_PP_COMMA_IF(N) \
-          BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
-          )
+             BOOST_PP_COMMA_IF(N) \
+             BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
+             )
         {
             return hpx::async( boost::forward<F>(f) \
-              BOOST_PP_COMMA_IF(N) \
-              BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
-              );
+                               BOOST_PP_COMMA_IF(N) \
+                               BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) \
+                             );
         }
 
 #undef NT2_FUTURE_FORWARD_ARGS
