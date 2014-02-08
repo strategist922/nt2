@@ -62,7 +62,7 @@ namespace nt2
                 future_type const & future_result\
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
-            : f_( boost::forward<F>(f) ),future_result_(future_result) \
+            : f_(boost::forward<F>(f)),future_result_(future_result) \
               BOOST_PP_COMMA_IF(N) \
               BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
             {}
@@ -75,7 +75,7 @@ namespace nt2
                 *(future_result_.ready_) = true;
             }
 
-            F f_;
+            mutable F f_;
             future_type future_result_;
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
 
