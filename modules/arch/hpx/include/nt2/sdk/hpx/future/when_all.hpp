@@ -79,5 +79,6 @@ namespace nt2
         }
 
 #undef HPX_WAIT_ALL_FUTURE_ARG
+#undef N
 
 #endif
