@@ -19,17 +19,6 @@
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/dispatch/details/parameters.hpp>
 #include <boost/utility/result_of.hpp>
-#include <boost/tuple/tuple.hpp>
-
-
-#if defined(NT2_USE_HPX)
-#include <hpx/util/tuple.hpp>
-#define SHARED_MEMORY_TUPLE HPX_STD_TUPLE
-#else
-#include <boost/tuple/tuple.hpp>
-#define SHARED_MEMORY_TUPLE boost::tuple
-#endif
-
 
 namespace nt2
 {

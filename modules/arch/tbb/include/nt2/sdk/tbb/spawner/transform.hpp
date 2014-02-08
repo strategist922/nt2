@@ -23,37 +23,6 @@
 #include <boost/exception_ptr.hpp>
 #endif
 
-struct p1
-{
-    typedef int result_type;
-
-    int operator()() const
-    {
-        return 1;
-    }
-};
-
-struct p2
-{
-    typedef int result_type;
-
-    int operator()(int value) const
-    {
-        return value*2;
-    }
-};
-
-struct p3
-{
-    typedef int result_type;
-
-    int operator()(int value)
-    {
-        printf("Result is: %d\n",value);
-        return value;
-    }
-};
-
 
 namespace nt2
 {
@@ -115,14 +84,43 @@ namespace nt2
 //            exception = boost::current_exception();
 //            }
 //#endif
+            typedef typename
+            nt2::make_future< Arch,int >::type future;
 
-        typedef typename
-          nt2::details::tbb_future<int> future;
+            std::size_t leftover = size % grain;
+            std::size_t nblocks  = size/grain;
 
-        future f1 = async<Arch>(p1());
-        future f2 = f1.then(p2());
+            std::vector< future > barrier;
+            barrier.reserve(nblocks);
 
-        f2.get();
+            #ifndef BOOST_NO_EXCEPTIONS
+            boost::exception_ptr exception;
+
+            try
+            {
+            #endif
+
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+              std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+
+              // Call operation
+              barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
+            }
+
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+                // Call operation
+                barrier[n].get();
+            }
+
+            #ifndef BOOST_NO_EXCEPTIONS
+            }
+            catch(...)
+            {
+                exception = boost::current_exception();
+            }
+            #endif
 
         }
     };
