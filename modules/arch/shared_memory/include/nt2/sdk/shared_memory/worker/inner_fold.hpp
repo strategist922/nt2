@@ -76,7 +76,7 @@ namespace nt2
     typedef typename Out::value_type                                          value_type;
     typedef typename details::target_type_from_site<Site,value_type>::type    target_type;
 
-    worker(Out& out, In& in, Neutral const& n, Bop const& bop, Uop const& uop)
+    worker(Out const & out, In const & in, Neutral const& n, Bop const& bop, Uop const& uop)
     : out_(out), in_(in), neutral_(n), bop_(bop), uop_(uop)
     {}
 
@@ -120,11 +120,11 @@ namespace nt2
       return 0;
     }
 
-    Out&                     out_;
-    In&                      in_;
-    Neutral const &          neutral_;
-    Bop const &              bop_;
-    Uop const &              uop_;
+    Out                     out_;
+    In                      in_;
+    Neutral const &         neutral_;
+    Bop const &             bop_;
+    Uop const &             uop_;
 
     private:
     worker& operator=(worker const&);

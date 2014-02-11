@@ -25,6 +25,10 @@ namespace nt2 { namespace details {
     {
       boost::swap(futures_,src.futures_);
       boost::swap(grain_,src.grain_);
+
+      // Clear previous futures to avoid premature
+      // synchronization
+      src.futures_.clear();
     }
 
     inline void synchronize()
@@ -33,6 +37,12 @@ namespace nt2 { namespace details {
         {
             futures_[n].get();
         }
+        futures_.clear();
+    }
+
+    ~container_has_futures()
+    {
+      if (!futures_.empty()) synchronize();
     }
 
     //===========================================

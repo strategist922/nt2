@@ -25,7 +25,6 @@
 #include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
 
 #include <vector>
-#include <iostream>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -84,9 +83,8 @@ namespace nt2
                 {
                     // Call operation
                     tmp.futures_.push_back (
-                      async<Arch>(w, begin+n*grain_out, chunk)
+                      async<Arch>(Worker(w), begin+n*grain_out, chunk)
                     );
-                    std::cout<<"Launch async "<<n<<std::endl;
                 }
 
                 else
@@ -94,17 +92,11 @@ namespace nt2
                     // Call operation
                     tmp.futures_.push_back(
                       when_all<Arch>(data_in.futures_)
-                        .then(details::then_worker<Worker,Arch>
+                        .then(details::then_worker<Worker>
                            (w,begin+n*grain_out, chunk)
                          )
                     );
-                    std::cout<<"Launch continuation "<<n<<std::endl;
                 }
-            }
-
-            for(std::size_t n=0;n<nblocks;++n)
-            {
-                tmp.futures_[n].get();
             }
 
             boost::proto::value(w.out_).specifics().swap(tmp);

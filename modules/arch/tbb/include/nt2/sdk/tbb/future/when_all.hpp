@@ -26,8 +26,6 @@
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 #include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
-#include <boost/tuple/tuple.hpp>
-
 namespace nt2
 {
 
