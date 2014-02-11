@@ -13,28 +13,26 @@
 
 namespace nt2 { namespace details {
 
-    template<class Worker,class Arch>
+    template<class Worker>
     struct then_worker
     {
         typedef int result_type;
 
-        typedef typename
-        nt2::make_future< Arch,int >::type future;
-
-        then_worker(Worker & w,
+        then_worker(Worker const & w,
                     std::size_t begin,
                     std::size_t size
                     )
         :w_(w),begin_(begin),size_(size)
         {}
 
-        int operator()(future) const
+        template<typename T>
+        int operator()(T) const
         {
             w_(begin_,size_);
             return 0;
         }
 
-        Worker & w_;
+        mutable Worker w_;
         std::size_t begin_;
         std::size_t size_;
 

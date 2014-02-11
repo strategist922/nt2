@@ -21,7 +21,6 @@
 #include <boost/preprocessor/iterate.hpp>
 
 #include <nt2/sdk/shared_memory/future.hpp>
-#include <nt2/sdk/hpx/future/details/hpx_future.hpp>
 
 #include <vector>
 
@@ -64,15 +63,6 @@ namespace nt2
             return hpx::when_all( boost::forward<Iterator>(begin),\
                                  boost::forward<Iterator>(end)\
                                  ).then(details::empty_body());
-        }
-
-        template <typename Iterator>
-        inline hpx::lcos::shared_future<int>
-        call( BOOST_FWD_REF(Iterator) begin, BOOST_FWD_REF(Iterator) end )
-        {
-            return hpx::when_all( boost::forward<Iterator>(begin),\
-                                  boost::forward<Iterator>(end)\
-                                ).then(details::empty_body());
         }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \

@@ -25,9 +25,6 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 
-#include <nt2/sdk/shared_memory/future.hpp>
-#include <nt2/sdk/hpx/future/details/hpx_future.hpp>
-
 namespace nt2
 {
     namespace tag
@@ -70,8 +67,7 @@ namespace nt2
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
 
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) hpx::make_ready_future( \
-boost::forward<A##n>(a##n))
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
 
         template< typename F \
         BOOST_PP_COMMA_IF(N) \

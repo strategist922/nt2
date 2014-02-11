@@ -12,7 +12,6 @@
 #include <nt2/sdk/meta/is_container.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <vector>
-#include <iostream>
 #include <algorithm>
 
 #include <boost/proto/proto.hpp>
@@ -37,7 +36,6 @@ namespace nt2 { namespace details
         std::size_t begin(data.begin_);
         std::size_t size(data.size_);
 
-        std::cout<<"Find container terminal with grain "<<grain_in<<std::endl;
 
         if (!futures_in.empty())
         {
@@ -46,7 +44,6 @@ namespace nt2 { namespace details
             ? futures_in.begin() +
                 std::min(futures_in.size(),(begin +size)/grain_in + 1)
             : futures_in.begin() + (begin +size)/grain_in;
-          std::cout<<"Nombre de deps "<<std::distance(begin_dep,end_dep)<<std::endl;
 
              // Call operation
           data.futures_.insert(data.futures_.end(),begin_dep,end_dep);

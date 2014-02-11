@@ -355,14 +355,12 @@ namespace nt2 { namespace memory
     **/
     BOOST_FORCEINLINE reference operator[](size_type i)
     {
-      this->specifics().synchronize();
       return data_[i];
     }
 
     /// @overload
     BOOST_FORCEINLINE const_reference operator[](size_type i) const
     {
-      this->specifics().synchronize();
       return data_[i];
     }
 

@@ -29,7 +29,7 @@ namespace nt2
   {
       typedef int result_type;
 
-      worker(Out & out, In & in)
+      worker(Out const & out, In const & in)
       :out_(out),in_(in)
       {}
 
@@ -39,8 +39,8 @@ namespace nt2
           return 0;
       };
 
-      Out & out_;
-      In & in_;
+      Out out_;
+      In in_;
 
       nt2::functor<tag::transform_,Site> work;
 
