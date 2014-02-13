@@ -10,6 +10,7 @@
 #define NT2_SDK_SHARED_MEMORY_DETAILS_THEN_WORKER_HPP_INCLUDED
 
 #include <nt2/sdk/shared_memory/future.hpp>
+#include <boost/move/move.hpp>
 
 namespace nt2 { namespace details {
 
@@ -18,11 +19,11 @@ namespace nt2 { namespace details {
     {
         typedef int result_type;
 
-        then_worker(Worker const & w,
+        then_worker(BOOST_FWD_REF(Worker) w,
                     std::size_t begin,
                     std::size_t size
                     )
-        :w_(w),begin_(begin),size_(size)
+        :w_(boost::forward<Worker>(w)),begin_(begin),size_(size)
         {}
 
         template<typename T>

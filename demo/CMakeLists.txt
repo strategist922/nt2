@@ -13,7 +13,9 @@ set(NT2_DIR ${CMAKE_SOURCE_DIR}/../cmake)
 
 set(NT2_BLAS_MULTICORE 0)
 
-find_package(NT2 REQUIRED)
+# find_package(NT2 REQUIRED)
+find_package(NT2 REQUIRED COMPONENTS test.benchmark core arch.hpx)
+
 include(${NT2_USE_FILE})
 
 set(CMAKE_BUILD_TYPE Release)
@@ -22,8 +24,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 #helloworld
-add_subdirectory(helloworld/nt2)
-add_subdirectory(helloworld/simd)
+# add_subdirectory(helloworld/nt2)
+# add_subdirectory(helloworld/simd)
 
 #blackscholes
 add_subdirectory(blackscholes/scalar)
@@ -32,33 +34,33 @@ add_subdirectory(blackscholes/nt2_merged)
 add_subdirectory(blackscholes/simd)
 
 #mandelbrot
-add_subdirectory(mandelbrot/scalar)
-add_subdirectory(mandelbrot/nt2)
-add_subdirectory(mandelbrot/simd)
+# add_subdirectory(mandelbrot/scalar)
+# add_subdirectory(mandelbrot/nt2)
+# add_subdirectory(mandelbrot/simd)
 
 #rgb2yuv
-add_subdirectory(rgb2yuv/scalar)
-add_subdirectory(rgb2yuv/nt2)
-add_subdirectory(rgb2yuv/simd)
+# add_subdirectory(rgb2yuv/scalar)
+# add_subdirectory(rgb2yuv/nt2)
+# add_subdirectory(rgb2yuv/simd)
 
 #rgb2grey
-add_subdirectory(rgb2grey/scalar)
-add_subdirectory(rgb2grey/nt2)
-add_subdirectory(rgb2grey/simd)
+# add_subdirectory(rgb2grey/scalar)
+# add_subdirectory(rgb2grey/nt2)
+# add_subdirectory(rgb2grey/simd)
 
 #saxpy
-add_subdirectory(saxpy/scalar)
-add_subdirectory(saxpy/nt2)
-add_subdirectory(saxpy/simd)
-add_subdirectory(saxpy/mkl)
+# add_subdirectory(saxpy/scalar)
+# add_subdirectory(saxpy/nt2)
+# add_subdirectory(saxpy/simd)
+# add_subdirectory(saxpy/mkl)
 
 #sigmadelta
-add_subdirectory(sigmadelta/scalar)
-add_subdirectory(sigmadelta/nt2)
-add_subdirectory(sigmadelta/simd)
+# add_subdirectory(sigmadelta/scalar)
+# add_subdirectory(sigmadelta/nt2)
+# add_subdirectory(sigmadelta/simd)
 
 #sdot
-add_subdirectory(sdot/scalar)
-add_subdirectory(sdot/nt2)
-add_subdirectory(sdot/simd)
-add_subdirectory(sdot/mkl)
+# add_subdirectory(sdot/scalar)
+# add_subdirectory(sdot/nt2)
+# add_subdirectory(sdot/simd)
+# add_subdirectory(sdot/mkl)

@@ -19,6 +19,7 @@
 
 #include <nt2/sdk/hpx/future/future.hpp>
 #include <nt2/sdk/hpx/future/when_all.hpp>
+#include <hpx/lcos/wait_all.hpp>
 
 #include <nt2/sdk/shared_memory/details/then_worker.hpp>
 #include <nt2/sdk/shared_memory/details/proto_data_with_futures.hpp>
@@ -49,66 +50,105 @@ namespace nt2
         {
             typedef typename tag::hpx_<Site> Arch;
 
-            typedef typename
-            nt2::make_future< Arch ,int >::type future;
+           //  typedef typename
+           //  nt2::make_future< Arch ,int >::type future;
 
-            std::size_t nblocks  = size/grain_out;
-            std::size_t leftover = size % grain_out;
-            std::size_t grain_in;
+           // std::size_t nblocks  = size/grain_out;
+           // std::size_t leftover = size % grain_out;
+           // std::size_t grain_in;
 
-            details::container_has_futures<Arch> tmp;
-            tmp.grain_ = grain_out;
-            tmp.futures_.reserve(nblocks);
+           // details::container_has_futures<Arch> tmp;
+           // tmp.grain_ = grain_out;
+           // tmp.futures_.reserve(nblocks);
 
-            details::aggregate_futures aggregate_f;
+           // details::aggregate_futures aggregate_f;
 
-            #ifndef BOOST_NO_EXCEPTIONS
-            boost::exception_ptr exception;
+           // #ifndef BOOST_NO_EXCEPTIONS
+           // boost::exception_ptr exception;
 
-            try
-            {
-            #endif
+           // try
+           // {
+           // #endif
 
 
-            for(std::size_t n=0;n<nblocks;++n)
-            {
-                std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
+           // for(std::size_t n=0;n<nblocks;++n)
+           // {
+           //     std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
-                details::proto_data_with_futures<future>
-                data_in(n*grain_out,chunk);
+           //     details::proto_data_with_futures<future>
+           //     data_in(n*grain_out,chunk);
 
-                aggregate_f(w.in_,0,data_in);
+           //     aggregate_f(w.in_,0,data_in);
 
-                if(data_in.futures_.empty())
-                {
-                    // Call operation
-                    tmp.futures_.push_back (
-                      async<Arch>(Worker(w), begin+n*grain_out, chunk)
-                    );
-                }
+           //     if(data_in.futures_.empty())
+           //     {
+           //         // Call operation
+           //         tmp.futures_.push_back (
+           //           async<Arch>(Worker(w), begin+n*grain_out, chunk)
+           //         );
+           //     }
 
-                else
-                {
-                    // Call operation
-                    tmp.futures_.push_back(
-                      when_all<Arch>(data_in.futures_)
-                        .then(details::then_worker<Worker>
-                           (w,begin+n*grain_out, chunk)
-                         )
-                    );
-                }
-            }
+           //     else
+           //     {
+           //         // Call operation
+           //         tmp.futures_.push_back(
+           //           hpx::when_all(boost::move(data_in.futures_))
+           //             .then(details::then_worker<Worker>
+           //                (Worker(w),begin+n*grain_out, chunk)
+           //              )
+           //         );
+           //     }
+           // }
 
-            boost::proto::value(w.out_).specifics().swap(tmp);
+           // boost::proto::value(w.out_).specifics().swap(tmp);
 
-            #ifndef BOOST_NO_EXCEPTIONS
-            }
-            catch(...)
-            {
-                exception = boost::current_exception();
-            }
-            #endif
+           // #ifndef BOOST_NO_EXCEPTIONS
+           // }
+           // catch(...)
+           // {
+           //     exception = boost::current_exception();
+           // }
+           // #endif
 
+
+           typedef typename
+           nt2::make_future< Arch,int >::type future;
+
+           std::size_t leftover = size % grain_out;
+           std::size_t nblocks  = size/grain_out;
+
+           std::vector< future > barrier;
+           barrier.reserve(nblocks);
+
+           #ifndef BOOST_NO_EXCEPTIONS
+           boost::exception_ptr exception;
+
+           try
+           {
+           #endif
+
+           for(std::size_t n=0;n<nblocks;++n)
+           {
+             std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
+             // Call operation
+             barrier.push_back ( async<Arch>(w, begin+n*grain_out, chunk) );
+           }
+
+           for(std::size_t n=0;n<nblocks;++n)
+           {
+               // Call operation
+               barrier[n].get();
+           }
+
+           // hpx::wait_all(barrier);
+
+           #ifndef BOOST_NO_EXCEPTIONS
+           }
+           catch(...)
+           {
+               exception = boost::current_exception();
+           }
+           #endif
 
         }
     };
