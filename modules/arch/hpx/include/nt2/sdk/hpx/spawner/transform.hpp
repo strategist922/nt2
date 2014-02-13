@@ -16,6 +16,7 @@
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
 
+
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
 #endif
@@ -37,7 +38,7 @@ namespace nt2
         template<typename Worker>
         void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain_out)
         {
-            typedef typename tag::hpx_<Site> Arch;
+          typedef typename tag::hpx_<Site> Arch;
 
           typedef typename
           nt2::make_future< Arch ,int >::type future;
