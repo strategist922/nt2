@@ -57,6 +57,8 @@ template<typename T> struct blackandscholes_nt2
     nt2::table<T> d2 = nt2::fnms(va,da,d1);
 
     R = nt2::fnms(Xa*nt2::exp(-ra*Ta),nt2::fastnormcdf(d2),Sa*nt2::fastnormcdf(d1));
+
+    R.synchronize();
   }
 
   friend std::ostream& operator<<(std::ostream& os, blackandscholes_nt2<T> const& p)
@@ -73,11 +75,11 @@ template<typename T> struct blackandscholes_nt2
 
 NT2_REGISTER_BENCHMARK_TPL( blackandscholes_nt2, (float) )
 {
-  std::size_t size_min  = args("size_min" ,   16);
-  std::size_t size_max  = args("size_max" , 4096);
-  std::size_t size_step = args("size_step",    2);
+  std::size_t size_min  = args("size_min" ,   4000*4000);
+  std::size_t size_max  = args("size_max" , 16000*16000);
+  std::size_t size_step = args("size_step",    4);
 
-  run_during_with< blackandscholes_nt2<float> > ( 1.
+  run_during_with< blackandscholes_nt2<float> > ( 10.
                                                 , geometric(size_min,size_max,size_step)
                                                 , cycles_per_element<stats::median_>()
                                                 );

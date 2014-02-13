@@ -47,7 +47,6 @@ namespace nt2
             {
                 if (NULL == nt2_graph_)
                 {
-                   printf("Create new graph\n");
                    nt2_graph_ = new tbb::flow::graph;
                 }
 
@@ -59,7 +58,6 @@ namespace nt2
             {
                 if (NULL == start_task_)
                 {
-                    printf("Create new start task\n");
                     start_task_ =
                     new tbb::flow::continue_node
                     <tbb::flow::continue_msg>
@@ -75,14 +73,12 @@ namespace nt2
             {
                 if (NULL == task_queue_)
                 {
-                    printf("Create new task queue\n");
-
                     task_queue_ = new std::vector< \
                     tbb::flow::continue_node< \
                     tbb::flow::continue_msg> * \
                     >;
 
-                    task_queue_->reserve(100);
+                    task_queue_->reserve(1000);
                 }
                 return task_queue_;
             }

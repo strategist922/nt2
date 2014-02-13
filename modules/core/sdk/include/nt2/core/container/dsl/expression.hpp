@@ -217,7 +217,6 @@ namespace nt2 { namespace container
     >::type                                                           \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(n,A, const& a) ) const    \
     {                                                                 \
-      synchronize();                                                  \
       return nt2::function(*this, BOOST_PP_ENUM(n,M2,n) );            \
     }                                                                 \
     template<BOOST_PP_ENUM_PARAMS(n,class A)> BOOST_FORCEINLINE       \
@@ -227,7 +226,6 @@ namespace nt2 { namespace container
     >::type                                                           \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(n,A, const& a) )          \
     {                                                                 \
-      synchronize();                                                  \
       return nt2::function(*this, BOOST_PP_ENUM(n,M2,n) );            \
     }                                                                 \
     /**/

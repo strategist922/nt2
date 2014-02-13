@@ -28,7 +28,7 @@ namespace nt2 { namespace details {
 
       // Clear previous futures to avoid premature
       // synchronization
-      src.futures_.clear();
+      // src.futures_.clear();
     }
 
     inline void synchronize()
@@ -40,10 +40,10 @@ namespace nt2 { namespace details {
         futures_.clear();
     }
 
-    ~container_has_futures()
-    {
-      if (!futures_.empty()) synchronize();
-    }
+    // ~container_has_futures()
+    // {
+    //   if (!futures_.empty()) synchronize();
+    // }
 
     //===========================================
     // vector of Futures
