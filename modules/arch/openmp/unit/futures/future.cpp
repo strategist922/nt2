@@ -99,7 +99,8 @@ NT2_TEST_CASE( then_future )
       future f6 = f5.then(boost::move(w2));
       future f7 = f6.then(boost::move(w3));
 
-      future f8 = nt2::async<Arch>(boost::move(w1)).then(boost::move(w2)).then(boost::move(w3));
+      future f8 =
+       nt2::async<Arch>(boost::move(w1)).then(boost::move(w2)).then(boost::move(w3));
 
       int value3 = f7.get();
       int value4 = f8.get();
@@ -115,8 +116,8 @@ NT2_TEST_CASE( make_ready_future )
 {
   #pragma omp parallel
   {
-     #pragma omp single
-     {
+    #pragma omp single
+    {
        future f1 = nt2::make_ready_future<Arch,int>(12);
 
        int value1 = f1.get();
@@ -130,7 +131,7 @@ NT2_TEST_CASE( make_ready_future )
        int value2 = f2.get();
 
        NT2_TEST_EQUAL(value2,12) ;
-     }
+    }
   }
 }
 
@@ -138,8 +139,8 @@ NT2_TEST_CASE( when_all_future )
 {
   #pragma omp parallel
   {
-     #pragma omp single
-     {
+    #pragma omp single
+    {
        future f1 = nt2::make_ready_future<Arch,int>(12);
        future f2 = nt2::make_ready_future<Arch,int>(24);
        future f3 = nt2::make_ready_future<Arch,int>(48);
@@ -158,6 +159,7 @@ NT2_TEST_CASE( when_all_future )
        int value2 = f9.get();
 
        NT2_TEST_EQUAL(value2,50) ;
-     }
+   }
   }
+
 }

@@ -19,6 +19,7 @@
 #include <boost/make_shared.hpp>
 
 #include <cstdio>
+#include <iostream>
 
 namespace nt2
 {
@@ -62,22 +63,28 @@ namespace nt2
        }
 
        template<typename F>
-       openmp_future<typename boost::result_of<F(result_type)>::type>
+       openmp_future<typename boost::result_of<F(openmp_future)>::type>
        then(BOOST_FWD_REF(F) f)
        {
-           typedef typename boost::result_of<F(result_type)>::type then_result_type;
+           typedef typename boost::result_of<F(openmp_future)>::type
+             then_result_type;
 
            details::openmp_future<then_result_type> then_future;
-
            then_future.attach_previous_future(*this);
 
-           bool & prev( *ready_ );
-           bool & next( *(then_future.ready_) );
+           F f_( boost::forward<F> (f) );
 
-           #pragma omp task shared(f,prev,next,then_future) depend(in: prev) depend(out: next)
+           openmp_future current_future(*this);
+           bool * prev( ready_.get() );
+           bool * next( then_future.ready_.get() );
+
+           #pragma omp task \
+            firstprivate(then_future,current_future,f_,prev,next) \
+            depend(in: prev) \
+            depend(out: next)
            {
-               *(then_future.res_) = f(*this);
-               next = true;
+               *(then_future.res_) = f_(current_future);
+               *next = true;
            }
 
            return then_future;
