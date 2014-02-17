@@ -14,6 +14,7 @@
 #if defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
 
 #include <omp.h>
+#include <unistd.h>
 
 #include <boost/move/move.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -46,12 +47,14 @@ namespace nt2
         call(result_type value)
         {
             details::openmp_future<result_type> future_res;
-            bool & next( *(future_res.ready_) );
+            bool * next( future_res.ready_.get() );
 
-            #pragma omp task shared(next,value) depend(out: next)
+            #pragma omp task \
+             firstprivate(future_res,next,value) \
+             depend(out: next)
             {
                 *(future_res.res_) = value;
-                next = true;
+                *next = true;
             }
 
             return future_res;
@@ -75,11 +78,11 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) boost::forward<A##n>(a##n)
+#define NT2_FUTURE_FORWARD_ARGS(z,n,t) BOOST_FWD_REF(A##n) a##n##_
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) A##n a##n ( boost::forward<A##n> (a##n##_) );
 
         template< typename F\
-          BOOST_PP_COMMA_IF(N)\
+         BOOST_PP_COMMA_IF(N)\
           BOOST_PP_ENUM_PARAMS(N, typename A) >
         inline typename make_future< tag::openmp_<Site>,\
           typename boost::result_of<\
@@ -95,26 +98,28 @@ namespace nt2
               >::type result_type;
 
             details::openmp_future<result_type> future_res;
+            F f_( boost::forward<F> (f) );
 
-            bool & next( *(future_res.ready_) );
+            BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS1, ~)
+
+            bool * next( future_res.ready_.get() );
 
             #pragma omp task \
-               shared(f,next \
-                 BOOST_PP_COMMA_IF(N)\
-                 BOOST_PP_ENUM_PARAMS(N, a)) \
+               firstprivate(future_res,next,f_ \
+                            BOOST_PP_COMMA_IF(N) \
+                            BOOST_PP_ENUM_PARAMS(N, a) \
+                           ) \
                depend(out: next)
             {
-                *(future_res.res_) = f(\
-                  BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
-
-                next = true;
+                *(future_res.res_) = f_(BOOST_PP_ENUM_PARAMS(N, a));
+                 *next = true;
             }
 
             return future_res;
           }
 
 #undef NT2_FUTURE_FORWARD_ARGS
-#undef NT2_FUTURE_FORWARD_ARGS2
+#undef NT2_FUTURE_FORWARD_ARGS1
 #undef N
 
 #endif

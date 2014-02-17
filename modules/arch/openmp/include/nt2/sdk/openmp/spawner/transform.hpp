@@ -15,7 +15,7 @@
 #include <omp.h>
 #include <nt2/sdk/shared_memory/spawner.hpp>
 
-#include <nt2/sdk/openmp/future/future.hpp>
+// #include <nt2/sdk/openmp/future/future.hpp>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>

@@ -48,8 +48,7 @@ namespace nt2
 #define POINT(a,b) a.b
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::openmp_future<A##n> const & a##n
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) A##n & r##n = *(POINT(a##n,ready_));
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) r##n
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) bool * r##n = POINT(a##n,ready_).get();
 
 template< BOOST_PP_ENUM_PARAMS(N, typename A) >
 details::openmp_future<int> call\
@@ -57,17 +56,17 @@ details::openmp_future<int> call\
 {
     details::openmp_future<int> future_res;
 
-    bool & next( *(future_res.ready_) );
+    bool * next( future_res.ready_.get() );
 
     BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS1, ~)
 
     #pragma omp task \
-       shared( next, BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~)) \
-       depend( in : BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) ) \
+       firstprivate(future_res, next, BOOST_PP_ENUM_PARAMS(N,r) ) \
+       depend( in : BOOST_PP_ENUM_PARAMS(N,r) ) \
        depend( out : next )
     {
-        *(future_res.res_) = 0;
-        next = true;
+        *(future_res.res_) = 1;
+        *next = true;
     }
 
     return future_res;
@@ -75,7 +74,6 @@ details::openmp_future<int> call\
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS1
-#undef NT2_FUTURE_FORWARD_ARGS2
 #undef N
 
 #endif
