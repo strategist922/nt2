@@ -112,7 +112,7 @@ namespace nt2
                depend(out: next)
             {
                 *(future_res.res_) = f_(BOOST_PP_ENUM_PARAMS(N, a));
-                 *next = true;
+                *next = true;
             }
 
             return future_res;
