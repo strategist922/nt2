@@ -11,6 +11,7 @@
 
 #include <nt2/sdk/meta/is_container.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
+
 #include <vector>
 #include <algorithm>
 
@@ -45,8 +46,11 @@ namespace nt2 { namespace details
                 std::min(futures_in.size(),(begin +size)/grain_in + 1)
             : futures_in.begin() + (begin +size)/grain_in;
 
-             // Call operation
+          // Push back the dependencies
           data.futures_.insert(data.futures_.end(),begin_dep,end_dep);
+
+          // Leave the "calling card" of out
+          in.specifics().calling_cards_.push_back( &(data.specifics_) );
         }
 
         return 0;

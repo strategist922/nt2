@@ -28,7 +28,7 @@ namespace nt2 { namespace details {
 
       // Clear previous futures to avoid premature
       // synchronization
-      // src.futures_.clear();
+      src.futures_.clear();
     }
 
     inline void synchronize()
@@ -38,17 +38,24 @@ namespace nt2 { namespace details {
             futures_[n].get();
         }
         futures_.clear();
+
+        for(std::size_t n=0;n<calling_cards_.size();++n)
+        {
+            calling_cards_[n]->synchronize();
+        }
+        calling_cards_.clear();
     }
 
-    // ~container_has_futures()
-    // {
-    //   if (!futures_.empty()) synchronize();
-    // }
+    ~container_has_futures()
+    {
+      if (!futures_.empty()) synchronize();
+    }
 
     //===========================================
     // vector of Futures
     //===========================================
     std::vector<future> futures_;
+    std::vector< container_has_futures *> calling_cards_;
     std::size_t grain_;
 
   };
