@@ -178,11 +178,11 @@ namespace nt2
 
             template<typename F>
             details::tbb_future<
-              typename boost::result_of<F(result_type)>::type
+              typename boost::result_of<F(tbb_future)>::type
               >
             then(BOOST_FWD_REF(F) f)
             {
-                typedef typename boost::result_of<F(result_type)>::type
+                typedef typename boost::result_of<F(tbb_future)>::type
                   then_result_type;
 
                 typedef typename details::tbb_future<then_result_type>
