@@ -47,6 +47,7 @@ namespace nt2
             {
                 if (NULL == nt2_graph_)
                 {
+                   printf("Create new graph\n");
                    nt2_graph_ = new tbb::flow::graph;
                 }
 
@@ -58,6 +59,7 @@ namespace nt2
             {
                 if (NULL == start_task_)
                 {
+                    printf("Create new start task\n");
                     start_task_ =
                     new tbb::flow::continue_node
                     <tbb::flow::continue_msg>
@@ -73,6 +75,7 @@ namespace nt2
             {
                 if (NULL == task_queue_)
                 {
+                    printf("Create new task queue\n");
                     task_queue_ = new std::vector< \
                     tbb::flow::continue_node< \
                     tbb::flow::continue_msg> * \
@@ -87,18 +90,21 @@ namespace nt2
             {
                 if (NULL != nt2_graph_)
                 {
+                    printf("Kill graph\n");
                     delete nt2_graph_;
                     nt2_graph_ = NULL;
                 }
 
                 if (NULL != start_task_)
                 {
+                    printf("Kill start\n");
                     delete start_task_;
                     start_task_ = NULL;
                 }
 
                 if (NULL != task_queue_)
                 {
+                    printf("Kill task queue\n");
                     for (std::size_t i =0; i<task_queue_->size(); i++)
                     {
                         delete( (*task_queue_)[i] );
@@ -149,7 +155,9 @@ namespace nt2
             template< typename previous_future>
             void attach_previous_future(previous_future const & pfuture)
             {
-                pfuture_ = boost::make_shared<previous_future> (pfuture);
+                pfuture_ = boost::shared_ptr<void>(
+                  new previous_future(pfuture)
+                );
             }
 
 
@@ -165,8 +173,10 @@ namespace nt2
 
             void wait()
             {
+                printf("wait ...\n");
                 getStart()->try_put(tbb::flow::continue_msg());
                 getWork()->wait_for_all();
+                printf("graph completed!\n");
                 kill_graph();
             }
 
@@ -196,7 +206,7 @@ namespace nt2
                   ( *getWork(),
                       details::tbb_task_wrapper1<
                         F,
-                        then_future_type &,
+                        then_future_type const &,
                         tbb_future const &
                         >
                    (boost::forward<F>(f), then_future, *this )

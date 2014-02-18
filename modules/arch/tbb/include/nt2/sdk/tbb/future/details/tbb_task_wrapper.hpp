@@ -68,10 +68,8 @@ namespace nt2
 
             void operator()( tbb::flow::continue_msg ) const
             {
-                *(future_result_.res_) = \
-                  f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
-
-                *(future_result_.ready_) = true;
+                *(future_result_.res_) = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
+                //*(future_result_.ready_) = true;
             }
 
             mutable F f_;

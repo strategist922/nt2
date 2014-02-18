@@ -26,6 +26,8 @@
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 #include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
+#include <cstdio>
+
 namespace nt2
 {
 
@@ -49,24 +51,26 @@ namespace nt2
        tbb::flow::continue_msg> node_type;
 
         template <typename Future>
-        details::tbb_future< std::vector<Future> >
+        details::tbb_future< int >
         call( BOOST_FWD_REF(std::vector<Future>) lazy_values )
         {
            typedef typename details::tbb_future<int> future;
 
            future future_res;
 
-           node_type * c = new node_type( *future_res.getWork(),
+           node_type * c = new node_type( *(future_res.getWork()),
              details::tbb_task_wrapper0<details::empty_functor,future>
                (details::empty_functor(), future_res)
              );
 
+           future_res.getTaskQueue()->push_back(c);
+
            for (std::size_t i=0; i<lazy_values.size(); i++)
            {
              tbb::flow::make_edge(*(lazy_values[i].node_),*c);
-             future_res.attach_task(c);
            }
 
+           future_res.attach_task(c);
            return future_res;
         }
 

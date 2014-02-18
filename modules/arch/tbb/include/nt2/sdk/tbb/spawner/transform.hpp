@@ -15,9 +15,18 @@
 #include <tbb/tbb.h>
 #include <nt2/sdk/tbb/blocked_range.hpp>
 
+#include <nt2/sdk/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
+#include <nt2/sdk/tbb/settings/specific_data.hpp>
+#include <nt2/sdk/shared_memory/details/aggregate_futures.hpp>
 
 #include <nt2/sdk/tbb/future/future.hpp>
+#include <nt2/sdk/tbb/future/when_all.hpp>
+
+#include <nt2/sdk/shared_memory/details/then_worker.hpp>
+#include <nt2/sdk/shared_memory/details/proto_data_with_futures.hpp>
+#include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
+
 #include <cstdio>
 
 #ifndef BOOST_NO_EXCEPTIONS
@@ -63,65 +72,107 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+        void operator()(Worker & w
+                       ,std::size_t begin
+                       ,std::size_t size
+                       ,std::size_t grain_out
+                       )
         {
 
-#ifndef BOOST_NO_EXCEPTIONS
-           boost::exception_ptr exception;
+// #ifndef BOOST_NO_EXCEPTIONS
+//            boost::exception_ptr exception;
 
-           try
-           {
-#endif
-           details::Tbb_Transformer<Worker> tbb_w ( w );
+//            try
+//            {
+// #endif
+//            details::Tbb_Transformer<Worker> tbb_w ( w );
 
-           tbb::parallel_for(
-               nt2::blocked_range<std::size_t>(begin,begin+size,grain),
-               tbb_w);
+//            tbb::parallel_for(
+//                nt2::blocked_range<std::size_t>(begin,begin+size,grain_out),
+//                tbb_w);
 
-#ifndef BOOST_NO_EXCEPTIONS
-           }
-           catch(...)
-           {
-           exception = boost::current_exception();
-           }
-#endif
-            // typedef typename
-            // nt2::make_future< Arch,int >::type future;
+// #ifndef BOOST_NO_EXCEPTIONS
+//            }
+//            catch(...)
+//            {
+//            exception = boost::current_exception();
+//            }
+// #endif
 
-            // std::size_t leftover = size % grain;
-            // std::size_t nblocks  = size/grain;
+            typedef typename tag::tbb_<Site> Arch;
 
-            // std::vector< future > barrier;
-            // barrier.reserve(nblocks);
+             typedef typename
+             nt2::make_future< Arch ,int >::type future;
 
-            // #ifndef BOOST_NO_EXCEPTIONS
-            // boost::exception_ptr exception;
+            std::size_t nblocks  = size/grain_out;
+            std::size_t leftover = size % grain_out;
+            std::size_t grain_in;
 
-            // try
-            // {
-            // #endif
+            details::container_has_futures<Arch> &
+              out_specifics( boost::proto::value(w.out_).specifics() );
 
-            // for(std::size_t n=0;n<nblocks;++n)
-            // {
-            //   std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
+            details::container_has_futures<Arch> tmp;
 
-            //   // Call operation
-            //   barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
-            // }
+            tmp.grain_ = grain_out;
+            tmp.futures_.reserve(nblocks);
 
-            // for(std::size_t n=0;n<nblocks;++n)
-            // {
-            //     // Call operation
-            //     barrier[n].get();
-            // }
+            details::aggregate_futures aggregate_f;
 
-            // #ifndef BOOST_NO_EXCEPTIONS
-            // }
-            // catch(...)
-            // {
-            //     exception = boost::current_exception();
-            // }
-            // #endif
+            #ifndef BOOST_NO_EXCEPTIONS
+            boost::exception_ptr exception;
+
+            try
+            {
+            #endif
+
+
+            for(std::size_t n=0;n<nblocks;++n)
+            {
+                std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
+
+                details::proto_data_with_futures<future
+                  ,details::container_has_futures<Arch>
+                > data_in(n*grain_out,chunk,out_specifics);
+
+                aggregate_f(w.in_,0,data_in);
+
+                if(data_in.futures_.empty())
+                {
+                    printf("Create async ... \n");
+                    // Call operation
+                    tmp.futures_.push_back (
+                      async<Arch>(Worker(w), begin+n*grain_out, chunk)
+                    );
+
+                    printf("async created at %p\n",tmp.futures_.back().ready_.get());
+                }
+
+                else
+                {
+                    // Call operation
+                    tmp.futures_.push_back(
+                      when_all<Arch>(boost::move(data_in.futures_))
+                        .then(details::then_worker<Worker>
+                           (Worker(w),begin+n*grain_out, chunk)
+                         )
+                    );
+
+                    printf("continuation created equal %d\n",*(tmp.futures_.back().ready_));
+
+                }
+            }
+
+            out_specifics.swap(tmp);
+
+            printf("Transform dependencies built!\n");
+
+            #ifndef BOOST_NO_EXCEPTIONS
+            }
+            catch(...)
+            {
+                exception = boost::current_exception();
+            }
+            #endif
         }
     };
 }
