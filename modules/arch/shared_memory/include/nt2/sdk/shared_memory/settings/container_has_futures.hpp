@@ -25,6 +25,7 @@ namespace nt2 { namespace details {
     {
       boost::swap(futures_,src.futures_);
       boost::swap(grain_,src.grain_);
+      boost::swap(calling_cards_,src.calling_cards_);
 
       // Clear previous futures to avoid premature
       // synchronization
@@ -33,17 +34,19 @@ namespace nt2 { namespace details {
 
     inline void synchronize()
     {
-        for(std::size_t n=0;n<futures_.size();++n)
-        {
-            futures_[n].get();
-        }
-        futures_.clear();
-
         for(std::size_t n=0;n<calling_cards_.size();++n)
         {
+            printf("Synchro calling card %lu\n",n);
             calling_cards_[n]->synchronize();
         }
         calling_cards_.clear();
+
+        for(std::size_t n=0;n<futures_.size();++n)
+        {
+            printf("Synchronize %lu\n",n);
+            futures_[n].get();
+        }
+        futures_.clear();
     }
 
     ~container_has_futures()
