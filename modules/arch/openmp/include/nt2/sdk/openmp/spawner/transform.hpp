@@ -10,7 +10,7 @@
 #ifndef NT2_SDK_OPENMP_SPAWNER_TRANSFORM_HPP_INCLUDED
 #define NT2_SDK_OPENMP_SPAWNER_TRANSFORM_HPP_INCLUDED
 
-#if defined(_OPENMP) && _OPENMP >= 200203 /* OpenMP 2.0 */
+#if defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
 
 #include <omp.h>
 #include <nt2/sdk/shared_memory/spawner.hpp>
