@@ -101,8 +101,14 @@ namespace nt2
 
             typedef typename tag::tbb_<Site> Arch;
 
-             typedef typename
+            typedef typename
              nt2::make_future< Arch ,int >::type future;
+
+            typedef typename
+            details::container_has_futures<Arch>::call_it call_it;
+
+            typedef typename
+            std::vector<future>::iterator future_it;
 
             std::size_t nblocks  = size/grain_out;
             std::size_t leftover = size % grain_out;
@@ -126,13 +132,34 @@ namespace nt2
             #endif
 
 
-            for(std::size_t n=0;n<nblocks;++n)
+            for(std::size_t n=0, offset=0; n<nblocks; ++n, offset+=grain_out)
             {
                 std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
                 details::proto_data_with_futures<future
                   ,details::container_has_futures<Arch>
-                > data_in(n*grain_out,chunk,out_specifics);
+                > data_in(offset,chunk,out_specifics);
+
+
+                for(call_it i=out_specifics.calling_cards_.begin();
+                    i!=out_specifics.calling_cards_.end();
+                    ++i)
+                {
+                    printf("dependee found\n");
+
+                    std::size_t grain_in = (*i)->grain_;
+
+                    future_it begin_dep = (*i)->futures_.begin() + offset/grain_in;
+
+                    future_it end_dep   = ( (offset + chunk) % grain_in )
+                    ? (*i)->futures_.begin() +
+                    std::min( (*i)->futures_.size(), (offset + chunk)/grain_in + 1)
+                    : (*i)->futures_.begin() + (offset + chunk)/grain_in;
+
+                    // Push back the dependencies
+                    data_in.futures_.insert(data_in.futures_.end(),begin_dep,end_dep);
+                }
+
 
                 aggregate_f(w.in_,0,data_in);
 
@@ -140,7 +167,7 @@ namespace nt2
                 {
                     // Call operation
                     tmp.futures_.push_back (
-                      async<Arch>(Worker(w), begin+n*grain_out, chunk)
+                      async<Arch>(Worker(w), begin+offset, chunk)
                     );
                 }
 
@@ -148,9 +175,9 @@ namespace nt2
                 {
                     // Call operation
                     tmp.futures_.push_back(
-                      when_all<Arch>(data_in.futures_)
+                      nt2::when_all<Arch>(data_in.futures_)
                         .then(details::then_worker<Worker>
-                           (Worker(w),begin+n*grain_out, chunk)
+                           (Worker(w),begin+offset, chunk)
                          )
                     );
                 }

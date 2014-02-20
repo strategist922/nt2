@@ -50,7 +50,7 @@ namespace nt2 { namespace details
           data.futures_.insert(data.futures_.end(),begin_dep,end_dep);
 
           // Leave the "calling card" of out
-          in.specifics().calling_cards_.push_back( &(data.specifics_) );
+          in.specifics().calling_cards_.insert( &(data.specifics_) );
         }
 
         return 0;

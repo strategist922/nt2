@@ -12,6 +12,7 @@
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <boost/swap.hpp>
 #include <vector>
+#include <set>
 #include <cstdio>
 
 
@@ -21,6 +22,10 @@ namespace nt2 { namespace details {
   struct container_has_futures
   {
     typedef typename nt2::make_future<Arch,int >::type future;
+    typedef typename std::set<
+      container_has_futures *
+    >::iterator call_it;
+
 
     inline void swap(container_has_futures& src)
     {
@@ -35,10 +40,12 @@ namespace nt2 { namespace details {
 
     inline void synchronize()
     {
-        for(std::size_t n=0;n<calling_cards_.size();++n)
+        for(call_it n=calling_cards_.begin();
+            n!=calling_cards_.end();
+            ++n)
         {
-            printf("Synchro calling card %lu\n",n);
-            calling_cards_[n]->synchronize();
+            printf("Synchro calling card\n");
+            (*n)->synchronize();
         }
         calling_cards_.clear();
 
@@ -59,7 +66,7 @@ namespace nt2 { namespace details {
     // vector of Futures
     //===========================================
     std::vector<future> futures_;
-    std::vector< container_has_futures *> calling_cards_;
+    std::set< container_has_futures *> calling_cards_;
     std::size_t grain_;
 
   };
