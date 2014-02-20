@@ -36,7 +36,7 @@ namespace nt2
     template<class Site, class result_type>
     struct make_future<tag::openmp_<Site> , result_type>
     {
-        typedef nt2::details::openmp_future<result_type> type;
+        typedef typename nt2::details::openmp_future<result_type> type;
     };
 
     template< class Site>

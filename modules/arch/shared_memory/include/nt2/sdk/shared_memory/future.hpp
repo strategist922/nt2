@@ -20,6 +20,8 @@
 #include <boost/dispatch/details/parameters.hpp>
 #include <boost/utility/result_of.hpp>
 
+#include <vector>
+
 namespace nt2
 {
     template<class Arch, class result_type>
@@ -27,9 +29,6 @@ namespace nt2
 
     template<class Arch>
     struct async_impl;
-
-    template<class Arch>
-    struct when_all_impl;
 
     template<class Arch>
     struct make_ready_future_impl;
@@ -41,6 +40,25 @@ namespace nt2
        return make_ready_future_impl<Arch>().call(value);
     }
 
+    template<class Arch>
+    struct when_all_impl;
+
+    template<class Arch, class Future>
+    struct when_all_vec_result
+    {
+      typedef typename make_future<Arch,int>::type type;
+    };
+
+    template < typename Arch, typename Future>
+    inline typename when_all_vec_result<Arch,Future>::type
+    when_all( BOOST_FWD_REF(std::vector<Future>) lazy_values )
+    {
+        return when_all_impl<Arch>().call(
+          boost::forward<
+            std::vector<Future>
+          > (lazy_values)
+        );
+    }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
 ( 0, BOOST_DISPATCH_MAX_ARITY, "nt2/sdk/shared_memory/future.hpp")\
@@ -74,7 +92,7 @@ namespace nt2
        )
     {
         return async_impl<Arch>().call(boost::forward<F>(f) \
-                                       BOOST_PP_COMMA_IF(N)\
+                                       BOOST_PP_COMMA_IF(N) \
                                        BOOST_PP_ENUM(N,\
                                        NT2_FUTURE_FORWARD_ARGS2, ~)\
                                       );
@@ -83,9 +101,19 @@ namespace nt2
 #if BOOST_PP_GREATER(N,0)
 
     template< typename Arch,\
-              BOOST_PP_ENUM_PARAMS(N, typename A)\
-              >
-    inline typename make_future< Arch,int>::type
+          BOOST_PP_ENUM_PARAMS(N, typename A)\
+          >
+    struct BOOST_PP_CAT(when_all_result,N)
+    {
+      typedef typename make_future<Arch,int>::type type;
+    };
+
+    template< typename Arch,\
+          BOOST_PP_ENUM_PARAMS(N, typename A)\
+          >
+    inline typename BOOST_PP_CAT(when_all_result,N) < \
+             Arch, BOOST_PP_ENUM_PARAMS(N,A)\
+             >::type
     when_all(BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~))
     {
       return when_all_impl<Arch>().call(BOOST_PP_ENUM_PARAMS(N,a));

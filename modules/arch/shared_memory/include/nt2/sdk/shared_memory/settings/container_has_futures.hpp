@@ -12,6 +12,7 @@
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <boost/swap.hpp>
 #include <vector>
+#include <cstdio>
 
 
 namespace nt2 { namespace details {

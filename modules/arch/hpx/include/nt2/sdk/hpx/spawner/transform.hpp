@@ -97,7 +97,7 @@ namespace nt2
                 {
                     // Call operation
                     tmp.futures_.push_back(
-                      hpx::when_all(boost::move(data_in.futures_))
+                      nt2::when_all<Arch>(boost::move(data_in.futures_))
                         .then(details::then_worker<Worker>
                            (Worker(w),begin+n*grain_out, chunk)
                          )
