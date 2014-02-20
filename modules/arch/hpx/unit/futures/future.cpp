@@ -67,7 +67,8 @@ struct p4
 {
     typedef int result_type;
 
-    int operator()(future dep) const
+    template <typename T>
+    int operator()(T) const
     {
         return 50;
     }
@@ -127,7 +128,7 @@ NT2_TEST_CASE( when_all_future )
   future f2 = nt2::make_ready_future<Arch,int>(24);
   future f3 = nt2::make_ready_future<Arch,int>(48);
 
-  future f4 = nt2::when_all<Arch>(f1,f2,f3);
+  auto f4 = nt2::when_all<Arch>(f1,f2,f3);
   future f5 = f4.then(p4());
   int value1 = f5.get();
 

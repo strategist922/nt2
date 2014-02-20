@@ -73,10 +73,10 @@ namespace nt2
         BOOST_PP_COMMA_IF(N) \
         BOOST_PP_ENUM_PARAMS(N, typename A) >
         inline typename make_future< \
-        tag::hpx_<Site>,\
-        typename boost::result_of< \
-        F(BOOST_PP_ENUM_PARAMS(N, A)) \
-        >::type \
+          tag::hpx_<Site>,\
+          typename boost::result_of< \
+            F(BOOST_PP_ENUM_PARAMS(N, A)) \
+          >::type \
         >::type
         call(BOOST_FWD_REF(F) f \
              BOOST_PP_COMMA_IF(N) \

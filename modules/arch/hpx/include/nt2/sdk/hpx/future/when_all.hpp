@@ -16,53 +16,32 @@
 #include <hpx/lcos/future.hpp>
 #include <hpx/lcos/wait_all.hpp>
 
+#include <boost/move/move.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/enum.hpp>
 #include <boost/preprocessor/iterate.hpp>
 
 #include <nt2/sdk/shared_memory/future.hpp>
-
-#include <vector>
+#include <nt2/sdk/hpx/future/details/when_all_result.hpp>
 
 #include <vector>
 
 namespace nt2
 {
-
-    namespace details
-    {
-        struct empty_body
-        {
-            typedef int result_type;
-
-            template <typename T>
-            int operator()(T) const
-            {
-                return 0;
-            }
-
-        };
-    }
-
     template<class Site>
     struct when_all_impl< tag::hpx_<Site> >
     {
 
         template <typename Future>
-        inline hpx::lcos::shared_future<int >
-        call( std::vector<Future> & lazy_values )
+        inline typename when_all_vec_result< \
+          tag::hpx_<Site>, Future \
+          >::type
+        call( BOOST_FWD_REF(std::vector<Future>) lazy_values )
         {
-            return hpx::when_all(lazy_values)
-            .then(details::empty_body());
-        }
-
-        template <typename Iterator>
-        inline hpx::lcos::shared_future<int>
-        call( BOOST_FWD_REF(Iterator) begin, BOOST_FWD_REF(Iterator) end )
-        {
-            return hpx::when_all( boost::forward<Iterator>(begin),\
-                                 boost::forward<Iterator>(end)\
-                                 ).then(details::empty_body());
+          return hpx::when_all(boost::forward<
+            std::vector<Future>
+            > ( lazy_values )
+          );
         }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3, \
@@ -81,17 +60,20 @@ namespace nt2
 
 #define N BOOST_PP_ITERATION()
 
-#define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) hpx::lcos::shared_future<A##n> & a##n
+#define HPX_WAIT_ALL_FUTURE_ARG(z, n, t) BOOST_FWD_REF(A##n) a##n
+#define HPX_WAIT_ALL_FUTURE_ARG1(z, n, t) boost::forward<A##n>(a##n)
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
-        inline hpx::lcos::shared_future<int>
+        inline typename BOOST_PP_CAT(when_all_result,N) < \
+          tag::hpx_<Site>, BOOST_PP_ENUM_PARAMS(N,A) \
+          >::type
         call( BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG, ~))
         {
-            return hpx::when_all(BOOST_PP_ENUM_PARAMS(N,a)
-                                ).then(details::empty_body());
+            return hpx::when_all(BOOST_PP_ENUM(N, HPX_WAIT_ALL_FUTURE_ARG1, ~));
         }
 
 #undef HPX_WAIT_ALL_FUTURE_ARG
+#undef HPX_WAIT_ALL_FUTURE_ARG1
 #undef N
 
 #endif

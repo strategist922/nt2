@@ -16,6 +16,7 @@
 #include <tbb/tbb.h>
 #include <tbb/flow_graph.h>
 
+#include <boost/move/move.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -52,7 +53,7 @@ namespace nt2
 
         template <typename Future>
         details::tbb_future< int >
-        call( std::vector<Future> const & lazy_values )
+        call( std::vector<Future> & lazy_values )
         {
            typedef typename details::tbb_future<int> future;
 
