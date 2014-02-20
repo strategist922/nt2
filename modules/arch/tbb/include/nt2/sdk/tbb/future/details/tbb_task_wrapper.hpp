@@ -58,28 +58,24 @@ namespace nt2
         {
             BOOST_PP_CAT(tbb_task_wrapper,N) \
               ( BOOST_FWD_REF(F) f, \
-                future_type const & future_result\
+                BOOST_FWD_REF(future_type) future_result\
                 BOOST_PP_COMMA_IF(N) \
                 BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~))
-            : f_(boost::forward<F>(f)),future_result_(future_result) \
+            : f_(boost::forward<F>(f))
+            , future_result_(boost::forward<future_type>(future_result)) \
               BOOST_PP_COMMA_IF(N) \
               BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS3, ~)
             {}
 
-            void operator()( tbb::flow::continue_msg ) const
+            void operator()(const tbb::flow::continue_msg )
             {
                 *(future_result_.res_) = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
-                //*(future_result_.ready_) = true;
+                *(future_result_.ready_) = true;
             }
 
-            mutable F f_;
+            F f_;
             future_type future_result_;
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
-
-            private:
-
-            BOOST_PP_CAT(tbb_task_wrapper,N) & \
-            operator=(BOOST_PP_CAT(tbb_task_wrapper,N) const&);
         };
 
 #undef NT2_FUTURE_FORWARD_ARGS

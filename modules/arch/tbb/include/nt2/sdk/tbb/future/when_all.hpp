@@ -52,7 +52,7 @@ namespace nt2
 
         template <typename Future>
         details::tbb_future< int >
-        call( BOOST_FWD_REF(std::vector<Future>) lazy_values )
+        call( std::vector<Future> const & lazy_values )
         {
            typedef typename details::tbb_future<int> future;
 
@@ -67,6 +67,7 @@ namespace nt2
 
            for (std::size_t i=0; i<lazy_values.size(); i++)
            {
+             future_res.attach_previous_future(lazy_values[i]);
              tbb::flow::make_edge(*(lazy_values[i].node_),*c);
            }
 
@@ -94,6 +95,7 @@ namespace nt2
 
 #define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::tbb_future<A##n> const & a##n
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) tbb::flow::make_edge(*(POINT(a##n,node_)),*c);
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) future_res.attach_previous_future( a##n );
 
         template< BOOST_PP_ENUM_PARAMS(N, typename A) >
         details::tbb_future<int>
@@ -111,6 +113,7 @@ namespace nt2
             future_res.getTaskQueue()->push_back(c);
 
             BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS1, ~)
+            BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS2, ~)
 
             future_res.attach_task(c);
 
@@ -119,6 +122,7 @@ namespace nt2
 
 #undef NT2_FUTURE_FORWARD_ARGS
 #undef NT2_FUTURE_FORWARD_ARGS1
+#undef NT2_FUTURE_FORWARD_ARGS2
 #undef N
 
 #endif

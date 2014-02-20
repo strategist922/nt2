@@ -138,27 +138,21 @@ namespace nt2
 
                 if(data_in.futures_.empty())
                 {
-                    printf("Create async ... \n");
                     // Call operation
                     tmp.futures_.push_back (
                       async<Arch>(Worker(w), begin+n*grain_out, chunk)
                     );
-
-                    printf("async created at %p\n",tmp.futures_.back().ready_.get());
                 }
 
                 else
                 {
                     // Call operation
                     tmp.futures_.push_back(
-                      when_all<Arch>(boost::move(data_in.futures_))
+                      when_all<Arch>(data_in.futures_)
                         .then(details::then_worker<Worker>
                            (Worker(w),begin+n*grain_out, chunk)
                          )
                     );
-
-                    printf("continuation created equal %d\n",*(tmp.futures_.back().ready_));
-
                 }
             }
 
