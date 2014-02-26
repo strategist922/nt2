@@ -132,7 +132,7 @@ namespace nt2
             #endif
 
 
-            for(std::size_t n=0, offset=0; n<nblocks; ++n, offset+=grain_out)
+            for(std::size_t n=0, offset=begin; n<nblocks; ++n, offset+=grain_out)
             {
                 std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
@@ -167,7 +167,7 @@ namespace nt2
                 {
                     // Call operation
                     tmp.futures_.push_back (
-                      async<Arch>(Worker(w), begin+offset, chunk)
+                      async<Arch>(Worker(w), offset, chunk)
                     );
                 }
 
@@ -177,7 +177,7 @@ namespace nt2
                     tmp.futures_.push_back(
                       nt2::when_all<Arch>(data_in.futures_)
                         .then(details::then_worker<Worker>
-                           (Worker(w),begin+offset, chunk)
+                           (Worker(w), offset, chunk)
                          )
                     );
                 }
