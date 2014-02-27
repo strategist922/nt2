@@ -63,8 +63,10 @@ namespace nt2
             std::size_t leftover = size % grain_out;
             std::size_t grain_in;
 
-            details::container_has_futures<Arch> &
-              out_specifics( boost::proto::value(w.out_).specifics() );
+
+            details::container_has_futures<Arch> * pout_specifics;
+            details::fold_futures< details::get_specifics >()(w.out_, 0, pout_specifics);
+            details::container_has_futures<Arch> & out_specifics = *pout_specifics;
 
             details::container_has_futures<Arch> tmp;
 
@@ -93,8 +95,6 @@ namespace nt2
                     i!=out_specifics.calling_cards_.end();
                     ++i)
                 {
-                    printf("dependee found\n");
-
                     std::size_t grain_in = (*i)->grain_;
 
                     future_it begin_dep = (*i)->futures_.begin() + offset/grain_in;
@@ -141,44 +141,42 @@ namespace nt2
             #endif
 
 
-     //      typedef typename
-     //      nt2::make_future< Arch,int >::type future;
+          // typedef typename
+          // nt2::make_future< Arch,int >::type future;
 
-     //      std::size_t leftover = size % grain_out;
-     //      std::size_t nblocks  = size/grain_out;
+          // std::size_t leftover = size % grain_out;
+          // std::size_t nblocks  = size/grain_out;
 
-     //      std::vector< future > barrier;
-     //      barrier.reserve(nblocks);
+          // std::vector< future > barrier;
+          // barrier.reserve(nblocks);
 
-     //      #ifndef BOOST_NO_EXCEPTIONS
-     //      boost::exception_ptr exception;
+          // #ifndef BOOST_NO_EXCEPTIONS
+          // boost::exception_ptr exception;
 
-     //      try
-     //      {
-     //      #endif
+          // try
+          // {
+          // #endif
 
-     //      for(std::size_t n=0;n<nblocks;++n)
-     //      {
-     //        std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
-     //        // Call operation
-     //        barrier.push_back ( async<Arch>(w, begin+n*grain_out, chunk) );
-     //      }
+          // for(std::size_t n=0;n<nblocks;++n)
+          // {
+          //   std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
+          //   // Call operation
+          //   barrier.push_back ( async<Arch>(w, begin+n*grain_out, chunk) );
+          // }
 
-     //      for(std::size_t n=0;n<nblocks;++n)
-     //      {
-     //          // Call operation
-     //          barrier[n].get();
-     //      }
+          // for(std::size_t n=0;n<nblocks;++n)
+          // {
+          //     // Call operation
+          //     barrier[n].get();
+          // }
 
-     //      // hpx::wait_all(barrier);
-
-     //      #ifndef BOOST_NO_EXCEPTIONS
-     //      }
-     //      catch(...)
-     //      {
-     //          exception = boost::current_exception();
-     //      }
-     //      #endif
+          // #ifndef BOOST_NO_EXCEPTIONS
+          // }
+          // catch(...)
+          // {
+          //     exception = boost::current_exception();
+          // }
+          // #endif
 
         }
     };

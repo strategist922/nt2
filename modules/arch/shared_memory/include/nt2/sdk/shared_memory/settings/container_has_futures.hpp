@@ -44,14 +44,12 @@ namespace nt2 { namespace details {
             n!=calling_cards_.end();
             ++n)
         {
-            printf("Synchro calling card\n");
             (*n)->synchronize();
         }
         calling_cards_.clear();
 
         for(std::size_t n=0;n<futures_.size();++n)
         {
-            printf("Synchronize %lu\n",n);
             futures_[n].get();
         }
         futures_.clear();

@@ -58,7 +58,8 @@ namespace nt2 { namespace details
 
     };
 
-    struct aggregate_futures
+    template<class F>
+    struct fold_futures
     :boost::proto::or_<
       // If the expression is a non-container terminal
       // Do nothing
@@ -74,7 +75,7 @@ namespace nt2 { namespace details
        ,boost::proto::_state
       >
       // Else if the expression is a container terminal
-      // call display_success
+      // call F
      ,boost::proto::when<
         boost::proto::and_<
           boost::proto::terminal< boost::proto::_ >
@@ -82,18 +83,32 @@ namespace nt2 { namespace details
             meta::is_container_or_ref< boost::proto::_value>()
          >
         >
-      ,process_node(boost::proto::_value,boost::proto::_data)
+      ,F(boost::proto::_value,boost::proto::_data)
       >
-     // Else recall aggregate_futures for every child
+     // Else recall fold_futures for every child
      ,boost::proto::otherwise<
         boost::proto::fold<
           boost::proto::_
          ,boost::proto::_state
-         ,aggregate_futures
+         ,fold_futures<F>
         >
       >
     >
     {};
+
+    typedef fold_futures<process_node> aggregate_futures;
+
+    struct get_specifics : boost::proto::callable
+    {
+      typedef int result_type;
+
+      template <class Container,class ProtoData>
+      inline int operator()(Container & in, ProtoData & data) const
+      {
+        data = &in.specifics();
+        return 0;
+      }
+    };
 
 } }
 
