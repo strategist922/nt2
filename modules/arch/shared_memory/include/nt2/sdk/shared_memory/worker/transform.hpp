@@ -35,7 +35,6 @@ namespace nt2
 
       int operator()(std::size_t begin, std::size_t size)
       {
-          printf("beginworker: %lu grainworker: %lu\n",begin,size);
           work(out_,in_,std::make_pair(begin,size));
           return 0;
       };
