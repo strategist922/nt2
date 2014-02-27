@@ -20,6 +20,7 @@
 #include <nt2/sdk/meta/container_traits.hpp>
 #include <nt2/sdk/meta/settings_of.hpp>
 #include <nt2/sdk/meta/is_scalar.hpp>
+#include <nt2/sdk/meta/is_container.hpp>
 #include <nt2/core/functions/function.hpp>
 #include <nt2/core/functions/extent.hpp>
 #include <nt2/memory/functions/assign.hpp>
@@ -217,6 +218,7 @@ namespace nt2 { namespace container
     >::type                                                           \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(n,A, const& a) ) const    \
     {                                                                 \
+      if(meta::is_container_or_ref<nt2_expression>())                 \
       synchronize();                                                  \
       return nt2::function(*this, BOOST_PP_ENUM(n,M2,n) );            \
     }                                                                 \
@@ -227,6 +229,7 @@ namespace nt2 { namespace container
     >::type                                                           \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(n,A, const& a) )          \
     {                                                                 \
+      if(meta::is_container_or_ref<nt2_expression>())                 \
       synchronize();                                                  \
       return nt2::function(*this, BOOST_PP_ENUM(n,M2,n) );            \
     }                                                                 \
