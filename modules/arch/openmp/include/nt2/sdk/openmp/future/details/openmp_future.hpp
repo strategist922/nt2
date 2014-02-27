@@ -86,7 +86,6 @@ namespace nt2
             depend(out: next)
            {
                *(then_future.res_) = f_(current_future);
-               printf("write true\n");
                *next = true;
            }
 
