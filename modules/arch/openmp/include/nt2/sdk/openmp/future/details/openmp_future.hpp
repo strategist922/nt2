@@ -39,7 +39,9 @@ namespace nt2
        template<typename previous_future>
        void attach_previous_future(previous_future const & pfuture)
        {
-           pfuture_ = boost::make_shared<previous_future> (pfuture);
+           pfuture_ = boost::shared_ptr<previous_future>(
+                   new previous_future(pfuture)
+                  );
        }
 
        bool is_ready() const
@@ -84,6 +86,7 @@ namespace nt2
             depend(out: next)
            {
                *(then_future.res_) = f_(current_future);
+               printf("write true\n");
                *next = true;
            }
 
