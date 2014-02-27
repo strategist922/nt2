@@ -47,7 +47,6 @@ namespace nt2
             {
                 if (NULL == nt2_graph_)
                 {
-                   printf("Create new graph\n");
                    nt2_graph_ = new tbb::flow::graph;
                 }
                 return nt2_graph_;
@@ -171,7 +170,6 @@ namespace nt2
             {
                 getStart()->try_put(tbb::flow::continue_msg());
                 getWork()->wait_for_all();
-                printf("graph completed!\n");
                 kill_graph();
             }
 
