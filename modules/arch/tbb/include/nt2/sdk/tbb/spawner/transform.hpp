@@ -79,121 +79,117 @@ namespace nt2
                        )
         {
 
-// #ifndef BOOST_NO_EXCEPTIONS
-//            boost::exception_ptr exception;
+#ifndef BOOST_NO_EXCEPTIONS
+           boost::exception_ptr exception;
 
-//            try
-//            {
-// #endif
-//            details::Tbb_Transformer<Worker> tbb_w ( w );
+           try
+           {
+#endif
+           details::Tbb_Transformer<Worker> tbb_w ( w );
 
-//            tbb::parallel_for(
-//                nt2::blocked_range<std::size_t>(begin,begin+size,grain_out),
-//                tbb_w);
+           tbb::parallel_for(
+               nt2::blocked_range<std::size_t>(begin,begin+size,grain_out),
+               tbb_w);
 
-// #ifndef BOOST_NO_EXCEPTIONS
-//            }
-//            catch(...)
-//            {
-//            exception = boost::current_exception();
-//            }
-// #endif
+#ifndef BOOST_NO_EXCEPTIONS
+           }
+           catch(...)
+           {
+           exception = boost::current_exception();
+           }
+#endif
 
-            typedef typename tag::tbb_<Site> Arch;
+            // typedef typename tag::tbb_<Site> Arch;
 
-            typedef typename
-             nt2::make_future< Arch ,int >::type future;
+            // typedef typename
+            //  nt2::make_future< Arch ,int >::type future;
 
-            typedef typename
-            details::container_has_futures<Arch>::call_it call_it;
+            // typedef typename
+            // details::container_has_futures<Arch>::call_it call_it;
 
-            typedef typename
-            std::vector<future>::iterator future_it;
+            // typedef typename
+            // std::vector<future>::iterator future_it;
 
-            std::size_t nblocks  = size/grain_out;
-            std::size_t leftover = size % grain_out;
-            std::size_t grain_in;
+            // std::size_t nblocks  = size/grain_out;
+            // std::size_t leftover = size % grain_out;
+            // std::size_t grain_in;
 
-            details::container_has_futures<Arch> &
-              out_specifics( boost::proto::value(w.out_).specifics() );
+            // details::container_has_futures<Arch> &
+            //   out_specifics( boost::proto::value(w.out_).specifics() );
 
-            details::container_has_futures<Arch> tmp;
+            // details::container_has_futures<Arch> tmp;
 
-            tmp.grain_ = grain_out;
-            tmp.futures_.reserve(nblocks);
+            // tmp.grain_ = grain_out;
+            // tmp.futures_.reserve(nblocks);
 
-            details::aggregate_futures aggregate_f;
+            // details::aggregate_futures aggregate_f;
 
-            #ifndef BOOST_NO_EXCEPTIONS
-            boost::exception_ptr exception;
+            // #ifndef BOOST_NO_EXCEPTIONS
+            // boost::exception_ptr exception;
 
-            try
-            {
-            #endif
-
-
-            for(std::size_t n=0, offset=begin; n<nblocks; ++n, offset+=grain_out)
-            {
-                std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
-
-                details::proto_data_with_futures<future
-                  ,details::container_has_futures<Arch>
-                > data_in(offset,chunk,out_specifics);
+            // try
+            // {
+            // #endif
 
 
-                for(call_it i=out_specifics.calling_cards_.begin();
-                    i!=out_specifics.calling_cards_.end();
-                    ++i)
-                {
-                    printf("dependee found\n");
+            // for(std::size_t n=0, offset=begin; n<nblocks; ++n, offset+=grain_out)
+            // {
+            //     std::size_t chunk = (n<nblocks-1) ? grain_out : grain_out+leftover;
 
-                    std::size_t grain_in = (*i)->grain_;
-
-                    future_it begin_dep = (*i)->futures_.begin() + offset/grain_in;
-
-                    future_it end_dep   = ( (offset + chunk) % grain_in )
-                    ? (*i)->futures_.begin() +
-                    std::min( (*i)->futures_.size(), (offset + chunk)/grain_in + 1)
-                    : (*i)->futures_.begin() + (offset + chunk)/grain_in;
-
-                    // Push back the dependencies
-                    data_in.futures_.insert(data_in.futures_.end(),begin_dep,end_dep);
-                }
+            //     details::proto_data_with_futures<future
+            //       ,details::container_has_futures<Arch>
+            //     > data_in(offset,chunk,out_specifics);
 
 
-                aggregate_f(w.in_,0,data_in);
+            //     for(call_it i=out_specifics.calling_cards_.begin();
+            //         i!=out_specifics.calling_cards_.end();
+            //         ++i)
+            //     {
+            //         std::size_t grain_in = (*i)->grain_;
 
-                if(data_in.futures_.empty())
-                {
-                    // Call operation
-                    tmp.futures_.push_back (
-                      async<Arch>(Worker(w), offset, chunk)
-                    );
-                }
+            //         future_it begin_dep = (*i)->futures_.begin() + offset/grain_in;
 
-                else
-                {
-                    // Call operation
-                    tmp.futures_.push_back(
-                      nt2::when_all<Arch>(data_in.futures_)
-                        .then(details::then_worker<Worker>
-                           (Worker(w), offset, chunk)
-                         )
-                    );
-                }
-            }
+            //         future_it end_dep   = ( (offset + chunk) % grain_in )
+            //         ? (*i)->futures_.begin() +
+            //         std::min( (*i)->futures_.size(), (offset + chunk)/grain_in + 1)
+            //         : (*i)->futures_.begin() + (offset + chunk)/grain_in;
 
-            out_specifics.swap(tmp);
+            //         // Push back the dependencies
+            //         data_in.futures_.insert(data_in.futures_.end(),begin_dep,end_dep);
+            //     }
 
-            printf("Transform dependencies built!\n");
 
-            #ifndef BOOST_NO_EXCEPTIONS
-            }
-            catch(...)
-            {
-                exception = boost::current_exception();
-            }
-            #endif
+            //     aggregate_f(w.in_,0,data_in);
+
+            //     if(data_in.futures_.empty())
+            //     {
+            //         // Call operation
+            //         tmp.futures_.push_back (
+            //           async<Arch>(Worker(w), offset, chunk)
+            //         );
+            //     }
+
+            //     else
+            //     {
+            //         // Call operation
+            //         tmp.futures_.push_back(
+            //           nt2::when_all<Arch>(data_in.futures_)
+            //             .then(details::then_worker<Worker>
+            //                (Worker(w), offset, chunk)
+            //              )
+            //         );
+            //     }
+            // }
+
+            // out_specifics.swap(tmp);
+
+            // #ifndef BOOST_NO_EXCEPTIONS
+            // }
+            // catch(...)
+            // {
+            //     exception = boost::current_exception();
+            // }
+            // #endif
         }
     };
 }
