@@ -45,8 +45,7 @@ namespace nt2 { namespace ext
       nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
       nt2::spawner<tag::transform_, BackEnd > s;
 
-      if(sz > 8*grain) s(w,it,sz,grain);
-      else  w(it,sz);
+      s(w,it,sz,grain);
     }
   };
 

@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_SHARED_MEMORY_DETAILS_AGGREGATE_FUTURES_HPP_INCLUDED
-#define NT2_SDK_SHARED_MEMORY_DETAILS_AGGREGATE_FUTURES_HPP_INCLUDED
+#ifndef NT2_SDK_SHARED_MEMORY_DETAILS_AGGREGATE_NODES_HPP_INCLUDED
+#define NT2_SDK_SHARED_MEMORY_DETAILS_AGGREGATE_NODES_HPP_INCLUDED
 
 #include <nt2/sdk/meta/is_container.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
@@ -21,7 +21,7 @@
 namespace nt2 { namespace details
 {
 
-    struct process_node : boost::proto::callable
+    struct get_futures : boost::proto::callable
     {
       typedef int result_type;
 
@@ -58,8 +58,20 @@ namespace nt2 { namespace details
 
     };
 
+    struct get_specifics : boost::proto::callable
+    {
+        typedef int result_type;
+
+        template <class Container,class ProtoData>
+        inline int operator()(Container & in, ProtoData & data) const
+        {
+            data = &in.specifics();
+            return 0;
+        }
+    };
+
     template<class F>
-    struct fold_futures
+    struct aggregate_nodes
     :boost::proto::or_<
       // If the expression is a non-container terminal
       // Do nothing
@@ -90,25 +102,14 @@ namespace nt2 { namespace details
         boost::proto::fold<
           boost::proto::_
          ,boost::proto::_state
-         ,fold_futures<F>
+         ,aggregate_nodes<F>
         >
       >
     >
     {};
 
-    typedef fold_futures<process_node> aggregate_futures;
-
-    struct get_specifics : boost::proto::callable
-    {
-      typedef int result_type;
-
-      template <class Container,class ProtoData>
-      inline int operator()(Container & in, ProtoData & data) const
-      {
-        data = &in.specifics();
-        return 0;
-      }
-    };
+    typedef aggregate_nodes<get_futures> aggregate_futures;
+    typedef aggregate_nodes<get_specifics> aggregate_specifics;
 
 } }
 
