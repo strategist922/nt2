@@ -18,15 +18,9 @@ else()
     set(TBB_INCLUDE_PATH "${TBB_ROOT}/include/")
     set(TBB_CXX_FLAGS "-DNT2_USE_TBB")
     set(TBB_FOUND 1)
-    set(TBB_LIBRARY optimized tbb tbbmalloc_proxy tbbmalloc
-        debug tbb_debug tbbmalloc_proxy_debug tbbmalloc_debug)
-    if(DEFINED NT2_ARCH_X86_64)
-      set(TBB_LIBRARY_PATH "${TBB_ROOT}/lib/intel64/${TBB_ARCH}")
-    elseif(DEFINED NT2_ARCH_X86)
-      set(TBB_LIBRARY_PATH "${TBB_ROOT}/lib/ia32/${TBB_ARCH}")
-    else()
-      set(TBB_FOUND 0)
-    endif()
+    set(TBB_LIBRARY optimized tbb tbbmalloc
+        debug tbb_debug tbbmalloc_debug)
+    set(TBB_LIBRARY_PATH "${TBB_ROOT}/lib")
   else()
     set(TBB_ROOT /usr)
     find_path(TBB_LIBRARY_PATH NAMES "libtbb.so"

@@ -218,7 +218,6 @@ namespace nt2 { namespace container
     >::type                                                           \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(n,A, const& a) ) const    \
     {                                                                 \
-      if(meta::is_container_or_ref<nt2_expression>())                 \
       synchronize();                                                  \
       return nt2::function(*this, BOOST_PP_ENUM(n,M2,n) );            \
     }                                                                 \
@@ -229,7 +228,6 @@ namespace nt2 { namespace container
     >::type                                                           \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(n,A, const& a) )          \
     {                                                                 \
-      if(meta::is_container_or_ref<nt2_expression>())                 \
       synchronize();                                                  \
       return nt2::function(*this, BOOST_PP_ENUM(n,M2,n) );            \
     }                                                                 \
