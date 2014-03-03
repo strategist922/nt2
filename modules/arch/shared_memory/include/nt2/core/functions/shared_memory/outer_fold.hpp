@@ -45,9 +45,7 @@ namespace nt2 { namespace ext
       w(out, in, neutral, bop, uop);
 
       nt2::spawner< tag::transform_,BackEnd > s;
-
-      if( obound > grain ) s(w,0,obound,grain);
-      else w(0,obound);
+      s(w,0,obound,grain);
     }
 
     private:

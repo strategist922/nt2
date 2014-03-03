@@ -69,6 +69,7 @@ namespace nt2
 
             void operator()(const tbb::flow::continue_msg )
             {
+                tbb::mutex::scoped_lock lock(future_result_.mutex_);
                 *(future_result_.res_) = f_( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~));
                 *(future_result_.ready_) = true;
             }
