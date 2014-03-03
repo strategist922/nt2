@@ -161,8 +161,9 @@ namespace nt2
                 node_ = node;
             }
 
-            bool is_ready() const
+            bool is_ready()
             {
+                tbb::mutex::scoped_lock lock(mutex_);
                 return *ready_;
             }
 
@@ -222,6 +223,7 @@ namespace nt2
             boost::shared_ptr<result_type> res_;
             std::vector< boost::shared_ptr<void> > pfutures_;
             boost::shared_ptr<bool> ready_;
+            tbb::mutex mutex_;
         };
     }
 }

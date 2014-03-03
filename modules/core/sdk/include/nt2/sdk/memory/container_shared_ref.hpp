@@ -217,7 +217,10 @@ namespace nt2 { namespace memory
      * @return A reference to the specific data of the container.
      **/
     //==========================================================================
-    specific_data_type&  specifics() const { BOOST_ASSERT_MSG(0, "unimplemented"); }
+    specific_data_type&  specifics() const {
+                                             // BOOST_ASSERT_MSG(0, "unimplemented");
+                                             return base_->specifics();
+                                           }
 
     //==========================================================================
     // Check if a position is safely R/W in the current container
