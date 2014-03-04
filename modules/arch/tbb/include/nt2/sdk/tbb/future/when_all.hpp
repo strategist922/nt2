@@ -23,7 +23,8 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/dispatch/details/parameters.hpp>
 
-#include <nt2/sdk/tbb/future/future.hpp>
+#include <nt2/sdk/shared_memory/future.hpp>
+
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 #include <nt2/sdk/tbb/future/details/empty_body.hpp>
 

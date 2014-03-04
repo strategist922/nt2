@@ -21,6 +21,7 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 
+#include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/openmp/future/details/openmp_future.hpp>
 
 #include <vector>
