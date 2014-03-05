@@ -17,6 +17,8 @@
 
 #if defined(NT2_USE_HPX)
 #include <hpx/hpx_init.hpp>
+#elif defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
+#include <omp.h>
 #endif
 
 #if defined(DNT2_USE_MAGMA)
@@ -106,6 +108,7 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
 #endif
 
 #if defined(NT2_USE_HPX)
+
   // std::vector<std::string> cfg;
   // cfg.push_back("hpx.parcel.port=0");
 
@@ -117,9 +120,23 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
 
   return hpx::init(argc, argv);
 
+#elif defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
+
+  int res;
+
+  #pragma omp parallel
+  #pragma omp single
+  {
+    std::cout<<"Welcome to OpenMP!"<<std::endl;
+    res = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
+  }
+
+  return res;
 
 #else
+
   return nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
+
 #endif
 }
 

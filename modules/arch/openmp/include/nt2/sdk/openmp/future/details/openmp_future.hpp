@@ -39,9 +39,11 @@ namespace nt2
        template<typename previous_future>
        void attach_previous_future(previous_future const & pfuture)
        {
-           pfuture_ = boost::shared_ptr<previous_future>(
-                   new previous_future(pfuture)
-                  );
+          pfutures_.push_back(
+            boost::shared_ptr<previous_future>(
+             new previous_future(pfuture)
+            )
+          );
        }
 
        bool is_ready() const
@@ -92,7 +94,7 @@ namespace nt2
            return then_future;
        }
 
-       boost::shared_ptr<void> pfuture_;
+       std::vector< boost::shared_ptr<void> > pfutures_;
        boost::shared_ptr<result_type> res_;
        boost::shared_ptr<bool> ready_;
 

@@ -23,7 +23,7 @@ namespace nt2
   struct specific_data< tag::openmp_<Site>,T>
   {
     typedef typename
-    details::container_has_futures< Arch > type;
+    details::container_has_futures< tag::openmp_<Site> > type;
   };
 }
 
