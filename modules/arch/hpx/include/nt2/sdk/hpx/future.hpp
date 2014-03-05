@@ -11,5 +11,6 @@
 #define NT2_SDK_HPX_FUTURE_HPP_INCLUDED
 
 #include <nt2/sdk/hpx/future/future.hpp>
+#include <nt2/sdk/hpx/future/when_all.hpp>
 
 #endif

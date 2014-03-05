@@ -11,5 +11,6 @@
 #define NT2_SDK_TBB_FUTURE_HPP_INCLUDED
 
 #include <nt2/sdk/tbb/future/future.hpp>
+#include <nt2/sdk/tbb/future/when_all.hpp>
 
 #endif

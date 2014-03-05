@@ -10,7 +10,7 @@
 #ifndef NT2_SDK_OPENMP_SPAWNER_TRANSFORM_HPP_INCLUDED
 #define NT2_SDK_OPENMP_SPAWNER_TRANSFORM_HPP_INCLUDED
 
-#if defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
+#if defined(_OPENMP) && _OPENMP >= 200203 /* OpenMP 2.0 */
 
 #include <omp.h>
 #include <nt2/sdk/shared_memory/spawner.hpp>
@@ -40,77 +40,39 @@ namespace nt2
     void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
     {
 
-      typedef typename tag::openmp_<Site> Arch;
-
-// #ifndef BOOST_NO_EXCEPTIONS
-//       boost::exception_ptr exception;
-// #endif
-//      std::size_t leftover = size % grain;
-//      std::size_t nblocks  = size/grain;
-//      #pragma omp parallel
-//      {
-//        // Dispatch group of blocks over each threads
-//        #pragma omp for schedule(static)
-//        for(std::size_t n=0;n<nblocks;++n)
-//        {
-// #ifndef BOOST_NO_EXCEPTIONS
-//          try
-//          {
-// #endif
-//            std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
-//            // Call operation
-//            w(begin+n*grain,chunk);
-// #ifndef BOOST_NO_EXCEPTIONS
-//          }
-//          catch(...)
-//          {
-//            #pragma omp critical
-//            exception = boost::current_exception();
-//          }
-// #endif
-//        }
-//     }
-
-        typedef typename
-        nt2::make_future< Arch,int >::type future;
-
-        std::size_t nblocks  = size/grain;
-        std::size_t ibound   = nblocks * grain;
-        std::size_t leftover = size % grain;
-
 #ifndef BOOST_NO_EXCEPTIONS
-        boost::exception_ptr exception;
-
-        try
-        {
+       boost::exception_ptr exception;
 #endif
-            #pragma omp parallel
-            #pragma omp single
-            {
-                std::vector< future > barrier;
-                barrier.reserve(nblocks+1);
+       std::size_t condition = size/grain;
+       std::size_t leftover = size % grain;
 
-                for(std::size_t n=0;n<nblocks;++n)
-                {
-                    std::size_t chunk = (n<nblocks-1) ? grain : grain+leftover;
-                    // Call operation
-                    barrier.push_back ( async<Arch>(w, begin+n*grain, chunk) );
-                }
+       std::size_t nblocks  = condition ? condition : 1;
+       std::size_t last_chunk = condition ? grain+leftover : size;
 
-                for(std::size_t n=0;n<nblocks;++n)
-                {
-                    // Call operation
-                    barrier[n].get();
-                }
-            }
-
+       #pragma omp parallel
+       {
+       // Dispatch group of blocks over each threads
+          #pragma omp for schedule(static)
+          for(std::size_t n=0;n<nblocks;++n)
+          {
 #ifndef BOOST_NO_EXCEPTIONS
-        }
-        catch(...)
-        {
-            exception = boost::current_exception();
-        }
+             try
+             {
 #endif
+               std::size_t chunk = (n<nblocks-1) ? grain : last_chunk;
+               // Call operation
+               w(begin+n*grain,chunk);
+#ifndef BOOST_NO_EXCEPTIONS
+             }
+
+             catch(...)
+             {
+               #pragma omp critical
+               exception = boost::current_exception();
+             }
+#endif
+           }
+        }
       }
    };
 }

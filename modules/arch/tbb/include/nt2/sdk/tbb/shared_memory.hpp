@@ -26,6 +26,7 @@ BOOST_DISPATCH_COMBINE_SITE( nt2::tag::tbb_<tag::cpu_> )
 
 #include <nt2/sdk/tbb/spawner.hpp>
 #include <nt2/sdk/tbb/future.hpp>
+#include <nt2/sdk/tbb/settings/specific_data.hpp>
 
 #endif
 #endif

@@ -59,7 +59,6 @@ namespace nt2
             result_type my_out = (*this)(w, begin, middle-begin, grain);
 
             return w.bop_( my_out, other_out.get() );
-
          }
       };
 }
