@@ -26,6 +26,7 @@ BOOST_DISPATCH_COMBINE_SITE( nt2::tag::openmp_<tag::cpu_> )
 
 #include <nt2/sdk/openmp/spawner.hpp>
 #include <nt2/sdk/openmp/future.hpp>
+#include <nt2/sdk/openmp/settings/specific_data.hpp>
 
 #endif
 #endif

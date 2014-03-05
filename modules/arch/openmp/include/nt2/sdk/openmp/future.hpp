@@ -11,5 +11,6 @@
 #define NT2_SDK_OPENMP_FUTURE_HPP_INCLUDED
 
 #include <nt2/sdk/openmp/future/future.hpp>
+#include <nt2/sdk/openmp/future/when_all.hpp>
 
 #endif

@@ -16,5 +16,6 @@ namespace nt2
   struct spawner;
 }
 
-#endif
+#include <nt2/sdk/shared_memory/spawner/transform.hpp>
 
+#endif

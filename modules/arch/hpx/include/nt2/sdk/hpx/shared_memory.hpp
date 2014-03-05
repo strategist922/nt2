@@ -26,6 +26,7 @@ BOOST_DISPATCH_COMBINE_SITE( nt2::tag::hpx_<tag::cpu_> )
 
 #include <nt2/sdk/hpx/spawner.hpp>
 #include <nt2/sdk/hpx/future.hpp>
+#include <nt2/sdk/hpx/settings/specific_data.hpp>
 
 #endif
 #endif
