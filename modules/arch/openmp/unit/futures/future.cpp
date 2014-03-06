@@ -110,13 +110,12 @@ NT2_TEST_CASE( then_future )
     int  next3(0);
 
     #pragma omp task \
-    shared(next2,next3) \
-    depend(in: next2) \
-    depend(out: next3)
-   {
-       printf("p3\n");
-       next3 = next2*3;
-   }
+    shared(next1) \
+    depend(out: next1)
+    {
+        printf("p1\n");
+        next1 = 1;
+    }
 
    #pragma omp task \
     shared(next1,next2) \
@@ -128,12 +127,13 @@ NT2_TEST_CASE( then_future )
    }
 
     #pragma omp task \
-    shared(next1) \
-    depend(out: next1)
-    {
-        printf("p1\n");
-        next1 = 1;
-    }
+    shared(next2,next3) \
+    depend(in: next2) \
+    depend(out: next3)
+   {
+       printf("p3\n");
+       next3 = next2*3;
+   }
 
     #pragma omp taskwait
 

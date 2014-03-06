@@ -113,8 +113,8 @@ namespace nt2 { namespace container
       return *this;
     }
 
-    iterator        begin()       { return nt2_expression::raw(); }
-    const_iterator  begin() const { return nt2_expression::raw(); }
+    iterator        begin()       { this->synchronize(); return nt2_expression::raw(); }
+    const_iterator  begin() const { this->synchronize(); return nt2_expression::raw(); }
 
     iterator        end()       { return begin() + nt2_expression::size(); }
     const_iterator  end() const { return begin() + nt2_expression::size(); }
