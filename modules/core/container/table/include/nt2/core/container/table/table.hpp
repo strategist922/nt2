@@ -113,8 +113,8 @@ namespace nt2 { namespace container
       return *this;
     }
 
-    iterator        begin()       { return boost::proto::value(*this).begin(); }
-    const_iterator  begin() const { return boost::proto::value(*this).begin(); }
+    iterator        begin()       { this->synchronize(); return boost::proto::value(*this).begin(); }
+    const_iterator  begin() const { this->synchronize(); return boost::proto::value(*this).begin(); }
 
     iterator        end()       { return boost::proto::value(*this).end(); }
     const_iterator  end() const { return boost::proto::value(*this).end(); }
