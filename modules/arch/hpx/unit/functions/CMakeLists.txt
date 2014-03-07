@@ -9,7 +9,7 @@
 
 SET( SOURCES
   colon.cpp
-  linspace.cpp
+# linspace.cpp
   ones.cpp
   reshape.cpp
   zeros.cpp
