@@ -111,7 +111,7 @@ namespace nt2
                  {
                      // Call operation
                      tmp.futures_.push_back(
-                         async<Arch>(Worker(w), offset, chunk)
+                       nt2::async<Arch>(Worker(w), offset, chunk)
                          );
                  }
 
@@ -119,7 +119,7 @@ namespace nt2
                  {
                      // Call operation
                      tmp.futures_.push_back(
-                        when_all<Arch>(boost::move(data_in.futures_))
+                        nt2::when_all<Arch>(boost::move(data_in.futures_))
                         .then(details::then_worker<Worker>
                               (Worker(w),offset, chunk)
                               )
