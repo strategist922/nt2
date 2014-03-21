@@ -20,6 +20,18 @@
 
 namespace nt2 { namespace details
 {
+    struct synchronize_futures : boost::proto::callable
+    {
+      typedef int result_type;
+
+      template <class Container,class ProtoData>
+      inline int operator()(Container & in, ProtoData &) const
+      {
+        in.specifics().synchronize();
+        return 0;
+      }
+
+    };
 
     struct get_futures : boost::proto::callable
     {
@@ -110,6 +122,7 @@ namespace nt2 { namespace details
 
     typedef aggregate_nodes<get_futures> aggregate_futures;
     typedef aggregate_nodes<get_specifics> aggregate_specifics;
+    typedef aggregate_nodes<synchronize_futures> aggregate_and_synchronize;
 
 } }
 
