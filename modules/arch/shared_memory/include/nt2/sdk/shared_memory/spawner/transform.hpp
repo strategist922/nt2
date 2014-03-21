@@ -17,6 +17,7 @@
 #include <nt2/sdk/shared_memory/details/then_worker.hpp>
 #include <nt2/sdk/shared_memory/details/aggregate_nodes.hpp>
 #include <nt2/sdk/shared_memory/details/proto_data_with_futures.hpp>
+#include <nt2/sdk/shared_memory/details/insert_dependencies.hpp>
 
 #include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
 
@@ -93,16 +94,10 @@ namespace nt2
                      i!=out_specifics.calling_cards_.end();
                      ++i)
                  {
-                     std::size_t grain_in = (*i)->grain_;
-
-                     future_it begin_dep  = (*i)->futures_.begin() + offset/grain_in;
-                     future_it end_dep    = ( (offset + chunk) % grain_in )
-                     ? (*i)->futures_.begin() +
-                     std::min( (*i)->futures_.size(), (offset + chunk)/grain_in + 1)
-                     : (*i)->futures_.begin() + (offset + chunk)/grain_in;
-
-                     // Push back the dependencies
-                     data_in.futures_.insert(data_in.futures_.end(),begin_dep,end_dep);
+                    details::insert_dependencies(
+                        data_in.futures_, offset , chunk
+                      , (*i)->futures_  , (*i)->grain_
+                      );
                  }
 
                  aggregate_f(w.in_,0,data_in);

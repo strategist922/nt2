@@ -11,6 +11,7 @@
 
 #include <nt2/sdk/meta/is_container.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
+#include <nt2/sdk/shared_memory/details/insert_dependencies.hpp>
 
 #include <vector>
 #include <algorithm>
@@ -41,28 +42,15 @@ namespace nt2 { namespace details
       inline int operator()(Container & in, ProtoData & data) const
       {
         typedef typename ProtoData::FutureVector FutureVector;
-        typedef typename FutureVector::iterator Iterator;
 
         FutureVector & futures_in = in.specifics().futures_;
-        std::size_t grain_in = in.specifics().grain_;
-
-        std::size_t begin(data.begin_);
-        std::size_t size(data.size_);
-
 
         if (!futures_in.empty())
         {
-          Iterator begin_dep = futures_in.begin() + begin/grain_in;
-          Iterator end_dep   = ( (begin + size)%grain_in )
-            ? futures_in.begin() +
-                std::min(futures_in.size(),(begin +size)/grain_in + 1)
-            : futures_in.begin() + (begin +size)/grain_in;
-
-          // Push back the dependencies
-          data.futures_.insert(data.futures_.end(),begin_dep,end_dep);
-
-          // Leave the "calling card" of out
-          in.specifics().calling_cards_.insert( &(data.specifics_) );
+          details::insert_dependencies(
+            data.futures_, data.begin_, data.size_
+          , futures_in, in.specifics().grain_
+          );
         }
 
         return 0;
