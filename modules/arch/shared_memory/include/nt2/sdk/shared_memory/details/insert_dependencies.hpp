@@ -18,29 +18,32 @@ namespace nt2 { namespace details {
     inline void insert_dependencies( FutureVector & out,
                                      std::pair<std::size_t,std::size_t> begin,
                                      std::pair<std::size_t,std::size_t> size,
-                                     std::pair<std::size_t,std::size_t> grain_out,
                                      FutureVector & in,
-                                     std::pair<std::size_t,std::size_t> grain_in
+                                     std::pair<std::size_t,std::size_t> grain_in,
+                                     std::pair<std::size_t,std::size_t> LDX
                                     )
     {
-        typedef typename FutureVector::iterator Iterator;
 
-        // Iterator begin_dep  = in.begin() + begin/grain_in;
+        std::size_t begin_n  = begin.first / grain_in.first;
+        std::size_t end_n    = ( (begin.first + size.first) % grain_in.first )
+        ? (begin.first + size.first) / grain_in.first + 1
+        : (begin.first + size.first) / grain_in.first;
 
-        // Iterator end_dep    = ( (begin + grain_out) % grain_in )
-        // ? in.begin() + std::min( in.size(), (begin + grain_out)/grain_in + 1)
-        // : in.begin() + (begin + grain_out)/grain_in;
+        end_n = std::min( LDX.first, end_n);
 
-        // // Push back the dependencies
-        // out.insert(out.end(),begin_dep,end_dep);
 
-        std:size_t N0  = begin.first  / grain_out.first;
-        std:size_t M0  = begin.second / grain_out.second;
+        std::size_t begin_m  = begin.second / grain_in.second;
+        std::size_t end_m  = ( (begin.second + size.second) % grain_in.second )
+        ? (begin.second + size.second) / grain_in.second + 1
+        : (begin.second + size.second) / grain_in.second;
 
-        std:size_t size_N  = size.first  / grain_out.first;
-        std:size_t size_M  = size.second / grain_out.second;
+        end_m = std::min( LDX.second, end_m);
 
-        for(std::size_t N = 0; N<size_N; )
+        for(std::size_t n = begin_n; n!= end_n; n++)
+        for(std::size_t m = begin_m; m!= end_m; m++)
+        {
+           out.push_back( in[n+m*LDX.first] );
+        }
 
     }
 
