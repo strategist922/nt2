@@ -28,20 +28,36 @@ namespace nt2
   struct worker<tag::transform_,BackEnd,Site,Out,In>
   {
       typedef int result_type;
+      typedef typename boost::remove_reference<In>::type::extent_type extent_type;
 
       worker(Out const & out, In const & in)
       :out_(out),in_(in)
-      {}
-
-      int operator()(std::size_t begin, std::size_t size)
       {
-          work(out_,in_,std::make_pair(begin,size));
+         extent_type ext = in.extent();
+         std::size_t bound  = boost::fusion::at_c<0>(ext);
+      }
+
+      template <typename Pair>
+      int operator()(Pair begin, Pair size)
+      {
+          for(std::size_t m=0, mm=begin.second; m<size.second; ++m, ++mm)
+          {
+            std::size_t offset = begin.first + mm * bound;
+            work(out_,in_,std::make_pair(offset,size.first));
+          }
+
           return 0;
+      };
+
+      int operator()(int begin, int size)
+      {
+        work(out_,in_,std::make_pair(begin,size));
+        return 0;
       };
 
       Out out_;
       In in_;
-
+      std::size_t bound;
       nt2::functor<tag::transform_,Site> work;
 
   private:

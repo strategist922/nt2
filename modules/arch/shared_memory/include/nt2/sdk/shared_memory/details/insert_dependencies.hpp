@@ -16,22 +16,32 @@ namespace nt2 { namespace details {
 
     template<typename FutureVector>
     inline void insert_dependencies( FutureVector & out,
-                                     std::size_t begin,
-                                     std::size_t grain_out,
+                                     std::pair<std::size_t,std::size_t> begin,
+                                     std::pair<std::size_t,std::size_t> size,
+                                     std::pair<std::size_t,std::size_t> grain_out,
                                      FutureVector & in,
-                                     std::size_t grain_in
+                                     std::pair<std::size_t,std::size_t> grain_in
                                     )
     {
         typedef typename FutureVector::iterator Iterator;
 
-        Iterator begin_dep  = in.begin() + begin/grain_in;
+        // Iterator begin_dep  = in.begin() + begin/grain_in;
 
-        Iterator end_dep    = ( (begin + grain_out) % grain_in )
-        ? in.begin() + std::min( in.size(), (begin + grain_out)/grain_in + 1)
-        : in.begin() + (begin + grain_out)/grain_in;
+        // Iterator end_dep    = ( (begin + grain_out) % grain_in )
+        // ? in.begin() + std::min( in.size(), (begin + grain_out)/grain_in + 1)
+        // : in.begin() + (begin + grain_out)/grain_in;
 
-        // Push back the dependencies
-        out.insert(out.end(),begin_dep,end_dep);
+        // // Push back the dependencies
+        // out.insert(out.end(),begin_dep,end_dep);
+
+        std:size_t N0  = begin.first  / grain_out.first;
+        std:size_t M0  = begin.second / grain_out.second;
+
+        std:size_t size_N  = size.first  / grain_out.first;
+        std:size_t size_M  = size.second / grain_out.second;
+
+        for(std::size_t N = 0; N<size_N; )
+
     }
 
 } }
