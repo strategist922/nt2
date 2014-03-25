@@ -11,7 +11,7 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <vector>
-#include <pair>
+#include <utility>
 
 namespace nt2 { namespace details {
 
@@ -22,13 +22,15 @@ namespace nt2 { namespace details {
 
         proto_data_with_futures(std::pair<std::size_t,std::size_t> begin
                                ,std::pair<std::size_t,std::size_t> size
+                               ,std::size_t LDX
                                ,Specifics & specifics)
-        :begin_(begin),size_(size),specifics_(specifics)
+        :begin_(begin),size_(size),LDX_(LDX),specifics_(specifics)
         {}
 
         FutureVector futures_;
         std::pair<std::size_t,std::size_t> begin_;
         std::pair<std::size_t,std::size_t> size_;
+        std::pair<std::size_t,std::size_t> LDX_;
         Specifics & specifics_;
 
         private:

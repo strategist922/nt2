@@ -21,7 +21,7 @@
 
 #include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
 
-#include <pair>
+#include <utility>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -41,11 +41,11 @@ namespace nt2
     {
         spawner(){}
 
-        template<typename Worker,typename Pair>
+        template<typename Worker>
         void operator()(Worker & w
-                       ,Pair begin
-                       ,Pair size
-                       ,Pair grain_out
+                       ,std::pair<std::size_t,std::size_t> begin
+                       ,std::pair<std::size_t,std::size_t> size
+                       ,std::pair<std::size_t,std::size_t> grain_out
                        )
         {
              typedef typename
@@ -80,6 +80,8 @@ namespace nt2
                            ,condition_col ? grain_out.second : size.second
                            );
 
+             tmp.LDX_   = std::make_pair(nblocks_row,nblocks_col);
+
              tmp.futures_.reserve(nblocks_row*nblocks_col);
 
              details::aggregate_futures aggregate_f;
@@ -111,8 +113,8 @@ namespace nt2
                          ++i)
                      {
                         details::insert_dependencies(
-                            data_in.futures_, offset , chunk, grain_out
-                           ,(*i)->futures_ , (*i)->grain_
+                            data_in.futures_, offset , chunk
+                           ,(*i)->LDX_ ,(*i)->futures_ , (*i)->grain_
                           );
                      }
 
