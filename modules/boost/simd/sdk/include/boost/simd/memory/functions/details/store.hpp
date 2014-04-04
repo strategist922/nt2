@@ -40,6 +40,26 @@ namespace boost { namespace simd { namespace details
     storer& operator=(storer const&);
   };
 
+  template<typename Tag, typename A0, typename A1, typename A2, typename A3>
+  struct storer<Tag(A0,A1,A2,A3)>
+  {
+    storer( A0 const& a0_, A1 const& a1_, A2 a2_, A3 const& a3_) : a0(a0_), a1(a1_), a2(a2_), a3(a3_) {}
+
+    template<int I> BOOST_FORCEINLINE void operator()() const
+    {
+      typename dispatch::make_functor<Tag,A0>::type callee;
+      callee(fusion::at_c<I>(a0), fusion::at_c<I>(a1), a2, a3);
+    }
+
+    A0 const& a0;
+    A1 const& a1;
+    A2 a2;
+    A3 const& a3;
+
+    private:
+    storer& operator=(storer const&);
+  };
+
   template<typename Tag, typename A0, typename A1>
   struct storer<Tag(A0,A1)>
   {

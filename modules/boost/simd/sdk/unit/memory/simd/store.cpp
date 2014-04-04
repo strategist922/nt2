@@ -74,12 +74,15 @@ struct nt2_test_run_mask_store
     std::cout << "With U = " << nt2::type_id<U>() << std::endl;
     using boost::simd::logical;
     using boost::simd::native;
+    using boost::simd::pack;
 
     typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
     typedef native<logical<T>, ext_t>     vlT;
+    typedef pack<logical<T> >     plT;
 
     mask_store_runner< U, native<T,ext_t>, vlT>(offset);
     mask_store_runner< logical<U>, native<logical<T>,ext_t>,vlT>(offset);
+    mask_store_runner< U           , pack<T>   , plT                >(offset);
   }
 };
 
@@ -227,6 +230,23 @@ NT2_TEST_CASE( store_sequence_pointer )
   store_runner< foo, native<foo,ext_t> >();
   store_runner< foo, native<foo,ext_t> >(true);
 }
+
+/*NT2_TEST_CASE( mask_store_sequence_pointer )
+{
+  using boost::simd::native;
+  using boost::simd::logical;
+  using boost::simd::meta::cardinal_of;
+
+  typedef BOOST_SIMD_DEFAULT_EXTENSION ext_t;
+  typedef native<foo,ext_t> vT;
+  //typedef native<logical<foo>, ext_t>     vlT;
+
+  static const std::size_t N = cardinal_of<native<foo,ext_t> >::value;
+
+  typedef typename boost::simd::meta::vector_of<logical<foo>, N>::type vlT;
+  mask_store_runner< foo, native<foo,ext_t>, vlT>();
+//  mask_store_runner< foo, native<foo,ext_t>, vlT >(true);
+}*/
 
 NT2_TEST_CASE( store_sequence )
 {

@@ -270,6 +270,56 @@ namespace boost { namespace simd { namespace ext
                       );
     }
   };
+
+  /// INTERNAL ONLY - masked SIMD store for Fusion Sequence with offset
+  BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::store_
+                                    , tag::cpu_
+                                    , (A0)(A1)(A2)(A3)(X)(Y)
+                                    , ((simd_< fusion_sequence_<A0>, X >))
+                                      (fusion_sequence_<A1>)
+                                      (generic_< integer_<A2> >)
+                                      ((simd_< logical_<A3>
+                                             , Y
+                                             >
+                                      ))
+                                    )
+  {
+    typedef void result_type;
+
+    BOOST_FORCEINLINE result_type
+    operator()(const A0& a0, const A1& a1, const A2& a2, const A3& a3) const
+    {
+      static const int N = fusion::result_of::size<A1>::type::value;
+      meta::iterate<N>( details::storer< boost::simd::
+                                         tag::store_(A0, A1, A2, A3)
+                                       >(a0, a1, a2, a3)
+                      );
+    }
+  };
+
+  /// INTERNAL ONLY - masked SIMD store for Fusion Sequence without offset
+  BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::store_
+                                    , tag::cpu_
+                                    , (A0)(A1)(A2)(X)(Y)
+                                    , ((simd_< fusion_sequence_<A0>, X >))
+                                      (fusion_sequence_<A1>)
+                                      ((simd_< logical_<A2>
+                                             , Y
+                                             >
+                                      ))
+                                    )
+  {
+    typedef void result_type;
+
+    BOOST_FORCEINLINE result_type operator()(const A0& a0, const A1& a1, const A2& a2) const
+    {
+      static const int N = fusion::result_of::size<A1>::type::value;
+      meta::iterate<N>( details::storer< boost::simd::
+                                         tag::store_(A0, A1, A2)
+                                       >(a0, a1, a2)
+                      );
+    }
+  };
 } } }
 
 #endif
