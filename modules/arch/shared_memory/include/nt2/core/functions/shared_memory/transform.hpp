@@ -32,10 +32,14 @@ namespace nt2 { namespace ext
   {
 
     typedef void result_type;
+    typedef typename boost::remove_reference<In>::type::extent_type extent_type;
 
     BOOST_FORCEINLINE result_type operator()(Out& out, In& in, Range range) const
     {
-      std::size_t grain = 4; //config::top_cache_size(2)/sizeof(typename Out::value_type);
+      std::size_t grain = config::top_cache_size(2)/sizeof(typename Out::value_type);
+
+      extent_type ext = in.extent();
+      std::size_t bound  = boost::fusion::at_c<0>(ext);
 
       std::size_t it = range.first;
       std::size_t sz = range.second;
@@ -45,7 +49,11 @@ namespace nt2 { namespace ext
       nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
       nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
 
-      s(w,it,sz,grain);
+      s(w
+       ,std::make_pair(begin%bound,begin/bound)
+       ,sz
+       ,std::make_pair(grain,grain)
+       );
 
     }
   };

@@ -14,28 +14,31 @@
 
 namespace nt2 { namespace details {
 
-    template<class Worker>
+    template<class Worker, class Index>
     struct then_worker
     {
         typedef int result_type;
 
         then_worker(BOOST_FWD_REF(Worker) w,
-                    std::size_t begin,
-                    std::size_t size
+                    std::pair<std::size_t> begin,
+                    std::pair<std::size_t> size,
+                    std::size_t size_max
                     )
         :w_(boost::forward<Worker>(w)),begin_(begin),size_(size)
+        ,size_max_(size_max)
         {}
 
         template<typename T>
         int operator()(T) const
         {
-            w_(begin_,size_);
+            w_(begin_,size_,size_max);
             return 0;
         }
 
         mutable Worker w_;
-        std::size_t begin_;
-        std::size_t size_;
+        Index begin_;
+        Index size_;
+        std::size_t size_max_;
 
         private:
         then_worker& operator=(then_worker const&);
