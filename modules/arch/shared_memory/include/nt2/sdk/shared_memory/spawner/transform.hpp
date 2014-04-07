@@ -94,15 +94,15 @@ namespace nt2
              #endif
 
 
-             for(std::size_t nn=0, n=begin.first; nn<nblocks_row; ++nn, n+=grain_out.first)
+             for(std::size_t nn=0, n=begin.second; nn<nblocks_col; ++nn, n+=grain_out.second)
              {
-                for(std::size_t mm=0, m=begin.second; mm<nblocks_col; ++mm, m+=grain_out.second)
-                {
-                     std::size_t chunk_n = (nn<nblocks_row-1) ? grain_out.first  : last_chunk_row;
-                     std::size_t chunk_m = (mm<nblocks_col-1) ? grain_out.second : last_chunk_col;
+                 for(std::size_t mm=0, m=begin.first; mm<nblocks_row; ++mm, m+=grain_out.first)
+                 {
+                     std::size_t chunk_m = (mm<nblocks_row-1) ? grain_out.first  : last_chunk_row;
+                     std::size_t chunk_n = (nn<nblocks_col-1) ? grain_out.second : last_chunk_col;
 
-                     std::pair<std::size_t,std::size_t> offset (n,m);
-                     std::pair<std::size_t,std::size_t> chunk (chunk_n,chunk_m);
+                     std::pair<std::size_t,std::size_t> offset (m,n);
+                     std::pair<std::size_t,std::size_t> chunk (chunk_m,chunk_n);
 
                      details::proto_data_with_futures< future
                       ,details::container_has_futures<Arch>

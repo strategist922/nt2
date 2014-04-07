@@ -35,7 +35,7 @@ namespace nt2 { namespace details {
 
       // Clear previous futures to avoid premature
       // synchronization
-      // src.futures_.clear();
+      src.futures_.clear();
     }
 
     inline void synchronize()
