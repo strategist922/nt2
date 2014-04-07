@@ -13,7 +13,7 @@
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/include/functor.hpp>
 
-#include <cstdio>
+#include <utility>
 
 namespace nt2
 {
@@ -37,13 +37,20 @@ namespace nt2
          std::size_t bound  = boost::fusion::at_c<0>(ext);
       }
 
-      template <typename Pair>
-      int operator()(Pair begin, Pair size)
+      int operator()(std::pair<std::size_t,std::size_t> begin
+                    ,std::pair<std::size_t,std::size_t> size
+                    ,std::size_t size_max)
       {
-          for(std::size_t m=0, mm=begin.second; m<size.second; ++m, ++mm)
+
+          for(std::size_t n=0; n<size.second; ++n)
           {
-            std::size_t offset = begin.first + mm * bound;
-            work(out_,in_,std::make_pair(offset,size.first));
+            std::size_t offset    = begin.first + (begin.second+n) * bound;
+
+            std::size_t end = ( size_max < offset + size.first) )
+            ? size_max % bound
+            : size.first
+
+            work(out_,in_,std::make_pair(offset,end));
           }
 
           return 0;

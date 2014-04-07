@@ -44,7 +44,7 @@ namespace nt2
         template<typename Worker>
         void operator()(Worker & w
                        ,std::pair<std::size_t,std::size_t> begin
-                       ,std::pair<std::size_t,std::size_t> size
+                       ,std::size_t size
                        ,std::pair<std::size_t,std::size_t> grain_out
                        )
         {
@@ -54,20 +54,20 @@ namespace nt2
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
-             typedef typename
-             std::vector<future>::iterator future_it;
+             std::size_t height = (size <= bound) ? size : bound;
+             std::size_t width  = (size <= bound) ? 1 : size/bound + (size%bound > 0);
 
-             std::size_t condition_row = size.first / grain_out.first;
-             std::size_t condition_col = size.second / grain_out.second;
+             std::size_t condition_row = height / grain_out.first;
+             std::size_t condition_col = width  / grain_out.second;
 
-             std::size_t leftover_row = size.first % grain_out.first;
-             std::size_t leftover_col = size.second % grain_out.second;
+             std::size_t leftover_row = height % grain_out.first;
+             std::size_t leftover_col = width  % grain_out.second;
 
              std::size_t nblocks_row  = condition_row ? condition_row : 1;
              std::size_t nblocks_col  = condition_col ? condition_col : 1;
 
-             std::size_t last_chunk_row = condition_row ? grain_out.first  + leftover_row : size.first;
-             std::size_t last_chunk_col = condition_col ? grain_out.second + leftover_col : size.second;
+             std::size_t last_chunk_row = condition_row ? grain_out.first  + leftover_row : height;
+             std::size_t last_chunk_col = condition_col ? grain_out.second + leftover_col : width;
 
              details::container_has_futures<Arch> * pout_specifics;
              details::aggregate_specifics()(w.out_, 0, pout_specifics);
@@ -76,8 +76,8 @@ namespace nt2
              details::container_has_futures<Arch> tmp;
 
              tmp.grain_ = std::make_pair(
-                            condition_row ? grain_out.first  : size.first
-                           ,condition_col ? grain_out.second : size.second
+                            condition_row ? grain_out.first  : height
+                           ,condition_col ? grain_out.second : width
                            );
 
              tmp.LDX_   = std::make_pair(nblocks_row,nblocks_col);
@@ -124,7 +124,7 @@ namespace nt2
                      {
                          // Call operation
                          tmp.futures_.push_back(
-                           nt2::async<Arch>(Worker(w), offset, chunk)
+                           nt2::async<Arch>(Worker(w), offset, chunk, size)
                              );
                      }
 
@@ -133,7 +133,7 @@ namespace nt2
                          // Call operation
                          tmp.futures_.push_back(
                             nt2::when_all<Arch>(boost::move(data_in.futures_))
-                            .then( details::then_worker<Worker>(Worker(w),offset, chunk)
+                            .then( details::then_worker<Worker>(Worker(w),offset, chunk, size)
                               )
                             );
                      }
