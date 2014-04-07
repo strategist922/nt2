@@ -24,25 +24,25 @@ namespace nt2 { namespace details {
                                     )
     {
 
-        std::size_t begin_n  = begin.first / grain_in.first;
-        std::size_t end_n    = ( (begin.first + size.first) % grain_in.first )
+        std::size_t begin_m  = begin.first / grain_in.first;
+        std::size_t end_m    = ( (begin.first + size.first) % grain_in.first )
         ? (begin.first + size.first) / grain_in.first + 1
         : (begin.first + size.first) / grain_in.first;
 
-        end_n = std::min( LDX.first, end_n);
+        end_m = std::min( LDX.first, end_m);
 
 
-        std::size_t begin_m  = begin.second / grain_in.second;
-        std::size_t end_m  = ( (begin.second + size.second) % grain_in.second )
+        std::size_t begin_n  = begin.second / grain_in.second;
+        std::size_t end_n  = ( (begin.second + size.second) % grain_in.second )
         ? (begin.second + size.second) / grain_in.second + 1
         : (begin.second + size.second) / grain_in.second;
 
-        end_m = std::min( LDX.second, end_m);
+        end_n = std::min( LDX.second, end_n);
 
         for(std::size_t n = begin_n; n!= end_n; n++)
         for(std::size_t m = begin_m; m!= end_m; m++)
         {
-           out.push_back( in[n+m*LDX.first] );
+           out.push_back( in[m+n*LDX.first] );
         }
 
     }
