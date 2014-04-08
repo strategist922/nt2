@@ -38,19 +38,22 @@ namespace nt2
       }
 
       int operator()(std::pair<std::size_t,std::size_t> begin
-                    ,std::pair<std::size_t,std::size_t> size
-                    ,std::size_t size_max)
+                    ,std::pair<std::size_t,std::size_t> chunk
+                    ,std::size_t offset
+                    ,std::size_t size)
       {
-
-          for(std::size_t n=0; n<size.second; ++n)
+          for(std::size_t nn=0, n=begin.second; nn<chunk.second; ++nn, n+=bound)
           {
-            std::size_t offset    = begin.first + (begin.second+n) * bound;
+            std::size_t o =  begin.first + n;
 
-            std::size_t end = ( size_max < offset + size.first) )
-            ? size_max % bound
-            : size.first
+            if(size > o )
+            {
+              std::size_t colchunk = ( size < o + chunk.first)
+              ? size - o
+              : chunk.first;
 
-            work(out_,in_,std::make_pair(offset,end));
+              work(out_,in_,std::make_pair(offset + o, colchunk));
+            }
           }
 
           return 0;

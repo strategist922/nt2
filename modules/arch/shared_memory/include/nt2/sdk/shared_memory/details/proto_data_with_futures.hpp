@@ -19,18 +19,19 @@ namespace nt2 { namespace details {
     struct proto_data_with_futures
     {
         typedef typename std::vector<Future> FutureVector;
+        typedef std::pair<std::size_t,std::size_t> Pair;
 
-        proto_data_with_futures(std::pair<std::size_t,std::size_t> begin
-                               ,std::pair<std::size_t,std::size_t> size
-                               ,std::size_t LDX
+        proto_data_with_futures(Pair begin
+                               ,Pair chunk
+                               ,Pair LDX
                                ,Specifics & specifics)
-        :begin_(begin),size_(size),LDX_(LDX),specifics_(specifics)
+        :begin_(begin),chunk_(chunk),LDX_(LDX),specifics_(specifics)
         {}
 
         FutureVector futures_;
-        std::pair<std::size_t,std::size_t> begin_;
-        std::pair<std::size_t,std::size_t> size_;
-        std::pair<std::size_t,std::size_t> LDX_;
+        Pair begin_;
+        Pair chunk_;
+        Pair LDX_;
         Specifics & specifics_;
 
         private:

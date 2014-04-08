@@ -42,32 +42,33 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w
-                       ,std::pair<std::size_t,std::size_t> begin
-                       ,std::size_t size
-                       ,std::pair<std::size_t,std::size_t> grain_out
-                       )
+        void operator()(Worker & w, std::size_t offset, std::size_t size, std::size_t grain_out)
         {
+             typedef typename Worker::extent_type extent_type;
+
              typedef typename
              nt2::make_future< Arch ,int >::type future;
 
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
+             extent_type ext = w.in_.extent();
+             std::size_t bound  = boost::fusion::at_c<0>(ext);
+
              std::size_t height = (size <= bound) ? size : bound;
              std::size_t width  = (size <= bound) ? 1 : size/bound + (size%bound > 0);
 
-             std::size_t condition_row = height / grain_out.first;
-             std::size_t condition_col = width  / grain_out.second;
+             std::size_t condition_row = height / grain_out;
+             std::size_t condition_col = width  / grain_out;
 
-             std::size_t leftover_row = height % grain_out.first;
-             std::size_t leftover_col = width  % grain_out.second;
+             std::size_t leftover_row = height % grain_out;
+             std::size_t leftover_col = width  % grain_out;
 
              std::size_t nblocks_row  = condition_row ? condition_row : 1;
              std::size_t nblocks_col  = condition_col ? condition_col : 1;
 
-             std::size_t last_chunk_row = condition_row ? grain_out.first  + leftover_row : height;
-             std::size_t last_chunk_col = condition_col ? grain_out.second + leftover_col : width;
+             std::size_t last_chunk_row = condition_row ? grain_out + leftover_row : height;
+             std::size_t last_chunk_col = condition_col ? grain_out + leftover_col : width;
 
              details::container_has_futures<Arch> * pout_specifics;
              details::aggregate_specifics()(w.out_, 0, pout_specifics);
@@ -76,8 +77,8 @@ namespace nt2
              details::container_has_futures<Arch> tmp;
 
              tmp.grain_ = std::make_pair(
-                            condition_row ? grain_out.first  : height
-                           ,condition_col ? grain_out.second : width
+                            condition_row ? grain_out : height
+                           ,condition_col ? grain_out : width
                            );
 
              tmp.LDX_   = std::make_pair(nblocks_row,nblocks_col);
@@ -94,27 +95,27 @@ namespace nt2
              #endif
 
 
-             for(std::size_t nn=0, n=begin.second; nn<nblocks_col; ++nn, n+=grain_out.second)
+             for(std::size_t nn=0, n=0; nn<nblocks_col; ++nn, n+=grain_out)
              {
-                 for(std::size_t mm=0, m=begin.first; mm<nblocks_row; ++mm, m+=grain_out.first)
+                 for(std::size_t mm=0, m=0; mm<nblocks_row; ++mm, m+=grain_out)
                  {
-                     std::size_t chunk_m = (mm<nblocks_row-1) ? grain_out.first  : last_chunk_row;
-                     std::size_t chunk_n = (nn<nblocks_col-1) ? grain_out.second : last_chunk_col;
+                     std::size_t chunk_m = (mm<nblocks_row-1) ? grain_out  : last_chunk_row;
+                     std::size_t chunk_n = (nn<nblocks_col-1) ? grain_out  : last_chunk_col;
 
-                     std::pair<std::size_t,std::size_t> offset (m,n);
+                     std::pair<std::size_t,std::size_t> begin (m,n);
                      std::pair<std::size_t,std::size_t> chunk (chunk_m,chunk_n);
 
                      details::proto_data_with_futures< future
                       ,details::container_has_futures<Arch>
-                      > data_in ( offset, chunk, out_specifics );
+                      > data_in ( begin, chunk, tmp.LDX_, out_specifics );
 
                     for(call_it i=out_specifics.calling_cards_.begin();
                          i!=out_specifics.calling_cards_.end();
                          ++i)
                      {
                         details::insert_dependencies(
-                            data_in.futures_, offset , chunk
-                           ,(*i)->LDX_ ,(*i)->futures_ , (*i)->grain_
+                            data_in.futures_, begin , chunk
+                           ,(*i)->futures_ , (*i)->grain_, (*i)->LDX_
                           );
                      }
 
@@ -124,7 +125,7 @@ namespace nt2
                      {
                          // Call operation
                          tmp.futures_.push_back(
-                           nt2::async<Arch>(Worker(w), offset, chunk, size)
+                           nt2::async<Arch>(Worker(w), begin, chunk, offset, size)
                              );
                      }
 
@@ -133,7 +134,7 @@ namespace nt2
                          // Call operation
                          tmp.futures_.push_back(
                             nt2::when_all<Arch>(boost::move(data_in.futures_))
-                            .then( details::then_worker<Worker>(Worker(w),offset, chunk, size)
+                            .then( details::then_worker<Worker>(Worker(w),begin, chunk, offset, size)
                               )
                             );
                      }
