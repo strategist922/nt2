@@ -17,7 +17,7 @@ namespace nt2 { namespace details {
     template<typename FutureVector>
     inline void insert_dependencies( FutureVector & out,
                                      std::pair<std::size_t,std::size_t> begin,
-                                     std::pair<std::size_t,std::size_t> size,
+                                     std::pair<std::size_t,std::size_t> chunk,
                                      FutureVector & in,
                                      std::pair<std::size_t,std::size_t> grain_in,
                                      std::pair<std::size_t,std::size_t> LDX
@@ -25,17 +25,17 @@ namespace nt2 { namespace details {
     {
 
         std::size_t begin_m  = begin.first / grain_in.first;
-        std::size_t end_m    = ( (begin.first + size.first) % grain_in.first )
-        ? (begin.first + size.first) / grain_in.first + 1
-        : (begin.first + size.first) / grain_in.first;
+        std::size_t end_m    = ( (begin.first + chunk.first) % grain_in.first )
+        ? (begin.first + chunk.first) / grain_in.first + 1
+        : (begin.first + chunk.first) / grain_in.first;
 
         end_m = std::min( LDX.first, end_m);
 
 
         std::size_t begin_n  = begin.second / grain_in.second;
-        std::size_t end_n  = ( (begin.second + size.second) % grain_in.second )
-        ? (begin.second + size.second) / grain_in.second + 1
-        : (begin.second + size.second) / grain_in.second;
+        std::size_t end_n  = ( (begin.second + chunk.second) % grain_in.second )
+        ? (begin.second + chunk.second) / grain_in.second + 1
+        : (begin.second + chunk.second) / grain_in.second;
 
         end_n = std::min( LDX.second, end_n);
 

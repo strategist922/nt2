@@ -32,6 +32,7 @@ namespace nt2 { namespace details {
       boost::swap(futures_,src.futures_);
       boost::swap(grain_,src.grain_);
       boost::swap(calling_cards_,src.calling_cards_);
+      boost::swap(LDX_,src.LDX_);
 
       // Clear previous futures to avoid premature
       // synchronization
@@ -68,7 +69,8 @@ namespace nt2 { namespace details {
     //===========================================
     std::vector<future> futures_;
     std::set< container_has_futures *> calling_cards_;
-    std::size_t grain_;
+    std::pair<std::size_t,std::size_t> grain_;
+    std::pair<std::size_t,std::size_t> LDX_;
 
   };
 

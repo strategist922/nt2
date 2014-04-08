@@ -41,20 +41,15 @@ namespace nt2 { namespace ext
       extent_type ext = in.extent();
       std::size_t bound  = boost::fusion::at_c<0>(ext);
 
-      std::size_t it = range.first;
-      std::size_t sz = range.second;
+      std::size_t begin = range.first;
+      std::size_t size = range.second;
 
       if(!grain) grain = 1u;
 
       nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
       nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
 
-      s(w
-       ,std::make_pair(begin%bound,begin/bound)
-       ,sz
-       ,std::make_pair(grain,grain)
-       );
-
+      s(w,begin,size,grain);
     }
   };
 
