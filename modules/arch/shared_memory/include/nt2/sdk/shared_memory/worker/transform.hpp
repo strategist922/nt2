@@ -34,7 +34,7 @@ namespace nt2
       :out_(out),in_(in)
       {
          extent_type ext = in.extent();
-         std::size_t bound  = boost::fusion::at_c<0>(ext);
+         bound_  = boost::fusion::at_c<0>(ext);
       }
 
       int operator()(std::pair<std::size_t,std::size_t> begin
@@ -42,7 +42,7 @@ namespace nt2
                     ,std::size_t offset
                     ,std::size_t size)
       {
-          for(std::size_t nn=0, n=begin.second; nn<chunk.second; ++nn, n+=bound)
+          for(std::size_t nn=0, n=begin.second; nn<chunk.second; ++nn, n+=bound_)
           {
             std::size_t o =  begin.first + n;
 
@@ -52,6 +52,9 @@ namespace nt2
               ? size - o
               : chunk.first;
 
+              // printf("bound: %lu chunk height: %lu chunk width: %lu\n",bound_,chunk.first,chunk.second);
+              // printf("Size %lu Column %lu\n",size,nn);
+              // printf("Transform worker[%lu %lu[\n",offset + o,offset + o+colchunk);
               work(out_,in_,std::make_pair(offset + o, colchunk));
             }
           }
@@ -67,7 +70,7 @@ namespace nt2
 
       Out out_;
       In in_;
-      std::size_t bound;
+      std::size_t bound_;
       nt2::functor<tag::transform_,Site> work;
 
   private:

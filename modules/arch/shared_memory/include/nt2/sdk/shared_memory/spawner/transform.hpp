@@ -44,16 +44,13 @@ namespace nt2
         template<typename Worker>
         void operator()(Worker & w, std::size_t offset, std::size_t size, std::size_t grain_out)
         {
-             typedef typename Worker::extent_type extent_type;
-
              typedef typename
              nt2::make_future< Arch ,int >::type future;
 
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
-             extent_type ext = w.in_.extent();
-             std::size_t bound  = boost::fusion::at_c<0>(ext);
+             std::size_t bound  = w.bound_;
 
              std::size_t height = (size <= bound) ? size : bound;
              std::size_t width  = (size <= bound) ? 1 : size/bound + (size%bound > 0);
