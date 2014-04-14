@@ -16,11 +16,11 @@ namespace nt2 { namespace details {
 
     template<typename FutureVector>
     inline void insert_dependencies( FutureVector & out,
-                                     std::pair<std::size_t,std::size_t> begin,
-                                     std::pair<std::size_t,std::size_t> chunk,
-                                     FutureVector & in,
-                                     std::pair<std::size_t,std::size_t> grain_in,
-                                     std::pair<std::size_t,std::size_t> LDX
+                                     std::pair<std::size_t,std::size_t> begin,    // Indexes of the element in left up corner of Out tile
+                                     std::pair<std::size_t,std::size_t> chunk,    // height/width of Out tile
+                                     FutureVector & in,                           // vector of Futures In
+                                     std::pair<std::size_t,std::size_t> grain_in, // Default height/width of In tile
+                                     std::pair<std::size_t,std::size_t> LDX       // Height of In in number of In tiles
                                     )
     {
 
@@ -40,9 +40,11 @@ namespace nt2 { namespace details {
         end_n = std::min( LDX.second, end_n);
 
         for(std::size_t n = begin_n; n!= end_n; n++)
-        for(std::size_t m = begin_m; m!= end_m; m++)
         {
-           out.push_back( in[m+n*LDX.first] );
+            for(std::size_t m = begin_m; m!= end_m; m++)
+            {
+               out.push_back( in[m+n*LDX.first] );
+            }
         }
 
     }
