@@ -51,6 +51,9 @@ namespace nt2 { namespace details
             data.futures_, data.begin_, data.size_
           , futures_in, in.specifics().grain_
           );
+
+          // Leave the "calling card" of out
+          in.specifics().calling_cards_.insert( &(data.specifics_) );
         }
 
         return 0;
