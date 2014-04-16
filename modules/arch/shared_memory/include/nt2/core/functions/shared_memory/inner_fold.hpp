@@ -16,6 +16,8 @@
 #include <nt2/sdk/shared_memory/worker/inner_fold.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
 
+#include <utility>
+
 namespace nt2 { namespace ext
 {
   //============================================================================
@@ -38,7 +40,9 @@ namespace nt2 { namespace ext
     operator()(Out& out, In& in, Neutral const& neutral, Bop const& bop, Uop const& uop) const
     {
       extent_type ext = in.extent();
-      std::size_t obound = nt2::numel(boost::fusion::pop_front(ext));
+      std::size_t bound = boost::fusion::at_c<0>(ext);
+
+      std::size_t size = nt2::numel(in);
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
       std::size_t grain = top_cache_line_size;
 
@@ -46,7 +50,7 @@ namespace nt2 { namespace ext
       w(out, in, neutral, bop, uop);
 
       nt2::spawner< tag::transform_, tag::asynchronous_<BackEnd> > s;
-      s(w,0,obound,grain);
+      s(w,0,size,std::make_pair(bound,grain));
     }
 
   };

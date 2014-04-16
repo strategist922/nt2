@@ -16,7 +16,9 @@
 #include <nt2/sdk/shared_memory/worker/outer_fold.hpp>
 #include <nt2/sdk/shared_memory/details/aggregate_nodes.hpp>
 #include <nt2/sdk/config/cache.hpp>
+
 #include <cstddef>
+#include <utility>
 
 namespace nt2 { namespace ext
 {
@@ -36,20 +38,19 @@ namespace nt2 { namespace ext
     {
       extent_type ext = in.extent();
       std::size_t obound = boost::fusion::at_c<2>(ext);
-      std::size_t ibound = boost::fusion::at_c<0>(ext);
+      std::size_t bound = boost::fusion::at_c<0>(ext);
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(typename Out::value_type);
       if(!top_cache_line_size) top_cache_line_size = 1u;
 
-      std::size_t grain = top_cache_line_size/gcd(ibound,top_cache_line_size);
+      std::size_t grain = top_cache_line_size/gcd(obound,top_cache_line_size);
+
+      std::size_t size = nt2::numel(in);
 
       nt2::worker<tag::outer_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
       w(out, in, neutral, bop, uop);
 
-      int value;
-      details::aggregate_and_synchronize()(w.in_, 0, value);
-
-      nt2::spawner< tag::transform_, BackEnd > s;
-      s(w,0,obound,grain);
+      nt2::spawner< tag::transform_, tag::asynchronous_<BackEnd> > s;
+      s(w,0,size,std::make_pair(grain,obound));
     }
 
     private:

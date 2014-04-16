@@ -22,6 +22,7 @@
 #include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
 
 #include <utility>
+#include <cstdio>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -42,7 +43,7 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w, std::size_t offset, std::size_t size, std::size_t grain_out)
+        void operator()(Worker & w, std::size_t offset, std::size_t size, std::pair<std::size_t,std::size_t> grain_out)
         {
              typedef typename
              nt2::make_future< Arch ,int >::type future;
@@ -52,20 +53,30 @@ namespace nt2
 
              std::size_t bound  = w.bound_;
 
+             printf("bound: %lu size: %lu\n",bound,size);
+
+        // 2D parameters of In table
              std::size_t height = (size <= bound) ? size : bound;
              std::size_t width  = (size <= bound) ? 1 : size/bound + (size%bound > 0);
 
-             std::size_t condition_row = height / grain_out;
-             std::size_t condition_col = width  / grain_out;
+             printf("Table to fold is: %lu * %lu\n",height,width);
+             printf("Chosen grain is: %lu * %lu\n",grain_out.first,grain_out.second);
 
-             std::size_t leftover_row = height % grain_out;
-             std::size_t leftover_col = width  % grain_out;
+             std::size_t condition_row = height / grain_out.first;
+             std::size_t condition_col = width  / grain_out.second;
 
+        // A Tile has a surface of grain_out(1) x grain_out(2), check leftovers
+             std::size_t leftover_row = height % grain_out.first;
+             std::size_t leftover_col = width  % grain_out.second;
+
+        // Height/Width of Out in number of tiles
              std::size_t nblocks_row  = condition_row ? condition_row : 1;
              std::size_t nblocks_col  = condition_col ? condition_col : 1;
 
-             std::size_t last_chunk_row = condition_row ? grain_out + leftover_row : height;
-             std::size_t last_chunk_col = condition_col ? grain_out + leftover_col : width;
+             printf("Tile array is: %lu * %lu\n",nblocks_row,nblocks_col);
+
+             std::size_t last_chunk_row = condition_row ? grain_out.first + leftover_row : height;
+             std::size_t last_chunk_col = condition_col ? grain_out.second + leftover_col : width;
 
              details::container_has_futures<Arch> * pout_specifics;
              details::aggregate_specifics()(w.out_, 0, pout_specifics);
@@ -74,8 +85,8 @@ namespace nt2
              details::container_has_futures<Arch> tmp;
 
              tmp.grain_ = std::make_pair(
-                            condition_row ? grain_out : height
-                           ,condition_col ? grain_out : width
+                            condition_row ? grain_out.first : height
+                           ,condition_col ? grain_out.second : width
                            );
 
              tmp.LDX_   = std::make_pair(nblocks_row,nblocks_col);
@@ -92,12 +103,12 @@ namespace nt2
              #endif
 
 
-             for(std::size_t nn=0, n=0; nn<nblocks_col; ++nn, n+=grain_out)
+             for(std::size_t nn=0, n=0; nn<nblocks_col; ++nn, n+=grain_out.second)
              {
-                 for(std::size_t mm=0, m=0; mm<nblocks_row; ++mm, m+=grain_out)
+                 for(std::size_t mm=0, m=0; mm<nblocks_row; ++mm, m+=grain_out.first)
                  {
-                     std::size_t chunk_m = (mm<nblocks_row-1) ? grain_out  : last_chunk_row;
-                     std::size_t chunk_n = (nn<nblocks_col-1) ? grain_out  : last_chunk_col;
+                     std::size_t chunk_m = (mm<nblocks_row-1) ? grain_out.first   : last_chunk_row;
+                     std::size_t chunk_n = (nn<nblocks_col-1) ? grain_out.second  : last_chunk_col;
 
                      std::pair<std::size_t,std::size_t> begin (m,n);
                      std::pair<std::size_t,std::size_t> chunk (chunk_m,chunk_n);
