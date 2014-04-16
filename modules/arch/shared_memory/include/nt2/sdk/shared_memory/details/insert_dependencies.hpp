@@ -46,7 +46,6 @@ namespace nt2 { namespace details {
                out.push_back( in[m+n*LDX.first] );
             }
         }
-
     }
 
 } }

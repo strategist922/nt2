@@ -17,6 +17,9 @@
 #include <nt2/sdk/config/cache.hpp>
 #include <boost/simd/sdk/simd/native.hpp>
 
+#include <cstdio>
+#include <utility>
+
 namespace nt2
 {
 
@@ -78,17 +81,29 @@ namespace nt2
 
     worker(Out const & out, In const & in, Neutral const& n, Bop const& bop, Uop const& uop)
     : out_(out), in_(in), neutral_(n), bop_(bop), uop_(uop)
-    {}
+    {
+         extent_type ext = in_.extent();
+         bound_  = boost::fusion::at_c<0>(ext);
+    }
+
+    int operator()(std::pair<std::size_t,std::size_t> begin
+                  ,std::pair<std::size_t,std::size_t> chunk
+                  ,std::size_t,std::size_t)
+    {
+        (*this)(begin.second,chunk.second);
+        return 0;
+    };
+
 
     int operator()(std::size_t begin, std::size_t size) const
     {
+      printf("Inner fold worker: %lu %lu\n",begin,size);
       extent_type ext = in_.extent();
 
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
       std::size_t grain  = top_cache_line_size;
 
-      std::size_t bound  = boost::fusion::at_c<0>(ext);
-      std::size_t ibound = (bound/grain) * grain;
+      std::size_t ibound = (bound_/grain) * grain;
       std::size_t obound = nt2::numel(boost::fusion::pop_front(ext));
 
       nt2::worker<tag::inner_fold_step_,BackEnd,Site,In,Neutral,Bop>
@@ -96,7 +111,7 @@ namespace nt2
 
       nt2::spawner<tag::fold_, BackEnd, target_type> s;
 
-      for(std::size_t j = begin, k=begin*bound; j < begin+size; ++j, k+=bound)
+      for(std::size_t j = begin, k=begin*bound_; j < begin+size; ++j, k+=bound_)
       {
         target_type vec_out = neutral_(nt2::meta::as_<target_type>());
         value_type s_out = neutral_(nt2::meta::as_<value_type>());
@@ -109,7 +124,7 @@ namespace nt2
 
         s_out = uop_( vec_out );
 
-        for(std::size_t i = ibound; i != bound; ++i)
+        for(std::size_t i = ibound; i != bound_; ++i)
           s_out = bop_(s_out, nt2::run(in_, i+k, meta::as_<value_type>()));
 
         nt2::run(out_, j, s_out);
@@ -120,9 +135,10 @@ namespace nt2
 
     Out                     out_;
     In                      in_;
-    Neutral const &         neutral_;
-    Bop const &             bop_;
-    Uop const &             uop_;
+    Neutral                 neutral_;
+    Bop                     bop_;
+    Uop                     uop_;
+    std::size_t             bound_;
 
     private:
     worker& operator=(worker const&);

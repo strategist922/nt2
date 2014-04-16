@@ -13,6 +13,7 @@
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/include/functor.hpp>
 
+#include <cstdio>
 #include <utility>
 
 namespace nt2
@@ -33,14 +34,14 @@ namespace nt2
       worker(Out const & out, In const & in)
       :out_(out),in_(in)
       {
-         extent_type ext = in.extent();
+         extent_type ext = in_.extent();
          bound_  = boost::fusion::at_c<0>(ext);
       }
 
-      int operator()(std::pair<std::size_t,std::size_t> begin
-                    ,std::pair<std::size_t,std::size_t> chunk
-                    ,std::size_t offset
-                    ,std::size_t size)
+      int operator()(std::pair<std::size_t,std::size_t> begin // Indexes of the element in left up corner of Out tile
+                    ,std::pair<std::size_t,std::size_t> chunk // height/width of Out tile
+                    ,std::size_t offset                       // Container offset
+                    ,std::size_t size)                        // Total number of elements to transform
       {
           for(std::size_t nn=0, n=begin.second; nn<chunk.second; ++nn, n+=bound_)
           {
@@ -52,10 +53,7 @@ namespace nt2
               ? size - o
               : chunk.first;
 
-              // printf("bound: %lu chunk height: %lu chunk width: %lu\n",bound_,chunk.first,chunk.second);
-              // printf("Size %lu Column %lu\n",size,nn);
-              // printf("Transform worker[%lu %lu[\n",offset + o,offset + o+colchunk);
-              work(out_,in_,std::make_pair(offset + o, colchunk));
+              (*this)(offset + o, colchunk);
             }
           }
 

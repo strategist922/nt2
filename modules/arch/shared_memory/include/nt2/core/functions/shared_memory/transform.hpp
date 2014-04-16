@@ -16,6 +16,8 @@
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/config/cache.hpp>
 
+#include <utility>
+
 namespace nt2 { namespace ext
 {
   //============================================================================
@@ -49,7 +51,7 @@ namespace nt2 { namespace ext
       nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
       nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
 
-      s(w,begin,size,grain);
+      s(w,begin,size,std::make_pair(grain,grain));
     }
   };
 

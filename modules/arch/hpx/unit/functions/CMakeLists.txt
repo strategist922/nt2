@@ -23,7 +23,7 @@ SET( SOURCES
   # rif.cpp
 #  rows.cpp
   transform.cpp
-  # sum.cpp
+  sum.cpp
   # homot.cpp
 # List of test files for toolbox core.settings
    )
