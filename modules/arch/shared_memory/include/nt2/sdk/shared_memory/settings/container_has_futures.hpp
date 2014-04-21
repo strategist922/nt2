@@ -51,12 +51,13 @@ namespace nt2 { namespace details {
         }
         calling_cards_.clear();
 
-        for(std::size_t n=0;n<futures_.size();++n)
-        {
-            futures_[n].get();
+
+          for(std::size_t n=0;n<futures_.size();++n)
+          {
+              futures_[n].get();
+          }
+          futures_.clear();
         }
-        futures_.clear();
-      }
     }
 
     ~container_has_futures()

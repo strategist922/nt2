@@ -42,15 +42,14 @@ namespace nt2
                     ,std::pair<std::size_t,std::size_t> chunk
                     ,std::size_t,std::size_t)
       {
-          (*this)(begin.first,chunk.first);
+          (*this)(begin.second,chunk.second);
           return 0;
       };
 
       int operator()(std::size_t begin, std::size_t size) const
       {
-          printf("Outer fold Out : %p In : %p\n",&out_,&in_);
-          printf("Outer fold worker: %lu %lu\n",begin,size);
           work(out_,in_,neutral_,bop_,uop_,std::make_pair(begin,size));
+          printf("OuterFold worker begin:%lu size:%lu\n",begin,size);
           return 0;
       }
 

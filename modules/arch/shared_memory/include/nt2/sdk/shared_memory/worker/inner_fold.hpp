@@ -130,6 +130,8 @@ namespace nt2
         nt2::run(out_, j, s_out);
       }
 
+      printf("Inner fold worker: %lu %lu Done\n",begin,size);
+
       return 0;
     }
 
