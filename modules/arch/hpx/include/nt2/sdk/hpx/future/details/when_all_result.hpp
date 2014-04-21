@@ -34,7 +34,7 @@ namespace nt2
     struct when_all_vec_result< tag::hpx_<Site>,Future>
     {
        typedef typename \
-         hpx::lcos::unique_future< \
+         hpx::lcos::future< \
            std::vector<Future> \
          > type;
     };
@@ -63,7 +63,7 @@ namespace nt2
       tag::hpx_<Site>,BOOST_PP_ENUM_PARAMS(N,A) \
       >
     {
-        typedef typename hpx::lcos::unique_future< \
+        typedef typename hpx::lcos::future< \
           HPX_STD_TUPLE< \
             BOOST_PP_ENUM(N, HPX_WHEN_N_DECAY_FUTURE, ~) \
           > \
