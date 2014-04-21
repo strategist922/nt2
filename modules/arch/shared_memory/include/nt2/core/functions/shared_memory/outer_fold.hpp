@@ -42,7 +42,7 @@ namespace nt2 { namespace ext
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(typename Out::value_type);
       if(!top_cache_line_size) top_cache_line_size = 1u;
 
-      std::size_t grain = top_cache_line_size/gcd(obound,top_cache_line_size);
+      std::size_t grain = top_cache_line_size/gcd(bound,top_cache_line_size);
 
       std::size_t size = nt2::numel(in);
 
@@ -50,7 +50,7 @@ namespace nt2 { namespace ext
       w(out, in, neutral, bop, uop);
 
       nt2::spawner< tag::transform_, tag::asynchronous_<BackEnd> > s;
-      s(w,0,size,std::make_pair(grain,obound));
+      s(w,0,size,std::make_pair(bound,grain));
     }
 
     private:

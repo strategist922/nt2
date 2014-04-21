@@ -62,7 +62,9 @@ namespace nt2
 
       int operator()(int begin, int size)
       {
+        printf("Transform worker begin:%d size:%d\n",begin,size);
         work(out_,in_,std::make_pair(begin,size));
+        printf("Transform worker begin:%d size:%d Done\n",begin,size);
         return 0;
       };
 
