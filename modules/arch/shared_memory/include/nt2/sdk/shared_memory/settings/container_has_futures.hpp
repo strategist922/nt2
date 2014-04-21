@@ -40,6 +40,8 @@ namespace nt2 { namespace details {
 
     inline void synchronize()
     {
+      if (!futures_.empty())
+      {
         for(call_it n=calling_cards_.begin();
             n!=calling_cards_.end();
             ++n)
@@ -53,11 +55,12 @@ namespace nt2 { namespace details {
             futures_[n].get();
         }
         futures_.clear();
+      }
     }
 
     ~container_has_futures()
     {
-      if (!futures_.empty()) synchronize();
+      synchronize();
     }
 
     //===========================================
