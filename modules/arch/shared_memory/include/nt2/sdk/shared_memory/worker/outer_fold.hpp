@@ -46,10 +46,9 @@ namespace nt2
           return 0;
       };
 
-      int operator()(std::size_t begin, std::size_t size) const
+      int operator()(std::size_t begin, std::size_t size)
       {
           work(out_,in_,neutral_,bop_,uop_,std::make_pair(begin,size));
-          printf("OuterFold worker begin:%lu size:%lu\n",begin,size);
           return 0;
       }
 

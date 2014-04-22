@@ -97,7 +97,6 @@ namespace nt2
 
     int operator()(std::size_t begin, std::size_t size) const
     {
-      printf("Inner fold worker: %lu %lu\n",begin,size);
       extent_type ext = in_.extent();
 
       std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
@@ -129,8 +128,6 @@ namespace nt2
 
         nt2::run(out_, j, s_out);
       }
-
-      printf("Inner fold worker: %lu %lu Done\n",begin,size);
 
       return 0;
     }

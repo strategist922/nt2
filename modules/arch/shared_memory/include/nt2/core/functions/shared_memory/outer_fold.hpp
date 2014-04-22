@@ -44,7 +44,7 @@ namespace nt2 { namespace ext
 
       std::size_t grain = top_cache_line_size/gcd(bound,top_cache_line_size);
 
-      std::size_t size = nt2::numel(in);
+      std::size_t size = bound*obound;
 
       nt2::worker<tag::outer_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
       w(out, in, neutral, bop, uop);
