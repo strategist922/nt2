@@ -53,14 +53,9 @@ namespace nt2
 
              std::size_t bound  = w.bound_;
 
-
-             printf("bound: %lu size: %lu\n",bound,size);
-
         // 2D parameters of In table
              std::size_t height = (size <= bound) ? size : bound;
              std::size_t width  = (size <= bound) ? 1 : size/bound + (size%bound > 0);
-
-             printf("Table to fold is: %lu * %lu\n",height,width);
 
         // Update grain_out to have a valid grain
               grain_out = std::make_pair(
@@ -73,10 +68,8 @@ namespace nt2
              std::size_t leftover_col = width  % grain_out.second;
 
         // Height/Width of Out in number of tiles
-             std::size_t nblocks_row  = height / grain_out.first;;
+             std::size_t nblocks_row  = height / grain_out.first;
              std::size_t nblocks_col  = width  / grain_out.second;
-
-             printf("Tile array is: %lu * %lu\n",nblocks_row,nblocks_col);
 
              std::size_t last_chunk_row =  grain_out.first  + leftover_row;
              std::size_t last_chunk_col =  grain_out.second + leftover_col;
@@ -84,9 +77,6 @@ namespace nt2
              details::container_has_futures<Arch> * pout_specifics;
              details::aggregate_specifics()(w.out_, 0, pout_specifics);
              details::container_has_futures<Arch> & out_specifics = * pout_specifics;
-
-
-             printf("Chosen grain is: %lu * %lu\n",grain_out.first,grain_out.second);
 
              details::container_has_futures<Arch> tmp;
              tmp.grain_ = grain_out;
@@ -139,8 +129,6 @@ namespace nt2
 
                      else
                      {
-                        printf("Continuation is called\n");
-
                          // Call operation
                          tmp.futures_.push_back(
                             nt2::when_all<Arch>(boost::move(data_in.futures_))

@@ -39,8 +39,6 @@ namespace nt2 { namespace details {
 
         end_n = std::min( LDX.second, end_n);
 
-        printf("Dependency block (%lu:%lu,%lu:%lu)",begin_m,end_m-1,begin_n,end_n-1);
-
         for(std::size_t n = begin_n; n!= end_n; n++)
         {
             for(std::size_t m = begin_m; m!= end_m; m++)
