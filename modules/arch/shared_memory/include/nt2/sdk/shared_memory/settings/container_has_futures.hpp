@@ -26,13 +26,29 @@ namespace nt2 { namespace details {
       container_has_futures *
     >::iterator call_it;
 
+    inline future & tile(std::size_t m, std::size_t n)
+    {
+      return futures_[m + n*NTiles_.first];
+    }
+
+    inline future const & tile(std::size_t m, std::size_t n) const
+    {
+      return futures_[m + n*NTiles_.first];
+    }
+
+    template<typename Iterator>
+    inline Iterator leftup(Iterator raw, std::size_t m, std::size_t n)
+    {
+      return raw +  size_.first * grain_.second * n + grain_.first * m ;
+    }
 
     inline void swap(container_has_futures& src)
     {
       boost::swap(futures_,src.futures_);
       boost::swap(grain_,src.grain_);
       boost::swap(calling_cards_,src.calling_cards_);
-      boost::swap(LDX_,src.LDX_);
+      boost::swap(NTiles_,src.NTiles_);
+      boost::swap(size_,src.size_);
 
       // Clear previous futures to avoid premature
       // synchronization
@@ -71,7 +87,8 @@ namespace nt2 { namespace details {
     std::vector<future> futures_;
     std::set< container_has_futures *> calling_cards_;
     std::pair<std::size_t,std::size_t> grain_;
-    std::pair<std::size_t,std::size_t> LDX_;
+    std::pair<std::size_t,std::size_t> NTiles_;
+    std::pair<std::size_t,std::size_t> size_;
 
   };
 
