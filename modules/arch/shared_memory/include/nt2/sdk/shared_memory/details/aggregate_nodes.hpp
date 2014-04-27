@@ -49,7 +49,7 @@ namespace nt2 { namespace details
         {
           details::insert_dependencies(
             data.futures_, data.begin_, data.chunk_
-          , futures_in, in.specifics().grain_, data.LDX_
+          , futures_in, in.specifics().grain_, data.NTiles_
           );
 
           // Leave the "calling card" of out

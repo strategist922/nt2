@@ -79,8 +79,9 @@ namespace nt2
              details::container_has_futures<Arch> & out_specifics = * pout_specifics;
 
              details::container_has_futures<Arch> tmp;
-             tmp.grain_ = grain_out;
-             tmp.LDX_   = std::make_pair(nblocks_row,nblocks_col);
+             tmp.grain_  = grain_out;
+             tmp.NTiles_ = std::make_pair(nblocks_row,nblocks_col);
+             tmp.size_   = std::make_pair(height,width);
              tmp.futures_.reserve(nblocks_row*nblocks_col);
 
              details::aggregate_futures aggregate_f;
@@ -105,7 +106,7 @@ namespace nt2
 
                      details::proto_data_with_futures< future
                       ,details::container_has_futures<Arch>
-                      > data_in ( begin, chunk, tmp.LDX_, out_specifics );
+                      > data_in ( begin, chunk, tmp.NTiles_, out_specifics );
 
                     for(call_it i=out_specifics.calling_cards_.begin();
                          i!=out_specifics.calling_cards_.end();
@@ -113,7 +114,7 @@ namespace nt2
                      {
                         details::insert_dependencies(
                             data_in.futures_, begin , chunk
-                           ,(*i)->futures_ , (*i)->grain_, (*i)->LDX_
+                           ,(*i)->futures_ , (*i)->grain_, (*i)->NTiles_
                           );
                      }
 

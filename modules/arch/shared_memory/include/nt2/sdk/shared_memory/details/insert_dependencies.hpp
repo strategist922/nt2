@@ -20,7 +20,7 @@ namespace nt2 { namespace details {
                                      std::pair<std::size_t,std::size_t> chunk,    // height/width of Out tile
                                      FutureVector & in,                           // vector of Futures In
                                      std::pair<std::size_t,std::size_t> grain_in, // Default height/width of In tile
-                                     std::pair<std::size_t,std::size_t> LDX       // Height of In in number of In tiles
+                                     std::pair<std::size_t,std::size_t> NTiles       // Height of In in number of In tiles
                                     )
     {
 
@@ -29,7 +29,7 @@ namespace nt2 { namespace details {
         ? (begin.first + chunk.first) / grain_in.first + 1
         : (begin.first + chunk.first) / grain_in.first;
 
-        end_m = std::min( LDX.first, end_m);
+        end_m = std::min( NTiles.first, end_m);
 
 
         std::size_t begin_n  = begin.second / grain_in.second;
@@ -37,13 +37,13 @@ namespace nt2 { namespace details {
         ? (begin.second + chunk.second) / grain_in.second + 1
         : (begin.second + chunk.second) / grain_in.second;
 
-        end_n = std::min( LDX.second, end_n);
+        end_n = std::min( NTiles.second, end_n);
 
         for(std::size_t n = begin_n; n!= end_n; n++)
         {
             for(std::size_t m = begin_m; m!= end_m; m++)
             {
-               out.push_back( in[m+n*LDX.first] );
+               out.push_back( in[m+n*NTiles.first] );
             }
         }
     }

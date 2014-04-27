@@ -23,15 +23,15 @@ namespace nt2 { namespace details {
 
         proto_data_with_futures(Pair begin
                                ,Pair chunk
-                               ,Pair LDX
+                               ,Pair NTiles
                                ,Specifics & specifics)
-        :begin_(begin),chunk_(chunk),LDX_(LDX),specifics_(specifics)
+        :begin_(begin),chunk_(chunk),NTiles_(NTiles),specifics_(specifics)
         {}
 
         FutureVector futures_;
         Pair begin_;
         Pair chunk_;
-        Pair LDX_;
+        Pair NTiles_;
         Specifics & specifics_;
 
         private:
