@@ -48,9 +48,8 @@ namespace nt2 { namespace details
         if (!futures_in.empty())
         {
           details::insert_dependencies(
-            data.futures_, data.begin_, data.chunk_
-          , futures_in, in.specifics().grain_, data.NTiles_
-          );
+            data.futures_, data.begin_, data.chunk_,in.specifics()
+            );
 
           // Leave the "calling card" of out
           in.specifics().calling_cards_.insert( &(data.specifics_) );

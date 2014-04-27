@@ -106,16 +106,13 @@ namespace nt2
 
                      details::proto_data_with_futures< future
                       ,details::container_has_futures<Arch>
-                      > data_in ( begin, chunk, tmp.NTiles_, out_specifics );
+                      > data_in ( begin, chunk, out_specifics );
 
                     for(call_it i=out_specifics.calling_cards_.begin();
                          i!=out_specifics.calling_cards_.end();
                          ++i)
                      {
-                        details::insert_dependencies(
-                            data_in.futures_, begin , chunk
-                           ,(*i)->futures_ , (*i)->grain_, (*i)->NTiles_
-                          );
+                        details::insert_dependencies( data_in.futures_, begin , chunk, **i );
                      }
 
                      aggregate_f(w.in_,0,data_in);

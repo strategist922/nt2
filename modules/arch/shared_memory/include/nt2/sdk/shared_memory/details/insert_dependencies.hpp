@@ -14,36 +14,34 @@
 
 namespace nt2 { namespace details {
 
-    template<typename FutureVector>
+    template<typename FutureVector, typename Specifics>
     inline void insert_dependencies( FutureVector & out,
                                      std::pair<std::size_t,std::size_t> begin,    // Indexes of the element in left up corner of Out tile
                                      std::pair<std::size_t,std::size_t> chunk,    // height/width of Out tile
-                                     FutureVector & in,                           // vector of Futures In
-                                     std::pair<std::size_t,std::size_t> grain_in, // Default height/width of In tile
-                                     std::pair<std::size_t,std::size_t> NTiles       // Height of In in number of In tiles
+                                     Specifics & in
                                     )
     {
 
-        std::size_t begin_m  = begin.first / grain_in.first;
-        std::size_t end_m    = ( (begin.first + chunk.first) % grain_in.first )
-        ? (begin.first + chunk.first) / grain_in.first + 1
-        : (begin.first + chunk.first) / grain_in.first;
+        std::size_t begin_m  = begin.first / in.grain_.first;
+        std::size_t end_m    = ( (begin.first + chunk.first) % in.grain_.first )
+        ? (begin.first + chunk.first) / in.grain_.first + 1
+        : (begin.first + chunk.first) / in.grain_.first;
 
-        end_m = std::min( NTiles.first, end_m);
+        end_m = std::min( in.NTiles_.first, end_m);
 
 
-        std::size_t begin_n  = begin.second / grain_in.second;
-        std::size_t end_n  = ( (begin.second + chunk.second) % grain_in.second )
-        ? (begin.second + chunk.second) / grain_in.second + 1
-        : (begin.second + chunk.second) / grain_in.second;
+        std::size_t begin_n  = begin.second / in.grain_.second;
+        std::size_t end_n  = ( (begin.second + chunk.second) % in.grain_.second )
+        ? (begin.second + chunk.second) / in.grain_.second + 1
+        : (begin.second + chunk.second) / in.grain_.second;
 
-        end_n = std::min( NTiles.second, end_n);
+        end_n = std::min( in.NTiles_.second, end_n);
 
         for(std::size_t n = begin_n; n!= end_n; n++)
         {
             for(std::size_t m = begin_m; m!= end_m; m++)
             {
-               out.push_back( in[m+n*NTiles.first] );
+               out.push_back( in.tile(m,n) );
             }
         }
     }
