@@ -40,6 +40,10 @@ namespace nt2
                                   , (A0&)(A1&)
                                   , 2
                                   );
+  NT2_FUNCTION_IMPLEMENTATION_TPL (tag::laswp_, laswp
+                                , (A0&)(A1&)(A2&)(A3&)
+                                , 4
+                                );
 
 }
 
