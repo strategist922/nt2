@@ -99,11 +99,11 @@ namespace nt2 { namespace ext
                     /*
                      * Swap behind.
                      */
-                    nt2::swap( L(_(1,i), ii+i+1), WORK(_(im+1,im+i)) );
+                    nt2::swap( L(i+1, _(ii+1,ii+i)), WORK(im+1,_(1,i)) );
                     /*
                      * Swap ahead.
                      */
-                    nt2::swap(U(_(ii+i+1,ii+sb), ii+i+1), A(_(im+1,im+sb-i), ii+i+1) );
+                    nt2::swap( U(ii+i+1,_(ii+i+1,ii+sb)), A(im+1,_(ii+i+1,ii+sb)) );
                     /*
                      * Set IPIV.
                      */

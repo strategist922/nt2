@@ -108,7 +108,7 @@ namespace nt2 { namespace ext
 
                 if (im != (ii+i)) {
                     im = im - M1;
-                    nt2::swap(a1(ii+i+1,_(1,N1)), a2(im+1),_(1,N1));
+                    nt2::swap( a1(ii+i+1,_(1,N1)), a2(im+1,_(1,N1)) );
                 }
                 ip = ip + 1;
             }
