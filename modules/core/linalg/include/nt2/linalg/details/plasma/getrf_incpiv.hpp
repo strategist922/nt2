@@ -32,11 +32,8 @@ namespace nt2 { namespace ext
 
      BOOST_FORCEINLINE result_type operator()( A0 const & IB, A1 & A, A2 & IPIV) const
      {
-        nt2_la_int M = nt2::height(A);
-        nt2_la_int N = nt2::width(A);
-
-        nt2_la_int i, j, k, sb;
-        nt2_la_int m;
+        std::size_t M = nt2::height(A);
+        std::size_t N = nt2::width(A);
 
         /* Check input arguments */
         if (M < 0) {
@@ -60,14 +57,15 @@ namespace nt2 { namespace ext
         if ((M == 0) || (N == 0) || (IB == 0))
             return 0;
 
-        k = min(M, N);
+        std::size_t k = min(M, N);
 
-        for(i =0 ; i < k; i += IB) {
-            sb = std::min(IB, k-i);
+        for(std::size_t i =0 ; i < k; i += IB) {
+
+            std::size_t sb = std::min(IB, k-i);
             /*
              * Factor diagonal and subdiagonal blocks and test for exact singularity.
              */
-            m = M-i;
+            std::size_t m = M-i;
             nt2::getf2(A(_(i+1,i+m),_(i+1,i+sb)), IPIV(_(i+1,i+m)));
             /*
              * Adjust pivot indices.
@@ -75,13 +73,13 @@ namespace nt2 { namespace ext
 
             if (i+sb < N) {
                 nt2::gessm( sb,
-                    IPIV(_(i,M)),
+                    IPIV(_(i+1,M)),
                     A(_(i+1,M),_(i+1,i+sb)),
                     A(_(i+1,M),_(i+sb+1,N))
                     );
             }
 
-            for(j = i; j < i+sb; j++) {
+            for(std::size_t j = i; j < i+sb; j++) {
                 IPIV[j] = i + IPIV[j];
             }
         }

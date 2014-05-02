@@ -34,15 +34,11 @@ namespace nt2 { namespace ext
 
      BOOST_FORCEINLINE result_type operator()( A0 const& IB, A1& IPIV, A2& L, A3& A) const
      {
-        nt2_la_int M = nt2::height(A);
-        nt2_la_int N = nt2::width(A);
-        nt2_la_int K = nt2::height(L);
+        std::size_t M = nt2::height(A);
+        std::size_t N = nt2::width(A);
+        std::size_t K = nt2::height(L);
 
-        static T mzone = -1.0;
-        static nt2_la_int ione  =  1;
-
-        nt2_la_int i, sb;
-        nt2_la_int tmp, tmp2;
+        T mzone = -1.0;
 
         /* Check input arguments */
         if (M < 0) {
@@ -74,8 +70,8 @@ namespace nt2 { namespace ext
         if ((M == 0) || (N == 0) || (K == 0) || (IB == 0))
             return 0;
 
-        for(i = 0; i < K; i += IB) {
-            sb = std::min(IB, K-i);
+        for(std::size_t i = 0; i < K; i += IB) {
+            std::size_t sb = std::min(IB, K-i);
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */
@@ -85,14 +81,15 @@ namespace nt2 { namespace ext
              */
             nt2::trsm( 'L', 'L', 'N', 'U',
                      , L(_(i+1,i+sb), _(i+1,i+sb)),
-                     , A(_(i+1,i+sb), _)
+                     , A(_(i+1,i+sb), _(1,N))
                      );
 
             if (i+sb < M) {
             /*
             * Update trailing submatrix.
             */
-            A(_(i+sb+1,M),_) = nt2::mtimes( L(_(i+sb+1,M), _(i+1,i+sb)), A(_(i+1,i+sb),_), mzone );
+            A(_(i+sb+1,M),_(1,N)) =
+              nt2::mtimes( L(_(i+sb+1,M), _(i+1,i+sb)), A(_(i+1,i+sb),_(1,N)), mzone );
             }
         }
         return 0;

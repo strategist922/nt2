@@ -20,20 +20,9 @@
 
 #include <algorithm>
 
-// namespace nt2
-// {
-    // template<typename T>
-    // nt2_la_int tstrf(nt2_la_int IB, nt2_la_int NB,
-    //                  table<T> & U,
-    //                  table<T> & A,
-    //                  table<T> & L,
-    //                  table<nt2_la_int> & IPIV,
-    //                  table<T> & WORK
-    //                  )
-    // {
 namespace nt2 { namespace ext
 {
-    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ssssm_, tag::cpu_
+    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tstrf_, tag::cpu_
                               , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(A4)(S4)(A5)(S5)
                               , (unspecified_<A0>)
                                 ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
@@ -55,17 +44,15 @@ namespace nt2 { namespace ext
                                               A5 & WORK
                                              ) const
      {
-        nt2_la_int IB = ibnb.first;
-        nt2_la_int NB = ibnb.second;
-        nt2_la_int M = nt2::height(A);
-        nt2_la_int N = nt2::width(A);
+        std::size_t IB = ibnb.first;
+        std::size_t NB = ibnb.second;
+        std::size_t M = nt2::height(A);
+        std::size_t N = nt2::width(A);
 
-        static T zzero = 0.0;
-        static T mzone =-1.0;
+        T zzero = 0.0;
+        T mzone =-1.0;
 
         T alpha;
-        nt2_la_int i, j, ii, sb;
-        nt2_la_int im, ip;
 
         /* Check input arguments */
         if (M < 0) {
@@ -100,12 +87,12 @@ namespace nt2 { namespace ext
         /* Set L to 0 */
         L = 0.;
 
-        ip = 0;
-        for (ii = 0; ii < N; ii += IB) {
-            sb = min(N-ii, IB);
+        for (std::size_t ii = 0, ip = 0; ii < N; ii += IB, ip++) {
 
-            for (i = 0; i < sb; i++) {
-                im = nt2::iamax(_(1,M), ii+i+1);
+            std::size_t sb = min(N-ii, IB);
+
+            for (std::size_t i = 0; i < sb; i++) {
+                std::size_t im = nt2::iamax(_(1,M), ii+i+1);
                 IPIV(ip+1) = ii+i+1;
 
                 if ( fabs( A(im+1,ii+i+1) ) > fabs( U(ii+i+1,ii+i+1) ) ){
@@ -136,7 +123,6 @@ namespace nt2 { namespace ext
                           , U(ii+i+1, _(ii+i+2,ii+sb))
                           , A(_(1,M), _(ii+i+2,ii+sb))
                           );
-                ip = ip+1;
             }
             /*
              * Apply the subpanel to the rest of the panel.
@@ -148,15 +134,15 @@ namespace nt2 { namespace ext
                     }
                 }
 
-            nt2_la_int nt2::ssssm( sb,
-                             U(_(ii+1,ii+NB), _(ii+sb+1,N)),
-                             A(_(1,M), _(ii+sb+1,N)),
-                             L(_(1,sb), _(ii+1,ii+sb)),
-                             WORK(_(1,M),_(1,N-(ii+sb))),
-                             IPIV(_(ii+1,M))
-                            );
+             nt2::ssssm( sb,
+                         U(_(ii+1,ii+NB), _(ii+sb+1,N)),
+                         A(_(1,M), _(ii+sb+1,N)),
+                         L(_(1,sb), _(ii+1,ii+sb)),
+                         WORK(_(1,M),_(1,N-(ii+sb))),
+                         IPIV(_(ii+1,M))
+                        );
 
-                for(j = ii; j < ii+sb; j++) {
+                for(std::size_t j = ii; j < ii+sb; j++) {
                     if (IPIV(j+1) <= NB) {
                         IPIV(j+1) = IPIV(j+1) + ii;
                     }

@@ -43,11 +43,11 @@ namespace nt2 { namespace ext
                                                A5 & IPIV
                                              ) const
      {
-        nt2_la_int M1 = nt2::height(a1);
-        nt2_la_int N1 = nt2::width(a1);
-        nt2_la_int M2 = nt2::height(a2);
-        nt2_la_int N2 = nt2::width(a2);
-        nt2_la_int K  = nt2::height(L1);
+        std::size_t M1 = nt2::height(a1);
+        std::size_t N1 = nt2::width(a1);
+        std::size_t M2 = nt2::height(a2);
+        std::size_t N2 = nt2::width(a2);
+        std::size_t K  = nt2::height(L1);
 
         static T mzone =-1.0;
 
@@ -80,11 +80,11 @@ namespace nt2 { namespace ext
             return -6;
         }
         if (a1.leading_size() < std::max(1,M1)) {
-            coreblas_error(8, "Illegal value of LDa1");
+            coreblas_error(8, "Illegal value of LDA1");
             return -8;
         }
         if (a2.leading_size() < std::max(1,M2)) {
-            coreblas_error(10, "Illegal value of LDa2");
+            coreblas_error(10, "Illegal value of LDA2");
             return -10;
         }
         if (L1.leading_size() < std::max(1,IB)) {
@@ -100,17 +100,15 @@ namespace nt2 { namespace ext
         if ((M1 == 0) || (N1 == 0) || (M2 == 0) || (N2 == 0) || (K == 0) || (IB == 0))
             return 0;
 
-        ip = 0;
-
-        for(ii = 0; ii < K; ii += IB) {
-            sb = std::min(K-ii, IB);
+        for(std::size_t ii = 0, ip =0; ii < K; ii += IB, ip++) {
+            std::size_t sb = std::min(K-ii, IB);
 
             for(i = 0; i < sb; i++) {
                 im = IPIV[ip]-1;
 
                 if (im != (ii+i)) {
                     im = im - M1;
-                    nt2::swap(a1(_(ii+i+1,ii+i+N1),_), a2(_(im+1,im+N1),_));
+                    nt2::swap(a1(ii+i+1,_(1,N1)), a2(im+1),_(1,N1));
                 }
                 ip = ip + 1;
             }
