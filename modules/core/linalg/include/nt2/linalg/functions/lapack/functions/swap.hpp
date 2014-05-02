@@ -49,7 +49,7 @@ namespace nt2 { namespace ext
 
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
     {
-      nt2_la_int ld = nt2::height(a0);
+      nt2_la_int ld = a0.leading_size();
       nt2_la_int inc = 1;
 
       NT2_F77NAME(dswap) ( &ld, a0.raw(), &inc, a1.raw(), &inc);
@@ -67,7 +67,7 @@ namespace nt2 { namespace ext
 
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
     {
-      nt2_la_int ld = nt2::height(a0);
+      nt2_la_int ld = a0.leading_size();
       nt2_la_int inc = 1;
 
       NT2_F77NAME(sswap) ( &ld, a0.raw(), &inc, a1.raw(), &inc);
@@ -85,7 +85,7 @@ namespace nt2 { namespace ext
 
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
     {
-      nt2_la_int ld = nt2::height(a0);
+      nt2_la_int ld = a0.leading_size();
       nt2_la_int inc = 1;
 
       NT2_F77NAME(cswap) ( &ld, a0.raw(), &inc, a1.raw(), &inc);
@@ -103,7 +103,7 @@ namespace nt2 { namespace ext
 
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
     {
-      nt2_la_int ld = nt2::height(a0);
+      nt2_la_int ld = a0.leading_size();
       nt2_la_int inc = 1;
 
       NT2_F77NAME(zswap) ( &ld, a0.raw(), &inc, a1.raw(), &inc);
