@@ -95,7 +95,7 @@ namespace nt2 { namespace ext
                 std::size_t im = nt2::iamax(_(1,M), ii+i+1);
                 IPIV(ip+1) = ii+i+1;
 
-                if ( fabs( A(im+1,ii+i+1) ) > fabs( U(ii+i+1,ii+i+1) ) ){
+                if ( std::fabs( A(im+1,ii+i+1) ) > std::fabs( U(ii+i+1,ii+i+1) ) ){
                     /*
                      * Swap behind.
                      */
