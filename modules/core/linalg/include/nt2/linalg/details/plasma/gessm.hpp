@@ -19,14 +19,21 @@
 
 #include <algorithm>
 
-namespace nt2
+namespace nt2 { namespace ext
 {
-    template<typename T>
-    nt2_la_int gessm(nt2_la_int IB,
-                     const table<nt2_la_int> & IPIV,
-                     const table<T> & L,
-                     table<T> & A)
+    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::gessm_, tag::cpu_
+                              , (A0)(A1)(S1)(A2)(S2)(A3)(S3)
+                              , (scalar_< integer_<A0> >)
+                                ((container_< nt2::tag::table_, integer_<A1>, S1 >))
+                                ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
+                                ((container_< nt2::tag::table_, unspecified_<A3>, S3 >))
+                              )
     {
+     typedef nt2_la_int result_type;
+     typedef typename A2::value_type T;
+
+     BOOST_FORCEINLINE result_type operator()( A0 const& IB, A1& IPIV, A2& L, A3& A) const
+     {
         nt2_la_int M = nt2::height(A);
         nt2_la_int N = nt2::width(A);
         nt2_la_int K = nt2::height(L);
@@ -72,7 +79,7 @@ namespace nt2
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */
-            nt2::laswp(A(_(1,M),_(1,N)), i+1, i+sb, IPIV(_(1,M));
+            nt2::laswp(A(_(1,M),_(1,N)), i+1, i+sb, IPIV(_(1,M)));
             /*
              * Compute block row of U.
              */
@@ -85,11 +92,13 @@ namespace nt2
             /*
             * Update trailing submatrix.
             */
-            A(_(i+sb+1,M),_) = nt2::mtimes( L(_(i+sb+1,M), _(i+1,i+sb)), A(_(i+1,i+sb),_), mzone )
+            A(_(i+sb+1,M),_) = nt2::mtimes( L(_(i+sb+1,M), _(i+1,i+sb)), A(_(i+1,i+sb),_), mzone );
             }
         }
         return 0;
     }
-}
+  };
+
+} }
 
 #endif

@@ -19,21 +19,34 @@
 
 #include <algorithm>
 
-namespace nt2
+namespace nt2 { namespace ext
 {
-    template<typename T>
-    nt2_la_int ssssm( nt2_la_int IB,
-                nt2::table<T> & A1,
-                nt2::table<T> & A2,
-                nt2::table<T> & L1,
-                nt2::table<T> & L2,
-                const nt2::table<nt2_la_int> & IPIV
-                )
+    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ssssm_, tag::cpu_
+                              , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(A4)(S4)(A5)(S5)
+                              , (scalar_< integer_<A0> >)
+                                ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
+                                ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
+                                ((container_< nt2::tag::table_, unspecified_<A3>, S3 >))
+                                ((container_< nt2::tag::table_, unspecified_<A4>, S4 >))
+                                ((container_< nt2::tag::table_, integer_<A5>, S5 >))
+                              )
     {
-        nt2_la_int M1 = nt2::height(A1);
-        nt2_la_int N1 = nt2::width(A1);
-        nt2_la_int M2 = nt2::height(A2);
-        nt2_la_int N2 = nt2::width(A2);
+
+     typedef nt2_la_int result_type;
+     typedef typename A1::value_type T;
+
+     BOOST_FORCEINLINE result_type operator()( A0 const & IB,
+                                               A1 & a1,
+                                               A2 & a2,
+                                               A3 & L1,
+                                               A4 & L2,
+                                               A5 & IPIV
+                                             ) const
+     {
+        nt2_la_int M1 = nt2::height(a1);
+        nt2_la_int N1 = nt2::width(a1);
+        nt2_la_int M2 = nt2::height(a2);
+        nt2_la_int N2 = nt2::width(a2);
         nt2_la_int K  = nt2::height(L1);
 
         static T mzone =-1.0;
@@ -66,12 +79,12 @@ namespace nt2
             coreblas_error(6, "Illegal value of IB");
             return -6;
         }
-        if (A1.leading_size() < std::max(1,M1)) {
-            coreblas_error(8, "Illegal value of LDA1");
+        if (a1.leading_size() < std::max(1,M1)) {
+            coreblas_error(8, "Illegal value of LDa1");
             return -8;
         }
-        if (A2.leading_size() < std::max(1,M2)) {
-            coreblas_error(10, "Illegal value of LDA2");
+        if (a2.leading_size() < std::max(1,M2)) {
+            coreblas_error(10, "Illegal value of LDa2");
             return -10;
         }
         if (L1.leading_size() < std::max(1,IB)) {
@@ -85,7 +98,7 @@ namespace nt2
 
         /* Quick return */
         if ((M1 == 0) || (N1 == 0) || (M2 == 0) || (N2 == 0) || (K == 0) || (IB == 0))
-            return KERNEL_SUCCESS;
+            return 0;
 
         ip = 0;
 
@@ -97,7 +110,7 @@ namespace nt2
 
                 if (im != (ii+i)) {
                     im = im - M1;
-                    nt2::swap(A1(_(ii+i+1,ii+i+N1),_), A2(_(im+1,im+N1),_));
+                    nt2::swap(a1(_(ii+i+1,ii+i+N1),_), a2(_(im+1,im+N1),_));
                 }
                 ip = ip + 1;
             }
@@ -105,18 +118,20 @@ namespace nt2
             nt2::trsm(
                 'L', 'L', 'N', 'U',
                 L1(_(1,sb),_(ii+1,ii+sb)),
-                A1(_(ii+1,ii+sb),_)
+                a1(_(ii+1,ii+sb),_)
                 );
 
-            A2 = nt2::mtimes(
+            a2 = nt2::mtimes(
                 'N','N'
                 L2(_,_(ii+1,ii+sb)),
-                A1(_(ii+1,ii+sb),_(1,N2)),
+                a1(_(ii+1,ii+sb),_(1,N2)),
                 mzone
                 );
         }
-        return KERNEL_SUCCESS;
+        return 0;
     }
-}
+  };
+
+} }
 
 #endif

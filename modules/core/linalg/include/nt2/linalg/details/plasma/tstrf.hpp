@@ -20,18 +20,43 @@
 
 #include <algorithm>
 
-namespace nt2
+// namespace nt2
+// {
+    // template<typename T>
+    // nt2_la_int tstrf(nt2_la_int IB, nt2_la_int NB,
+    //                  table<T> & U,
+    //                  table<T> & A,
+    //                  table<T> & L,
+    //                  table<nt2_la_int> & IPIV,
+    //                  table<T> & WORK
+    //                  )
+    // {
+namespace nt2 { namespace ext
 {
-    template<typename T>
-    nt2_la_int tstrf(nt2_la_int IB, nt2_la_int NB,
-                     table<T> & U,
-                     table<T> & A,
-                     table<T> & L,
-                     table<nt2_la_int> & IPIV,
-                     table<T> & WORK
-                     )
+    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ssssm_, tag::cpu_
+                              , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(A4)(S4)(A5)(S5)
+                              , (unspecified_<A0>)
+                                ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
+                                ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
+                                ((container_< nt2::tag::table_, unspecified_<A3>, S3 >))
+                                ((container_< nt2::tag::table_, integer_<A4>, S4 >))
+                                ((container_< nt2::tag::table_, unspecified_<A5>, S5 >))
+                              )
     {
 
+     typedef nt2_la_int result_type;
+     typedef typename A1::value_type T;
+
+     BOOST_FORCEINLINE result_type operator()(A0 const & ibnb,
+                                              A1 & U,
+                                              A2 & A,
+                                              A3 & L,
+                                              A4 & IPIV,
+                                              A5 & WORK
+                                             ) const
+     {
+        nt2_la_int IB = ibnb.first;
+        nt2_la_int NB = ibnb.second;
         nt2_la_int M = nt2::height(A);
         nt2_la_int N = nt2::width(A);
 
@@ -83,7 +108,7 @@ namespace nt2
                 im = nt2::iamax(_(1,M), ii+i+1);
                 IPIV(ip+1) = ii+i+1;
 
-                if (fabs( A(im+1,ii+i+1) ) > fabs( U(ii+i+1,ii+i+1) ) {
+                if ( fabs( A(im+1,ii+i+1) ) > fabs( U(ii+i+1,ii+i+1) ) ){
                     /*
                      * Swap behind.
                      */
@@ -140,6 +165,8 @@ namespace nt2
         }
         return 0;
     }
-}
+  };
+
+} }
 
 #endif

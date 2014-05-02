@@ -18,14 +18,20 @@
 
 #include <algorithm>
 
-namespace nt2
+namespace nt2 { namespace ext
 {
-    template<typename T>
-    nt2_la_int getrf_incpiv( nt2_la_int IB,
-                             table<T> & A,
-                             table< nt2_la_int> IPIV
-                            )
+    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::getrf_incpiv_, tag::cpu_
+                              , (A0)(A1)(S1)(A2)(S2)
+                              , (scalar_< integer_<A0> >)
+                                ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
+                                ((container_< nt2::tag::table_, integer_<A2>, S2 >))
+                              )
     {
+     typedef nt2_la_int result_type;
+     typedef typename A1::value_type T;
+
+     BOOST_FORCEINLINE result_type operator()( A0 const & IB, A1 & A, A2 & IPIV) const
+     {
         nt2_la_int M = nt2::height(A);
         nt2_la_int N = nt2::width(A);
 
@@ -81,6 +87,8 @@ namespace nt2
         }
         return 0;
     }
-}
+  };
+
+} }
 
 #endif
