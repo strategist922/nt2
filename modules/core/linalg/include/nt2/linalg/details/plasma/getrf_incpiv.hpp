@@ -80,7 +80,7 @@ namespace nt2 { namespace ext
             }
 
             for(std::size_t j = i; j < i+sb; j++) {
-                IPIV[j] = i + IPIV[j];
+                IPIV(j) = i + IPIV(j);
             }
         }
         return 0;
