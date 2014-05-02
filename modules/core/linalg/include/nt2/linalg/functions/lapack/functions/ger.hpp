@@ -83,7 +83,7 @@ namespace nt2 { namespace ext
                             , ((container_< nt2::tag::table_, float_<A0>, S0 >))
                             , ((container_< nt2::tag::table_, float_<A1>, S1 >))
                             , ((container_< nt2::tag::table_, float_<A2>, S2 >))
-                            , (scalar_< complex_< float_<A2> > >)
+                            , (scalar_< complex_< float_<A3> > >)
                             )
   {
      typedef void result_type;
@@ -105,7 +105,7 @@ namespace nt2 { namespace ext
                             , ((container_< nt2::tag::table_, complex_< double_<A0> >, S0 > ))
                             , ((container_< nt2::tag::table_, complex_< double_<A1> >, S1 > ))
                             , ((container_< nt2::tag::table_, complex_< double_<A2> >, S2 > ))
-                            , (scalar_< complex_< double_<A2> > >)
+                            , (scalar_< complex_< double_<A3> > >)
                             )
   {
      typedef void result_type;
