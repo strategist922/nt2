@@ -17,6 +17,8 @@
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
+#include <algorithm>
+
 namespace nt2
 {
     template<typename T>
@@ -34,7 +36,7 @@ namespace nt2
         nt2_la_int N2 = nt2::width(A2);
         nt2_la_int K  = nt2::height(L1);
 
-        static double mzone =-1.0;
+        static T mzone =-1.0;
 
         nt2_la_int i, ii, sb;
         nt2_la_int im, ip;
@@ -64,19 +66,19 @@ namespace nt2
             coreblas_error(6, "Illegal value of IB");
             return -6;
         }
-        if (A1.leading_size() < max(1,M1)) {
+        if (A1.leading_size() < std::max(1,M1)) {
             coreblas_error(8, "Illegal value of LDA1");
             return -8;
         }
-        if (A2.leading_size() < max(1,M2)) {
+        if (A2.leading_size() < std::max(1,M2)) {
             coreblas_error(10, "Illegal value of LDA2");
             return -10;
         }
-        if (L1.leading_size() < max(1,IB)) {
+        if (L1.leading_size() < std::max(1,IB)) {
             coreblas_error(12, "Illegal value of LDL1");
             return -12;
         }
-        if (L2.leading_size() < max(1,M2)) {
+        if (L2.leading_size() < std::max(1,M2)) {
             coreblas_error(14, "Illegal value of LDL2");
             return -14;
         }
@@ -88,7 +90,7 @@ namespace nt2
         ip = 0;
 
         for(ii = 0; ii < K; ii += IB) {
-            sb = min(K-ii, IB);
+            sb = std::min(K-ii, IB);
 
             for(i = 0; i < sb; i++) {
                 im = IPIV[ip]-1;

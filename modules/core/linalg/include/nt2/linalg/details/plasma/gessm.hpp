@@ -17,6 +17,8 @@
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
+#include <algorithm>
+
 namespace nt2
 {
     template<typename T>
@@ -66,7 +68,7 @@ namespace nt2
             return 0;
 
         for(i = 0; i < K; i += IB) {
-            sb = min(IB, K-i);
+            sb = std::min(IB, K-i);
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */

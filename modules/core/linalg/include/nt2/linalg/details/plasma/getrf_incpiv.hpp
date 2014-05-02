@@ -16,6 +16,8 @@
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
+#include <algorithm>
+
 namespace nt2
 {
     template<typename T>
@@ -50,12 +52,12 @@ namespace nt2
 
         /* Quick return */
         if ((M == 0) || (N == 0) || (IB == 0))
-            return KERNEL_SUCCESS;
+            return 0;
 
         k = min(M, N);
 
         for(i =0 ; i < k; i += IB) {
-            sb = min(IB, k-i);
+            sb = std::min(IB, k-i);
             /*
              * Factor diagonal and subdiagonal blocks and test for exact singularity.
              */

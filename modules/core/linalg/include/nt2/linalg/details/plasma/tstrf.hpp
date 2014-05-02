@@ -18,15 +18,18 @@
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
+#include <algorithm>
+
 namespace nt2
 {
-    nt2_la_int CORE_dtstrf(nt2_la_int IB, nt2_la_int NB,
-                    table<T> & U,
-                    table<T> & A,
-                    table<T> & L,
-                    table<nt2_la_int> & IPIV,
-                    table<T> & WORK
-                    )
+    template<typename T>
+    nt2_la_int tstrf(nt2_la_int IB, nt2_la_int NB,
+                     table<T> & U,
+                     table<T> & A,
+                     table<T> & L,
+                     table<nt2_la_int> & IPIV,
+                     table<T> & WORK
+                     )
     {
 
         nt2_la_int M = nt2::height(A);
@@ -52,15 +55,15 @@ namespace nt2
             coreblas_error(3, "Illegal value of IB");
             return -3;
         }
-        if ((U.leading_size() < max(1,NB)) && (NB > 0)) {
+        if ((U.leading_size() < std::max(1,NB)) && (NB > 0)) {
             coreblas_error(6, "Illegal value of LDU");
             return -6;
         }
-        if ((A.leading_size() < max(1,M)) && (M > 0)) {
+        if ((A.leading_size() < std::max(1,M)) && (M > 0)) {
             coreblas_error(8, "Illegal value of LDA");
             return -8;
         }
-        if ((L.leading_size() < max(1,IB)) && (IB > 0)) {
+        if ((L.leading_size() < std::max(1,IB)) && (IB > 0)) {
             coreblas_error(10, "Illegal value of LDL");
             return -10;
         }

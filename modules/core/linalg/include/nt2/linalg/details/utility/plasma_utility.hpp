@@ -10,12 +10,6 @@
 #define NT2_LINALG_DETAILS_UTILITY_PLASMA_UTILITY_HPP_INCLUDED
 
 #define coreblas_error(k, str) fprintf(stderr, "%s: Parameter %d / %s\n", __func__, k, str);
-#ifndef max
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#endif
-#ifndef min
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#endif
 
 #endif
 
