@@ -89,7 +89,7 @@ namespace nt2 { namespace ext
 
         for (std::size_t ii = 0, ip = 0; ii < N; ii += IB, ip++) {
 
-            std::size_t sb = min(N-ii, IB);
+            std::size_t sb = std::min(N-ii, IB);
 
             for (std::size_t i = 0; i < sb; i++) {
                 std::size_t im = nt2::iamax(_(1,M), ii+i+1);

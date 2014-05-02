@@ -57,11 +57,11 @@ namespace nt2 { namespace ext
             coreblas_error(4, "Illegal value of IB");
             return -4;
         }
-        if ((L.leading_size() < max(1,M)) && (M > 0)) {
+        if ((L.leading_size() < std::max(1,M)) && (M > 0)) {
             coreblas_error(7, "Illegal value of LDL");
             return -7;
         }
-        if ((A.leading_size() < max(1,M)) && (M > 0)) {
+        if ((A.leading_size() < std::max(1,M)) && (M > 0)) {
             coreblas_error(9, "Illegal value of LDA");
             return -9;
         }

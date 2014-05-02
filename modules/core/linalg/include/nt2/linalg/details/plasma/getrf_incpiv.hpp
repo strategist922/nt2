@@ -48,7 +48,7 @@ namespace nt2 { namespace ext
             coreblas_error(3, "Illegal value of IB");
             return -3;
         }
-        if ((LDA < max(1,M)) && (M > 0)) {
+        if ((LDA < std::max(1,M)) && (M > 0)) {
             coreblas_error(5, "Illegal value of LDA");
             return -5;
         }
@@ -57,7 +57,7 @@ namespace nt2 { namespace ext
         if ((M == 0) || (N == 0) || (IB == 0))
             return 0;
 
-        std::size_t k = min(M, N);
+        std::size_t k = std::min(M, N);
 
         for(std::size_t i =0 ; i < k; i += IB) {
 
