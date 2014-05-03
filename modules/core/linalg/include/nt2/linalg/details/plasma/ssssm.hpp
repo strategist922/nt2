@@ -104,7 +104,7 @@ namespace nt2 { namespace ext
             std::size_t sb = std::min(K-ii, IB);
 
             for(i = 0; i < sb; i++) {
-                im = IPIV[ip]-1;
+                im = IPIV(ip)-1;
 
                 if (im != (ii+i)) {
                     im = im - M1;
