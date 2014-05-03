@@ -43,7 +43,7 @@ namespace nt2
 
     BOOST_FORCEINLINE void shift()
     {
-      nt2::details::circ_shift_<Operation::height>::call(*this);
+      nt2::details::circ_shift_<Operation::height-1>::call(*this);
     }
   };
 }

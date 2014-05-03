@@ -70,7 +70,7 @@ namespace nt2
       typedef typename boost::simd::meta::as_pack<base_type,Card>::type    type;
 
       typedef typename
-              Operation::template rebind<Operation::height,1>::other h_op;
+              Operation::template rebind<1,Operation::width>::other h_op;
 
       static const std::size_t hh = Operation::height/2;
       static const std::size_t hw = (Operation::width/2)*Card;
@@ -83,7 +83,7 @@ namespace nt2
 
         for(std::size_t i = hw; i<w-hw; i+=Card)
         {
-          details::reduce_column<Operation,type>(j, i+1, rs[Operation::width-1], in);
+          details::reduce_column<Operation,type>(j, i+Card, rs[Operation::width-1], in);
 
           rs.slide();
           aligned_store( rs.fold(), &out[j][i] );
