@@ -9,9 +9,11 @@
 #ifndef NT2_LINALG_DETAILS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
 #define NT2_LINALG_DETAILS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
 
-#include <nt2/linalg/details/utility/plasma_utility.hpp>
-#include <nt2/linalg/details/plasma/gessm.hpp>
+#include <nt2/linalg/functions/getrf_incpiv.hpp>
+#include <nt2/linalg/functions/gessm.hpp>
 #include <nt2/linalg/functions/getf2.hpp>
+
+#include <nt2/linalg/details/utility/plasma_utility.hpp>
 
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>

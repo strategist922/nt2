@@ -6,14 +6,16 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_LINALG_DETAILS_PLASMA_SSSSM_HPP_INCLUDED
-#define NT2_LINALG_DETAILS_PLASMA_SSSSM_HPP_INCLUDED
+#ifndef NT2_LINALG_DETAILS_PLASMA_TSTRF_HPP_INCLUDED
+#define NT2_LINALG_DETAILS_PLASMA_TSTRF_HPP_INCLUDED
 
-#include <nt2/linalg/details/utility/plasma_utility.hpp>
+#include <nt2/linalg/functions/tstrf.hpp>
+#include <nt2/linalg/functions/ssssm.hpp>
 #include <nt2/linalg/functions/ger.hpp>
 #include <nt2/linalg/functions/iamax.hpp>
 #include <nt2/linalg/functions/swap.hpp>
-#include <nt2/linalg/details/plasma/ssssm.hpp>
+
+#include <nt2/linalg/details/utility/plasma_utility.hpp>
 
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>

@@ -9,10 +9,12 @@
 #ifndef NT2_LINALG_DETAILS_PLASMA_SSSSM_HPP_INCLUDED
 #define NT2_LINALG_DETAILS_PLASMA_SSSSM_HPP_INCLUDED
 
-#include <nt2/linalg/details/utility/plasma_utility.hpp>
+#include <nt2/linalg/functions/ssssm.hpp>
 #include <nt2/linalg/functions/swap.hpp>
 #include <nt2/linalg/functions/trsm.hpp>
 #include <nt2/linalg/functions/mtimes.hpp>
+
+#include <nt2/linalg/details/utility/plasma_utility.hpp>
 
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
