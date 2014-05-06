@@ -34,6 +34,8 @@ namespace nt2 { namespace ext
 
      BOOST_FORCEINLINE result_type operator()( A0 const & IB, A1 & A, A2 & IPIV) const
      {
+        using nt2::_;
+
         std::size_t M = nt2::height(A);
         std::size_t N = nt2::width(A);
 

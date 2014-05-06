@@ -45,6 +45,8 @@ namespace nt2 { namespace ext
                                                A5 & IPIV
                                              ) const
      {
+        using nt2::_;
+
         std::size_t M1 = nt2::height(a1);
         std::size_t N1 = nt2::width(a1);
         std::size_t M2 = nt2::height(a2);

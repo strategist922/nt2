@@ -46,6 +46,8 @@ namespace nt2 { namespace ext
                                               A5 & WORK
                                              ) const
      {
+        using nt2::_;
+
         std::size_t IB = ibnb.first;
         std::size_t NB = ibnb.second;
         std::size_t M = nt2::height(A);
