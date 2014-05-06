@@ -15,6 +15,7 @@ SET( SOURCES
   geneig_result.cpp
   ldl_result.cpp
   lu.cpp
+  lu_incpiv.cpp
   qr.cpp
   schur_result.cpp
   svd.cpp

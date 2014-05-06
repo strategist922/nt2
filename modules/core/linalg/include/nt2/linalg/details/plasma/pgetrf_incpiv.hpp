@@ -48,6 +48,8 @@ namespace nt2 {
       template<typename T>
       void operator()(T const &)
       {
+        using nt2::_;
+
         T1 & A(*Aptr);
         T2 & IPIV(*IPIVptr);
 
@@ -83,6 +85,8 @@ namespace nt2 {
       template< typename T>
       void operator()(T const &)
       {
+        using nt2::_;
+
         T1 & A(*Aptr);
         T1 & L(*Lptr);
         T2 & IPIV(*IPIVptr);
@@ -124,6 +128,8 @@ namespace nt2 {
       template<typename T>
       void operator()(T const &)
       {
+        using nt2::_;
+
         T1 & A(*Aptr);
         T2 & IPIV(*IPIVptr);
 
@@ -161,6 +167,8 @@ namespace nt2 {
       template< typename T>
       void operator()(T const &)
       {
+        using nt2::_;
+
         T1 & A(*Aptr);
         T1 & L(*Lptr);
         T2 & IPIV(*IPIVptr);

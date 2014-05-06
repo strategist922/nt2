@@ -20,7 +20,7 @@ namespace nt2
 {
   namespace tag
   {
-    /// @brief Defines getrf_incpiv function tag
+    /// @brief Defines parallel getrf_incpiv function tag
     struct pgetrf_incpiv_ : boost::dispatch::tag::formal_
     {
       /// INTERNAL ONLY
@@ -36,7 +36,7 @@ namespace nt2
 
     @return
   **/
-  NT2_FUNCTION_IMPLEMENTATION_TPL (tag::pgetrf_incpiv_, getrf_incpiv
+  NT2_FUNCTION_IMPLEMENTATION_TPL (tag::pgetrf_incpiv_, pgetrf_incpiv
                                   , (A0 const &)(A1&)(A2&)(A3&)
                                   , 4
                                   );
