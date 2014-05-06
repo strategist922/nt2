@@ -185,10 +185,10 @@ namespace nt2 {
   {
       NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::pgetrf_incpiv_, (nt2::tag::shared_memory_<Arch,Site>)
                                 , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(Arch)(Site)
-                                , (scalar_< std::size_teger_<A0> >)
+                                , (scalar_< integer_<A0> >)
                                   ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
                                   ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
-                                  ((container_< nt2::tag::table_, std::size_teger_<A3>, S3 >))
+                                  ((container_< nt2::tag::table_, integer_<A3>, S3 >))
                                 )
       {
        typedef void result_type;
