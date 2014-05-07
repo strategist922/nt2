@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_LINALG_DETAILS_PLASMA_PGETRF_INCPIV_HPP_INCLUDED
-#define NT2_LINALG_DETAILS_PLASMA_PGETRF_INCPIV_HPP_INCLUDED
+#ifndef NT2_LINALG_FUNCTIONS_PLASMA_PGETRF_INCPIV_HPP_INCLUDED
+#define NT2_LINALG_FUNCTIONS_PLASMA_PGETRF_INCPIV_HPP_INCLUDED
 
 #include <nt2/linalg/functions/pgetrf_incpiv.hpp>
 #include <nt2/linalg/functions/gessm.hpp>
@@ -121,7 +121,7 @@ namespace nt2 {
         std::size_t nn_,
         T2 & IPIV_
         )
-      :A(&A_),m(m_),n(n_),nb(nb_),ib(ib_),k(k_),nn(nn_)
+      :Aptr(&A_),m(m_),n(n_),nb(nb_),ib(ib_),k(k_),nn(nn_)
       ,IPIVptr(IPIV_)
       {}
 
@@ -182,21 +182,21 @@ namespace nt2 {
                   );
       }
 
-      T1 * A;
-      T1 * L;
+      T1 * Aptr;
+      T1 * Lptr;
       std::size_t m,n,nb,ib,k,mm,nn;
-      T2 * IPIV;
+      T2 * IPIVptr;
     };
   }
 
   namespace ext
   {
       NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::pgetrf_incpiv_, (nt2::tag::shared_memory_<Arch,Site>)
-                                , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(Arch)(Site)
+                                , (A0)(A1)(A2)(A3)(Arch)(Site)
                                 , (scalar_< integer_<A0> >)
-                                  ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
-                                  ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
-                                  ((container_< nt2::tag::table_, integer_<A3>, S3 >))
+                                  ((ast_< A1, nt2::container::domain>))
+                                  ((ast_< A2, nt2::container::domain>))
+                                  ((ast_< A3, nt2::container::domain>))
                                 )
       {
        typedef void result_type;
@@ -214,13 +214,13 @@ namespace nt2 {
 
           std::size_t src(0), dst(1);
 
-          std::vector< Grid<Future> > Tiles;
+          std::vector< nt2::details::Grid<Future> > Tiles;
           Tiles.reserve(TILES+1);
 
-          Tiles.push_back(Grid<Future>(TILES+1,TILES+1, nt2::make_ready_future<Arch,std::size_t>));
+          Tiles.push_back( nt2::details::Grid<Future>(TILES+1,TILES+1, nt2::make_ready_future<Arch,std::size_t>) );
 
           for(std::size_t k=0; k <TILES; k++)
-          Tiles.push_back(Grid<Future>(TILES-k,TILES-k));
+          Tiles.push_back( nt2::details::Grid<Future>(TILES-k,TILES-k) );
 
           for(std::size_t k=0; k < TILES; k++) {
 
@@ -228,7 +228,7 @@ namespace nt2 {
           std::size_t kn = (k==TILES-1) ? N - k*n : n;
 
           //step 1
-          Tiles[dst](0,0) = Tiles[src](1,1).then(dgetrf_f<A2,A3>(A,km,kn,nb,ib,k,IPIV));
+          Tiles[dst](0,0) = Tiles[src](1,1).then(details::getrf_f<A2,A3>(A,km,kn,nb,ib,k,IPIV));
           //step 2
           for(std::size_t mm = k+1; mm < TILES; mm++) {
 
@@ -237,7 +237,7 @@ namespace nt2 {
             Tiles[dst](mm-k,0) = when_all<Arch>(Tiles[dst](mm-k-1,0),
                                                 Tiles[src](mm-k+1,1)
                                                )
-                                 .then(dtstrf_f<A2,A3>(A,L,m_,kn,nb,ib,k,mm,IPIV));
+                                 .then(details::tstrf_f<A2,A3>(A,L,m_,kn,nb,ib,k,mm,IPIV));
           }
 
           //step 3
@@ -248,7 +248,7 @@ namespace nt2 {
           Tiles[dst](0,nn-k) = when_all<Arch>(Tiles[dst](0,0),
                                               Tiles[src](1,nn-k+1)
                                              )
-                              .then(dgessm_f<A2,A3>(A,km,n_,nb,ib,k,nn,IPIV));
+                              .then(details::gessm_f<A2,A3>(A,km,n_,nb,ib,k,nn,IPIV));
           }
 
           //step 4
@@ -262,7 +262,7 @@ namespace nt2 {
                                                               Tiles[dst](mm-k-1,nn-k),
                                                               Tiles[src](mm-k+1,nn-k+1)
                                                             )
-                                              .then(dssssm_f<A2,A3>(A,L,m_,n_,nb,ib,k,mm,nn,IPIV));
+                                              .then(details::ssssm_f<A2,A3>(A,L,m_,n_,nb,ib,k,mm,nn,IPIV));
                   }
           }
 

@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_LINALG_DETAILS_PLASMA_GESSM_HPP_INCLUDED
-#define NT2_LINALG_DETAILS_PLASMA_GESSM_HPP_INCLUDED
+#ifndef NT2_LINALG_FUNCTIONS_PLASMA_GESSM_HPP_INCLUDED
+#define NT2_LINALG_FUNCTIONS_PLASMA_GESSM_HPP_INCLUDED
 
 #include <nt2/linalg/functions/gessm.hpp>
 #include <nt2/linalg/functions/laswp.hpp>
@@ -24,11 +24,11 @@
 namespace nt2 { namespace ext
 {
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::gessm_, tag::cpu_
-                              , (A0)(A1)(S1)(A2)(S2)(A3)(S3)
+                              , (A0)(A1)(A2)(A3)
                               , (scalar_< integer_<A0> >)
-                                ((container_< nt2::tag::table_, integer_<A1>, S1 >))
-                                ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
-                                ((container_< nt2::tag::table_, unspecified_<A3>, S3 >))
+                                ((ast_< A1, nt2::container::domain>))
+                                ((ast_< A2, nt2::container::domain>))
+                                ((ast_< A3, nt2::container::domain>))
                               )
     {
      typedef nt2_la_int result_type;
@@ -79,13 +79,17 @@ namespace nt2 { namespace ext
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */
-            nt2::laswp(A(_(1,M),_(1,N)), i+1, i+sb, IPIV(_(1,M)));
+            nt2::laswp(boost::proto::value( A(_(1,M),_(1,N))) ),
+                       i+1,
+                       i+sb,
+                       boost::proto::value( IPIV(_(1,M)) )
+                       );
             /*
              * Compute block row of U.
              */
             nt2::trsm( 'L', 'L', 'N', 'U',
-                     , L(_(i+1,i+sb), _(i+1,i+sb)),
-                     , A(_(i+1,i+sb), _(1,N))
+                     , boost::proto::value( L(_(i+1,i+sb), _(i+1,i+sb)) ),
+                     , boost::proto::value( A(_(i+1,i+sb), _(1,N)) )
                      );
 
             if (i+sb < M) {

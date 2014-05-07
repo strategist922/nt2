@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_LINALG_DETAILS_PLASMA_SSSSM_HPP_INCLUDED
-#define NT2_LINALG_DETAILS_PLASMA_SSSSM_HPP_INCLUDED
+#ifndef NT2_LINALG_FUNCTIONS_PLASMA_SSSSM_HPP_INCLUDED
+#define NT2_LINALG_FUNCTIONS_PLASMA_SSSSM_HPP_INCLUDED
 
 #include <nt2/linalg/functions/ssssm.hpp>
 #include <nt2/linalg/functions/swap.hpp>
@@ -24,13 +24,13 @@
 namespace nt2 { namespace ext
 {
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ssssm_, tag::cpu_
-                              , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(A4)(S4)(A5)(S5)
+                              , (A0)(A1)(A2)(A3)(A4)(A5)
                               , (scalar_< integer_<A0> >)
-                                ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
-                                ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
-                                ((container_< nt2::tag::table_, unspecified_<A3>, S3 >))
-                                ((container_< nt2::tag::table_, unspecified_<A4>, S4 >))
-                                ((container_< nt2::tag::table_, integer_<A5>, S5 >))
+                                ((ast_< A1, nt2::container::domain>))
+                                ((ast_< A2, nt2::container::domain>))
+                                ((ast_< A3, nt2::container::domain>))
+                                ((ast_< A4, nt2::container::domain>))
+                                ((ast_< A5, nt2::container::domain>))
                               )
     {
 
@@ -119,8 +119,8 @@ namespace nt2 { namespace ext
 
             nt2::trsm(
                 'L', 'L', 'N', 'U',
-                L1(_(1,sb),_(ii+1,ii+sb)),
-                a1(_(ii+1,ii+sb),_)
+                boost::proto::value( L1(_(1,sb),_(ii+1,ii+sb)) ),
+                boost::proto::value( a1(_(ii+1,ii+sb),_) )
                 );
 
             a2 = nt2::mtimes(

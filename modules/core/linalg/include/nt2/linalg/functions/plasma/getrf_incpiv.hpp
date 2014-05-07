@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_LINALG_DETAILS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
-#define NT2_LINALG_DETAILS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
+#ifndef NT2_LINALG_FUNCTIONS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
+#define NT2_LINALG_FUNCTIONS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
 
 #include <nt2/linalg/functions/getrf_incpiv.hpp>
 #include <nt2/linalg/functions/gessm.hpp>
@@ -23,10 +23,10 @@
 namespace nt2 { namespace ext
 {
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::getrf_incpiv_, tag::cpu_
-                              , (A0)(A1)(S1)(A2)(S2)
+                              , (A0)(A1)(A2)
                               , (scalar_< integer_<A0> >)
-                                ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
-                                ((container_< nt2::tag::table_, integer_<A2>, S2 >))
+                                ((ast_< A1, nt2::container::domain>))
+                                ((ast_< A2, nt2::container::domain>))
                               )
     {
      typedef nt2_la_int result_type;
@@ -70,7 +70,9 @@ namespace nt2 { namespace ext
              * Factor diagonal and subdiagonal blocks and test for exact singularity.
              */
             std::size_t m = M-i;
-            nt2::getf2(A(_(i+1,i+m),_(i+1,i+sb)), IPIV(_(i+1,i+m)));
+            nt2::getf2( boost::proto::value( A(_(i+1,i+m),_(i+1,i+sb)) ),
+                        boost::proto::value( IPIV(_(i+1,i+m)) )
+                      );
             /*
              * Adjust pivot indices.
              */

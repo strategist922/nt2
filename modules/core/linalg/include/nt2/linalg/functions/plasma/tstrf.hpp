@@ -27,11 +27,11 @@ namespace nt2 { namespace ext
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tstrf_, tag::cpu_
                               , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(A4)(S4)(A5)(S5)
                               , (unspecified_<A0>)
-                                ((container_< nt2::tag::table_, unspecified_<A1>, S1 >))
-                                ((container_< nt2::tag::table_, unspecified_<A2>, S2 >))
-                                ((container_< nt2::tag::table_, unspecified_<A3>, S3 >))
-                                ((container_< nt2::tag::table_, integer_<A4>, S4 >))
-                                ((container_< nt2::tag::table_, unspecified_<A5>, S5 >))
+                                ((ast_< A1, nt2::container::domain>))
+                                ((ast_< A2, nt2::container::domain>))
+                                ((ast_< A3, nt2::container::domain>))
+                                ((ast_< A4, nt2::container::domain>))
+                                ((ast_< A5, nt2::container::domain>))
                               )
     {
 
@@ -103,11 +103,15 @@ namespace nt2 { namespace ext
                     /*
                      * Swap behind.
                      */
-                    nt2::swap( L(i+1, _(ii+1,ii+i)), WORK(im+1,_(1,i)) );
+                    nt2::swap( boost::proto::value( L(i+1, _(ii+1,ii+i)) ),
+                               boost::proto::value( WORK(im+1,_(1,i)) )
+                              );
                     /*
                      * Swap ahead.
                      */
-                    nt2::swap( U(ii+i+1,_(ii+i+1,ii+sb)), A(im+1,_(ii+i+1,ii+sb)) );
+                    nt2::swap( boost::proto::value( U(ii+i+1,_(ii+i+1,ii+sb)) ),
+                               boost::proto::value( A(im+1,_(ii+i+1,ii+sb)) )
+                              );
                     /*
                      * Set IPIV.
                      */
@@ -123,9 +127,9 @@ namespace nt2 { namespace ext
                 WORK(_(1,M), i+1) = A(_(1,M), ii+i+1);
 
                 // Warning: first arg must be a column vector, the second must be a line vector
-                nt2::ger(   A(_(1,M), ii+i+1)
-                          , U(ii+i+1, _(ii+i+2,ii+sb))
-                          , A(_(1,M), _(ii+i+2,ii+sb))
+                nt2::ger(   boost::proto::value( A(_(1,M), ii+i+1) )
+                          , boost::proto::value( U(ii+i+1, _(ii+i+2,ii+sb)) )
+                          , boost::proto::value( A(_(1,M), _(ii+i+2,ii+sb)) )
                           );
             }
             /*
