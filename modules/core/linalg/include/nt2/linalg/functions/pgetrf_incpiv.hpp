@@ -37,7 +37,7 @@ namespace nt2
     @return
   **/
   NT2_FUNCTION_IMPLEMENTATION_TPL (tag::pgetrf_incpiv_, pgetrf_incpiv
-                                  , (A0 const &)(A1&)(A2&)(A3&)
+                                  , (A0)(A1&)(A2&)(A3&)
                                   , 4
                                   );
 }

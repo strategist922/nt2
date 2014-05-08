@@ -46,17 +46,18 @@ namespace nt2 {
         {}
 
       template<typename T>
-      void operator()(T const &)
+      int operator()(T const &)
       {
         using nt2::_;
 
         T1 & A(*Aptr);
         T2 & IPIV(*IPIVptr);
 
-        nt2::getrf_incpiv(ib,
-                          A(    _(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n)),
-                          IPIV( _(k*nb+1,k*nb+m), k)
-                          );
+        // nt2::getrf_incpiv(ib,
+        //                   A(    _(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n)),
+        //                   IPIV( _(k*nb+1,k*nb+m), k)
+        //                   );
+        return 0;
       }
 
       T1 * Aptr;
@@ -83,7 +84,7 @@ namespace nt2 {
       {}
 
       template< typename T>
-      void operator()(T const &)
+      int operator()(T const &)
       {
         using nt2::_;
 
@@ -93,19 +94,20 @@ namespace nt2 {
 
         T1 work(nt2::of_size(m,n));
 
-        nt2::tstrf(std::make_pair(ib,nb),
-                   A(    _(k*nb+1, k*nb+nb),  _(k*nb+1,k*nb+n) ),
-                   A(    _(mm*nb+1,mm*nb+m),  _(k*nb+1,k*nb+n) ),
-                   L(    _(mm*ib+1,mm*ib+ib), _(k*nb*1,k*nb+n) ),
-                   IPIV( _(mm*nb+1,mm*nb+m),  k                ),
-                   work( _(1,m),              _(1,n)           )
-                   );
+        // nt2::tstrf(std::make_pair(ib,nb),
+        //            A(    _(k*nb+1, k*nb+nb),  _(k*nb+1,k*nb+n) ),
+        //            A(    _(mm*nb+1,mm*nb+m),  _(k*nb+1,k*nb+n) ),
+        //            L(    _(mm*ib+1,mm*ib+ib), _(k*nb*1,k*nb+n) ),
+        //            IPIV( _(mm*nb+1,mm*nb+m),  k                ),
+        //            work( _(1,m),              _(1,n)           )
+        //            );
+         return 0;
       }
 
-      double * Aptr;
-      double * Lptr;
+      T1 * Aptr;
+      T1 * Lptr;
       std::size_t m,n,nb,ib,k,mm,info,LDA,LDL;
-      std::size_t * IPIVptr;
+      T2 * IPIVptr;
     };
 
     template <typename T1, typename T2>
@@ -122,22 +124,23 @@ namespace nt2 {
         T2 & IPIV_
         )
       :Aptr(&A_),m(m_),n(n_),nb(nb_),ib(ib_),k(k_),nn(nn_)
-      ,IPIVptr(IPIV_)
+      ,IPIVptr(&IPIV_)
       {}
 
       template<typename T>
-      void operator()(T const &)
+      int operator()(T const &)
       {
         using nt2::_;
 
         T1 & A(*Aptr);
         T2 & IPIV(*IPIVptr);
 
-        nt2::gessm(ib,
-                   IPIV( _(k*nb+1, k*nb+m), k                   ),
-                   A(    _(k*nb+1, k*nb+m), _(k*nb+1, k*nb+nb)  ),
-                   A(    _(k*nb+1, k*nb+m), _(nn*nb+1, nn*nb+n) )
-                   );
+        // nt2::gessm(ib,
+        //            IPIV( _(k*nb+1, k*nb+m), k                   ),
+        //            A(    _(k*nb+1, k*nb+m), _(k*nb+1, k*nb+nb)  ),
+        //            A(    _(k*nb+1, k*nb+m), _(nn*nb+1, nn*nb+n) )
+        //            );
+        return 0;
       }
 
       T1 * Aptr;
@@ -165,7 +168,7 @@ namespace nt2 {
       {}
 
       template< typename T>
-      void operator()(T const &)
+      int operator()(T const &)
       {
         using nt2::_;
 
@@ -173,13 +176,14 @@ namespace nt2 {
         T1 & L(*Lptr);
         T2 & IPIV(*IPIVptr);
 
-       nt2::ssssm(ib,
-                  A(    _(k*nb+1,k*nb+nb),   _(nn*nb+1,nn*nb+n) ),
-                  A(    _(mm*nb+1,mm*nb+m),  _(nn*nb+1,nn*nb+n) ),
-                  L(    _(mm*ib+1,mm*ib+ib), _(k*nb+1, k*nb+nb) ),
-                  A(    _(mm*nb+1,mm*nb+m),  _(k*nb+1, k*nb+nb) ),
-                  IPIV( _(mm*nb+1,mm*nb+m),  k                  )
-                  );
+       // nt2::ssssm(ib,
+       //            A(    _(k*nb+1,k*nb+nb),   _(nn*nb+1,nn*nb+n) ),
+       //            A(    _(mm*nb+1,mm*nb+m),  _(nn*nb+1,nn*nb+n) ),
+       //            L(    _(mm*ib+1,mm*ib+ib), _(k*nb+1, k*nb+nb) ),
+       //            A(    _(mm*nb+1,mm*nb+m),  _(k*nb+1, k*nb+nb) ),
+       //            IPIV( _(mm*nb+1,mm*nb+m),  k                  )
+       //            );
+        return 0;
       }
 
       T1 * Aptr;
@@ -200,9 +204,9 @@ namespace nt2 {
                                 )
       {
        typedef void result_type;
-       typedef typename nt2::make_future<Arch, std::size_t>::type Future;
+       typedef typename nt2::make_future<Arch, int>::type Future;
 
-       BOOST_FORCEINLINE result_type operator()( A0 const & nb, A1 & A, A2 & L, A3 & IPIV) const
+       BOOST_FORCEINLINE result_type operator()( A0 nb, A1 & A, A2 & L, A3 & IPIV) const
        {
           std::size_t M = nt2::height(A);
           std::size_t N = nt2::width(A);
@@ -217,7 +221,7 @@ namespace nt2 {
           std::vector< nt2::details::Grid<Future> > Tiles;
           Tiles.reserve(TILES+1);
 
-          Tiles.push_back( nt2::details::Grid<Future>(TILES+1,TILES+1, nt2::make_ready_future<Arch,std::size_t>) );
+          Tiles.push_back( nt2::details::Grid<Future>(TILES+1,TILES+1, nt2::make_ready_future<Arch,int>(0)) );
 
           for(std::size_t k=0; k <TILES; k++)
           Tiles.push_back( nt2::details::Grid<Future>(TILES-k,TILES-k) );
@@ -234,7 +238,7 @@ namespace nt2 {
 
             std::size_t m_ = (mm==TILES-1) ? M -mm*m : m;
 
-            Tiles[dst](mm-k,0) = when_all<Arch>(Tiles[dst](mm-k-1,0),
+            Tiles[dst](mm-k,0) = nt2::when_all<Arch>(Tiles[dst](mm-k-1,0),
                                                 Tiles[src](mm-k+1,1)
                                                )
                                  .then(details::tstrf_f<A2,A3>(A,L,m_,kn,nb,ib,k,mm,IPIV));
@@ -245,7 +249,7 @@ namespace nt2 {
 
           std::size_t n_ = (nn==TILES-1) ? N - nn*n : n;
 
-          Tiles[dst](0,nn-k) = when_all<Arch>(Tiles[dst](0,0),
+          Tiles[dst](0,nn-k) = nt2::when_all<Arch>(Tiles[dst](0,0),
                                               Tiles[src](1,nn-k+1)
                                              )
                               .then(details::gessm_f<A2,A3>(A,km,n_,nb,ib,k,nn,IPIV));
@@ -258,7 +262,7 @@ namespace nt2 {
                       std::size_t m_ = (mm==TILES-1) ? M - mm*m : m;
                       std::size_t n_ = (nn==TILES-1) ? N - nn*n : n;
 
-                      Tiles[dst](mm-k,nn-k) = when_all<Arch>( Tiles[dst](mm-k,0),
+                      Tiles[dst](mm-k,nn-k) = nt2::when_all<Arch>( Tiles[dst](mm-k,0),
                                                               Tiles[dst](mm-k-1,nn-k),
                                                               Tiles[src](mm-k+1,nn-k+1)
                                                             )
