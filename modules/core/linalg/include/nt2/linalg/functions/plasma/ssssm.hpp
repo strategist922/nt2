@@ -10,9 +10,9 @@
 #define NT2_LINALG_FUNCTIONS_PLASMA_SSSSM_HPP_INCLUDED
 
 #include <nt2/linalg/functions/ssssm.hpp>
-#include <nt2/linalg/functions/swap.hpp>
-#include <nt2/linalg/functions/trsm.hpp>
-#include <nt2/linalg/functions/mtimes.hpp>
+#include <nt2/include/functions/swap.hpp>
+#include <nt2/include/functions/trsm.hpp>
+#include <nt2/include/functions/mtimes.hpp>
 
 #include <nt2/linalg/details/utility/plasma_utility.hpp>
 
@@ -34,7 +34,7 @@ namespace nt2 { namespace ext
                               )
     {
 
-     typedef nt2_la_int result_type;
+     typedef int result_type;
      typedef typename A1::value_type T;
 
      BOOST_FORCEINLINE result_type operator()( A0 const & IB,
@@ -54,9 +54,6 @@ namespace nt2 { namespace ext
         std::size_t K  = nt2::height(L1);
 
         static T mzone =-1.0;
-
-        nt2_la_int i, ii, sb;
-        nt2_la_int im, ip;
 
         /* Check input arguments */
         if (M1 < 0) {
@@ -83,19 +80,19 @@ namespace nt2 { namespace ext
             coreblas_error(6, "Illegal value of IB");
             return -6;
         }
-        if (a1.leading_size() < std::max(1,M1)) {
+        if (a1.leading_size() < std::max(1ul,M1)) {
             coreblas_error(8, "Illegal value of LDA1");
             return -8;
         }
-        if (a2.leading_size() < std::max(1,M2)) {
+        if (a2.leading_size() < std::max(1ul,M2)) {
             coreblas_error(10, "Illegal value of LDA2");
             return -10;
         }
-        if (L1.leading_size() < std::max(1,IB)) {
+        if (L1.leading_size() < std::max(1ul,IB)) {
             coreblas_error(12, "Illegal value of LDL1");
             return -12;
         }
-        if (L2.leading_size() < std::max(1,M2)) {
+        if (L2.leading_size() < std::max(1ul,M2)) {
             coreblas_error(14, "Illegal value of LDL2");
             return -14;
         }
@@ -104,17 +101,16 @@ namespace nt2 { namespace ext
         if ((M1 == 0) || (N1 == 0) || (M2 == 0) || (N2 == 0) || (K == 0) || (IB == 0))
             return 0;
 
-        for(std::size_t ii = 0, ip =0; ii < K; ii += IB, ip++) {
+        for(std::size_t ii = 0, ip = 0; ii < K; ii += IB, ip++) {
             std::size_t sb = std::min(K-ii, IB);
 
-            for(i = 0; i < sb; i++) {
-                im = IPIV(ip)-1;
+            for(std::size_t i = 0; i < sb; i++) {
+                std::size_t im = IPIV(ip)-1;
 
                 if (im != (ii+i)) {
                     im = im - M1;
                     nt2::swap( a1(ii+i+1,_(1,N1)), a2(im+1,_(1,N1)) );
                 }
-                ip = ip + 1;
             }
 
             nt2::trsm(
@@ -124,7 +120,7 @@ namespace nt2 { namespace ext
                 );
 
             a2 = nt2::mtimes(
-                'N','N'
+                'N','N',
                 L2(_,_(ii+1,ii+sb)),
                 a1(_(ii+1,ii+sb),_(1,N2)),
                 mzone

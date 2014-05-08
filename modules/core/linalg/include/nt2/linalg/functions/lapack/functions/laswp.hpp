@@ -165,6 +165,7 @@ namespace nt2 { namespace ext
     typedef void  result_type;
 
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1, A2 & a2, A3 & a3) const
+    {
       nt2_la_int n = nt2::width(a0);
       nt2_la_int ld = a0.leading_size();
       nt2_la_int k1 = a2;
@@ -209,6 +210,7 @@ namespace nt2 { namespace ext
     typedef void  result_type;
 
     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1, A2 & a2, A3 & a3) const
+    {
       nt2_la_int n = nt2::width(a0);
       nt2_la_int ld = a0.leading_size();
       nt2_la_int k1 = a2;

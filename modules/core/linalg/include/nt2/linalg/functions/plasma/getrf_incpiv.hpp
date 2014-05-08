@@ -10,8 +10,8 @@
 #define NT2_LINALG_FUNCTIONS_PLASMA_GETRF_INCPIV_HPP_INCLUDED
 
 #include <nt2/linalg/functions/getrf_incpiv.hpp>
-#include <nt2/linalg/functions/gessm.hpp>
-#include <nt2/linalg/functions/getf2.hpp>
+#include <nt2/include/functions/gessm.hpp>
+#include <nt2/include/functions/getf2.hpp>
 
 #include <nt2/linalg/details/utility/plasma_utility.hpp>
 
@@ -29,7 +29,7 @@ namespace nt2 { namespace ext
                                 ((ast_< A2, nt2::container::domain>))
                               )
     {
-     typedef nt2_la_int result_type;
+     typedef int result_type;
      typedef typename A1::value_type T;
 
      BOOST_FORCEINLINE result_type operator()( A0 const & IB, A1 & A, A2 & IPIV) const

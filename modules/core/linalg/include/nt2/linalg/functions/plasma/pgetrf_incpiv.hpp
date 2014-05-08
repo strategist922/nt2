@@ -10,10 +10,10 @@
 #define NT2_LINALG_FUNCTIONS_PLASMA_PGETRF_INCPIV_HPP_INCLUDED
 
 #include <nt2/linalg/functions/pgetrf_incpiv.hpp>
-#include <nt2/linalg/functions/gessm.hpp>
-#include <nt2/linalg/functions/getrf_incpiv.hpp>
-#include <nt2/linalg/functions/ssssm.hpp>
-#include <nt2/linalg/functions/tstrf.hpp>
+// #include <nt2/include/functions/gessm.hpp>
+// #include <nt2/include/functions/getrf_incpiv.hpp>
+// #include <nt2/include/functions/ssssm.hpp>
+// #include <nt2/include/functions/tstrf.hpp>
 
 #include <nt2/linalg/details/plasma/grid.hpp>
 
@@ -46,7 +46,7 @@ namespace nt2 {
         {}
 
       template<typename T>
-      int operator()(T const &)
+      int operator()(T const &)const
       {
         using nt2::_;
 
@@ -57,6 +57,7 @@ namespace nt2 {
         //                   A(    _(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n)),
         //                   IPIV( _(k*nb+1,k*nb+m), k)
         //                   );
+
         return 0;
       }
 

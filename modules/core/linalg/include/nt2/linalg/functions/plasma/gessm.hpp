@@ -10,9 +10,9 @@
 #define NT2_LINALG_FUNCTIONS_PLASMA_GESSM_HPP_INCLUDED
 
 #include <nt2/linalg/functions/gessm.hpp>
-#include <nt2/linalg/functions/laswp.hpp>
-#include <nt2/linalg/functions/trsm.hpp>
-#include <nt2/linalg/functions/mtimes.hpp>
+#include <nt2/include/functions/laswp.hpp>
+#include <nt2/include/functions/trsm.hpp>
+#include <nt2/include/functions/mtimes.hpp>
 
 #include <nt2/linalg/details/utility/plasma_utility.hpp>
 
@@ -31,7 +31,7 @@ namespace nt2 { namespace ext
                                 ((ast_< A3, nt2::container::domain>))
                               )
     {
-     typedef nt2_la_int result_type;
+     typedef int result_type;
      typedef typename A2::value_type T;
 
      BOOST_FORCEINLINE result_type operator()( A0 const& IB, A1& IPIV, A2& L, A3& A) const
@@ -61,11 +61,11 @@ namespace nt2 { namespace ext
             coreblas_error(4, "Illegal value of IB");
             return -4;
         }
-        if ((L.leading_size() < std::max(1,M)) && (M > 0)) {
+        if ((L.leading_size() < std::max(1ul,M)) && (M > 0)) {
             coreblas_error(7, "Illegal value of LDL");
             return -7;
         }
-        if ((A.leading_size() < std::max(1,M)) && (M > 0)) {
+        if ((A.leading_size() < std::max(1ul,M)) && (M > 0)) {
             coreblas_error(9, "Illegal value of LDA");
             return -9;
         }
@@ -79,7 +79,7 @@ namespace nt2 { namespace ext
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */
-            nt2::laswp(boost::proto::value( A(_(1,M),_(1,N))) ),
+            nt2::laswp(boost::proto::value( A(_(1,M),_(1,N)) ),
                        i+1,
                        i+sb,
                        boost::proto::value( IPIV(_(1,M)) )
@@ -88,8 +88,8 @@ namespace nt2 { namespace ext
              * Compute block row of U.
              */
             nt2::trsm( 'L', 'L', 'N', 'U',
-                     , boost::proto::value( L(_(i+1,i+sb), _(i+1,i+sb)) ),
-                     , boost::proto::value( A(_(i+1,i+sb), _(1,N)) )
+                       boost::proto::value( L(_(i+1,i+sb), _(i+1,i+sb)) ),
+                       boost::proto::value( A(_(i+1,i+sb), _(1,N)) )
                      );
 
             if (i+sb < M) {

@@ -10,12 +10,13 @@
 #define NT2_LINALG_DETAILS_PLASMA_TSTRF_HPP_INCLUDED
 
 #include <nt2/linalg/functions/tstrf.hpp>
-#include <nt2/linalg/functions/ssssm.hpp>
-#include <nt2/linalg/functions/ger.hpp>
-#include <nt2/linalg/functions/iamax.hpp>
-#include <nt2/linalg/functions/swap.hpp>
+#include <nt2/include/functions/ssssm.hpp>
+#include <nt2/include/functions/ger.hpp>
+#include <nt2/include/functions/iamax.hpp>
+#include <nt2/include/functions/swap.hpp>
 
 #include <nt2/linalg/details/utility/plasma_utility.hpp>
+#include <nt2/linalg/details/utility/f77_wrapper.hpp>
 
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
@@ -25,7 +26,7 @@
 namespace nt2 { namespace ext
 {
     NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::tstrf_, tag::cpu_
-                              , (A0)(A1)(S1)(A2)(S2)(A3)(S3)(A4)(S4)(A5)(S5)
+                              , (A0)(A1)(A2)(A3)(A4)(A5)
                               , (unspecified_<A0>)
                                 ((ast_< A1, nt2::container::domain>))
                                 ((ast_< A2, nt2::container::domain>))
@@ -71,15 +72,15 @@ namespace nt2 { namespace ext
             coreblas_error(3, "Illegal value of IB");
             return -3;
         }
-        if ((U.leading_size() < std::max(1,NB)) && (NB > 0)) {
+        if ((U.leading_size() < std::max(1ul,NB)) && (NB > 0)) {
             coreblas_error(6, "Illegal value of LDU");
             return -6;
         }
-        if ((A.leading_size() < std::max(1,M)) && (M > 0)) {
+        if ((A.leading_size() < std::max(1ul,M)) && (M > 0)) {
             coreblas_error(8, "Illegal value of LDA");
             return -8;
         }
-        if ((L.leading_size() < std::max(1,IB)) && (IB > 0)) {
+        if ((L.leading_size() < std::max(1ul,IB)) && (IB > 0)) {
             coreblas_error(10, "Illegal value of LDL");
             return -10;
         }
@@ -117,7 +118,7 @@ namespace nt2 { namespace ext
                      */
                     IPIV(ip+1) = NB + im + 1;
 
-                    for (j = 0; j < i; j++) {
+                    for (std::size_t j = 0; j < i; j++) {
                         A(im+1,ii+j+1) = zzero;
                     }
                 }
@@ -136,7 +137,7 @@ namespace nt2 { namespace ext
              * Apply the subpanel to the rest of the panel.
              */
             if(ii+i < N) {
-                for(j = ii; j < ii+sb; j++) {
+                for(std::size_t j = ii; j < ii+sb; j++) {
                     if (IPIV(j+1) <= NB) {
                         IPIV(j+1) = IPIV(j+1) - ii;
                     }
