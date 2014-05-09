@@ -57,7 +57,7 @@ namespace nt2 { namespace details {
 
     inline void synchronize()
     {
-      if (!futures_.empty())
+      if (!calling_cards_.empty())
       {
         for(call_it n=calling_cards_.begin();
             n!=calling_cards_.end();
@@ -66,14 +66,16 @@ namespace nt2 { namespace details {
             (*n)->synchronize();
         }
         calling_cards_.clear();
+      }
 
-
-          for(std::size_t n=0;n<futures_.size();++n)
-          {
-              futures_[n].get();
-          }
-          futures_.clear();
+      if (!futures_.empty())
+      {
+        for(std::size_t n=0;n<futures_.size();++n)
+        {
+            futures_[n].get();
         }
+        futures_.clear();
+      }
     }
 
     ~container_has_futures()
