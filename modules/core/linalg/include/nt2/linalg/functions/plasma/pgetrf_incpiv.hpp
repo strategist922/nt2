@@ -11,7 +11,7 @@
 
 #include <nt2/linalg/functions/pgetrf_incpiv.hpp>
 // #include <nt2/include/functions/gessm.hpp>
-// #include <nt2/include/functions/getrf_incpiv.hpp>
+#include <nt2/include/functions/getrf_incpiv.hpp>
 // #include <nt2/include/functions/ssssm.hpp>
 // #include <nt2/include/functions/tstrf.hpp>
 
@@ -22,6 +22,8 @@
 
 #include <nt2/sdk/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/future.hpp>
+
+#include <nt2/include/functions/evaluate.hpp>
 
 
 
@@ -46,17 +48,17 @@ namespace nt2 {
         {}
 
       template<typename T>
-      int operator()(T const &)const
+      int operator()(T const &)
       {
         using nt2::_;
 
         T1 & A(*Aptr);
         T2 & IPIV(*IPIVptr);
 
-        // nt2::getrf_incpiv(ib,
-        //                   A(    _(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n)),
-        //                   IPIV( _(k*nb+1,k*nb+m), k)
-        //                   );
+        nt2::getrf_incpiv(ib,
+                          nt2::evaluate( A(    _(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n)) ),
+                          nt2::evaluate( IPIV( _(k*nb+1,k*nb+m), k) )
+                          );
 
         return 0;
       }

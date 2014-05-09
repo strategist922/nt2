@@ -16,6 +16,7 @@
 
 #include <nt2/linalg/details/utility/plasma_utility.hpp>
 
+#include <nt2/include/functions/evaluate.hpp>
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
@@ -34,7 +35,7 @@ namespace nt2 { namespace ext
      typedef int result_type;
      typedef typename A2::value_type T;
 
-     BOOST_FORCEINLINE result_type operator()( A0 const& IB, A1& IPIV, A2& L, A3& A) const
+     BOOST_FORCEINLINE result_type operator()( A0 const& IB, A1 IPIV, A2 L, A3 A) const
      {
         using nt2::_;
 
@@ -79,25 +80,27 @@ namespace nt2 { namespace ext
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */
-            nt2::laswp(boost::proto::value( A(_(1,M),_(1,N)) ),
+            nt2::laswp(boost::proto::value( nt2::evaluate( A(_(1,M),_(1,N)) )),
+                       boost::proto::value( nt2::evaluate(IPIV(_(1,M)) )),
                        i+1,
-                       i+sb,
-                       boost::proto::value( IPIV(_(1,M)) )
+                       i+sb
                        );
             /*
              * Compute block row of U.
              */
             nt2::trsm( 'L', 'L', 'N', 'U',
-                       boost::proto::value( L(_(i+1,i+sb), _(i+1,i+sb)) ),
-                       boost::proto::value( A(_(i+1,i+sb), _(1,N)) )
+                       boost::proto::value( nt2::evaluate( L(_(i+1,i+sb), _(i+1,i+sb)) )),
+                       boost::proto::value( nt2::evaluate( A(_(i+1,i+sb), _(1,N)) ))
                      );
 
             if (i+sb < M) {
             /*
             * Update trailing submatrix.
             */
-            A(_(i+sb+1,M),_(1,N)) =
-              nt2::mtimes( L(_(i+sb+1,M), _(i+1,i+sb)), A(_(i+1,i+sb),_(1,N)), mzone );
+            // A(_(i+sb+1,M),_(1,N)) =
+            //   nt2::mtimes( nt2::evaluate( L(_(i+sb+1,M), _(i+1,i+sb)) ),
+            //                nt2::evaluate( A(_(i+1,i+sb),_(1,N)), mzone )
+            //              );
             }
         }
         return 0;

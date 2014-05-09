@@ -37,7 +37,7 @@ namespace nt2
     @return
   **/
   NT2_FUNCTION_IMPLEMENTATION_TPL (tag::getf2_, getf2
-                                  , (A0&)(A1&)
+                                  , (A0)(A1)
                                   , 2
                                   );
 }

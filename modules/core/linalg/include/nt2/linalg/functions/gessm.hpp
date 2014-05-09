@@ -37,7 +37,7 @@ namespace nt2
     @return
   **/
   NT2_FUNCTION_IMPLEMENTATION_TPL (tag::gessm_, gessm
-                                  , (A0 const &)(A1&)(A2&)(A3&)
+                                  , (A0 const &)(A1)(A2)(A3)
                                   , 4
                                   );
 }

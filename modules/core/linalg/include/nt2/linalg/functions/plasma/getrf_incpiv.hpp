@@ -15,6 +15,7 @@
 
 #include <nt2/linalg/details/utility/plasma_utility.hpp>
 
+#include <nt2/include/functions/evaluate.hpp>
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
@@ -32,7 +33,7 @@ namespace nt2 { namespace ext
      typedef int result_type;
      typedef typename A1::value_type T;
 
-     BOOST_FORCEINLINE result_type operator()( A0 const & IB, A1 & A, A2 & IPIV) const
+     BOOST_FORCEINLINE result_type operator()( A0 const & IB, A1 A, A2 IPIV) const
      {
         using nt2::_;
 
@@ -52,7 +53,7 @@ namespace nt2 { namespace ext
             coreblas_error(3, "Illegal value of IB");
             return -3;
         }
-        if ((LDA < std::max(1,M)) && (M > 0)) {
+        if ((A.leading_size() < std::max(1ul,M)) && (M > 0)) {
             coreblas_error(5, "Illegal value of LDA");
             return -5;
         }
@@ -70,8 +71,8 @@ namespace nt2 { namespace ext
              * Factor diagonal and subdiagonal blocks and test for exact singularity.
              */
             std::size_t m = M-i;
-            nt2::getf2( boost::proto::value( A(_(i+1,i+m),_(i+1,i+sb)) ),
-                        boost::proto::value( IPIV(_(i+1,i+m)) )
+            nt2::getf2( boost::proto::value( nt2::evaluate( A(_(i+1,i+m),_(i+1,i+sb)) ) ),
+                        boost::proto::value( nt2::evaluate( IPIV(_(i+1,i+m)) ) )
                       );
             /*
              * Adjust pivot indices.
@@ -79,15 +80,15 @@ namespace nt2 { namespace ext
 
             if (i+sb < N) {
                 nt2::gessm( sb,
-                    IPIV(_(i+1,M)),
-                    A(_(i+1,M),_(i+1,i+sb)),
-                    A(_(i+1,M),_(i+sb+1,N))
+                    nt2::evaluate( IPIV(_(i+1,M)) ),
+                    nt2::evaluate( A(_(i+1,M),_(i+1,i+sb)) ),
+                    nt2::evaluate( A(_(i+1,M),_(i+sb+1,N)) )
                     );
             }
 
             for(std::size_t j = i; j < i+sb; j++) {
                 IPIV(j) = i + IPIV(j);
-            }
+          }
         }
         return 0;
     }

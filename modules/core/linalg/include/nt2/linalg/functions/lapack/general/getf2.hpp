@@ -51,7 +51,7 @@ namespace nt2 { namespace ext
   {
      typedef nt2_la_int result_type;
 
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0 a0, A1 a1) const
      {
         result_type that;
         nt2_la_int  m  = nt2::height(a0);
@@ -74,7 +74,7 @@ namespace nt2 { namespace ext
   {
      typedef nt2_la_int result_type;
 
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0 a0, A1 a1) const
      {
         result_type that;
         nt2_la_int  m  = nt2::height(a0);
@@ -96,7 +96,7 @@ namespace nt2 { namespace ext
                             )
   {
      typedef nt2_la_int result_type;
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0 a0, A1 a1) const
      {
         result_type that;
         nt2_la_int  m  = nt2::height(a0);
@@ -118,7 +118,7 @@ namespace nt2 { namespace ext
                             )
   {
      typedef nt2_la_int result_type;
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0 a0, A1 a1) const
      {
         result_type that;
         nt2_la_int  m  = nt2::height(a0);
