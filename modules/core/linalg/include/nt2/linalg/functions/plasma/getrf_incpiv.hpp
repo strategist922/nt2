@@ -37,8 +37,9 @@ namespace nt2 { namespace ext
      {
         using nt2::_;
 
-        std::size_t M = nt2::height(A);
-        std::size_t N = nt2::width(A);
+        nt2_la_int M = nt2::height(A);
+        nt2_la_int N = nt2::width(A);
+        nt2_la_int LDA = A.leading_size();
 
         /* Check input arguments */
         if (M < 0) {
@@ -53,7 +54,7 @@ namespace nt2 { namespace ext
             coreblas_error(3, "Illegal value of IB");
             return -3;
         }
-        if ((A.leading_size() < std::max(1ul,M)) && (M > 0)) {
+        if ((LDA < std::max(1,M)) && (M > 0)) {
             coreblas_error(5, "Illegal value of LDA");
             return -5;
         }
@@ -62,15 +63,15 @@ namespace nt2 { namespace ext
         if ((M == 0) || (N == 0) || (IB == 0))
             return 0;
 
-        std::size_t k = std::min(M, N);
+        nt2_la_int k = std::min(M, N);
 
-        for(std::size_t i =0 ; i < k; i += IB) {
+        for(nt2_la_int i =0 ; i < k; i += IB) {
 
-            std::size_t sb = std::min(IB, k-i);
+            nt2_la_int sb = std::min(IB, k-i);
             /*
              * Factor diagonal and subdiagonal blocks and test for exact singularity.
              */
-            std::size_t m = M-i;
+            nt2_la_int m = M-i;
             nt2::getf2( boost::proto::value( nt2::evaluate( A(_(i+1,i+m),_(i+1,i+sb)) ) ),
                         boost::proto::value( nt2::evaluate( IPIV(_(i+1,i+m)) ) )
                       );
@@ -86,7 +87,7 @@ namespace nt2 { namespace ext
                     );
             }
 
-            for(std::size_t j = i; j < i+sb; j++) {
+            for(nt2_la_int j = i; j < i+sb; j++) {
                 IPIV(j) = i + IPIV(j);
           }
         }

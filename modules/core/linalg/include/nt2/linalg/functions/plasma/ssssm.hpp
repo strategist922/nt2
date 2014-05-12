@@ -38,20 +38,25 @@ namespace nt2 { namespace ext
      typedef typename A1::value_type T;
 
      BOOST_FORCEINLINE result_type operator()( A0 const & IB,
-                                               A1 & a1,
-                                               A2 & a2,
-                                               A3 & L1,
-                                               A4 & L2,
-                                               A5 & IPIV
+                                               A1 a1,
+                                               A2 a2,
+                                               A3 L1,
+                                               A4 L2,
+                                               A5 IPIV
                                              ) const
      {
         using nt2::_;
 
-        std::size_t M1 = nt2::height(a1);
-        std::size_t N1 = nt2::width(a1);
-        std::size_t M2 = nt2::height(a2);
-        std::size_t N2 = nt2::width(a2);
-        std::size_t K  = nt2::height(L1);
+        nt2_la_int M1 = nt2::height(a1);
+        nt2_la_int N1 = nt2::width(a1);
+        nt2_la_int M2 = nt2::height(a2);
+        nt2_la_int N2 = nt2::width(a2);
+        nt2_la_int K  = nt2::height(L1);
+
+        nt2_la_int LDA1 = a1.leading_size();
+        nt2_la_int LDA2 = a2.leading_size();
+        nt2_la_int LDL1 = L1.leading_size();
+        nt2_la_int LDL2 = L2.leading_size();
 
         static T mzone =-1.0;
 
@@ -80,19 +85,19 @@ namespace nt2 { namespace ext
             coreblas_error(6, "Illegal value of IB");
             return -6;
         }
-        if (a1.leading_size() < std::max(1ul,M1)) {
+        if ( LDA1 < std::max(1,M1)) {
             coreblas_error(8, "Illegal value of LDA1");
             return -8;
         }
-        if (a2.leading_size() < std::max(1ul,M2)) {
+        if ( LDA2 < std::max(1,M2)) {
             coreblas_error(10, "Illegal value of LDA2");
             return -10;
         }
-        if (L1.leading_size() < std::max(1ul,IB)) {
+        if ( LDL1 < std::max(1,IB)) {
             coreblas_error(12, "Illegal value of LDL1");
             return -12;
         }
-        if (L2.leading_size() < std::max(1ul,M2)) {
+        if ( LDL2 < std::max(1,M2)) {
             coreblas_error(14, "Illegal value of LDL2");
             return -14;
         }
@@ -101,28 +106,45 @@ namespace nt2 { namespace ext
         if ((M1 == 0) || (N1 == 0) || (M2 == 0) || (N2 == 0) || (K == 0) || (IB == 0))
             return 0;
 
-        for(std::size_t ii = 0, ip = 0; ii < K; ii += IB, ip++) {
-            std::size_t sb = std::min(K-ii, IB);
+        nt2_la_int ip = 0;
 
-            for(std::size_t i = 0; i < sb; i++) {
-                std::size_t im = IPIV(ip)-1;
+        for(nt2_la_int ii = 0; ii < K; ii += IB) {
+            nt2_la_int sb = std::min(K-ii, IB);
+
+            for(nt2_la_int i = 0; i < sb; i++) {
+                nt2_la_int im = IPIV(ip)-1;
 
                 if (im != (ii+i)) {
                     im = im - M1;
-                    nt2::swap( a1(ii+i+1,_(1,N1)), a2(im+1,_(1,N1)) );
+                    nt2::swap(
+                        boost::proto::value( nt2::evaluate(
+                        a1(ii+i+1,_(1,N1))
+                        )),
+                        boost::proto::value( nt2::evaluate(
+                        a2(im+1,_(1,N1))
+                        ))
+                        );
                 }
+                ip = ip + 1;
             }
 
             nt2::trsm(
                 'L', 'L', 'N', 'U',
-                boost::proto::value( L1(_(1,sb),_(ii+1,ii+sb)) ),
-                boost::proto::value( a1(_(ii+1,ii+sb),_) )
+                boost::proto::value( nt2::evaluate(
+                L1(_(1,sb),_(ii+1,ii+sb))
+                )),
+                boost::proto::value( nt2::evaluate(
+                a1(_(ii+1,ii+sb),_(1,N1))
+                ))
                 );
 
             a2 = nt2::mtimes(
-                'N','N',
-                L2(_,_(ii+1,ii+sb)),
-                a1(_(ii+1,ii+sb),_(1,N2)),
+                nt2::evaluate(
+                L2(_(1,M2),_(ii+1,ii+sb))
+                ),
+                nt2::evaluate(
+                a1(_(ii+1,ii+sb),_(1,N2))
+                ),
                 mzone
                 );
         }

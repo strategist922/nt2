@@ -40,7 +40,7 @@ namespace nt2
 
   NT2_FUNCTION_IMPLEMENTATION_TPL (tag::trsm_, trsm
                                   , (A0 const&)(A1 const&)(A2 const&) (A3 const&)
-                                    (A4 const&) (A5&)
+                                    (A4)(A5)
                                   , 6
                                   );
 

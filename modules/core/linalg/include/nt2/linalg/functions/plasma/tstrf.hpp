@@ -21,6 +21,8 @@
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
 
+#include <nt2/include/functions/evaluate.hpp>
+
 #include <algorithm>
 
 namespace nt2 { namespace ext
@@ -39,25 +41,29 @@ namespace nt2 { namespace ext
      typedef nt2_la_int result_type;
      typedef typename A1::value_type T;
 
-     BOOST_FORCEINLINE result_type operator()(A0 const & ibnb,
-                                              A1 & U,
-                                              A2 & A,
-                                              A3 & L,
-                                              A4 & IPIV,
+     BOOST_FORCEINLINE result_type operator()(A0 ibnb,
+                                              A1 U,
+                                              A2 A,
+                                              A3 L,
+                                              A4 IPIV,
                                               A5 & WORK
                                              ) const
      {
         using nt2::_;
 
-        std::size_t IB = ibnb.first;
-        std::size_t NB = ibnb.second;
-        std::size_t M = nt2::height(A);
-        std::size_t N = nt2::width(A);
+        nt2_la_int IB = ibnb.first;
+        nt2_la_int NB = ibnb.second;
+        nt2_la_int  M = nt2::height(A);
+        nt2_la_int  N = nt2::width(A);
+
+        nt2_la_int  LDU = U.leading_size();
+        nt2_la_int  LDA = A.leading_size();
+        nt2_la_int  LDL = L.leading_size();
 
         T zzero = 0.0;
         T mzone =-1.0;
-
         T alpha;
+        nt2_la_int i;
 
         /* Check input arguments */
         if (M < 0) {
@@ -72,15 +78,15 @@ namespace nt2 { namespace ext
             coreblas_error(3, "Illegal value of IB");
             return -3;
         }
-        if ((U.leading_size() < std::max(1ul,NB)) && (NB > 0)) {
+        if ((LDU < std::max(1,NB)) && (NB > 0)) {
             coreblas_error(6, "Illegal value of LDU");
             return -6;
         }
-        if ((A.leading_size() < std::max(1ul,M)) && (M > 0)) {
+        if ((LDA < std::max(1,M)) && (M > 0)) {
             coreblas_error(8, "Illegal value of LDA");
             return -8;
         }
-        if ((L.leading_size() < std::max(1ul,IB)) && (IB > 0)) {
+        if ((LDL < std::max(1,IB)) && (IB > 0)) {
             coreblas_error(10, "Illegal value of LDL");
             return -10;
         }
@@ -92,33 +98,45 @@ namespace nt2 { namespace ext
         /* Set L to 0 */
         L = 0.;
 
-        for (std::size_t ii = 0, ip = 0; ii < N; ii += IB, ip++) {
+        for (nt2_la_int ii = 0, ip = 0; ii < N; ii += IB, ip++) {
 
-            std::size_t sb = std::min(N-ii, IB);
+            nt2_la_int sb = std::min(N-ii, IB);
 
-            for (std::size_t i = 0; i < sb; i++) {
-                std::size_t im = nt2::iamax(_(1,M), ii+i+1);
+            for (i = 0; i < sb; i++) {
+                nt2_la_int im = nt2::iamax(
+                                 boost::proto::value(
+                                 A(_(1,M), ii+i+1)
+                                 ));
+
                 IPIV(ip+1) = ii+i+1;
 
                 if ( std::fabs( A(im+1,ii+i+1) ) > std::fabs( U(ii+i+1,ii+i+1) ) ){
                     /*
                      * Swap behind.
                      */
-                    nt2::swap( boost::proto::value( L(i+1, _(ii+1,ii+i)) ),
-                               boost::proto::value( WORK(im+1,_(1,i)) )
+                    nt2::swap( boost::proto::value( nt2::evaluate(
+                               L(i+1, _(ii+1,ii+i))
+                               )),
+                               boost::proto::value( nt2::evaluate(
+                               WORK(im+1,_(1,i))
+                               ))
                               );
                     /*
                      * Swap ahead.
                      */
-                    nt2::swap( boost::proto::value( U(ii+i+1,_(ii+i+1,ii+sb)) ),
-                               boost::proto::value( A(im+1,_(ii+i+1,ii+sb)) )
+                    nt2::swap( boost::proto::value( nt2::evaluate(
+                               U(ii+i+1,_(ii+i+1,ii+sb))
+                               )),
+                               boost::proto::value( nt2::evaluate(
+                               A(im+1,_(ii+i+1,ii+sb))
+                               ))
                               );
                     /*
                      * Set IPIV.
                      */
                     IPIV(ip+1) = NB + im + 1;
 
-                    for (std::size_t j = 0; j < i; j++) {
+                    for (nt2_la_int j = 0; j < i; j++) {
                         A(im+1,ii+j+1) = zzero;
                     }
                 }
@@ -128,30 +146,47 @@ namespace nt2 { namespace ext
                 WORK(_(1,M), i+1) = A(_(1,M), ii+i+1);
 
                 // Warning: first arg must be a column vector, the second must be a line vector
-                nt2::ger(   boost::proto::value( A(_(1,M), ii+i+1) )
-                          , boost::proto::value( U(ii+i+1, _(ii+i+2,ii+sb)) )
-                          , boost::proto::value( A(_(1,M), _(ii+i+2,ii+sb)) )
+                nt2::ger(   boost::proto::value( nt2::evaluate(
+                            A(_(1,M), ii+i+1)
+                            ))
+                          , boost::proto::value( nt2::evaluate(
+                            U(ii+i+1, _(ii+i+2,ii+sb))
+                            ))
+                          , boost::proto::value( nt2::evaluate(
+                            A(_(1,M), _(ii+i+2,ii+sb))
+                            ))
+                          , mzone
                           );
             }
             /*
              * Apply the subpanel to the rest of the panel.
              */
             if(ii+i < N) {
-                for(std::size_t j = ii; j < ii+sb; j++) {
+                for(nt2_la_int j = ii; j < ii+sb; j++) {
                     if (IPIV(j+1) <= NB) {
                         IPIV(j+1) = IPIV(j+1) - ii;
                     }
                 }
 
              nt2::ssssm( sb,
-                         U(_(ii+1,ii+NB), _(ii+sb+1,N)),
-                         A(_(1,M), _(ii+sb+1,N)),
-                         L(_(1,sb), _(ii+1,ii+sb)),
-                         WORK(_(1,M),_(1,N-(ii+sb))),
+                         nt2::evaluate(
+                         U(_(ii+1,ii+NB), _(ii+sb+1,N))
+                         ),
+                         nt2::evaluate(
+                         A(_(1,M), _(ii+sb+1,N))
+                         ),
+                         nt2::evaluate(
+                         L(_(1,sb), _(ii+1,ii+sb))
+                         ),
+                         nt2::evaluate(
+                         WORK(_(1,M),_(1,N-(ii+sb)))
+                         ),
+                         nt2::evaluate(
                          IPIV(_(ii+1,M))
+                         )
                         );
 
-                for(std::size_t j = ii; j < ii+sb; j++) {
+                for(nt2_la_int j = ii; j < ii+sb; j++) {
                     if (IPIV(j+1) <= NB) {
                         IPIV(j+1) = IPIV(j+1) + ii;
                     }

@@ -37,7 +37,7 @@ namespace nt2
     @return
   **/
   NT2_FUNCTION_IMPLEMENTATION_TPL (tag::ger_, ger
-                                , (A0&)(A1&)(A2&)(A3 const &)
+                                , (A0)(A1)(A2)(A3 const &)
                                 , 4
                                 );
 }

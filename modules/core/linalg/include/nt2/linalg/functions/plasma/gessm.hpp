@@ -39,9 +39,11 @@ namespace nt2 { namespace ext
      {
         using nt2::_;
 
-        std::size_t M = nt2::height(A);
-        std::size_t N = nt2::width(A);
-        std::size_t K = nt2::height(L);
+        nt2_la_int M = nt2::height(A);
+        nt2_la_int N = nt2::width(A);
+        nt2_la_int K = nt2::height(L);
+        nt2_la_int LDL = L.leading_size();
+        nt2_la_int LDA = A.leading_size();
 
         T mzone = -1.0;
 
@@ -62,11 +64,11 @@ namespace nt2 { namespace ext
             coreblas_error(4, "Illegal value of IB");
             return -4;
         }
-        if ((L.leading_size() < std::max(1ul,M)) && (M > 0)) {
+        if ((LDL < std::max(1,M)) && (M > 0)) {
             coreblas_error(7, "Illegal value of LDL");
             return -7;
         }
-        if ((A.leading_size() < std::max(1ul,M)) && (M > 0)) {
+        if ((LDA < std::max(1,M)) && (M > 0)) {
             coreblas_error(9, "Illegal value of LDA");
             return -9;
         }
@@ -75,13 +77,17 @@ namespace nt2 { namespace ext
         if ((M == 0) || (N == 0) || (K == 0) || (IB == 0))
             return 0;
 
-        for(std::size_t i = 0; i < K; i += IB) {
-            std::size_t sb = std::min(IB, K-i);
+        for(nt2_la_int i = 0; i < K; i += IB) {
+            nt2_la_int sb = std::min(IB, K-i);
             /*
              * Apply nt2_la_interchanges to columns I*IB+1:IB*( I+1 )+1.
              */
-            nt2::laswp(boost::proto::value( nt2::evaluate( A(_(1,M),_(1,N)) )),
-                       boost::proto::value( nt2::evaluate(IPIV(_(1,M)) )),
+            nt2::laswp(boost::proto::value( nt2::evaluate(
+                       A(_(1,M),_(1,N))
+                       )),
+                       boost::proto::value( nt2::evaluate(
+                       IPIV(_(1,M))
+                       )),
                        i+1,
                        i+sb
                        );
@@ -89,18 +95,23 @@ namespace nt2 { namespace ext
              * Compute block row of U.
              */
             nt2::trsm( 'L', 'L', 'N', 'U',
-                       boost::proto::value( nt2::evaluate( L(_(i+1,i+sb), _(i+1,i+sb)) )),
-                       boost::proto::value( nt2::evaluate( A(_(i+1,i+sb), _(1,N)) ))
+                       boost::proto::value( nt2::evaluate(
+                       L(_(i+1,i+sb), _(i+1,i+sb))
+                       )),
+                       boost::proto::value( nt2::evaluate(
+                       A(_(i+1,i+sb), _(1,N))
+                       ))
                      );
 
             if (i+sb < M) {
             /*
             * Update trailing submatrix.
             */
-            // A(_(i+sb+1,M),_(1,N)) =
-            //   nt2::mtimes( nt2::evaluate( L(_(i+sb+1,M), _(i+1,i+sb)) ),
-            //                nt2::evaluate( A(_(i+1,i+sb),_(1,N)), mzone )
-            //              );
+            A(_(i+sb+1,M),_(1,N)) =
+              nt2::mtimes( nt2::evaluate( L(_(i+sb+1,M), _(i+1,i+sb)) ),
+                           nt2::evaluate( A(_(i+1,i+sb),_(1,N))),
+                           mzone
+                         );
             }
         }
         return 0;

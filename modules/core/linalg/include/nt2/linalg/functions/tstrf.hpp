@@ -37,7 +37,7 @@ namespace nt2
     @return
   **/
   NT2_FUNCTION_IMPLEMENTATION_TPL (tag::tstrf_, tstrf
-                                  ,(A0 const &)(A1 &)(A2 &)(A3 &)(A4 &)(A5 &)
+                                  ,(A0)(A1)(A2)(A3)(A4)(A5 &)
                                   , 6
                                   );
 }

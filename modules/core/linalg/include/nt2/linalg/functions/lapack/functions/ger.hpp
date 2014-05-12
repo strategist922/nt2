@@ -36,10 +36,11 @@ extern "C"
 namespace nt2 { namespace ext
 {
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ger_, tag::cpu_
+                            , (A0)(S0)(A1)(S1)(A2)(S2)(A3)
                             , ((container_< nt2::tag::table_, double_<A0>, S0 >))
-                            , ((container_< nt2::tag::table_, double_<A1>, S1 >))
-                            , ((container_< nt2::tag::table_, double_<A2>, S2 >))
-                            , (scalar_< double_<A3> >)
+                              ((container_< nt2::tag::table_, double_<A1>, S1 >))
+                              ((container_< nt2::tag::table_, double_<A2>, S2 >))
+                              (scalar_< double_<A3> >)
                             )
   {
      typedef void result_type;
@@ -48,20 +49,21 @@ namespace nt2 { namespace ext
      {
         nt2_la_int  m    = nt2::height(a2);
         nt2_la_int  n    = nt2::width(a2);
-        nt2_la_int  lda  = a2.leading.size();
+        nt2_la_int  lda  = a2.leading_size();
         double alpha   = a3;
         nt2_la_int  incx = 1;
         nt2_la_int  incy = a1.leading_size();
 
-        NT2_F77NAME(dger)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a3.raw(), &lda);
+        NT2_F77NAME(dger)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a2.raw(), &lda);
      }
   };
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ger_, tag::cpu_
-                            , ((container_< nt2::tag::table_, float_<A0>, S0 >))
-                            , ((container_< nt2::tag::table_, float_<A1>, S1 >))
-                            , ((container_< nt2::tag::table_, float_<A2>, S2 >))
-                            , (scalar_< float_<A3> >)
+                            , (A0)(S0)(A1)(S1)(A2)(S2)(A3)
+                            , ((container_< nt2::tag::table_, single_<A0>, S0 >))
+                              ((container_< nt2::tag::table_, single_<A1>, S1 >))
+                              ((container_< nt2::tag::table_, single_<A2>, S2 >))
+                              (scalar_< single_<A3> >)
                             )
   {
      typedef void result_type;
@@ -70,20 +72,21 @@ namespace nt2 { namespace ext
      {
         nt2_la_int  m    = nt2::height(a2);
         nt2_la_int  n    = nt2::width(a2);
-        nt2_la_int  lda  = a2.leading.size();
+        nt2_la_int  lda  = a2.leading_size();
         float alpha      = a3;
         nt2_la_int  incx = 1;
         nt2_la_int  incy = a1.leading_size();
 
-        NT2_F77NAME(sger)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a3.raw(), &lda);
+        NT2_F77NAME(sger)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a2.raw(), &lda);
      }
   };
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ger_, tag::cpu_
-                            , ((container_< nt2::tag::table_, float_<A0>, S0 >))
-                            , ((container_< nt2::tag::table_, float_<A1>, S1 >))
-                            , ((container_< nt2::tag::table_, float_<A2>, S2 >))
-                            , (scalar_< complex_< float_<A3> > >)
+                            , (A0)(S0)(A1)(S1)(A2)(S2)(A3)
+                            , ((container_< nt2::tag::table_, single_<A0>, S0 >))
+                              ((container_< nt2::tag::table_, single_<A1>, S1 >))
+                              ((container_< nt2::tag::table_, single_<A2>, S2 >))
+                              (scalar_< complex_< single_<A3> > >)
                             )
   {
      typedef void result_type;
@@ -92,20 +95,21 @@ namespace nt2 { namespace ext
      {
         nt2_la_int  m    = nt2::height(a2);
         nt2_la_int  n    = nt2::width(a2);
-        nt2_la_int  lda  = a2.leading.size();
-        nt2_la_complex alpha = a3;
+        nt2_la_int  lda  = a2.leading_size();
+        A3 alpha = a3;
         nt2_la_int  incx = 1;
         nt2_la_int  incy = a1.leading_size();
 
-        NT2_F77NAME(cgeru)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a3.raw(), &lda);
+        NT2_F77NAME(cgeru)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a2.raw(), &lda);
      }
   };
 
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::ger_, tag::cpu_
+                            , (A0)(S0)(A1)(S1)(A2)(S2)(A3)
                             , ((container_< nt2::tag::table_, complex_< double_<A0> >, S0 > ))
-                            , ((container_< nt2::tag::table_, complex_< double_<A1> >, S1 > ))
-                            , ((container_< nt2::tag::table_, complex_< double_<A2> >, S2 > ))
-                            , (scalar_< complex_< double_<A3> > >)
+                              ((container_< nt2::tag::table_, complex_< double_<A1> >, S1 > ))
+                              ((container_< nt2::tag::table_, complex_< double_<A2> >, S2 > ))
+                              (scalar_< complex_< double_<A3> > >)
                             )
   {
      typedef void result_type;
@@ -114,12 +118,12 @@ namespace nt2 { namespace ext
      {
         nt2_la_int  m    = nt2::height(a2);
         nt2_la_int  n    = nt2::width(a2);
-        nt2_la_int  lda  = a2.leading.size();
-        nt2_la_complex alpha = a3;
+        nt2_la_int  lda  = a2.leading_size();
+        A3 alpha = a3;
         nt2_la_int  incx = 1;
         nt2_la_int  incy = a1.leading_size();
 
-        NT2_F77NAME(zgeru)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a3.raw(), &lda);
+        NT2_F77NAME(zgeru)(&m, &n, &alpha, a0.raw(), &incx, a1.raw(), &incy, a2.raw(), &lda);
      }
   };
 } }

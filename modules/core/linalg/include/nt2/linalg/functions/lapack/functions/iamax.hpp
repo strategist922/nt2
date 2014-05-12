@@ -23,10 +23,10 @@ extern "C"
   long int NT2_F77NAME(isamax)(const nt2_la_int* n, const float *dx
                               ,const nt2_la_int* incx);
 
-  long int NT2_F77NAME(icamax)(const nt2_la_int* n, const nt2_la_complex *dx,
+  long int NT2_F77NAME(icamax)(const nt2_la_int* n, const nt2_la_complex *dx
                               ,const nt2_la_int* incx);
 
-  long int NT2_F77NAME(izamax)(const nt2_la_int* n, const nt2_la_complex *dx,
+  long int NT2_F77NAME(izamax)(const nt2_la_int* n, const nt2_la_complex *dx
                               ,const nt2_la_int* incx);
 }
 
@@ -39,7 +39,7 @@ namespace nt2 { namespace ext
   {
      typedef long int result_type;
 
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0& a0) const
      {
         nt2_la_int  n  = nt2::height(a0);
         nt2_la_int  incx = 1;
@@ -55,7 +55,7 @@ namespace nt2 { namespace ext
   {
      typedef long int result_type;
 
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0& a0) const
      {
         nt2_la_int  n  = nt2::height(a0);
         nt2_la_int  incx = 1;
@@ -71,7 +71,7 @@ namespace nt2 { namespace ext
   {
      typedef long int result_type;
 
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0& a0) const
      {
         nt2_la_int  n  = nt2::height(a0);
         nt2_la_int  incx = 1;
@@ -88,7 +88,7 @@ namespace nt2 { namespace ext
   {
      typedef long int result_type;
 
-     BOOST_FORCEINLINE result_type operator()(A0& a0, A1& a1) const
+     BOOST_FORCEINLINE result_type operator()(A0& a0) const
      {
         nt2_la_int  n  = nt2::height(a0);
         nt2_la_int  incx = 1;

@@ -10,12 +10,13 @@
 #define NT2_LINALG_FUNCTIONS_PLASMA_PGETRF_INCPIV_HPP_INCLUDED
 
 #include <nt2/linalg/functions/pgetrf_incpiv.hpp>
-// #include <nt2/include/functions/gessm.hpp>
+#include <nt2/include/functions/gessm.hpp>
 #include <nt2/include/functions/getrf_incpiv.hpp>
-// #include <nt2/include/functions/ssssm.hpp>
-// #include <nt2/include/functions/tstrf.hpp>
+#include <nt2/include/functions/ssssm.hpp>
+#include <nt2/include/functions/tstrf.hpp>
 
 #include <nt2/linalg/details/plasma/grid.hpp>
+#include <nt2/linalg/details/utility/f77_wrapper.hpp>
 
 #include <nt2/include/functions/height.hpp>
 #include <nt2/include/functions/width.hpp>
@@ -56,15 +57,19 @@ namespace nt2 {
         T2 & IPIV(*IPIVptr);
 
         nt2::getrf_incpiv(ib,
-                          nt2::evaluate( A(    _(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n)) ),
-                          nt2::evaluate( IPIV( _(k*nb+1,k*nb+m), k) )
+                          nt2::evaluate(
+                          A(_(k*nb+1,k*nb+m), _(k*nb+1,k*nb+n))
+                          ),
+                          nt2::evaluate(
+                          IPIV( _(k*nb+1,k*nb+m), k)
+                          )
                           );
 
         return 0;
       }
 
       T1 * Aptr;
-      std::size_t m,n,nb,ib,k;
+      nt2_la_int m,n,nb,ib,k;
       T2 * IPIVptr;
     };
 
@@ -97,19 +102,27 @@ namespace nt2 {
 
         T1 work(nt2::of_size(m,n));
 
-        // nt2::tstrf(std::make_pair(ib,nb),
-        //            A(    _(k*nb+1, k*nb+nb),  _(k*nb+1,k*nb+n) ),
-        //            A(    _(mm*nb+1,mm*nb+m),  _(k*nb+1,k*nb+n) ),
-        //            L(    _(mm*ib+1,mm*ib+ib), _(k*nb*1,k*nb+n) ),
-        //            IPIV( _(mm*nb+1,mm*nb+m),  k                ),
-        //            work( _(1,m),              _(1,n)           )
-        //            );
+        nt2::tstrf(std::make_pair(ib,nb),
+                   nt2::evaluate(
+                   A(_(k*nb+1, k*nb+nb),_(k*nb+1,k*nb+n))
+                   ),
+                   nt2::evaluate(
+                   A(_(mm*nb+1,mm*nb+m),_(k*nb+1,k*nb+n))
+                   ),
+                   nt2::evaluate(
+                   L(_(mm*ib+1,mm*ib+ib), _(k*nb*1,k*nb+n))
+                   ),
+                   nt2::evaluate(
+                   IPIV(_(mm*nb+1,mm*nb+m), k)
+                   ),
+                   work
+                   );
          return 0;
       }
 
       T1 * Aptr;
       T1 * Lptr;
-      std::size_t m,n,nb,ib,k,mm,info,LDA,LDL;
+      nt2_la_int m,n,nb,ib,k,mm,info,LDA,LDL;
       T2 * IPIVptr;
     };
 
@@ -138,16 +151,22 @@ namespace nt2 {
         T1 & A(*Aptr);
         T2 & IPIV(*IPIVptr);
 
-        // nt2::gessm(ib,
-        //            IPIV( _(k*nb+1, k*nb+m), k                   ),
-        //            A(    _(k*nb+1, k*nb+m), _(k*nb+1, k*nb+nb)  ),
-        //            A(    _(k*nb+1, k*nb+m), _(nn*nb+1, nn*nb+n) )
-        //            );
+        nt2::gessm(ib,
+                   nt2::evaluate(
+                   IPIV( _(k*nb+1, k*nb+m), k)
+                   ),
+                   nt2::evaluate(
+                   A(_(k*nb+1, k*nb+m), _(k*nb+1, k*nb+nb) )
+                   ),
+                   nt2::evaluate(
+                   A(_(k*nb+1, k*nb+m), _(nn*nb+1, nn*nb+n) )
+                   )
+                   );
         return 0;
       }
 
       T1 * Aptr;
-      std::size_t m,n,nb,ib,k,nn,LDA;
+      nt2_la_int m,n,nb,ib,k,nn,LDA;
       T2 * IPIVptr;
     };
 
@@ -179,19 +198,29 @@ namespace nt2 {
         T1 & L(*Lptr);
         T2 & IPIV(*IPIVptr);
 
-       // nt2::ssssm(ib,
-       //            A(    _(k*nb+1,k*nb+nb),   _(nn*nb+1,nn*nb+n) ),
-       //            A(    _(mm*nb+1,mm*nb+m),  _(nn*nb+1,nn*nb+n) ),
-       //            L(    _(mm*ib+1,mm*ib+ib), _(k*nb+1, k*nb+nb) ),
-       //            A(    _(mm*nb+1,mm*nb+m),  _(k*nb+1, k*nb+nb) ),
-       //            IPIV( _(mm*nb+1,mm*nb+m),  k                  )
-       //            );
+       nt2::ssssm(ib,
+                  nt2::evaluate(
+                    A(_(k*nb+1,k*nb+nb),_(nn*nb+1,nn*nb+n) )
+                    ),
+                  nt2::evaluate(
+                    A(_(mm*nb+1,mm*nb+m),_(nn*nb+1,nn*nb+n) )
+                    ),
+                  nt2::evaluate(
+                    L(_(mm*ib+1,mm*ib+ib),_(k*nb+1, k*nb+nb) )
+                    ),
+                  nt2::evaluate(
+                    A(_(mm*nb+1,mm*nb+m),_(k*nb+1, k*nb+nb) )
+                    ),
+                  nt2::evaluate(
+                    IPIV(_(mm*nb+1,mm*nb+m),k)
+                    )
+                  );
         return 0;
       }
 
       T1 * Aptr;
       T1 * Lptr;
-      std::size_t m,n,nb,ib,k,mm,nn;
+      nt2_la_int m,n,nb,ib,k,mm,nn;
       T2 * IPIVptr;
     };
   }
