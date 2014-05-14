@@ -71,9 +71,8 @@ namespace nt2 { namespace ext
             /*
              * Factor diagonal and subdiagonal blocks and test for exact singularity.
              */
-            nt2_la_int m = M-i;
-            nt2::getf2( boost::proto::value( nt2::evaluate( A(_(i+1,i+m),_(i+1,i+sb)) ) ),
-                        boost::proto::value( nt2::evaluate( IPIV(_(i+1,i+m)) ) )
+            nt2::getf2( boost::proto::value( nt2::evaluate( A(_(i+1,M),_(i+1,i+sb)) ) ),
+                        boost::proto::value( nt2::evaluate( IPIV(_(i+1,M)) ) )
                       );
             /*
              * Adjust pivot indices.
