@@ -31,6 +31,7 @@ INPUT                 += $(NT2_BINARY_DIR)/include/nt2/operator/functions
 INPUT                 += ../include/nt2/predicates/functions
 INPUT                 += $(NT2_BINARY_DIR)/include/nt2/predicates/functions
 INPUT                 += ../include/nt2/meta
+INPUT                 += ../include/nt2/core/utility
 FULL_PATH_NAMES        = NO
 INHERIT_DOCS           = NO
 RECURSIVE              = NO
