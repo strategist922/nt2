@@ -43,13 +43,13 @@ namespace nt2
                     ,std::size_t offset                       // Container offset
                     ,std::size_t size)                        // Total number of elements to transform
       {
-          for(std::size_t nn=0, n=begin.second; nn<chunk.second; ++nn, n+=bound_)
+          for(std::size_t nn=0, n=begin.second*bound_; nn<chunk.second; ++nn, n+=bound_)
           {
             std::size_t o =  begin.first + n;
 
             if(size > o )
             {
-              std::size_t colchunk = ( size < o + chunk.first)
+              std::size_t colchunk = ( size < (o + chunk.first) )
               ? size - o
               : chunk.first;
 
