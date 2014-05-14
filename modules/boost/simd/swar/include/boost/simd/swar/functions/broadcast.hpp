@@ -87,7 +87,8 @@ namespace boost { namespace simd { namespace tag
                           )
                         );
 
-    return callee(value,boost::mpl::int_<N>());
+    boost::mpl::int_<N> idx;
+    return callee(value,idx);
   }
 
 } }

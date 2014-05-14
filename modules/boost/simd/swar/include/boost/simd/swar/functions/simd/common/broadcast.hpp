@@ -35,21 +35,21 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::broadcast_
-                                    , boost::simd::tag::cpu_
-                                    , (A0)(A1)
-                                    , ((ast_<A0, boost::simd::domain>))
-                                      (mpl_integral_< scalar_< integer_<A1> > >)
-                                    )
-  {
-    typedef typename boost::dispatch::meta::semantic_of<A0>::type     sema_t;
-    typedef typename boost::dispatch::meta::terminal_of<sema_t>::type result_type;
+  // BOOST_SIMD_FUNCTOR_IMPLEMENTATION ( boost::simd::tag::broadcast_
+  //                                   , boost::simd::tag::cpu_
+  //                                   , (A0)(A1)
+  //                                   , ((ast_<A0, boost::simd::domain>))
+  //                                     (mpl_integral_< scalar_< integer_<A1> > >)
+  //                                   )
+  // {
+  //   typedef typename boost::dispatch::meta::semantic_of<A0>::type     sema_t;
+  //   typedef typename boost::dispatch::meta::terminal_of<sema_t>::type result_type;
 
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return boost::simd::broadcast<A1::value>(evaluate(a0));
-    }
-  };
+  //   BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
+  //   {
+  //     return boost::simd::broadcast<A1::value>(evaluate(a0));
+  //   }
+  // };
 } } }
 
 #endif
