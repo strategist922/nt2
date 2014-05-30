@@ -13,9 +13,6 @@
 
 #if defined(NT2_USE_HPX)
 
-#include <hpx/lcos/future.hpp>
-#include <hpx/lcos/wait_all.hpp>
-
 #include <boost/move/move.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/enum.hpp>
@@ -23,6 +20,7 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/hpx/future/details/when_all_result.hpp>
+#include <hpx/lcos/when_all.hpp>
 
 #include <vector>
 
