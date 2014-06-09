@@ -62,3 +62,7 @@ add_subdirectory(sdot/scalar)
 add_subdirectory(sdot/nt2)
 add_subdirectory(sdot/simd)
 add_subdirectory(sdot/mkl)
+
+#biquad
+add_subdirectory(biquad/scalar)
+add_subdirectory(biquad/simd)
