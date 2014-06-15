@@ -16,6 +16,8 @@ set(NT2_BLAS_MULTICORE 0)
 # find_package(NT2 REQUIRED)
 find_package(NT2 REQUIRED COMPONENTS test.benchmark core arch.hpx)
 
+#find_package(NT2 REQUIRED COMPONENTS test.benchmark core arch.openmp)
+
 include(${NT2_USE_FILE})
 
 set(CMAKE_BUILD_TYPE Release)

@@ -80,7 +80,7 @@ namespace nt2 { namespace details {
 
     ~container_has_futures()
     {
-      synchronize();
+      //synchronize();
     }
 
     //===========================================

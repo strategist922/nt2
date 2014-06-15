@@ -24,6 +24,7 @@
 #include <nt2/include/constants/half.hpp>
 #include <vector>
 #include <iostream>
+#include <cstdio>
 
 #include <nt2/sdk/bench/benchmark.hpp>
 #include <nt2/sdk/bench/metric/cycles_per_element.hpp>
@@ -39,16 +40,19 @@ template<typename T> struct blackandscholes_nt2
   blackandscholes_nt2(std::size_t n)
                     :  size_(n)
   {
-    Sa.resize(nt2::of_size(size_));
-    Xa.resize(nt2::of_size(size_));
-    Ta.resize(nt2::of_size(size_));
-    ra.resize(nt2::of_size(size_));
-    va.resize(nt2::of_size(size_));
-    R.resize(nt2::of_size(size_));
+    Sa.resize(nt2::of_size(size_,size_));
+    Xa.resize(nt2::of_size(size_,size_));
+    Ta.resize(nt2::of_size(size_,size_));
+    ra.resize(nt2::of_size(size_,size_));
+    va.resize(nt2::of_size(size_,size_));
+    R.resize(nt2::of_size(size_,size_));
 
-    for(std::size_t i = 1; i <= size_; ++i)
-      Sa(i) = Xa(i) = Ta(i) = ra(i) = va(i) = T(i);
-  }
+    for(std::size_t j = 1; j <= size_; ++j)
+   {
+    for(std::size_t i= 1; i <= size_; ++i)
+      Sa(i,j) = Xa(i,j) = Ta(i,j) = ra(i,j) = va(i,j) = T(i+(j-1)*size_);
+   }
+}
 
   void operator()()
   {
@@ -66,7 +70,7 @@ template<typename T> struct blackandscholes_nt2
     return os << "(" << p.size() << ")";
   }
 
-  std::size_t size() const { return size_; }
+  std::size_t size() const { return size_*size_; }
 
   private:
   nt2::table<T> Sa, Xa, Ta, ra, va, R;
@@ -75,9 +79,9 @@ template<typename T> struct blackandscholes_nt2
 
 NT2_REGISTER_BENCHMARK_TPL( blackandscholes_nt2, (float) )
 {
-  std::size_t size_min  = args("size_min" ,   4000*4000);
-  std::size_t size_max  = args("size_max" , 16000*16000);
-  std::size_t size_step = args("size_step",    4);
+  std::size_t size_min  = args("size_min" ,   8000);
+  std::size_t size_max  = args("size_max" , 32000);
+  std::size_t size_step = args("size_step",    2);
 
   run_during_with< blackandscholes_nt2<float> > ( 10.
                                                 , geometric(size_min,size_max,size_step)

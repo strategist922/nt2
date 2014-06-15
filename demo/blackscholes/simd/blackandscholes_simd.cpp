@@ -55,7 +55,7 @@ BOOST_FORCEINLINE A0 blackandscholes(A0 const &a0, A0 const &a1, A0 const &a2, A
 template<typename T> struct blackandscholes_simd
 {
   blackandscholes_simd(std::size_t n)
-                    :  size_(n)
+                    :  size_(n*n)
   {
     Sa.resize(size_);
     Xa.resize(size_);
@@ -107,9 +107,9 @@ template<typename T> struct blackandscholes_simd
 
 NT2_REGISTER_BENCHMARK_TPL( blackandscholes_simd, (float) )
 {
-  std::size_t size_min  = args("size_min" ,   4000*4000);
-  std::size_t size_max  = args("size_max" , 16000*16000);
-  std::size_t size_step = args("size_step",    4);
+  std::size_t size_min  = args("size_min" ,   8000);
+  std::size_t size_max  = args("size_max" , 32000);
+  std::size_t size_step = args("size_step",    2);
 
   run_during_with< blackandscholes_simd<float> > ( 10.
                                                  , geometric(size_min,size_max,size_step)

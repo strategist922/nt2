@@ -49,12 +49,19 @@ namespace nt2
        std::size_t nblocks  = condition ? condition : 1;
        std::size_t last_chunk = condition ? grain+leftover : size;
 
-       #pragma omp parallel
-       {
        // Dispatch group of blocks over each threads
-          #pragma omp for schedule(static)
+
+#if defined(_OPENMP) && _OPENMP < 201307
+          #pragma omp parallel for schedule(static)
+#endif
           for(std::size_t n=0;n<nblocks;++n)
           {
+
+#if defined(_OPENMP) && _OPENMP >= 201307
+            #pragma omp task shared(w)
+            {
+#endif
+
 #ifndef BOOST_NO_EXCEPTIONS
              try
              {
@@ -72,8 +79,14 @@ namespace nt2
              }
 #endif
            }
+
+#if defined(_OPENMP) && _OPENMP >= 201307
+           }
+         #pragma omp taskwait
+#endif
+
         }
-      }
+
    };
 }
 

@@ -22,7 +22,6 @@
 #include <nt2/sdk/shared_memory/settings/container_has_futures.hpp>
 
 #include <utility>
-#include <cstdio>
 
 #ifndef BOOST_NO_EXCEPTIONS
 #include <boost/exception_ptr.hpp>
@@ -43,7 +42,7 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w, std::size_t offset, std::size_t size, std::pair<std::size_t,std::size_t> grain_out)
+        void operator()(Worker & w, std::pair<std::size_t,std::size_t> grain_out)
         {
              typedef typename
              nt2::make_future< Arch ,int >::type future;
@@ -51,11 +50,10 @@ namespace nt2
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
-             std::size_t bound  = w.bound_;
 
         // 2D parameters of In table
-             std::size_t height = (size <= bound) ? size : bound;
-             std::size_t width  = (size <= bound) ? 1 : size/bound + (size%bound > 0);
+             std::size_t height = w.bound_;
+             std::size_t width  = w.obound_;
 
         // Update grain_out to have a valid grain
               grain_out = std::make_pair(
@@ -121,7 +119,7 @@ namespace nt2
                      {
                          // Call operation
                          tmp.futures_.push_back(
-                           nt2::async<Arch>(Worker(w), begin, chunk, offset, size)
+                           nt2::async<Arch>(Worker(w), begin, chunk)
                              );
                      }
 
@@ -130,7 +128,7 @@ namespace nt2
                          // Call operation
                          tmp.futures_.push_back(
                             nt2::when_all<Arch>(boost::move(data_in.futures_))
-                            .then( details::then_worker<Worker>(Worker(w),begin, chunk, offset, size)
+                            .then( details::then_worker<Worker>(Worker(w), begin, chunk)
                               )
                             );
                      }

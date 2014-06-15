@@ -22,27 +22,22 @@ namespace nt2 { namespace details {
 
         then_worker(BOOST_FWD_REF(Worker) w,
                     Pair offset,
-                    Pair chunk,
-                    std::size_t begin,
-                    std::size_t size
+                    Pair chunk
                     )
         :w_(boost::forward<Worker>(w))
         ,offset_(offset),chunk_(chunk)
-        ,begin_(begin),size_(size)
         {}
 
         template<typename T>
         int operator()(T) const
         {
-            w_(offset_,chunk_,begin_,size_);
+            w_(offset_,chunk_);
             return 0;
         }
 
         mutable Worker w_;
         Pair offset_;
         Pair chunk_;
-        std::size_t begin_;
-        std::size_t size_;
 
         private:
         then_worker& operator=(then_worker const&);
