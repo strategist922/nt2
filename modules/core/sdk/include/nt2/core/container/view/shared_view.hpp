@@ -12,36 +12,26 @@
 #include <nt2/sdk/memory/container_ref.hpp>
 #include <nt2/sdk/memory/container_shared_ref.hpp>
 #include <nt2/core/container/view/adapted/shared_view.hpp>
+#include <nt2/core/container/view/adapted/shared_view_type.hpp>
 #include <boost/dispatch/dsl/semantic_of.hpp>
 
 namespace nt2 { namespace container
 {
-  template<class Expression, class ResultType> struct expression;
-
   /* shared_view; an expression of a container_shared_ref terminal.
    * allows construction from an expression of a container_shared_ref terminal */
-  template<typename Kind, typename T, typename S>
-  struct shared_view
-       :  expression< boost::proto
-          ::basic_expr< nt2::tag::terminal_
-                      , boost::proto::term< memory
-                             ::container_shared_ref<Kind,T,S,false>
-                                          >
-                      , 0l
-                      >
-                    , memory::container<Kind,T,S>&
-                    >
+  template<typename Container>
+  struct  shared_view
+        : details::shared_view_type<Container>::nt2_expression
   {
-    typedef memory::container_shared_ref< Kind, T, S, false >   container_ref;
-    typedef boost::proto::basic_expr< nt2::tag::terminal_
-                                    , boost::proto::term<container_ref>
-                                    , 0l
-                                    >                     basic_expr;
-    typedef memory::container<Kind,T,S>&                  container_type;
-    typedef expression<basic_expr, container_type>        nt2_expression;
+    typedef details::shared_view_type<Container>    sv_t;
+    typedef typename sv_t::basic_expr               basic_expr;
+    typedef typename sv_t::container_ref            container_ref;
+    typedef typename sv_t::container_type           container_type;
+    typedef typename sv_t::nt2_expression           nt2_expression;
+    typedef typename sv_t::value_type               value_type;
 
-    typedef typename container_ref::iterator              iterator;
-    typedef typename container_ref::const_iterator        const_iterator;
+    typedef typename container_ref::iterator        iterator;
+    typedef typename container_ref::const_iterator  const_iterator;
 
     iterator begin()  const { return boost::proto::value(*this).begin(); }
     iterator end()    const { return boost::proto::value(*this).end();   }
@@ -111,28 +101,19 @@ namespace nt2 { namespace container
     }
   };
 
-  template<typename Kind, typename T, typename S>
-  struct shared_view<Kind, T const, S>
-       : expression <  boost::proto::basic_expr
-                      < nt2::tag::terminal_
-                      , boost::proto::term
-                        <memory::container_shared_ref<Kind, T const, S, false>
-                      >
-                    , 0l
-                    >
-                   , memory::container<Kind,T,S> const&
-                   >
+  template<typename Container>
+  struct  shared_view<Container const>
+        : details::shared_view_type<Container const>::nt2_expression
   {
-    typedef memory::container_shared_ref<Kind, T const, S, false >   container_ref;
-    typedef boost::proto::basic_expr< nt2::tag::terminal_
-                                    , boost::proto::term<container_ref>
-                                    , 0l
-                                    >                           basic_expr;
-    typedef memory::container<Kind,T,S> const&                      container_type;
-    typedef expression<basic_expr, container_type>              nt2_expression;
+    typedef details::shared_view_type<Container const>  sv_t;
+    typedef typename sv_t::basic_expr                   basic_expr;
+    typedef typename sv_t::container_ref                container_ref;
+    typedef typename sv_t::container_type               container_type;
+    typedef typename sv_t::nt2_expression               nt2_expression;
+    typedef typename sv_t::value_type                   value_type;
 
-    typedef typename container_ref::iterator                    iterator;
-    typedef typename container_ref::const_iterator              const_iterator;
+    typedef typename container_ref::iterator            iterator;
+    typedef typename container_ref::const_iterator      const_iterator;
 
     iterator begin()  const { return boost::proto::value(*this).begin(); }
     iterator end()    const { return boost::proto::value(*this).end();   }

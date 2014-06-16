@@ -63,7 +63,7 @@ NT2_TEST_CASE( run_type )
 
   NT2_TEST_EXPR_TYPE( boost::proto::child_c<0>(a0 + a0)
                     , run_type
-                    , (view<table_, T const, S>)
+                    , (view< table<T, S> const>)
                     );
 
   NT2_TEST_EXPR_TYPE( a0 + a0
