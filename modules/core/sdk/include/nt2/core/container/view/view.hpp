@@ -42,17 +42,20 @@ namespace nt2 { namespace container
     iterator begin()  const { return boost::proto::value(*this).begin(); }
     iterator end()    const { return boost::proto::value(*this).end(); }
 
+    /// @brief Default constructor
     BOOST_FORCEINLINE
     view()
     {
     }
 
+    /// @brief Constructor from existing expression
     BOOST_FORCEINLINE
     view( nt2_expression const& expr )
               : nt2_expression(expr)
     {
     }
 
+    /// @brief Constructor from existing base_expr
     template<class Xpr>
     BOOST_FORCEINLINE
     view( Xpr& expr )
@@ -60,6 +63,7 @@ namespace nt2 { namespace container
     {
     }
 
+    /// @brief Constructor from existing constant base_expr
     template<class Xpr>
     BOOST_FORCEINLINE
     view( Xpr const& expr )
@@ -67,10 +71,46 @@ namespace nt2 { namespace container
     {
     }
 
+    /*!
+      @brief View from pointer constructor
+
+      Build a copy-less view from a pointer and a given size. Resulting view
+      provide access to the underlying data block through the usual Container
+      interface.
+    **/
+    template<typename Extent>
+    BOOST_FORCEINLINE
+    view(pointer p, Extent const& sz)
+            : nt2_expression(basic_expr::make(container_ref(p, sz)))
+    {
+    }
+
+    template<typename K, typename T, typename S>
+    BOOST_FORCEINLINE
+    view(memory::container<K, T, S>& c)
+            : nt2_expression(basic_expr::make(container_ref(c)))
+    {
+    }
+
+    template<typename K, typename T, typename S>
+    BOOST_FORCEINLINE
+    view(memory::container<K, T, S> const& c)
+            : nt2_expression(basic_expr::make(container_ref(c)))
+    {
+    }
+
     template<class Xpr>
-    void reset(Xpr& other)
+    BOOST_FORCEINLINE void reset(Xpr& other)
     {
       view tmp(other);
+      boost::proto::value(*this) = boost::proto::value(tmp);
+      this->size_ = tmp.size_;
+    }
+
+    template<typename Extent>
+    BOOST_FORCEINLINE void reset(pointer p, Extent const& sz)
+    {
+      view tmp(p,sz);
       boost::proto::value(*this) = boost::proto::value(tmp);
       this->size_ = tmp.size_;
     }
