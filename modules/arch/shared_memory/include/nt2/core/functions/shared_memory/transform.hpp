@@ -39,17 +39,11 @@ namespace nt2 { namespace ext
 
     BOOST_FORCEINLINE result_type operator()(Out& out, In& in, Range range) const
     {
-       std::size_t cache  = 1024*config::top_cache_size(1)/sizeof(typename Out::value_type);
- //      printf("0:%d 1:%d 2:%d 3:%d\n"
- //    ,config::top_cache_size(0)
- //      ,config::top_cache_size(1)
- //     ,config::top_cache_size(2)
- //     ,config::top_cache_size(3));
-       std::size_t factor = 4;
-       std::size_t grain  = factor*factor*cache;
+      // std::size_t cache  = 1024*config::top_cache_size(1)/sizeof(typename Out::value_type);
+       std::size_t grain  = 400*400;
 
-       std::size_t grain_x = factor*128;
-       std::size_t grain_y = factor*64;
+       std::size_t grain_x = 400;
+       std::size_t grain_y = 400;
 
        std::size_t begin = range.first;
        std::size_t size = range.second;
@@ -58,8 +52,8 @@ namespace nt2 { namespace ext
 
        nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
 
-//       nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
-//       s(w,std::make_pair(grain_x,grain_y));
+       //nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
+       //s(w,std::make_pair(grain_x,grain_y));
 
        nt2::spawner<tag::transform_,BackEnd > s;
        s(w,begin,size,grain);

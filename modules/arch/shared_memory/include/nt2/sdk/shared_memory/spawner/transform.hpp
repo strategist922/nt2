@@ -122,12 +122,10 @@ namespace nt2
                            nt2::async<Arch>(Worker(w), begin, chunk)
                              );
                      }
-
                      else
                      {
-                         // Call operation
-                         tmp.futures_.push_back(
-                            nt2::when_all<Arch>(boost::move(data_in.futures_))
+                          tmp.futures_.push_back(
+                           nt2::when_all<Arch>(boost::move(data_in.futures_))
                             .then( details::then_worker<Worker>(Worker(w), begin, chunk)
                               )
                             );

@@ -79,7 +79,7 @@ template<typename T> struct blackandscholes_nt2
 
 NT2_REGISTER_BENCHMARK_TPL( blackandscholes_nt2, (float) )
 {
-  std::size_t size_min  = args("size_min" ,   8000);
+  std::size_t size_min  = args("size_min" , 8000);
   std::size_t size_max  = args("size_max" , 32000);
   std::size_t size_step = args("size_step",    2);
 
