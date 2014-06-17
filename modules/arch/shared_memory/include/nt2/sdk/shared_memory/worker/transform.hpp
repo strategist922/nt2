@@ -13,6 +13,7 @@
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/include/functor.hpp>
 
+#include <cstdio>
 #include <utility>
 
 namespace nt2

@@ -56,6 +56,7 @@ template<typename T> struct blackandscholes_nt2
 
   void operator()()
   {
+
     nt2::table<T> da = nt2::sqrt(Ta);
     nt2::table<T> d1 = nt2::log(Sa/Xa) + (nt2::fma(nt2::sqr(va),T(0.5),ra)*Ta)/(va*da);
     nt2::table<T> d2 = nt2::fnms(va,da,d1);
@@ -79,8 +80,8 @@ template<typename T> struct blackandscholes_nt2
 
 NT2_REGISTER_BENCHMARK_TPL( blackandscholes_nt2, (float) )
 {
-  std::size_t size_min  = args("size_min" , 8000);
-  std::size_t size_max  = args("size_max" , 32000);
+  std::size_t size_min  = args("size_min" , 6000);
+  std::size_t size_max  = args("size_max" , 24000);
   std::size_t size_step = args("size_step",    2);
 
   run_during_with< blackandscholes_nt2<float> > ( 10.

@@ -115,20 +115,31 @@ namespace nt2
 
                      aggregate_f(w.in_,0,data_in);
 
-                     if(data_in.futures_.empty())
+
+                     switch( data_in.futures_.size() )
                      {
+                     case 0:
                          // Call operation
-                         tmp.futures_.push_back(
+                       tmp.futures_.push_back(
                            nt2::async<Arch>(Worker(w), begin, chunk)
-                             );
-                     }
-                     else
-                     {
-                          tmp.futures_.push_back(
+                           );
+                     break;
+
+                     case 1:
+                       tmp.futures_.push_back(
+                           data_in.futures_[0]
+                           .then( details::then_worker<Worker>(Worker(w), begin, chunk)
+                          )
+                        );
+                     break;
+
+                     default:
+                        tmp.futures_.push_back(
                            nt2::when_all<Arch>(boost::move(data_in.futures_))
-                            .then( details::then_worker<Worker>(Worker(w), begin, chunk)
-                              )
-                            );
+                           .then( details::then_worker<Worker>(Worker(w), begin, chunk)
+                           )
+                        );
+                     break;
                      }
                  }
              }

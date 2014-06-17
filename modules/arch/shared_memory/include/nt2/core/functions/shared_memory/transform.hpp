@@ -40,10 +40,10 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE result_type operator()(Out& out, In& in, Range range) const
     {
       // std::size_t cache  = 1024*config::top_cache_size(1)/sizeof(typename Out::value_type);
-       std::size_t grain  = 400*400;
+       std::size_t grain  = 800*800;
 
-       std::size_t grain_x = 400;
-       std::size_t grain_y = 400;
+       std::size_t grain_x = 800;
+       std::size_t grain_y = 800;
 
        std::size_t begin = range.first;
        std::size_t size = range.second;
