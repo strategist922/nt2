@@ -44,17 +44,17 @@ namespace nt2 { namespace ext
       std::size_t obound = nt2::numel(boost::fusion::pop_front(ext));
 
       std::size_t size = bound*obound;
-      std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
-      std::size_t grain = top_cache_line_size;
+      // std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
+      std::size_t grain = 800;
 
       nt2::worker<tag::inner_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
       w(out, in, neutral, bop, uop);
 
-      //nt2::spawner< tag::transform_, tag::asynchronous_<BackEnd> > s;
-      //s(w,0,size,std::make_pair(bound,grain));
+      nt2::spawner< tag::transform_, tag::asynchronous_<BackEnd> > s;
+      s(w,std::make_pair(bound,grain));
 
-      nt2::spawner< tag::transform_, BackEnd > s;
-      s(w,0,obound,grain);
+      // nt2::spawner< tag::transform_, BackEnd > s;
+      // s(w,0,obound,grain);
     }
 
   };

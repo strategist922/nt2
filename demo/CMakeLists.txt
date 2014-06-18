@@ -35,6 +35,11 @@ add_subdirectory(blackscholes/nt2)
 add_subdirectory(blackscholes/nt2_merged)
 add_subdirectory(blackscholes/simd)
 
+#sum
+add_subdirectory(sum/scalar)
+add_subdirectory(sum/nt2)
+add_subdirectory(sum/simd)
+
 #mandelbrot
 # add_subdirectory(mandelbrot/scalar)
 # add_subdirectory(mandelbrot/nt2)

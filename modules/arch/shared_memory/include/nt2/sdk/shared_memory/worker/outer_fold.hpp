@@ -36,11 +36,12 @@ namespace nt2
       {
          extent_type ext = in_.extent();
          bound_  = boost::fusion::at_c<0>(ext);
+         obound_ = nt2::numel(boost::fusion::pop_front(ext));
       }
 
       int operator()(std::pair<std::size_t,std::size_t> begin
                     ,std::pair<std::size_t,std::size_t> chunk
-                    ,std::size_t,std::size_t)
+                    )
       {
           (*this)(begin.second,chunk.second);
           return 0;
@@ -58,6 +59,7 @@ namespace nt2
       Bop                     bop_;
       Uop                     uop_;
       std::size_t             bound_;
+      std::size_t             obound_;
 
       nt2::functor<tag::outer_fold_,Site> work;
 

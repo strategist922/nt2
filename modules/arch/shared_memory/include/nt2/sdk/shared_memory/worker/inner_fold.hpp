@@ -84,11 +84,12 @@ namespace nt2
     {
          extent_type ext = in_.extent();
          bound_  = boost::fusion::at_c<0>(ext);
+         obound_ = nt2::numel(boost::fusion::pop_front(ext));
     }
 
     int operator()(std::pair<std::size_t,std::size_t> begin
                   ,std::pair<std::size_t,std::size_t> chunk
-                  ,std::size_t,std::size_t)
+                  )
     {
         (*this)(begin.second,chunk.second);
         return 0;
@@ -97,13 +98,10 @@ namespace nt2
 
     int operator()(std::size_t begin, std::size_t size) const
     {
-      extent_type ext = in_.extent();
-
-      std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
-      std::size_t grain  = top_cache_line_size;
+      // std::size_t top_cache_line_size = config::top_cache_size(2)/sizeof(value_type);
+      std::size_t grain  = 800;
 
       std::size_t ibound = (bound_/grain) * grain;
-      std::size_t obound = nt2::numel(boost::fusion::pop_front(ext));
 
       nt2::worker<tag::inner_fold_step_,BackEnd,Site,In,Neutral,Bop>
       w(in_,neutral_,bop_);
@@ -115,7 +113,7 @@ namespace nt2
         target_type vec_out = neutral_(nt2::meta::as_<target_type>());
         value_type s_out = neutral_(nt2::meta::as_<value_type>());
 
-        if( (size == obound) && (grain < ibound) )
+        if( (size == obound_) && (grain < ibound) )
            vec_out = s( w, k, ibound, grain );
 
         else if( ibound != 0 )
@@ -138,6 +136,7 @@ namespace nt2
     Bop                     bop_;
     Uop                     uop_;
     std::size_t             bound_;
+    std::size_t             obound_;
 
     private:
     worker& operator=(worker const&);

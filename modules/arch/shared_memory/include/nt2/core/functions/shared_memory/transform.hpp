@@ -52,11 +52,11 @@ namespace nt2 { namespace ext
 
        nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
 
-       //nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
-       //s(w,std::make_pair(grain_x,grain_y));
+       nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
+       s(w,std::make_pair(grain_x,grain_y));
 
-       nt2::spawner<tag::transform_,BackEnd > s;
-       s(w,begin,size,grain);
+       // nt2::spawner<tag::transform_,BackEnd > s;
+       // s(w,begin,size,grain);
     }
   };
 
