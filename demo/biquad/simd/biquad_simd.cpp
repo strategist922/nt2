@@ -29,11 +29,11 @@
 using namespace nt2::bench;
 using namespace nt2;
 
-template<typename T> struct biquad_scalar
+template<typename T> struct biquad_simd
 {
   typedef boost::simd::pack<T,4> pack_t;
 
-  biquad_scalar ( std::size_t s )
+  biquad_simd ( std::size_t s )
                 : size_(s)
                 , signal(size_), output(size_)
   {}
@@ -85,7 +85,7 @@ template<typename T> struct biquad_scalar
     }
   }
 
-  friend std::ostream& operator<<(std::ostream& os, biquad_scalar<T> const& p)
+  friend std::ostream& operator<<(std::ostream& os, biquad_simd<T> const& p)
   {
     return os << "(" << p.size_ << ")";
   }
@@ -97,13 +97,13 @@ template<typename T> struct biquad_scalar
   std::vector<T, boost::simd::allocator<T> >  signal, output;
 };
 
-NT2_REGISTER_BENCHMARK_TPL( biquad_scalar, (float)(double) )
+NT2_REGISTER_BENCHMARK_TPL( biquad_simd, (float)(double) )
 {
   std::size_t lmin  = args("lmin", 256);
   std::size_t lmax  = args("lmax", 4096);
   std::size_t lstep = args("lstep",  2);
 
-  run_during_with< biquad_scalar<T> > ( 1.
+  run_during_with< biquad_simd<T> > ( 1.
                                       , geometric(lmin,lmax,lstep)
                                       , cycles_per_element<stats::median_>()
                                       );
