@@ -21,25 +21,25 @@ NT2_TEST_CASE( shape_concept )
   using nt2::meta::option;
   using nt2::meta::match_option;
 
-  NT2_TEST( (match_option< nt2::rectangular_, nt2::tag::shape_ >::value) );
+  NT2_TEST( (match_option< nt2::general_, nt2::tag::shape_ >::value) );
 }
 
 NT2_TEST_CASE( single_shape_ )
 {
-  using nt2::rectangular_;
+  using nt2::general_;
   using nt2::diagonal_;
   using nt2::meta::option;
   using boost::mpl::_;
 
-  NT2_TEST_EXPR_TYPE( (rectangular_())
+  NT2_TEST_EXPR_TYPE( (general_())
                       ,(option< _, nt2::tag::shape_, some_kind_>)
-                      ,(rectangular_)
+                      ,(general_)
                       );
 }
 
 NT2_TEST_CASE( shape_default )
 {
-  using nt2::rectangular_;
+  using nt2::general_;
   using nt2::diagonal_;
   using nt2::settings;
   using nt2::meta::option;
@@ -49,7 +49,7 @@ NT2_TEST_CASE( shape_default )
                             , some_kind_
                             >::type
                     )
-                  , rectangular_
+                  , general_
                   );
 
   NT2_TEST_TYPE_IS( (option < settings(int,void*)
@@ -57,44 +57,44 @@ NT2_TEST_CASE( shape_default )
                             , some_kind_
                             >::type
                     )
-                  , rectangular_
+                  , general_
                   );
 }
 
 NT2_TEST_CASE( single_settings_shape_ )
 {
-  using nt2::rectangular_;
+  using nt2::general_;
   using nt2::diagonal_;
   using nt2::settings;
   using nt2::meta::option;
   using boost::mpl::_;
 
-  NT2_TEST_TYPE_IS( (option < settings(rectangular_)
+  NT2_TEST_TYPE_IS( (option < settings(general_)
                             , nt2::tag::shape_
                             , some_kind_
                             >::type
                     )
-                  , (rectangular_)
+                  , (general_)
                   );
 }
 
 NT2_TEST_CASE( multi_settings_shape_ )
 {
-  using nt2::rectangular_;
+  using nt2::general_;
   using nt2::diagonal_;
   using nt2::settings;
   using nt2::meta::option;
   using boost::mpl::_;
 
-  NT2_TEST_TYPE_IS( (option < settings(rectangular_,diagonal_)
+  NT2_TEST_TYPE_IS( (option < settings(general_,diagonal_)
                             , nt2::tag::shape_
                             , some_kind_
                             >::type
                     )
-                  , rectangular_
+                  , general_
                   );
 
-  NT2_TEST_TYPE_IS( (option < settings(diagonal_,rectangular_)
+  NT2_TEST_TYPE_IS( (option < settings(diagonal_,general_)
                             , nt2::tag::shape_
                             , some_kind_
                             >::type
@@ -105,22 +105,22 @@ NT2_TEST_CASE( multi_settings_shape_ )
 
 NT2_TEST_CASE( nested_settings_shape_ )
 {
-  using nt2::rectangular_;
+  using nt2::general_;
   using nt2::diagonal_;
   using nt2::settings;
   using nt2::meta::option;
   using boost::mpl::_;
 
   typedef settings shadow(double,int);
-  typedef settings option1(rectangular_,diagonal_);
-  typedef settings option2(diagonal_,rectangular_);
+  typedef settings option1(general_,diagonal_);
+  typedef settings option2(diagonal_,general_);
 
   NT2_TEST_TYPE_IS( (option < settings(shadow,option1)
                             , nt2::tag::shape_
                             , some_kind_
                             >::type
                     )
-                  , rectangular_
+                  , general_
                   );
 
   NT2_TEST_TYPE_IS( (option < settings(shadow,option2)

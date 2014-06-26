@@ -63,7 +63,7 @@ struct some_kind_::default_<nt2::tag::storage_order_>
 template<>
 struct some_kind_::default_<nt2::tag::shape_>
 {
-  typedef nt2::rectangular_ type;
+  typedef nt2::general_ type;
 };
 
 template<>

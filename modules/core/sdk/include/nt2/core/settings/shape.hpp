@@ -20,43 +20,23 @@ namespace nt2 { namespace tag
     struct apply : boost::mpl::false_
     {};
 
-    typedef nt2::rectangular_ default_type;
+    typedef nt2::general_ default_type;
   };
 
-  template<>
-  struct shape_::apply<nt2::rectangular_>
+  template<std::ptrdiff_t UpperBound, std::ptrdiff_t LowerBound>
+  struct shape_::apply<nt2::band_diagonal_<UpperBound,LowerBound> >
                 : boost::mpl::true_
   {};
 
-  template<>
-  struct shape_::apply<nt2::upper_triangular_>
-                : boost::mpl::true_
-  {};
+  // template<>
+  // struct shape_::apply<nt2::positive_definite_>
+  //               : boost::mpl::true_
+  // {};
 
-  template<>
-  struct shape_::apply<nt2::lower_triangular_>
-                : boost::mpl::true_
-  {};
-
-  template<int U, int L>
-  struct shape_::apply<nt2::band_diagonal_<U,L> >
-                : boost::mpl::true_
-  {};
-
-  template<>
-  struct shape_::apply<nt2::diagonal_>
-                : boost::mpl::true_
-  {};
-
-  template<>
-  struct shape_::apply<nt2::positive_definite_>
-                : boost::mpl::true_
-  {};
-
-  template<>
-  struct shape_::apply<nt2::symmetric_>
-                : boost::mpl::true_
-  {};
+  // template<>
+  // struct shape_::apply<nt2::symmetric_>
+  //               : boost::mpl::true_
+  // {};
 } }
 
 #include <nt2/core/settings/details/shape.hpp>

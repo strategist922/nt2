@@ -75,7 +75,7 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE
     void shape_analysis ( A0 const& a0, A1 const& a1 , A2 const& a2
                         , nt2::container::table<nt2_la_int>& piv, N2 const&
-                        , nt2::rectangular_ const&
+                        , nt2::general_ const&
                         ) const
     {
       eval(a0, a1, a2, piv, N2());

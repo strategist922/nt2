@@ -13,24 +13,46 @@
 #include <nt2/core/settings/buffer.hpp>
 #include <nt2/core/functions/scalar/numel.hpp>
 
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/int.hpp>
+
+#include <algorithm>
+
 namespace nt2
 {
-  /*!
-    @brief rectangular_ shape  option
-
-    @c rectangular_ is used to tag a Container as being dense, i.e. containing
-    no non-trivial elements.
-  **/
-  struct rectangular_
+  namespace details
   {
-    /*!
-      @brief Deduces buffer type from shape information
+    template<std::ptrdiff_t Bound>
+    struct upper_band
+    {
+      typedef boost::mpl::int<Bound> upper_bound;
+      typedef boost::mpl::bool_<Bound == -1> has_open_upper_bound;
+    };
 
-      For a given @C Container, computes the buffer type required for
-      said buffer to store its data.
+    template<std::ptrdiff_t Bound>
+    struct lower_band
+    {
+      typedef boost::mpl::int<Bound> lower_bound;
+      typedef boost::mpl::bool_<Bound == -1> has_open_lowper_bound;
+    };
+  }
 
-      @tparam Container Container type used as options source
-    **/
+  /*!
+    @brief band_diagonal_ shape  option
+
+    @tparam UpperBound  Number of upper diagonal being non-trivial. UpperBound
+                        is equal to -1 if all upper diagonals are non-trivial.
+
+    @tparam LowerBound  Number of lower diagonal being non-trivial. LowerBound
+                        is equal to -1 if all lower diagonals are non-trivial.
+  **/
+  template< std::ptrdiff_t UpperBound
+          , std::ptrdiff_t LowerBound
+          >
+  struct  band_diagonal_
+        : public details::upper_bound<UpperBound>
+        , public details::lower_band<LowerBound>
+  {
     template<typename Container> struct apply
     {
       typedef typename meta::option<Container, tag::buffer_>::type  buffer_t;
@@ -38,19 +60,30 @@ namespace nt2
                               ::template apply<Container>::type type;
     };
 
-    /*!
-      @brief Number of non-trivial elements
-
-      Computes the number of non-trivial elements stored in the current
-      Container.
-
-      @param sz Extent of current Container
-      @return Number of non-trivial elements to allocate
-    **/
-    template<typename Size> static
-    BOOST_FORCEINLINE std::size_t nnz(Size const& sz)
+    template<typename Extent>
+    static BOOST_FORCEINLINE std::size_t nnz(Extent const& sz)
     {
-      return nt2::numel(sz);
+      return
+    }
+  };
+
+  struct  band_diagonal_<0,0>
+        : public details::upper_bound<0>
+        , public details::lower_band<0>
+  {
+    template<typename Container> struct apply
+    {
+      typedef typename meta::option<Container, tag::buffer_>::type  buffer_t;
+      typedef typename details::make_buffer<buffer_t>
+                              ::template apply<Container>::type type;
+    };
+
+    template<typename Extent>
+    static BOOST_FORCEINLINE std::size_t nnz(Extent const& sz)
+    {
+      return std::min ( boost::fusion::at_c<0>(sz)
+                      , boost::fusion::at_c<1>(sz)
+                      );
     }
   };
 }

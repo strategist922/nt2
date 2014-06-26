@@ -9,26 +9,27 @@
 #ifndef NT2_CORE_SETTINGS_FORWARD_SHAPE_HPP_INCLUDED
 #define NT2_CORE_SETTINGS_FORWARD_SHAPE_HPP_INCLUDED
 
+#include <cstddef>
+
 namespace nt2
 {
-  //============================================================================
-  /*! The default container shape. Data are laid out in a hypercube
-   *  of N dimensions and contains only non-trivial values.
-   **/
-  //============================================================================
+  template< std::ptrdiff_t UpperBound
+          , std::ptrdiff_t LowerBound
+          >
+  struct band_diagonal_;
 
-  struct rectangular_;
-  struct upper_triangular_    {};
-  struct lower_triangular_    {};
-  template<int U,int L> struct band_diagonal_
-  {
-    static const int ud = U;
-    static const int ld = L;
-  };
-  struct diagonal_            {};
-  struct positive_definite_   {};
-  struct uhess_               {};
-  struct symmetric_           {};
+  typedef band_diagonal_<-1,-1> general_;
+  typedef band_diagonal_<-1, 0> upper_triangular_;
+  typedef band_diagonal_< 0,-1> lower_triangular_;
+  typedef band_diagonal_< 2, 2> pentadiagonal_;
+  typedef band_diagonal_< 1, 1> tridiagonal_;
+  typedef band_diagonal_< 1, 0> upper_bidiagonal_;
+  typedef band_diagonal_< 0, 1> lower_bidiagonal_;
+  typedef band_diagonal_< 0, 0> diagonal_;
+
+  // struct positive_definite_   {};
+  // struct uhess_               {};
+  // struct symmetric_           {};
 
   namespace tag
   {
@@ -38,5 +39,3 @@ namespace nt2
 }
 
 #endif
-
-

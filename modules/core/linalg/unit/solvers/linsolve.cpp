@@ -40,7 +40,7 @@ using nt2::classic_;
 using nt2::fast_;
 using nt2::precise_;
 
-typedef nt2::table<T,nt2::rectangular_>    t_t;
+typedef nt2::table<T,nt2::general_>    t_t;
 
 t_t a = nt2::cons<T>(nt2::of_size(3,3),2,1,1,1,2,2,2,5,7);
 t_t b = nt2::cons<T>(nt2::of_size(3,1),1,2,5);
@@ -76,7 +76,7 @@ using nt2::fast_;
 using nt2::precise_;
 
 typedef std::complex<T> cT;
-typedef nt2::table<cT,nt2::rectangular_>    t_t;
+typedef nt2::table<cT,nt2::general_>    t_t;
 
 
 t_t a = nt2::cons<cT>(nt2::of_size(3,3)
@@ -120,7 +120,7 @@ using nt2::classic_;
 using nt2::fast_;
 using nt2::precise_;
 
-typedef nt2::table<T,nt2::rectangular_>    t_t;
+typedef nt2::table<T,nt2::general_>    t_t;
 
 
 t_t a = nt2::cons<T>(nt2::of_size(3,3),2,1,1,1,2,2,2,5,7);
@@ -159,7 +159,7 @@ using nt2::fast_;
 using nt2::precise_;
 
 typedef std::complex<T> cT;
-typedef nt2::table<cT,nt2::rectangular_>    t_t;
+typedef nt2::table<cT,nt2::general_>    t_t;
 
 
 t_t a = nt2::cons<cT>(nt2::of_size(3,3)
@@ -202,7 +202,7 @@ using nt2::classic_;
 using nt2::fast_;
 using nt2::precise_;
 
-typedef nt2::table<T,nt2::rectangular_>    t_t;
+typedef nt2::table<T,nt2::general_>    t_t;
 
 t_t a = nt2::cons<T>(nt2::of_size(3,3),2,1,1,1,2,2,2,5,7);
 t_t b = nt2::cons<T>(nt2::of_size(3,1),1,2,5);
@@ -239,7 +239,7 @@ using nt2::fast_;
 using nt2::precise_;
 
 typedef std::complex<T> cT;
-typedef nt2::table<cT,nt2::rectangular_>    t_t;
+typedef nt2::table<cT,nt2::general_>    t_t;
 
 
 t_t a = nt2::cons<cT>(nt2::of_size(3,3)
