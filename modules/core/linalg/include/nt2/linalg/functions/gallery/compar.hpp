@@ -76,7 +76,7 @@ namespace nt2{ namespace ext
     {
       typedef typename A0::value_type value_type;
       size_t k = boost::proto::child_c<1>(in);
-      out.resize(extent(in));
+      out.reuse(extent(in));
       BOOST_AUTO_TPL(idx, nt2::_(size_t(1), nt2::inc(height(out)), nt2::numel(out)));
       BOOST_AUTO_TPL(absa,nt2::abs(boost::proto::child_c<0>(in)));
       if (k == 0)

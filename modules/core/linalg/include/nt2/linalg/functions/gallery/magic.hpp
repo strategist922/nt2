@@ -90,7 +90,7 @@ namespace nt2{ namespace ext
 
       BOOST_ASSERT_MSG(n!= 2, "There is no 2x2 magic matrix");
 
-      out.resize(nt2::of_size(n, n));
+      out.reuse(nt2::of_size(n, n));
 
       if(n%2 == 1) //Odd order
       {

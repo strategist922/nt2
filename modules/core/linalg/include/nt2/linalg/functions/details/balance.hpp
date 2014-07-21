@@ -137,7 +137,7 @@ namespace nt2 { namespace details
     {
       if (isempty(ipi_))
       {
-        ipi_.resize(of_size(1, n_));
+        ipi_.reuse(of_size(1, n_));
         for(int i=1; i <= n_; ++i)
         {
           for(int j=1; j <= n_; ++j)

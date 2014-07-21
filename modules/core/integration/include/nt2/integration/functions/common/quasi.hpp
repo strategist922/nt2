@@ -74,7 +74,7 @@ namespace nt2 { namespace ext
       static uint_type index = 0;
       static tabi_t ix =  nt2::zeros(nt2::of_size(dim, 1), nt2::meta::as_<uint_type>());
       static tabi_t iv =  sobol(dim, meta::as_<uint_type>());
-      x.resize(nt2::of_size(dim, nbpts));
+      x.reuse(nt2::of_size(dim, nbpts));
       nt2::container::table<uint_type> i = nt2::ffs(nt2::complement(nt2::_(index, index+nbpts-1)));
       for(uint_type l=1; l <= nbpts; ++l)
       {

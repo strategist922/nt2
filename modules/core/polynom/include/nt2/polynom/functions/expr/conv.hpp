@@ -112,7 +112,7 @@ namespace nt2{ namespace ext
       size_t na = nt2::numel(a);
       size_t nb = nt2::numel(b);
       size_t dim = na+nb ? na+nb-1u : 0u;
-      out.resize(of_size(1, dim));
+      out.reuse(of_size(1, dim));
       if (nt2::isempty(a) || nt2::isempty(b))
         out = nt2::zeros(extent(out), meta::as_<v_t>());
       else
@@ -123,7 +123,7 @@ namespace nt2{ namespace ext
 
         BOOST_AUTO_TPL(tmp, nt2::catv(nt2::colvect(a), nt2::zeros(nb ? nb-1u :0u, 1, meta::as_<v_t>())));
         out = nt2::mtimes(r, tmp);
-        out.resize(of_size(1, numel(out)));
+        out.reuse(of_size(1, numel(out)));
       }
       return out;
     }

@@ -32,7 +32,7 @@ namespace nt2 { namespace ext
     typedef typename A0::value_type                                       value_type;
     result_type operator()(A0& out, const A1& in) const
     {
-      out.resize(extent(in));
+      out.reuse(extent(in));
       prepare(out, in, N());
       return out;
     }

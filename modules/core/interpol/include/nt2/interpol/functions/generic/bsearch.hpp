@@ -71,7 +71,7 @@ namespace nt2 { namespace ext
       const child0 & xx  =  boost::proto::child_c<0>(inputs);
       const child1 & xi  =  boost::proto::child_c<1>(inputs);
       size_t w =  width(xi);
-      ilo.resize(of_size(1u, w));
+      ilo.reuse(of_size(1u, w));
       ilo = nt2::repnum(index_type(first_index<2>(xx)), 1u, w);
       nt2::table<index_type> ihi   = nt2::repnum(index_type(last_index<2>(xx)),  1u, w);
       nt2::table<index_type>  i(of_size(1, w));

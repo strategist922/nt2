@@ -58,7 +58,7 @@ namespace nt2 { namespace ext
         nt2_la_int  nhrs = nt2::width(a2);
         nt2_la_int  ldb = a2.leading_size();
 
-        a1.resize(nt2::of_size(n,1));
+        a1.reuse(nt2::of_size(n,1));
 
         NT2_F77NAME(dgesv)(&n,&nhrs,a0.raw(),&lda,a1.raw(),a2.raw(),&ldb,&that);
 
@@ -83,7 +83,7 @@ namespace nt2 { namespace ext
         nt2_la_int  nhrs = nt2::width(a2);
         nt2_la_int  ldb = a2.leading_size();
 
-        a1.resize(nt2::of_size(n,1));
+        a1.reuse(nt2::of_size(n,1));
 
         NT2_F77NAME(sgesv)(&n,&nhrs,a0.raw(),&lda,a1.raw(),a2.raw(),&ldb,&that);
 
@@ -108,7 +108,7 @@ namespace nt2 { namespace ext
         nt2_la_int  nhrs = nt2::width(a2);
         nt2_la_int  ldb = a2.leading_size();
 
-        a1.resize(nt2::of_size(n,1));
+        a1.reuse(nt2::of_size(n,1));
 
         NT2_F77NAME(zgesv)(&n,&nhrs,a0.raw(),&lda,a1.raw(),a2.raw(),&ldb,&that);
 
@@ -133,7 +133,7 @@ namespace nt2 { namespace ext
         nt2_la_int  nhrs = nt2::width(a2);
         nt2_la_int  ldb = a2.leading_size();
 
-        a1.resize(nt2::of_size(n,1));
+        a1.reuse(nt2::of_size(n,1));
 
         NT2_F77NAME(cgesv)(&n,&nhrs,a0.raw(),&lda,a1.raw(),a2.raw(),&ldb,&that);
 

@@ -94,7 +94,7 @@ NT2_TEST_CASE_TPL( typed_expr, NT2_REAL_TYPES )
   t2(1) = 4;
   t2(2) = 3;
 
-  ref.resize( nt2::of_size(4,3) );
+  ref.reuse( nt2::of_size(4,3) );
   for(int j=1;j<= 3;++j)
     for(int i=1;i<= 4;++i)
       ref(i,j) = j-1+s;

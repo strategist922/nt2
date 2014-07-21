@@ -55,12 +55,12 @@ namespace nt2 { namespace ext
       n_type n = boost::proto::child_c<0>(a1);
       d_type d = boost::proto::child_c<1>(a1);
       _2D sizee;
-      n.resize(extent(a0));
+      n.reuse(extent(a0));
       n = nt2::conv(nt2::polyder(a),b)-nt2::conv(nt2::polyder(b),a);
       sizee[0] = 1;
       sizee[1] = numel(b);
       sizee[1] = sizee[1] ? 2*sizee[1]-1:0;
-      d.resize(sizee);
+      d.reuse(sizee);
       d = nt2::conv(b, b);
     }
     BOOST_FORCEINLINE

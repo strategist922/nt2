@@ -81,7 +81,7 @@ namespace nt2 { namespace ext
 
     result_type operator()(A0& yi, A1& inputs) const
     {
-      yi.resize(inputs.extent());
+      yi.reuse(inputs.extent());
       const child0 & x   =  boost::proto::child_c<0>(inputs);
       if (numel(x) <=  1)
         BOOST_ASSERT_MSG(numel(x) >  1, "Interpolation requires at least two sample points in each dimension.");

@@ -61,7 +61,7 @@ namespace nt2{ namespace ext
     typedef A0& result_type;
     result_type operator()(A0& out, const A1& in) const
     {
-      out.resize(in.extent());
+      out.reuse(in.extent());
       int k = ((boost::proto::child_c<1>(in)%4)+4)%4;
       if(k == 1)       out = nt2::fliplr(nt2::trans(boost::proto::child_c<0>(in)));
       else if(k == 2)  out = nt2::fliplr(nt2::flipud(boost::proto::child_c<0>(in)));

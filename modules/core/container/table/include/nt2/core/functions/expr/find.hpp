@@ -99,7 +99,7 @@ namespace nt2 { namespace ext
     {
       child1& idx = boost::proto::child_c<0>(a1);
       child0& a = boost::proto::child_c<0>(a0);
-      idx.resize(extent(a0));
+      idx.reuse(extent(a0));
       ptrdiff_t k = numel(idx);
       ptrdiff_t m = nt2::numel(a);
       if(!k) return;
@@ -137,8 +137,8 @@ namespace nt2 { namespace ext
       child1& idx = boost::proto::child_c<0>(a1);
       child1& jdx = boost::proto::child_c<1>(a1);
       child0& a = boost::proto::child_c<0>(a0);
-      idx.resize(extent(a0));
-      jdx.resize(extent(a0));
+      idx.reuse(extent(a0));
+      jdx.reuse(extent(a0));
       ptrdiff_t k = numel(idx);
       if(!k) return;
       ptrdiff_t t = nt2::numel(a);
@@ -185,9 +185,9 @@ namespace nt2 { namespace ext
       child2& jdx = boost::proto::child_c<1>(a1);
       child3& v = boost::proto::child_c<2>(a1);
       child0& a = boost::proto::child_c<0>(a0);
-      idx.resize(extent(a0));
-      jdx.resize(extent(a0));
-      v.resize(extent(a0));
+      idx.reuse(extent(a0));
+      jdx.reuse(extent(a0));
+      v.reuse(extent(a0));
       ptrdiff_t k = numel(idx);
       if(!k) return;
       ptrdiff_t t = nt2::numel(a);

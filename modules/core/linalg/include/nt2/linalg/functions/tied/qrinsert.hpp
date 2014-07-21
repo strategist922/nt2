@@ -91,7 +91,7 @@ namespace nt2 { namespace ext
       if (orient == 'c')
       {
         // Make room and insert x before j-th column.
-        r1.resize(nt2::of_size(m, n+1));
+        r1.reuse(nt2::of_size(m, n+1));
         q1 = q;
         r1(nt2::_,nt2::_(1, j-1))  = r(nt2::_,nt2::_(1, j-1));
         r1(nt2::_,nt2::_(j+1, n+1)) = r(nt2::_,nt2::_(j, n));

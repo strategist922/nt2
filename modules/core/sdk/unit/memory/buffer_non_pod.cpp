@@ -85,7 +85,7 @@ NT2_TEST_CASE( buffer_resize )
 
   buffer<nt2::object> b(5);
 
-  b.resize(9);
+  b.reuse(9);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 9u    );
   NT2_TEST_EQUAL(b.capacity() , 9u    );
@@ -94,7 +94,7 @@ NT2_TEST_CASE( buffer_resize )
   for( std::size_t i = 0; i < 9; ++i )
     NT2_TEST_EQUAL( b[i].s, std::string("default") );
 
-  b.resize(3);
+  b.reuse(3);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 3u    );
   NT2_TEST_EQUAL(b.capacity() , 9u    );
@@ -103,7 +103,7 @@ NT2_TEST_CASE( buffer_resize )
   for( std::size_t i = 0; i < 3; ++i )
     NT2_TEST_EQUAL( b[i].s, std::string("default") );
 
-  b.resize(5);
+  b.reuse(5);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 5u    );
   NT2_TEST_EQUAL(b.capacity() , 9u    );
@@ -112,7 +112,7 @@ NT2_TEST_CASE( buffer_resize )
   for( std::size_t i = 0; i < 5; ++i )
     NT2_TEST_EQUAL( b[i].s, std::string("default") );
 
-  b.resize(1);
+  b.reuse(1);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 1u    );
   NT2_TEST_EQUAL(b.capacity() , 9u    );

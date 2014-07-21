@@ -56,7 +56,7 @@ namespace nt2 { namespace ext
       BOOST_AUTO_TPL(v, boost::proto::child_c<0>(in));
       size_t k = boost::proto::child_c<1>(in);
       size_t n = nt2::numel(v);
-      out.resize(nt2::of_size(n, k));
+      out.reuse(nt2::of_size(n, k));
       out = v(nt2::permsn(n, k));
       return out;
     }

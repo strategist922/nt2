@@ -59,7 +59,7 @@ namespace nt2 { namespace ext
       BOOST_AUTO_TPL(n, boost::proto::child_c<2>(in));
       v_type a = boost::proto::child_c<0>(in);
       v_type b = boost::proto::child_c<1>(in);
-      out.resize(nt2::extent(n));
+      out.reuse(nt2::extent(n));
       const v_type gold1 = -rec(nt2::Gold<v_type>());
       nt2::container::table<v_type> m
         = nt2::cons(of_size(2, 2),

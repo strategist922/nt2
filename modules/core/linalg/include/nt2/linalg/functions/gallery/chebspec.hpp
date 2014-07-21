@@ -106,13 +106,13 @@ namespace nt2 { namespace ext
 
       if (n == 0)
       {
-        out.resize(of_size(0, 1));
+        out.reuse(of_size(0, 1));
         return out;
       }
 
       if(k == 1) ++n;
 
-      out.resize(of_size(n, n));
+      out.reuse(of_size(n, n));
 
       compute(out, n, k, N());
 

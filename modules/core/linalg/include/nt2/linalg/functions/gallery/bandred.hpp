@@ -47,7 +47,7 @@ namespace nt2 { namespace ext
     typedef nt2::table<value_t>                                               tab_t;
     result_type operator()(A0& out, const A1& in) const
     {
-      out.resize(extent(boost::proto::child_c<0>(in)));
+      out.reuse(extent(boost::proto::child_c<0>(in)));
       size_t kl = boost::proto::child_c<1>(in);
       size_t ku = boost::proto::child_c<2>(in);
       bool flip = ku == 0;

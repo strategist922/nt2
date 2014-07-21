@@ -82,7 +82,7 @@ namespace nt2 { namespace ext
     {
       // Copy data in output first
       v_type& v = boost::proto::child_c<0>(a1);
-      v.resize(a0.extent());
+      v.reuse(a0.extent());
       val(a0, a1, N1(), N0());
     }
 
@@ -178,7 +178,7 @@ namespace nt2 { namespace ext
       BOOST_AUTO_TPL(xred, (x-mu(1))/mu(2));
       compute_val(p, xred, v);
       container::table<value_type> delta(of_size(extent(x)));
-      delta.resize(extent(x));
+      delta.reuse(extent(x));
       compute_delta(xred, r, df, nr, nt2::numel(p), delta);
       boost::proto::child_c<1>(a1) = delta;
     }

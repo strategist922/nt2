@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_CORE_CONTAINER_DSL_DETAILS_RESIZE_HPP_INCLUDED
-#define NT2_CORE_CONTAINER_DSL_DETAILS_RESIZE_HPP_INCLUDED
+#ifndef NT2_CORE_CONTAINER_DSL_DETAILS_REUSE_HPP_INCLUDED
+#define NT2_CORE_CONTAINER_DSL_DETAILS_REUSE_HPP_INCLUDED
 
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/sdk/meta/is_container.hpp>
@@ -22,25 +22,25 @@
 namespace nt2 { namespace ext
 {
   //============================================================================
-  // resize expression internal extension points
-  // Specify how expression are meant to be resized
+  // reuse expression internal extension points
+  // Specify how expression are meant to be reused
   //============================================================================
-  template<class Tag, class Domain, int N, class Expr> struct resize
+  template<class Tag, class Domain, int N, class Expr> struct reuse
   {
     //==========================================================================
-    //               ****NT2_INVALID_RESIZE_OF_RHS_EXPRESSION****
-    // If this static assert triggers, a call to resize has been issued on a
+    //               ****NT2_INVALID_REUSE_OF_RHS_EXPRESSION****
+    // If this static assert triggers, a call to reuse has been issued on a
     // RHS expression. Check for your code conformity at the expression level.
-    //               ****NT2_INVALID_RESIZE_OF_RHS_EXPRESSION****
+    //               ****NT2_INVALID_REUSE_OF_RHS_EXPRESSION****
     //==========================================================================
-    BOOST_MPL_ASSERT_MSG(0, NT2_INVALID_RESIZE_OF_RHS_EXPRESSION, (Tag));
+    BOOST_MPL_ASSERT_MSG(0, NT2_INVALID_REUSE_OF_RHS_EXPRESSION, (Tag));
   };
 
   //============================================================================
-  // resize nullary expression - only make sense for container
+  // reuse nullary expression - only make sense for container
   //============================================================================
   template<class Tag, class Domain, class Expr>
-  struct resize<Tag, Domain, 0, Expr>
+  struct reuse<Tag, Domain, 0, Expr>
   {
     template<class Sz> BOOST_FORCEINLINE void operator()(Expr& x, Sz const& sz)
     {
@@ -54,13 +54,13 @@ namespace nt2 { namespace ext
     {
       typedef typename meta::option<Expr, tag::storage_size_>::type ss_t;
 
-      // Assert that we don't resize out of any given storage_size
+      // Assert that we don't reuse out of any given storage_size
       BOOST_ASSERT_MSG
       ( nt2::numel(sz) <= std::size_t(ss_t::storage_size_type::value)
       , "Resizing over available storage size"
       );
 
-      boost::proto::value(x).resize(sz);
+      boost::proto::value(x).reuse(sz);
     }
 
     template<class Sz>

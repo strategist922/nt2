@@ -34,7 +34,7 @@ namespace nt2{ namespace ext
     {
       In0 & a = boost::proto::child_c<0>(in);
       BOOST_ASSERT_MSG(isvector(a)/* || issquare(a)*/, "input must be a vector or a square matrix");
-      out.resize(in.extent());
+      out.reuse(in.extent());
 
 //       if (issquare(a))
 //       {

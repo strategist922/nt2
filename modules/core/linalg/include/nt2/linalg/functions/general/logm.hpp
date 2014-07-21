@@ -109,7 +109,7 @@ namespace nt2
       BOOST_FORCEINLINE static void compute_logm(const T& a0, A0& res)
       {
         //u, t and r are complex arrays
-        res.resize(extent(a0));
+        res.reuse(extent(a0));
         ctab_t u, t;
         nt2::tie(u, t) = schur(a0, meta::as_<cplx_type>()); // t is complex schur form.
         BOOST_ASSERT_MSG(nt2::globalnone(is_eqz(nt2::diag_of(t))), "a0 has null eigenvalue(s)");
@@ -215,7 +215,7 @@ namespace nt2
           }
         }
         ord(2, j) = n;
-        ord.resize(nt2::of_size(2u, j));
+        ord.reuse(nt2::of_size(2u, j));
       }
 
       template < class D1, class D2 > static inline

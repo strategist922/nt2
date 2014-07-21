@@ -99,7 +99,7 @@ namespace nt2 { namespace ext
       BOOST_AUTO_TPL(y, nt2::colvect(boost::proto::child_c<1>(in)));
       size_t n =  numel(x);
 
-      out.resize(nt2::of_size(n, n));
+      out.reuse(nt2::of_size(n, n));
 
       out = nt2::repmat(x, n, 1);
 

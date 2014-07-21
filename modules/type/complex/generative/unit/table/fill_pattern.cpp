@@ -29,19 +29,19 @@ NT2_TEST_CASE_TPL( fill_pattern, NT2_REAL_TYPES )
   nt2::table<cT> x1 = nt2::fill_pattern(x, nt2::of_size(0) );
   NT2_TEST( nt2::isempty(x1) );
 
-  ref.resize( nt2::of_size(5) );
+  ref.reuse( nt2::of_size(5) );
   for(std::size_t i=1;i<=5;++i) ref(i) = x(1+(i-1)%3);
 
   nt2::table<cT> x2 = nt2::fill_pattern(x, nt2::of_size(5) );
   NT2_TEST_EQUAL( x2, ref );
 
-  ref.resize( nt2::of_size(5,5) );
+  ref.reuse( nt2::of_size(5,5) );
   for(std::size_t i=1;i<=25;++i) ref(i) = x(1+(i-1)%3);
 
   nt2::table<cT> x3 = nt2::fill_pattern(x, nt2::of_size(5,5) );
   NT2_TEST_EQUAL( x3, ref );
 
-  ref.resize( nt2::of_size(5,5,5) );
+  ref.reuse( nt2::of_size(5,5,5) );
   for(std::size_t i=1;i<=125;++i) ref(i) = x(1+(i-1)%3);
 
   nt2::table<cT> x4 = nt2::fill_pattern(x, nt2::of_size(5,5,5) );

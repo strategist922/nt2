@@ -46,7 +46,7 @@ template<typename T> struct qr3_float_nt2
   {
     m = h1 = w1 = size();
 
-    tau.resize(nt2::of_size(std::min(m,m), 1));
+    tau.reuse(nt2::of_size(std::min(m,m), 1));
 
     NT2_F77NAME(sgeqp3)(&h1,&w1,0,&m,0,0,work.main(),nt2::details::query(),&info);
 
@@ -134,7 +134,7 @@ template<typename T> struct qr3_double_nt2
   {
     m = h1 = w1 = size();
 
-    tau.resize(nt2::of_size(std::min(m,m), 1));
+    tau.reuse(nt2::of_size(std::min(m,m), 1));
 
     NT2_F77NAME(dgeqp3)(&h1,&w1,0,&m,0,0,work.main(),nt2::details::query(),&info);
 

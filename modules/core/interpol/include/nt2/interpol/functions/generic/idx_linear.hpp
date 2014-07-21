@@ -60,7 +60,7 @@ namespace nt2 { namespace ext
       //      BOOST_ASSERT_MSG(are_sx_compatible(xi, y), "Inputs dimensions are not compatible");
       const idx_t & xi   =  boost::proto::child_c<1>(inputs);
       const value_t & y     =  boost::proto::child_c<0>(inputs);
-      yi.resize(inputs.extent());
+      yi.reuse(inputs.extent());
       bool extrap = false;
       std::size_t dim =nt2::firstnonsingleton(xi);
       value_type extrapval1 = Nan<value_type>();

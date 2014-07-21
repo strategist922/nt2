@@ -99,11 +99,11 @@ namespace nt2 { namespace ext
       size_t k =  boost::proto::child_c<1>(in);
       if (n == 0)
       {
-        out.resize(nt2::of_size(0, 1));
+        out.reuse(nt2::of_size(0, 1));
         return out;
       }
 
-      out.resize(of_size(n, n));
+      out.reuse(of_size(n, n));
       compute(out, n, k);
 
       return out;

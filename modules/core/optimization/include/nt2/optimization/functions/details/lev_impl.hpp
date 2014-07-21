@@ -75,7 +75,7 @@ namespace nt2 { namespace details
     const float_t eps = Sqrteps<float_t>();
     const size_t nfvec = numel(fvec);
     array_t f( nt2::of_size(nfvec, 1));
-    df.resize( nt2::of_size(nfvec, numel(a)));
+    df.reuse( nt2::of_size(nfvec, numel(a)));
     for(size_t j = 1; j <= numel(a); ++j)
       {
         if((*pia)(j))

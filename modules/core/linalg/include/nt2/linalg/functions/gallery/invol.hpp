@@ -62,7 +62,7 @@ namespace nt2 { namespace ext
     result_type operator()(A0& out, const A1& in) const
     {
       size_t n =  boost::proto::child_c<0>(in);
-      out.resize(nt2::of_size(n, n));
+      out.reuse(nt2::of_size(n, n));
 
       out = nt2::hilb(n,target_t());
 

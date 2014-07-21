@@ -101,7 +101,7 @@ namespace nt2 { namespace memory
       std::size_t n_;
       resizer( std::size_t n ) : n_(n) {}
       template<typename T> BOOST_FORCEINLINE
-      void operator()(T& t) const  { t.resize(n_); }
+      void operator()(T& t) const  { t.reuse(n_); }
     };
 
     struct unary_ctor

@@ -77,7 +77,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         magma_dgeqrf (m, n, a0.raw(), m, a1.raw(), a2.main()
                             , wn, &that
@@ -134,7 +134,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ldda = ((m+31)/32)*32;
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         magma_sgeqrf(m, n, a0.raw(), m, a1.raw(), a2.main()
                             , wn, &that
@@ -165,7 +165,7 @@ namespace nt2 { namespace ext
         nt2_la_int  lwork_query = -1;
 
         details::workspace<typename A0::value_type> w;
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         magma_cgeqrf(m, n, 0, ld, 0, (cuFloatComplex*) w.main()
                           , lwork_query, &that
@@ -196,7 +196,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         magma_cgeqrf(m, n, (cuFloatComplex*)a0.raw(), ld, (cuFloatComplex*)a1.raw()
                     , (cuFloatComplex*)a2.main(), wn, &that
@@ -222,7 +222,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  lwork_query = -1;
         details::workspace<typename A0::value_type> w;
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         magma_zgeqrf(m, n, 0, ld, 0, (cuDoubleComplex*)w.main()
                           , lwork_query, &that
@@ -253,7 +253,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         magma_zgeqrf(m, n, (cuDoubleComplex*)a0.raw(), ld, (cuDoubleComplex*)a1.raw()
                     , (cuDoubleComplex*)a2.main(), wn, &that

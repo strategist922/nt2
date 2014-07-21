@@ -247,7 +247,7 @@ namespace nt2 { namespace details
         //        BOOST_AUTO_TPL(fx, f(x));
         vtab_t fx = f(x);
         // Quit if mesh points are too close.
-        fx.resize(nt2::of_size(nt2::numel(wt()), numel(fx)/numel(wt())));
+        fx.reuse(nt2::of_size(nt2::numel(wt()), numel(fx)/numel(wt())));
         // Quantities for subintervals.
         restab_t qsubs = nt2::mtimes(wt(), fx)*halfh;
         restab_t errsubs = nt2::mtimes(ewt(), fx)* halfh;

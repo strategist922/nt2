@@ -32,7 +32,7 @@ template<typename T> struct axpy_nt2
               :  alpha(boost::fusion::at_c<1>(s))
               ,  size_(boost::fusion::at_c<0>(s))
   {
-    X.resize(nt2::of_size(size_)); Y.resize(nt2::of_size(size_));
+    X.reuse(nt2::of_size(size_)); Y.reuse(nt2::of_size(size_));
     for(std::size_t i = 1; i<=size_; ++i) X(i) = Y(i) = T(i-1);
   }
 

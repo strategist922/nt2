@@ -74,7 +74,7 @@ namespace nt2 { namespace details
       BOOST_AUTO_TPL(dif, nt2::abs(nt2::diff(nt2::rowvect(wpts_))));
       real_t tol1= tol_/nt2::globalasum1(dif);
       size_t l = numel(dif);
-      res_.resize(extent(wpts_));
+      res_.reuse(extent(wpts_));
       res_(1) = nt2::Zero<value_t>();
       tol_ = tol1*dif(1);
       res_(2) = compute<true>(f, wpts_(1), wpts_(2));
@@ -92,7 +92,7 @@ namespace nt2 { namespace details
       if (!o.return_waypoints)
       {
         res_(begin_) = res_(end_);
-        res_.resize(nt2::of_size(1, 1));
+        res_.reuse(nt2::of_size(1, 1));
       }
     }
    private :

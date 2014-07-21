@@ -105,7 +105,7 @@ namespace nt2
          r_type tol = nt2::Eps<r_type>();
          uint32_t maxterms = 250;
          //u, t and r are complex arrays
-         res.resize(extent(a0));
+         res.reuse(extent(a0));
          ctab_t u, t;
          nt2::tie(u, t) = schur(a0, meta::as_<cplx_type>()); // t is complex schur form.
          if (isdiagonal(t))
@@ -261,7 +261,7 @@ namespace nt2
           }
         }
         ord(2, j) = n;
-        ord.resize(nt2::of_size(2u, j));
+        ord.reuse(nt2::of_size(2u, j));
       }
       template < class T, class U, class B>
         static inline ctab_t sylv_tri(const T& t,const U& u, const B& b)

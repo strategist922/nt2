@@ -12,7 +12,7 @@
 
 #include <nt2/sdk/meta/size_as.hpp>
 #include <nt2/core/container/dsl/value_type.hpp>
-#include <nt2/core/container/dsl/details/resize.hpp>
+#include <nt2/core/container/dsl/details/reuse.hpp>
 #include <nt2/core/container/dsl/details/generator.hpp>
 #include <boost/dispatch/dsl/semantic_of.hpp>
 #include <boost/dispatch/meta/scalar_of.hpp>
@@ -45,7 +45,7 @@ namespace nt2
     // resize function expression - do nothing
     //============================================================================
     template<class Domain, int N, class Expr>
-    struct resize<nt2::tag::function_, Domain, N, Expr>
+    struct reuse<nt2::tag::function_, Domain, N, Expr>
     {
       template<class Sz> BOOST_FORCEINLINE void operator()(Expr&, Sz const&) {}
     };

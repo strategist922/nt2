@@ -114,7 +114,7 @@ namespace nt2 { namespace ext
     template < class T >
     BOOST_FORCEINLINE static void compute_power(const T& a, r_type b, A0& r, const boost::mpl::false_&)
     {
-      r.resize(extent(a));
+      r.reuse(extent(a));
       typedef typename A1::index_type        index_type;
       typedef table<value_type, index_type> result_type;
       typedef table<cplx_type>                  ct_type;

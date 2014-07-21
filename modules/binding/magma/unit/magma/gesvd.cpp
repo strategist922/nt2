@@ -39,7 +39,7 @@ NT2_TEST_CASE_TPL(gesvd, NT2_REAL_TYPES )
 
   t_t s,vt,u;
 
-  s.resize(nt2::of_size(std::min(1000,1000),1));
+  s.reuse(nt2::of_size(std::min(1000,1000),1));
 
   nt2_la_int p = 5;
   p = nt2::gesvd( boost::proto::value(in),boost::proto::value(s)
@@ -66,7 +66,7 @@ NT2_TEST_CASE_TPL(gesvdc, NT2_REAL_TYPES )
   t_t vt,u;
   nt2::table<T> s;
 
-  s.resize(nt2::of_size(std::min(1000,1000),1));
+  s.reuse(nt2::of_size(std::min(1000,1000),1));
 
   nt2_la_int p = 5;
   p = nt2::gesvd( boost::proto::value(in),boost::proto::value(s)

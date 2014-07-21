@@ -27,7 +27,7 @@ template<typename T> struct dot_nt2
   dot_nt2(std::size_t n)
                   :  size_(n)
   {
-    X.resize(nt2::of_size(size_)); Y.resize(nt2::of_size(size_));
+    X.reuse(nt2::of_size(size_)); Y.reuse(nt2::of_size(size_));
     for(std::size_t i = 1; i<=size_; ++i)
       X(i) = Y(i) = T(i-1);
   }

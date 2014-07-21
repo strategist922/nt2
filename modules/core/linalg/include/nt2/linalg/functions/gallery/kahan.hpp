@@ -144,7 +144,7 @@ namespace nt2 { namespace ext
       value_t pert  =  boost::proto::child_c<1>(in);
       size_t m = siz[0];
       size_t n = siz[1];
-      out.resize(siz);
+      out.reuse(siz);
       value_t s, c;
       nt2::sincos(theta, s, c);
       BOOST_AUTO_TPL(z1, nt2::eye(n, nt2::meta::as_<value_t>()) - c*nt2::triu(nt2::ones(n,n,nt2::meta::as_<value_t>()), 1));

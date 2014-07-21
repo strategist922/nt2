@@ -53,8 +53,8 @@ mat orthr(T const epsi, mat const& u, vec const& s)
       nt2_la_int  m  = nt2::height(work);
       nt2_la_int  n  = nt2::width(work);
 
-      s.resize(nt2::of_size(std::min(m,n), 1));
-      u.resize(nt2::of_size(m,m));
+      s.reuse(nt2::of_size(std::min(m,n), 1));
+      u.reuse(nt2::of_size(m,m));
 
       nt2::gesvd( boost::proto::value(work),boost::proto::value(s)
                 , boost::proto::value(u),boost::proto::value(v),'A','N');
@@ -88,8 +88,8 @@ mat orthr(T const epsi, mat const& u, vec const& s)
       nt2_la_int  m  = nt2::height(work);
       nt2_la_int  n  = nt2::width(work);
 
-      s.resize(nt2::of_size(std::min(m,n), 1));
-      u.resize(nt2::of_size(m,m));
+      s.reuse(nt2::of_size(std::min(m,n), 1));
+      u.reuse(nt2::of_size(m,m));
 
       nt2::gesvd( boost::proto::value(work),boost::proto::value(s)
                 , boost::proto::value(u),boost::proto::value(v),'A','N');

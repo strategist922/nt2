@@ -87,8 +87,8 @@ namespace nt2 {
         jobvs_ = (sense_ == 'E' || sense_ == 'B') ? 'V':jobvs_;
         sort_ = (sense_ == 'E') ? 'S' : sort_;
         ldvs_ = (jobvs_ == 'V') ? n_ : 1;
-        w_.resize(nt2::of_size(n_, 1));
-        vs_.resize(of_size(ldvs_, ldvs_));
+        w_.reuse(nt2::of_size(n_, 1));
+        vs_.reuse(of_size(ldvs_, ldvs_));
         ldvs_ = vs_.leading_size();
         nt2::details::geesx(&jobvs_, &sort_, &nt2::details::selectall , &sense_, &n_,
                             aa_.raw(), &lda_, &sdim_, w_.raw(),
@@ -180,9 +180,9 @@ namespace nt2 {
         jobvs_ = (sense_ == 'E' || sense_ == 'B') ? 'V':jobvs_;
         sort_ = (sense_ == 'E') ? 'S' : sort_;
         ldvs_ = (jobvs_ == 'V') ? n_ : 1;
-        wr_.resize(nt2::of_size(n_, 1));
-        wi_.resize(nt2::of_size(n_, 1));
-        vs_.resize(of_size(ldvs_, ldvs_));
+        wr_.reuse(nt2::of_size(n_, 1));
+        wi_.reuse(nt2::of_size(n_, 1));
+        vs_.reuse(of_size(ldvs_, ldvs_));
         ldvs_ = vs_.leading_size();
         nt2::details::geesx(&jobvs_, &sort_, &nt2::details::selectall2 , &sense_, &n_,
                             aa_.raw(), &lda_, &sdim_, wr_.raw(), wi_.raw(),

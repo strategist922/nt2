@@ -123,7 +123,7 @@ NT2_TEST_CASE_TPL( colon_unsigned_step, NT2_UNSIGNED_TYPES )
   nt2::table<T> yd = _(T(9),T(-2),T(1));
   NT2_TEST_EQUAL( yd.extent(), nt2::of_size(1,0 ) );
 
-  ref.resize( nt2::of_size(1,9 ) );
+  ref.reuse( nt2::of_size(1,9 ) );
   for(int i=1;i<=9;++i)
     ref(i) = T(5);
 
@@ -155,7 +155,7 @@ NT2_TEST_CASE_TPL( colon_real_step, NT2_REAL_TYPES )
   NT2_TEST_EQUAL( yd.extent(), nt2::of_size(1,4) );
   NT2_TEST_ULP_EQUAL( yd, ref, 2 );
 
-  ref.resize(nt2::of_size(1,6));
+  ref.reuse(nt2::of_size(1,6));
   for(int i=1;i<=6;++i) ref(i) = T(0.5);
 
   nt2::table<T> zd = _(T(0.5),T(0),T(6));

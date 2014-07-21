@@ -50,7 +50,7 @@ template<typename T> struct sgesv_nt2
     h1 = h;
     nhrs = w;
     nhrs = nt2::width(b);
-    jpvt.resize(nt2::of_size(h1, 1) );
+    jpvt.reuse(nt2::of_size(h1, 1) );
 
     a1 = a;
     b1 = b;
@@ -106,7 +106,7 @@ template<typename T> struct dgesv_nt2
     h1 = h;
     nhrs = w;
     nhrs = nt2::width(b);
-    jpvt.resize(nt2::of_size(h1, 1) );
+    jpvt.reuse(nt2::of_size(h1, 1) );
 
     a1 = a;
     b1 = b;

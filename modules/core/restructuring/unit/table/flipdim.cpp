@@ -99,7 +99,7 @@ NT2_TEST_CASE_TPL( flipflip1, NT2_TYPES )
   NT2_TEST_EQUAL( xr,  nt2::flipdim(yr, 2) );
 
   nt2::table<T> xl,yl(nt2::_(T(1), T(5)));
-  yl.resize(nt2::of_size(5, 1));
+  yl.reuse(nt2::of_size(5, 1));
   display("yl", yl);
   xl = nt2::flipdim(yl);
   display("xl", xl);

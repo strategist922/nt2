@@ -30,10 +30,10 @@ template<typename T> struct rgb2grey_nt2
                     ,  width(boost::fusion::at_c<1>(s))
                     ,  size_(height*width)
   {
-    gr.resize(nt2::of_size(height,width));
-    r.resize(nt2::of_size(height,width));
-    g.resize(nt2::of_size(height,width));
-    b.resize(nt2::of_size(height,width));
+    gr.reuse(nt2::of_size(height,width));
+    r.reuse(nt2::of_size(height,width));
+    g.reuse(nt2::of_size(height,width));
+    b.reuse(nt2::of_size(height,width));
 
     for(std::size_t i=1; i<=size_; i++)
       r(i) = g(i) = b(i) = gr(i) = T(i-1);

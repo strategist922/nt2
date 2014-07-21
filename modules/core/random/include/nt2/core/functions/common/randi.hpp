@@ -29,7 +29,7 @@ namespace nt2 { namespace ext
     result_type operator()(A0& a0, A1& a1) const
     {
       // Setup lhs memory using size informations from rhs
-      a0.resize( boost::proto::value(boost::proto::child_c<2>(a1)) );
+      a0.reuse( boost::proto::value(boost::proto::child_c<2>(a1)) );
 
       // Forward to current random_stream and fill the data
       current_prng_.generator_

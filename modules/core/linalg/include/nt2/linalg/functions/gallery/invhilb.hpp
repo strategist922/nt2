@@ -72,7 +72,7 @@ namespace nt2{ namespace ext
     result_type operator()(A0& out, const A1& in) const
     {
       _2D sz = boost::proto::value(boost::proto::child_c<1>(in));
-      out.resize(sz);
+      out.reuse(sz);
 
       value_type n = sz[0];
       value_type p = n;

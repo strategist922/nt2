@@ -266,7 +266,7 @@ NT2_TEST_CASE(buffer_resize)
     b[i] = f;
   }
 
-  b.resize(3);
+  b.reuse(3);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 3u    );
   NT2_TEST_GREATER_EQUAL(b.capacity() , 5u    );
@@ -277,7 +277,7 @@ NT2_TEST_CASE(buffer_resize)
     NT2_TEST_EQUAL( b[i], boost::fusion::as_vector(f) );
   }
 
-  b.resize(5);
+  b.reuse(5);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 5u    );
   NT2_TEST_GREATER_EQUAL(b.capacity() , 5u    );
@@ -288,7 +288,7 @@ NT2_TEST_CASE(buffer_resize)
     NT2_TEST_EQUAL( b[i], boost::fusion::as_vector(f) );
   }
 
-  b.resize(9);
+  b.reuse(9);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 9u    );
   NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
@@ -305,7 +305,7 @@ NT2_TEST_CASE(buffer_resize)
     NT2_TEST_EQUAL( b[i], boost::fusion::as_vector(f) );
   }
 
-  b.resize(1);
+  b.reuse(1);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 1u    );
   NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );

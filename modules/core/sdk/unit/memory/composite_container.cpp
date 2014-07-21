@@ -367,7 +367,7 @@ NT2_TEST_CASE( container_resize )
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
   NT2_TEST(b.extent() == of_size_<0>());
 
-  b.resize( of_size(3,2) );
+  b.reuse( of_size(3,2) );
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
@@ -387,7 +387,7 @@ NT2_TEST_CASE( container_resize )
       NT2_TEST_EQUAL( b[i+3*j], boost::fusion::as_vector(f) );
     }
 
-  b.resize( of_size(1,11) );
+  b.reuse( of_size(1,11) );
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
@@ -405,7 +405,7 @@ NT2_TEST_CASE( container_resize )
     NT2_TEST_EQUAL( b[i], boost::fusion::as_vector(f) );
   }
 
-  b.resize( of_size(2,7) );
+  b.reuse( of_size(2,7) );
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );

@@ -165,7 +165,7 @@ namespace nt2 { namespace ext
     {
       size_t n =  boost::proto::child_c<0>(in);
       size_t k =  boost::proto::child_c<1>(in);
-      out.resize(of_size(n, n));
+      out.reuse(of_size(n, n));
       BOOST_AUTO_TPL(d, nt2::minusone(Two<v_type>()*nt2::mod(nt2::_(v_type(1), v_type(n)), Two<v_type>())));
       out =  nt2::from_diag(d);
       out(nt2::_, 1) = One<v_type>();

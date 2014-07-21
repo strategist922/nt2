@@ -122,11 +122,11 @@ namespace nt2 { namespace ext
       typedef typename boost::proto::result_of::child_c<A1&,1>::type       d_t;
       typedef typename boost::proto::result_of::child_c<A1&,2>::type       e_t;
       c_t & c = boost::proto::child_c<0>(a1);
-      c.resize(nt2::of_size(n,1));
+      c.reuse(nt2::of_size(n,1));
       d_t & d = boost::proto::child_c<1>(a1);
-      d.resize(nt2::of_size(n,1));
+      d.reuse(nt2::of_size(n,1));
       e_t & e= boost::proto::child_c<2>(a1);
-      e.resize(nt2::of_size(n,1));
+      e.reuse(nt2::of_size(n,1));
       doit(n, theta, c, d, e);
     }
 
@@ -158,7 +158,7 @@ namespace nt2 { namespace ext
       c(j) = e(j) + p(j);
       d(j) = -(c(j) + e(j));
       c = c(_(2, n));
-      e.resize(of_size(n-1, 1));
+      e.reuse(of_size(n-1, 1));
     }
   };
 } }

@@ -57,11 +57,11 @@ NT2_TEST_CASE_TPL(fixed_allocator_resize, NT2_TYPES )
   fixed_allocator<T> a(&data[0], &data[0] + 5);
   buffer<T,fixed_allocator<T> > v( 5, a );
 
-  v.resize( 3 );
+  v.reuse( 3 );
   for( std::ptrdiff_t i=0; i<3; ++i ) NT2_TEST_EQUAL( v[i], data[i] );
 
-  v.resize( 5 );
+  v.reuse( 5 );
   for( std::ptrdiff_t i=0; i<5; ++i ) NT2_TEST_EQUAL( v[i], data[i] );
 
-  NT2_TEST_ASSERT( v.resize(7) );
+  NT2_TEST_ASSERT( v.reuse(7) );
 }

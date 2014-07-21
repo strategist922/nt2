@@ -84,7 +84,7 @@ NT2_TEST_CASE_TPL( nd, NT2_TYPES )
   nt2::table<T> x2 = nt2::repnum(T(42), 8, 8 );
   NT2_TEST_EQUAL(x2,ref);
 
-  ref.resize( nt2::of_size(3,2,4) );
+  ref.reuse( nt2::of_size(3,2,4) );
   for(std::size_t i=1;i<= numel(ref);++i) ref(i) = T(42);
 
   x1 = nt2::repnum(T(42),nt2::of_size(3, 2 , 4));
@@ -93,7 +93,7 @@ NT2_TEST_CASE_TPL( nd, NT2_TYPES )
   x2 = nt2::repnum(T(42), 3, 2, 4 );
   NT2_TEST_EQUAL(x2,ref);
 
-  ref.resize( nt2::of_size(2,2,2,2) );
+  ref.reuse( nt2::of_size(2,2,2,2) );
   for(std::size_t i=1;i<= numel(ref);++i) ref(i) = T(42);
 
   x1 = nt2::repnum(T(42),nt2::of_size(2,2,2,2));
@@ -122,7 +122,7 @@ NT2_TEST_CASE_TPL( typed_expr, NT2_TYPES )
   t2(1) = 4;
   t2(2) = 3;
 
-  ref.resize( nt2::of_size(4,3) );
+  ref.reuse( nt2::of_size(4,3) );
   for(std::size_t i=1;i<= numel(ref);++i) ref(i) = T(42);
 
   nt2::table<T> x2 = nt2::repnum( T(42), t2 );

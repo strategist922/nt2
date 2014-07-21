@@ -39,12 +39,12 @@ template<typename T> struct blackandscholes_nt2
   blackandscholes_nt2(std::size_t n)
                     :  size_(n)
   {
-    Sa.resize(nt2::of_size(size_));
-    Xa.resize(nt2::of_size(size_));
-    Ta.resize(nt2::of_size(size_));
-    ra.resize(nt2::of_size(size_));
-    va.resize(nt2::of_size(size_));
-    R.resize(nt2::of_size(size_));
+    Sa.reuse(nt2::of_size(size_));
+    Xa.reuse(nt2::of_size(size_));
+    Ta.reuse(nt2::of_size(size_));
+    ra.reuse(nt2::of_size(size_));
+    va.reuse(nt2::of_size(size_));
+    R.reuse(nt2::of_size(size_));
 
     for(std::size_t i = 1; i <= size_; ++i)
       Sa(i) = Xa(i) = Ta(i) = ra(i) = va(i) = T(i);

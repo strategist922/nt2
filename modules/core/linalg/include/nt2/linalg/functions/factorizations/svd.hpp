@@ -75,7 +75,7 @@ namespace nt2 { namespace ext
       char jobu =  'N';
       char jobvt = 'N';
 
-      boost::proto::child_c<0>(a1).resize(nt2::of_size(std::min(m,n),1));
+      boost::proto::child_c<0>(a1).reuse(nt2::of_size(std::min(m,n),1));
 
       nt2_la_int info = nt2::gesvd(boost::proto::value(work)
                         , boost::proto::value(boost::proto::child_c<0>(a1))
@@ -102,9 +102,9 @@ namespace nt2 { namespace ext
       nt2_la_int  m  = nt2::height(work);
       nt2_la_int  n  = nt2::width(work);
 
-      s.resize(nt2::of_size(std::min(m,n), 1));
-      u.resize(nt2::of_size(m,m));
-      vt.resize(nt2::of_size(n,n));
+      s.reuse(nt2::of_size(std::min(m,n), 1));
+      u.reuse(nt2::of_size(m,m));
+      vt.reuse(nt2::of_size(n,n));
 
       nt2_la_int info = nt2::gesvd( boost::proto::value(work), boost::proto::value(s)
                                   , boost::proto::value(u), boost::proto::value(vt)
@@ -153,16 +153,16 @@ namespace nt2 { namespace ext
       nt2_la_int  m  = nt2::height(work);
       nt2_la_int  n  = nt2::width(work);
 
-      s.resize(nt2::of_size(std::min(m,n), 1));
-      vt.resize(nt2::of_size(n,n));
+      s.reuse(nt2::of_size(std::min(m,n), 1));
+      vt.reuse(nt2::of_size(n,n));
 
 
       if(m>n)
       {
         jobu = 'S';
-        boost::proto::child_c<0>(a1).resize(nt2::of_size(m,n));
+        boost::proto::child_c<0>(a1).reuse(nt2::of_size(m,n));
       }
-      else boost::proto::child_c<0>(a1).resize(nt2::of_size(m,m)) ;
+      else boost::proto::child_c<0>(a1).reuse(nt2::of_size(m,m)) ;
 
       nt2_la_int info = nt2::gesvd( boost::proto::value(work), boost::proto::value(s)
                        , boost::proto::value(boost::proto::child_c<0>(a1))
@@ -190,25 +190,25 @@ namespace nt2 { namespace ext
       nt2_la_int  m  = nt2::height(work);
       nt2_la_int  n  = nt2::width(work);
 
-      s.resize(nt2::of_size(std::min(m,n),1));
+      s.reuse(nt2::of_size(std::min(m,n),1));
 
 
       if(m>n)
       {
         jobu = 'S';
-        boost::proto::child_c<0>(a1).resize(nt2::of_size(m,n));
-        vt.resize(nt2::of_size(n,n));
+        boost::proto::child_c<0>(a1).reuse(nt2::of_size(m,n));
+        vt.reuse(nt2::of_size(n,n));
       }
       else if (m<n)
       {
         jobvt = 'S';
-        boost::proto::child_c<0>(a1).resize(nt2::of_size(m,m));
-        vt.resize(nt2::of_size(m,n));
+        boost::proto::child_c<0>(a1).reuse(nt2::of_size(m,m));
+        vt.reuse(nt2::of_size(m,n));
       }
       else
       {
-        boost::proto::child_c<0>(a1).resize(nt2::of_size(m,m));
-        vt.resize(nt2::of_size(n,n));
+        boost::proto::child_c<0>(a1).reuse(nt2::of_size(m,m));
+        vt.reuse(nt2::of_size(n,n));
       }
 
 

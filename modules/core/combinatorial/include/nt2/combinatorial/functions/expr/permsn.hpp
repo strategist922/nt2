@@ -59,7 +59,7 @@ namespace nt2 { namespace ext
       size_t n = boost::proto::child_c<0>(in);
       size_t k = boost::proto::child_c<1>(in);
       k = nt2::min(k, nt2::prod(nt2::_(size_t(1), n)));
-      out.resize(nt2::of_size(n, k));
+      out.reuse(nt2::of_size(n, k));
       ts_t cur = nt2::colvect(nt2::_(size_t(1), size_t(n)));
       out(nt2::_, 1) =  cur;
       for (size_t i = 2; i <= k; ++i)

@@ -95,7 +95,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(dgeqrf) (&m, &n, a0.raw(), &ld, a1.raw(), a2.main()
                             , &wn, &that
@@ -122,7 +122,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
 
         details::workspace<typename A0::value_type> w;
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(sgeqrf)(&m, &n, 0, &ld, 0, w.main()
                           , details::query(), &that
@@ -153,7 +153,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(sgeqrf) (&m, &n, a0.raw(), &ld, a1.raw(), a2.main()
                             , &wn, &that
@@ -181,7 +181,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
 
         details::workspace<typename A0::value_type> w;
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(cgeqrf)(&m, &n, 0, &ld, 0, w.main()
                           , details::query(), &that
@@ -212,7 +212,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(cgeqrf) (&m, &n, a0.raw(), &ld, a1.raw(), a2.main()
                             , &wn, &that
@@ -238,7 +238,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
 
         details::workspace<typename A0::value_type> w;
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(zgeqrf)(&m, &n, 0, &ld, 0, w.main()
                           , details::query(), &that
@@ -269,7 +269,7 @@ namespace nt2 { namespace ext
         nt2_la_int  ld = a0.leading_size();
         nt2_la_int  wn = a2.main_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(zgeqrf) (&m, &n, a0.raw(), &ld, a1.raw(), a2.main()
                             , &wn, &that

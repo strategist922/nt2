@@ -97,7 +97,7 @@ namespace nt2 { namespace ext
       BOOST_AUTO_TPL(z, nt2::_(v_type(1), v_type(n)));
       BOOST_AUTO_TPL(x, nt2::_(v_type(n), v_type(-1), v_type(1)));
 
-      out.resize(of_size(n, n));
+      out.reuse(of_size(n, n));
 
       if (k == 0)
       {

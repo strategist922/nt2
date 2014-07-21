@@ -23,7 +23,7 @@ NT2_TEST_CASE( resize_bigger )
   table<float> x( of_size(1,2) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(1,2 ) );
 
-  x.resize( of_size(4,4) );
+  x.reuse( of_size(4,4) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(4,4 ) );
 
   float u = 0;
@@ -45,7 +45,7 @@ NT2_TEST_CASE( resize_smaller )
   table<float> x( of_size(3,3) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(3,3 ) );
 
-  x.resize( of_size(1,2) );
+  x.reuse( of_size(1,2) );
 
   NT2_TEST_EQUAL( nt2::extent(x), of_size(1,2 ) );
 
@@ -68,7 +68,7 @@ NT2_TEST_CASE( resize_more_dims )
   table<float> x( of_size(3,3) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(3,3 ) );
 
-  x.resize( of_size(2,2,2) );
+  x.reuse( of_size(2,2,2) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(2,2,2 ) );
 
   float u = 0;
@@ -92,7 +92,7 @@ NT2_TEST_CASE( resize_less_dims )
   table<float> x( of_size(3,3,3) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(3,3,3 ) );
 
-  x.resize( of_size(9) );
+  x.reuse( of_size(9) );
   NT2_TEST_EQUAL( nt2::extent(x), of_size(9 ) );
 
   float u = 0;

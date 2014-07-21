@@ -41,12 +41,12 @@ template<typename T> struct rgb2yuv_nt2
                     ,  width(boost::fusion::at_c<1>(s))
                     ,  size_(height*width)
   {
-    y.resize(nt2::of_size(size_));
-    u.resize(nt2::of_size(size_));
-    v.resize(nt2::of_size(size_));
-    r.resize(nt2::of_size(size_));
-    g.resize(nt2::of_size(size_));
-    b.resize(nt2::of_size(size_));
+    y.reuse(nt2::of_size(size_));
+    u.reuse(nt2::of_size(size_));
+    v.reuse(nt2::of_size(size_));
+    r.reuse(nt2::of_size(size_));
+    g.reuse(nt2::of_size(size_));
+    b.reuse(nt2::of_size(size_));
 
     for(std::size_t i=1; i<=size_; i++)
       r(i) = g(i) = b(i) = y(i) = u(i) = v(i) = T(i-1);

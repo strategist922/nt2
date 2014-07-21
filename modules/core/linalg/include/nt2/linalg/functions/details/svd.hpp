@@ -133,11 +133,11 @@ namespace nt2 { namespace details
 
       vtcol_  = (jobvt_== 'N') ? 1 : n_;
       ldvt_   = (jobvt_== 'S'||jobvt_== 'O') ? nt2::min(n_, m_) : ((jobvt_== 'N') ? 1 : n_);
-      u_.resize(of_size(ldu_, ucol_));
+      u_.reuse(of_size(ldu_, ucol_));
       ldu_ = u_.leading_size();
-      vt_.resize(of_size(ldvt_, vtcol_));
+      vt_.reuse(of_size(ldvt_, vtcol_));
       ldvt_ = vt_.leading_size();
-      w_.resize(of_size(nt2::min(n_, m_), 1));
+      w_.reuse(of_size(nt2::min(n_, m_), 1));
       nt2::details::gesvd(&jobu_, &jobvt_, &m_, &n_, aa_.raw(), &lda_,
                           w_.raw(), u_.raw(), &ldu_,
                           vt_.raw(), &ldvt_, &info_, wrk_);

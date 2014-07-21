@@ -96,7 +96,7 @@ namespace boost { namespace serialization
     typedef typename nt2::meta::strip<e_t>::type size_type;
     size_type size_;
     ar >> size_;
-    e.resize(size_);
+    e.reuse(size_);
     ar >> make_array(e.raw(), nt2::numel(e));
   }
 

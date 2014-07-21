@@ -78,7 +78,7 @@ namespace nt2
 
     if(found == -1 || found == 0)
       sz = nt2::of_size(1u, k);
-    a.resize(sz);
+    a.reuse(sz);
   }
 
   template<class A, class Idx>

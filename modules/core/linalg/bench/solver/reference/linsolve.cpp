@@ -48,7 +48,7 @@ template<typename T> struct sgesv_nt2
     h1 = h;
     nhrs = w;
     nhrs = nt2::width(b);
-    jpvt.resize(nt2::of_size(h1, 1) );
+    jpvt.reuse(nt2::of_size(h1, 1) );
 
     a1 = a;
     b1 = b;
@@ -104,7 +104,7 @@ template<typename T> struct dgesv_nt2
     h1 = h;
     nhrs = w;
     nhrs = nt2::width(b);
-    jpvt.resize(nt2::of_size(h1, 1) );
+    jpvt.reuse(nt2::of_size(h1, 1) );
 
     a1 = a;
     b1 = b;
@@ -161,19 +161,19 @@ template<typename T> struct dgesvx_nt2
   nhrs = w;
   n  = nt2::height(a);
   nhrs = nt2::width(b);
-  jpvt.resize(nt2::of_size(h1, 1) );
+  jpvt.reuse(nt2::of_size(h1, 1) );
   x = b;
   char fact  = 'N';
   char trans = 'N';
   char equed = 'N';
 
-  af.resize(nt2::of_size(n,n));
-  r.resize(nt2::of_size(n,1));
-  c.resize(nt2::of_size(n,1));
-  ferr.resize(nt2::of_size(nhrs,1));
-  berr.resize(nt2::of_size(nhrs,1));
-  work.resize(nt2::of_size(4*n,1));
-  iwork.resize(nt2::of_size(n,1));
+  af.reuse(nt2::of_size(n,n));
+  r.reuse(nt2::of_size(n,1));
+  c.reuse(nt2::of_size(n,1));
+  ferr.reuse(nt2::of_size(nhrs,1));
+  berr.reuse(nt2::of_size(nhrs,1));
+  work.reuse(nt2::of_size(4*n,1));
+  iwork.reuse(nt2::of_size(n,1));
 
         NT2_F77NAME(dgesvx)( &fact       , &trans
                            , &h1         , &nhrs
@@ -239,19 +239,19 @@ template<typename T> struct sgesvx_nt2
   nhrs = w;
   n  = nt2::height(a);
   nhrs = nt2::width(b);
-  jpvt.resize(nt2::of_size(h1, 1) );
+  jpvt.reuse(nt2::of_size(h1, 1) );
   x = b;
   char fact  = 'N';
   char trans = 'N';
   char equed = 'N';
 
-  af.resize(nt2::of_size(n,n));
-  r.resize(nt2::of_size(n,1));
-  c.resize(nt2::of_size(n,1));
-  ferr.resize(nt2::of_size(nhrs,1));
-  berr.resize(nt2::of_size(nhrs,1));
-  work.resize(nt2::of_size(4*n,1));
-  iwork.resize(nt2::of_size(n,1));
+  af.reuse(nt2::of_size(n,n));
+  r.reuse(nt2::of_size(n,1));
+  c.reuse(nt2::of_size(n,1));
+  ferr.reuse(nt2::of_size(nhrs,1));
+  berr.reuse(nt2::of_size(nhrs,1));
+  work.reuse(nt2::of_size(4*n,1));
+  iwork.reuse(nt2::of_size(n,1));
 
         NT2_F77NAME(sgesvx)( &fact       , &trans
                            , &h1         , &nhrs

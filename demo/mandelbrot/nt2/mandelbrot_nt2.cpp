@@ -102,9 +102,9 @@ template<typename T> struct mandelbrot_nt2
                     ,  size_(h_*w_)
                     ,  julia(max_iter_)
   {
-    A.resize(nt2::of_size(h_,w_));
-    B.resize(nt2::of_size(h_,w_));
-    C.resize(nt2::of_size(h_,w_));
+    A.reuse(nt2::of_size(h_,w_));
+    B.reuse(nt2::of_size(h_,w_));
+    C.reuse(nt2::of_size(h_,w_));
 
     A=nt2::expand_to(nt2::linspace(a0_,a1_,h_),h_,w_);
     B=nt2::expand_to(nt2::colvect(nt2::linspace(b0_,b1_,w_)),h_,w_);

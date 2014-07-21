@@ -139,7 +139,7 @@ namespace nt2 { namespace ext
       typedef typename boost::proto::result_of::child_c<A1&,1>::type         Out1;
       typedef typename boost::proto::result_of::child_c<A1&,2>::type         Out2;
 
-      p.resize(a0.extent());
+      p.reuse(a0.extent());
       const In0& x  = boost::proto::child_c<0>(a0);
       const In1& a = boost::proto::child_c<1>(a0);
       const In2& b = boost::proto::child_c<2>(a0);
@@ -153,8 +153,8 @@ namespace nt2 { namespace ext
       BOOST_AUTO_TPL(exp_halfwidth, nt2::exp(normz*nt2::sqrt(varLogitp)));
       Out1 & plo = boost::proto::child_c<1>(a1);
       Out2 & pup = boost::proto::child_c<2>(a1);
-      plo.resize(a0.extent());
-      pup.resize(a0.extent());
+      plo.reuse(a0.extent());
+      pup.reuse(a0.extent());
       plo = itp*exp_halfwidth;
       pup = itp/exp_halfwidth;
       plo /= nt2::oneplus(plo);

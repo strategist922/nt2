@@ -303,8 +303,8 @@ NT2_TEST_CASE_TPL( container_resize, NT2_TYPES)
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
   NT2_TEST_EQUAL(b.extent(), of_size_<0>());
 
-  b.resize( of_size(3,2) );
-  ref.resize(3*2);
+  b.reuse( of_size(3,2) );
+  ref.reuse(3*2);
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
@@ -317,8 +317,8 @@ NT2_TEST_CASE_TPL( container_resize, NT2_TYPES)
 
   NT2_TEST_EQUAL(b,ref);
 
-  b.resize( of_size(1,11) );
-  ref.resize(11);
+  b.reuse( of_size(1,11) );
+  ref.reuse(11);
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
@@ -330,8 +330,8 @@ NT2_TEST_CASE_TPL( container_resize, NT2_TYPES)
 
   NT2_TEST_EQUAL(b,ref);
 
-  b.resize( of_size(2,7) );
-  ref.resize(2*7);
+  b.reuse( of_size(2,7) );
+  ref.reuse(2*7);
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );

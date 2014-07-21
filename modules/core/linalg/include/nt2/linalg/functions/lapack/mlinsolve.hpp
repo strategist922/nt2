@@ -72,7 +72,7 @@ namespace nt2 { namespace ext
       // Copy of matrix a is costly and should be avoided
       matrix_type entry(a0);
       NT2_AS_TERMINAL_IN(desired_semantic,b,a1);
-      a2.resize(nt2::of_size(m,nb));
+      a2.reuse(nt2::of_size(m,nb));
       nt2_la_int iter = nt2::gemsv(boost::proto::value(entry)
                        ,boost::proto::value(b),boost::proto::value(a2) );
       boost::dispatch::ignore_unused(iter);
@@ -89,7 +89,7 @@ namespace nt2 { namespace ext
 
       matrix_type entry(a0);
       NT2_AS_TERMINAL_IN(desired_semantic,b,a1);
-      a2.resize(nt2::of_size(m,n));
+      a2.reuse(nt2::of_size(m,n));
       nt2_la_int iter = nt2::pomsv( boost::proto::value(entry)
                                   , boost::proto::value(b),a2);
       boost::dispatch::ignore_unused(iter);

@@ -80,7 +80,7 @@ namespace nt2 { namespace ext
     typedef A0&                                                     result_type;
     result_type operator()(A0& out, const A1& in) const
     {
-      out.resize(extent(in));
+      out.reuse(extent(in));
       BOOST_AUTO_TPL( v, nt2::rowvect(boost::proto::child_c<0>(in)));
       BOOST_AUTO_TPL( idx, nt2::_(ptrdiff_t(nt2::numel(v)), ptrdiff_t(-1), ptrdiff_t(2)));
       BOOST_AUTO_TPL( vr, nt2::cath(v(1), v(1, idx)));

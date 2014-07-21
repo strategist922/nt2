@@ -46,7 +46,7 @@ namespace nt2 { namespace ext
                       );
 
       // If needed, resize
-      out.resize(nt2::extent(in));
+      out.reuse(nt2::extent(in));
 
       // Reuse output memory if possible
       c_t tmp = shallow_concrete(out, boost::proto::child_c<0>(in));

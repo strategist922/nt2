@@ -55,7 +55,7 @@ namespace nt2 { namespace ext
                                                 nt2::eye(nt2::size(cpan, 1), nt2::size(cpan, 2), meta::as_<value_type>()),
                                                 'V', 'V', 'S').eigen());
       out = eigen;
-      out.resize(in.extent());
+      out.reuse(in.extent());
       return out;
     }
   };

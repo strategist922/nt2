@@ -251,7 +251,7 @@ NT2_TEST_CASE( container_resize)
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
   NT2_TEST_EQUAL(b.extent(), of_size_<0>());
 
-  b.resize( of_size(3,2) );
+  b.reuse( of_size(3,2) );
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
@@ -262,7 +262,7 @@ NT2_TEST_CASE( container_resize)
     for(type::difference_type i=0;i<3;++i)
       NT2_TEST_EQUAL(b[i+3*j].s, std::string("default") );
 
-  b.resize( of_size(1,11) );
+  b.reuse( of_size(1,11) );
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );
@@ -272,7 +272,7 @@ NT2_TEST_CASE( container_resize)
   for(type::difference_type j=0;j<11;++j)
     NT2_TEST_EQUAL(b[j].s, std::string("default") );
 
-  b.resize( of_size(2,7) );
+  b.reuse( of_size(2,7) );
 
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.leading_size(), b.extent()[0] );

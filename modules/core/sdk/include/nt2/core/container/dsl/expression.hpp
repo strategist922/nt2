@@ -14,7 +14,7 @@
 #include <nt2/core/container/dsl/grammar.hpp>
 #include <nt2/core/container/dsl/size.hpp>
 #include <nt2/core/container/dsl/details/raw.hpp>
-#include <nt2/core/container/dsl/details/resize.hpp>
+#include <nt2/core/container/dsl/details/reuse.hpp>
 #include <nt2/core/container/dsl/details/expression.hpp>
 #include <nt2/core/container/dsl/details/expression_size.hpp>
 #include <nt2/sdk/meta/container_traits.hpp>
@@ -342,7 +342,7 @@ namespace nt2 { namespace container
     //==========================================================================
     template<class Sz> BOOST_FORCEINLINE void resize(Sz const& sz)
     {
-      ext::resize< typename boost::dispatch::meta::
+      ext::reuse< typename boost::dispatch::meta::
                    hierarchy_of<proto_tag>::type
                  , domain
                  , proto_arity_c
@@ -353,7 +353,7 @@ namespace nt2 { namespace container
 
     template<class Sz> BOOST_FORCEINLINE void resize(Sz const& sz) const
     {
-      ext::resize< typename boost::dispatch::meta::
+      ext::reuse< typename boost::dispatch::meta::
                    hierarchy_of<proto_tag>::type
                  , domain
                  , proto_arity_c

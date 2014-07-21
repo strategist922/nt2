@@ -81,7 +81,7 @@ namespace nt2{ namespace ext
       nt2_la_int lda = a.leading_size();
       nt2_la_int na = nt2::width(a);
       nt2_la_int nb = nt2::width(b);
-      x.resize(nt2::of_size(na,nb));
+      x.reuse(nt2::of_size(na,nb));
 
       double eps = boost::simd::Eps<double>();
       double anrm = nt2::lange( boost::proto::value(a),'I');

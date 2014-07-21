@@ -34,19 +34,19 @@ NT2_TEST_CASE( expr_as_size )
   using nt2::of_size;
   nt2::table<std::size_t> ref;
 
-  ref.resize( of_size(1) );
+  ref.reuse( of_size(1) );
   ref(1) = 3;
   NT2_TEST_EQUAL( of_size(3,3) , as_size( ref ) );
 
-  ref.resize( of_size(1,2) );
+  ref.reuse( of_size(1,2) );
   ref(1) = 3; ref(2) = 4;
   NT2_TEST_EQUAL( of_size(3,4) , as_size( ref ) );
 
-  ref.resize( of_size(1,3) );
+  ref.reuse( of_size(1,3) );
   ref(1) = 3; ref(2) = 4; ref(3) = 5;
   NT2_TEST_EQUAL( of_size(3,4,5) , as_size( ref ) );
 
-  ref.resize( of_size(1,4) );
+  ref.reuse( of_size(1,4) );
   ref(1) = 3; ref(2) = 4; ref(3) = 5; ref(4) = 6;
   NT2_TEST_EQUAL( of_size(3,4,5,6) , as_size( ref ) );
 }

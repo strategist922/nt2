@@ -103,7 +103,7 @@ namespace nt2 { namespace ext
       BOOST_ASSERT_MSG(!nt2::isempty(kk), "n must be of form 2^m or  12*2^m or 20*2^m");
       size_t k =  kk(1);
       i_type e = nt2::minusone(ee(k));
-      out.resize(nt2::of_size(n, n));
+      out.reuse(nt2::of_size(n, n));
       table<value_type> h;
       if (k == 1) //    n = 1 * 2^e;
       {

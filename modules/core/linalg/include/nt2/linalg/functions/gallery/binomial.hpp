@@ -82,7 +82,7 @@ namespace nt2 { namespace ext
     result_type operator()(A0& out, const A1& in) const
     {
       std::size_t n =  boost::proto::child_c<0>(in);
-      out.resize(nt2::of_size(n, n));
+      out.reuse(nt2::of_size(n, n));
       nt2::table<value_type, _2D> l = nt2::abs(nt2::pascal(n, 1, nt2::meta::as_<value_type>()));
       nt2::table<value_type, _2D> u = nt2::fliplr(nt2::flipud(l));
       nt2::table<value_type, _2D> d = nt2::from_diag(nt2::pow(value_type(-2), nt2::_(value_type(0), value_type(n-1))));

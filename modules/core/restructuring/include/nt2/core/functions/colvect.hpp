@@ -13,7 +13,7 @@
 
 #include <nt2/include/functor.hpp>
 #include <nt2/sdk/meta/reshaping_hierarchy.hpp>
-#include <nt2/core/container/dsl/details/resize.hpp>
+#include <nt2/core/container/dsl/details/reuse.hpp>
 
 namespace nt2
 {
@@ -66,7 +66,7 @@ namespace nt2 { namespace ext
   // resize colvect expression - do nothing
   //============================================================================
   template<class Domain, int N, class Expr>
-  struct resize<nt2::tag::colvect_, Domain, N, Expr>
+  struct reuse<nt2::tag::colvect_, Domain, N, Expr>
   {
     template<class Sz> BOOST_FORCEINLINE void operator()(Expr&, Sz const&) {}
   };

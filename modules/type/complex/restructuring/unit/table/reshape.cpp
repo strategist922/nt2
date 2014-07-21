@@ -24,14 +24,14 @@ NT2_TEST_CASE_TPL( of_size, NT2_TYPES )
   nt2::table<cT> x( nt2::of_size(4,4) );
   for(int i=1;i<=16;i++)  x(i) = T(i);
 
-  ref.resize( nt2::of_size(2,8) );
+  ref.reuse( nt2::of_size(2,8) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, nt2::of_size(2,8) );
 
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(8,2) );
+  ref.reuse( nt2::of_size(8,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, nt2::of_size(8,2) );
@@ -47,27 +47,27 @@ NT2_TEST_CASE_TPL( size, NT2_TYPES )
   nt2::table<cT> x( nt2::of_size(4,4) );
   for(int i=1;i<=16;i++)  x(i) = T(i);
 
-  ref.resize( nt2::of_size(8,2) );
+  ref.reuse( nt2::of_size(8,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, nt2::size(ref) );
 
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,8) );
+  ref.reuse( nt2::of_size(2,8) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, nt2::size(ref) );
 
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,4,2) );
+  ref.reuse( nt2::of_size(2,4,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, nt2::size(ref) );
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,2,2,2) );
+  ref.reuse( nt2::of_size(2,2,2,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, nt2::size(ref));
@@ -82,27 +82,27 @@ NT2_TEST_CASE_TPL( scalar, NT2_TYPES )
   nt2::table<cT> x( nt2::of_size(4,4) );
   for(int i=1;i<=16;i++)  x(i) = T(i);
 
-  ref.resize( nt2::of_size(8,2) );
+  ref.reuse( nt2::of_size(8,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, 8, 2 );
 
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,8) );
+  ref.reuse( nt2::of_size(2,8) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, 2, 8 );
 
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,4,2) );
+  ref.reuse( nt2::of_size(2,4,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, 2, 4, 2 );
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,2,2,2) );
+  ref.reuse( nt2::of_size(2,2,2,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, 2, 2, 2, 2 );
@@ -119,7 +119,7 @@ NT2_TEST_CASE_TPL( scalar_deduce, NT2_TYPES )
   nt2::table<cT> x( nt2::of_size(4,4) );
   for(int i=1;i<=16;i++)  x(i) = T(i);
 
-  ref.resize( nt2::of_size(8,2) );
+  ref.reuse( nt2::of_size(8,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, _(), 2 );
@@ -127,7 +127,7 @@ NT2_TEST_CASE_TPL( scalar_deduce, NT2_TYPES )
   y = nt2::reshape(x, 8, _() );
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,8) );
+  ref.reuse( nt2::of_size(2,8) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, _(), 8 );
@@ -135,7 +135,7 @@ NT2_TEST_CASE_TPL( scalar_deduce, NT2_TYPES )
   y = nt2::reshape(x, 2, _() );
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,4,2) );
+  ref.reuse( nt2::of_size(2,4,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, _(), 4, 2 );
@@ -145,7 +145,7 @@ NT2_TEST_CASE_TPL( scalar_deduce, NT2_TYPES )
   y = nt2::reshape(x, 2, 4, _() );
   NT2_TEST_EQUAL(ref, y);
 
-  ref.resize( nt2::of_size(2,2,2,2) );
+  ref.reuse( nt2::of_size(2,2,2,2) );
   for(int i=1;i<=16;i++)  ref(i) = x(i);
 
   y = nt2::reshape(x, _(), 2, 2, 2 );

@@ -406,7 +406,7 @@ namespace nt2 { namespace memory
     /// Note that the number of non-trivial (nnz) is delegated to storage scheme
     template<typename Size> BOOST_FORCEINLINE void init( Size const& )
     {
-      data_.resize( scheme_type::nnz( sizes_ ) );
+      data_.reuse( scheme_type::nnz( sizes_ ) );
     }
 
     /// INTERNAL ONLY

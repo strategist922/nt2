@@ -71,7 +71,7 @@ namespace nt2 { namespace ext
       value_type extrapval1y = extrapval1x;
       value_type extrapval2y = extrapval1x;
       choices(inputs, extrap, extrapval1x, extrapval2x, extrapval1y, extrapval2y, dim1, dim2, N1());
-      r.resize(inputs.extent());
+      r.reuse(inputs.extent());
       r = idx_linear(idx_linear(y,xi,true,nt2::_,dim1),yi,true,nt2::_,dim2);
       if (!extrap) {
          ext_t sizee; sizee[0] = 1;

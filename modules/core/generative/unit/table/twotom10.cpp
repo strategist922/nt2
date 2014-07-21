@@ -99,7 +99,7 @@ NT2_TEST_CASE( nd_untyped )
   NT2_TEST_EQUAL( nt2::extent(x1), nt2::of_size(8,4) );
   NT2_TEST_EQUAL(x1,ref);
 
-  ref.resize( nt2::of_size(1,4) );
+  ref.reuse( nt2::of_size(1,4) );
     for(int j=1;j<= 4;++j)
       ref(1,j) = nt2::Twotom10<double>();
 
@@ -107,7 +107,7 @@ NT2_TEST_CASE( nd_untyped )
   NT2_TEST_EQUAL( nt2::extent(x2), nt2::of_size(1,4) );
   NT2_TEST_EQUAL(x2,ref);
 
-  ref.resize( nt2::of_size(7,1) );
+  ref.reuse( nt2::of_size(7,1) );
     for(int i=1;i<= 7;++i)
       ref(i,1) = nt2::Twotom10<double>();
 
@@ -161,7 +161,7 @@ NT2_TEST_CASE( expr )
   t2(1) = 4;
   t2(2) = 3;
 
-  ref.resize( nt2::of_size(4,3) );
+  ref.reuse( nt2::of_size(4,3) );
   for(int j=1;j<= 3;++j)
     for(int i=1;i<= 4;++i)
       ref(i,j) = nt2::Twotom10<double>();
@@ -195,7 +195,7 @@ NT2_TEST_CASE_TPL( typed_expr, NT2_TYPES )
   t2(1) = 4;
   t2(2) = 3;
 
-  ref.resize( nt2::of_size(4,3) );
+  ref.reuse( nt2::of_size(4,3) );
   for(int j=1;j<= 3;++j)
     for(int i=1;i<= 4;++i)
       ref(i,j) = nt2::Twotom10<T>();

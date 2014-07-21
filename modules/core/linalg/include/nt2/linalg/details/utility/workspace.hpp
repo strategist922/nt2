@@ -115,25 +115,25 @@ namespace nt2 { namespace details
     void resize_main(nt2_la_int s)
     {
       main_size_ = s;
-      if(s > nt2_la_int(main_.size()))   main_.resize(s);
+      if(s > nt2_la_int(main_.size()))   main_.reuse(s);
     }
 
     void resize_reals(std::size_t s)
     {
       reals_size_ = s;
-      if(s > size_t(reals_.size()))  reals_.resize(s);
+      if(s > size_t(reals_.size()))  reals_.reuse(s);
     }
 
     void resize_integers(std::size_t s)
     {
       integers_size_ = s;
-      if(s > size_t(integers_.size())) integers_.resize(s);
+      if(s > size_t(integers_.size())) integers_.reuse(s);
     }
 
     void resize_logicals(std::size_t s)
     {
       logicals_size_ = s;
-      if(s > size_t(logicals_.size())) logicals_.resize(s);
+      if(s > size_t(logicals_.size())) logicals_.reuse(s);
     }
 
     bool is_ok(std::size_t w, std::size_t rw, std::size_t iw, std::size_t bw) const

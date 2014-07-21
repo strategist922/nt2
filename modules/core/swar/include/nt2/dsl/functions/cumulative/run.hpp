@@ -41,7 +41,7 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE result_type
     operator()(A0& a0, A1& a1) const
     {
-      a0.resize(a1.extent());
+      a0.reuse(a1.extent());
 
       input_type input = boost::proto::child_c<0>(a1);
       extent_type ext = input.extent();

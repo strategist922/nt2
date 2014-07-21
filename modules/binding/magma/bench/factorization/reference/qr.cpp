@@ -43,7 +43,7 @@ template<typename T> struct qr_float_nt2
   void operator()()
   {
     h1 = w1 = size_;
-    tau.resize(nt2::of_size(std::min(w1,h1), 1));
+    tau.reuse(nt2::of_size(std::min(w1,h1), 1));
     nt2_la_int lwork_query = -1;
     magma_sgeqp3(h1,w1,0,h1,0,0,work.main(),lwork_query,&i);
 
@@ -99,7 +99,7 @@ template<typename T> struct qr_double_nt2
   void operator()()
   {
     h1 = w1 = size_;
-    tau.resize(nt2::of_size(std::min(w1,h1), 1));
+    tau.reuse(nt2::of_size(std::min(w1,h1), 1));
     nt2_la_int lwork_query = -1;
     magma_dgeqp3(h1,w1,0,h1,0,0,work.main(),lwork_query,&i);
 

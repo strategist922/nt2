@@ -132,14 +132,14 @@ namespace nt2 { namespace ext
 
     void get_values(A1&, q_type qr, const size_t& nq, boost::mpl::long_<1> const &) const
     {
-      qr.resize(nt2::of_size(1, nq));
+      qr.reuse(nt2::of_size(1, nq));
     }
     void get_values(A1& a1, q_type qr, const size_t& nq, boost::mpl::long_<2> const &) const
     {
       typedef typename boost::proto::result_of::child_c<A1&,1>::type r_type;
       r_type  r = boost::proto::child_c<1>(a1);
       r = qr(nt2::_(nq+1, nt2::end_));
-      qr.resize(nt2::of_size(1, nq));
+      qr.reuse(nt2::of_size(1, nq));
     }
   };
 } }

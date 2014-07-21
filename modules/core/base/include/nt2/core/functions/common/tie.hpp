@@ -71,7 +71,7 @@ namespace nt2 { namespace ext
 
   // resizing a tie resizes all arguments
   template<class Domain, int N, class Expr>
-  struct resize<tag::tie_, Domain, N, Expr>
+  struct reuse<tag::tie_, Domain, N, Expr>
   {
     template<class Sz>
     struct impl
@@ -81,7 +81,7 @@ namespace nt2 { namespace ext
       template<int I>
       BOOST_FORCEINLINE void operator()() const
       {
-        boost::proto::child_c<I>(x).resize(sz);
+        boost::proto::child_c<I>(x).reuse(sz);
       }
 
       Expr& x;

@@ -132,7 +132,7 @@ namespace nt2{ namespace ext
     result_type operator()(A0& out, const A1& in) const
     {
       typedef typename A0::value_type value_type;
-      out.resize(extent(in));
+      out.reuse(extent(in));
       typedef typename meta::as_real<value_type>::type r_type;
       typedef typename meta::as_integer<r_type>::type i_type;
       size_t n =  boost::proto::child_c<0>(in);

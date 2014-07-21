@@ -169,10 +169,10 @@ namespace nt2 { namespace ext
       size_t theta =  boost::proto::child_c<2>(in);
       if (n == 0)
       {
-        out.resize(of_size(0, 1));
+        out.reuse(of_size(0, 1));
         return out;
       }
-      out.resize(of_size(n, n));
+      out.reuse(of_size(n, n));
       compute(out, n, k, theta);
       return out;
     }

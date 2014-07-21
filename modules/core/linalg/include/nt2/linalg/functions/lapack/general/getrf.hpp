@@ -58,7 +58,7 @@ namespace nt2 { namespace ext
         nt2_la_int  n  = nt2::width(a0);
         nt2_la_int  ld = a0.leading_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(dgetrf)(&m, &n, a0.raw(), &ld, a1.raw(), &that);
 
@@ -81,7 +81,7 @@ namespace nt2 { namespace ext
         nt2_la_int  n  = nt2::width(a0);
         nt2_la_int  ld = a0.leading_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(sgetrf)(&m, &n, a0.raw(), &ld, a1.raw(), &that);
 
@@ -103,7 +103,7 @@ namespace nt2 { namespace ext
         nt2_la_int  n  = nt2::width(a0);
         nt2_la_int  ld = a0.leading_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(cgetrf)(&m, &n, a0.raw(), &ld, a1.raw(), &that);
         return that;
@@ -125,7 +125,7 @@ namespace nt2 { namespace ext
         nt2_la_int  n  = nt2::width(a0);
         nt2_la_int  ld = a0.leading_size();
 
-        a1.resize( nt2::of_size(std::min(n, m), 1) );
+        a1.reuse( nt2::of_size(std::min(n, m), 1) );
 
         NT2_F77NAME(zgetrf)(&m, &n, a0.raw(), &ld, a1.raw(), &that);
         return that;

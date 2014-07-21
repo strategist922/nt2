@@ -66,15 +66,15 @@ template<typename T> struct sigmadelta_nt2
                     ,  size_(height*width)
                     ,  nb_frames(boost::fusion::at_c<0>(s))
   {
-    frames.resize(nb_frames);
-    image_variance.resize(nt2::of_size(height,width));
-    diff_img.resize(nt2::of_size(height,width));
-    mul_img.resize(nt2::of_size(height,width));
-    background_img.resize(nt2::of_size(height,width));
-    binary_label.resize(nt2::of_size(height,width));
+    frames.reuse(nb_frames);
+    image_variance.reuse(nt2::of_size(height,width));
+    diff_img.reuse(nt2::of_size(height,width));
+    mul_img.reuse(nt2::of_size(height,width));
+    background_img.reuse(nt2::of_size(height,width));
+    binary_label.reuse(nt2::of_size(height,width));
 
     for(std::size_t k=0; k<nb_frames; k++)
-      frames[k].resize(nt2::of_size(height,width));
+      frames[k].reuse(nt2::of_size(height,width));
 
     for(std::size_t k=0; k<nb_frames; k++)
     {

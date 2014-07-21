@@ -69,7 +69,7 @@ namespace nt2 { namespace ext
       nt2_la_int kl = shape::ld;
       nt2_la_int ld = n;
 
-      a1.resize(nt2::of_size(n,1));
+      a1.reuse(nt2::of_size(n,1));
 
       NT2_F77NAME(dgbsv)(&n,&kl,&ku,&nhrs,a0.raw(),&ld,a1.raw(),a2.raw(),&ld,&that);
 
@@ -101,7 +101,7 @@ namespace nt2 { namespace ext
       nt2_la_int kl = shape::ld;
       nt2_la_int ld = n;
 
-      a1.resize(nt2::of_size(n,1));
+      a1.reuse(nt2::of_size(n,1));
 
       NT2_F77NAME(sgbsv)(&n,&kl,&ku,&nhrs,a0.raw(),&ld,a1.raw(),a2.raw(),&ld,&that);
 
@@ -131,7 +131,7 @@ namespace nt2 { namespace ext
       nt2_la_int kl = shape::ld;
       nt2_la_int ld = n;
 
-      a1.resize(nt2::of_size(n,1));
+      a1.reuse(nt2::of_size(n,1));
 
       NT2_F77NAME(cgbsv)(&n,&kl,&ku,&nhrs,a0.raw(),&ld,a1.raw(),a2.raw(),&ld,&that);
 
@@ -161,7 +161,7 @@ namespace nt2 { namespace ext
       nt2_la_int kl = shape::ld;
       nt2_la_int ld = n;
 
-      a1.resize(nt2::of_size(n,1));
+      a1.reuse(nt2::of_size(n,1));
 
       NT2_F77NAME(zgbsv)(&n,&kl,&ku,&nhrs,a0.raw(),&ld,a1.raw(),a2.raw(),&ld,&that);
 

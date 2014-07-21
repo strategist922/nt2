@@ -76,7 +76,7 @@ NT2_TEST_CASE_TPL(msne, (double) )
 
   nt2::table<T> bc = b;
 
-  b.resize(nt2::of_size(m+5,4) );
+  b.reuse(nt2::of_size(m+5,4) );
 
   for(size_t i = 1; i <= 4 ; ++i)
   {

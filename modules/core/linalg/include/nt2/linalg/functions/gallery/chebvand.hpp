@@ -231,13 +231,13 @@ namespace nt2 { namespace ext
     {
       typedef typename A1::value_type                                   v_type;
       BOOST_AUTO_TPL(p, nt2::linspace(Zero<v_type>(), One<v_type>(), n));
-      out.resize(nt2::of_size(m, n));
+      out.reuse(nt2::of_size(m, n));
       compute(out, m, n, p);
     }
     static void prepare(A0& out, const A1 & in, size_t m, size_t n, boost::mpl::false_)
     {
       BOOST_AUTO_TPL(p, boost::proto::child_c<2>(in));
-      out.resize(nt2::of_size(m, nt2::numel(p)));
+      out.reuse(nt2::of_size(m, nt2::numel(p)));
       compute(out, m, n, p);
     }
     template < class P >

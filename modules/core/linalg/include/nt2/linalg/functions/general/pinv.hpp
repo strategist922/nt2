@@ -44,7 +44,7 @@ namespace nt2{ namespace ext
       entry_type u,v;
       base_type s;
 
-      out.resize(in.extent());
+      out.reuse(in.extent());
       rtype_t tol = choice(in, N());
       out = boost::proto::child_c<0>(in);
 
@@ -52,9 +52,9 @@ namespace nt2{ namespace ext
       nt2_la_int  m  = nt2::height(out);
       nt2_la_int  n  = nt2::width(out);
 
-      s.resize(nt2::of_size(std::min(m,n), 1));
-      v.resize(nt2::of_size(n,n));
-      u.resize(nt2::of_size(m,m));
+      s.reuse(nt2::of_size(std::min(m,n), 1));
+      v.reuse(nt2::of_size(n,n));
+      u.reuse(nt2::of_size(m,m));
 
       nt2::gesvd(boost::proto::value(out),boost::proto::value(s)
                 ,boost::proto::value(u), boost::proto::value(v),'A','A');

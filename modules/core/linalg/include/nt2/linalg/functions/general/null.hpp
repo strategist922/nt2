@@ -67,8 +67,8 @@ namespace nt2{ namespace ext
       nt2_la_int  m  = nt2::height(work);
       nt2_la_int  n  = nt2::width(work);
 
-      s.resize(nt2::of_size(std::min(m,n), 1));
-      v.resize(nt2::of_size(n,n));
+      s.reuse(nt2::of_size(std::min(m,n), 1));
+      v.reuse(nt2::of_size(n,n));
 
       nt2::gesvd(boost::proto::value(work),boost::proto::value(s)
                 ,boost::proto::value(u),boost::proto::value(v),'N','A');

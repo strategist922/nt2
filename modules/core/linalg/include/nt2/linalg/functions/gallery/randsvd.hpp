@@ -258,7 +258,7 @@ namespace nt2 { namespace ext
         sigma = nt2::expand(sigma, m, n); //Expand to m-by-n diagonal matrix.
       if ((kl == 0) && (ku == 0))
       {    // Diagonal matrix requested - nothing more to do.
-        out.resize(of_size(m, n));
+        out.reuse(of_size(m, n));
         out = sigma;
         return out;
       }

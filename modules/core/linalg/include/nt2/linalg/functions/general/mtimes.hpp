@@ -338,13 +338,13 @@ namespace nt2 { namespace ext
       {
         // overlapping of input and output data
         // so we provide dummy space and put it back in result later
-        dummy.resize(a1.extent());
+        dummy.reuse(a1.extent());
         result_view.reset(dummy);
         swap = true;
       }
       else
       {
-        result.resize(a1.extent());
+        result.reuse(a1.extent());
         result_view.reset(result);
       }
 

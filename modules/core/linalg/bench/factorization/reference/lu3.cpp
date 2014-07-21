@@ -43,7 +43,7 @@ template<typename T> struct lu3_float_nt2
   void operator()()
   {
     m = size();
-    jpvt.resize(nt2::of_size(std::min(size_, size_), 1) );
+    jpvt.reuse(nt2::of_size(std::min(size_, size_), 1) );
     NT2_F77NAME(sgetrf)( &m, &m, input.raw(), &m, jpvt.raw(), &info);
     L = nt2::tri1l(input);
     U = nt2::triu(input);
@@ -95,7 +95,7 @@ template<typename T> struct lu3_double_nt2
   void operator()()
   {
     m= size();
-    jpvt.resize(nt2::of_size(std::min(size_, size_), 1) );
+    jpvt.reuse(nt2::of_size(std::min(size_, size_), 1) );
     NT2_F77NAME(dgetrf)( &m, &m, input.raw(), &m, jpvt.raw(), &info);
     L = nt2::tri1l(input);
     U = nt2::triu(input);

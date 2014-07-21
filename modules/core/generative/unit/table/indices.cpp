@@ -156,7 +156,7 @@ NT2_TEST_CASE_TPL( nd, NT2_TYPES )
     NT2_TEST_EQUAL( nt2::extent(x1f), nt2::of_size(3,4) );
     NT2_TEST_EQUAL( x1f,ref );
 
-    ref.resize( nt2::of_size(3,3,3) );
+    ref.reuse( nt2::of_size(3,3,3) );
     for(int k=0;k< 3;++k)
       for(int j=0;j< 3;++j)
         for(int i=0;i< 3;++i)
@@ -170,7 +170,7 @@ NT2_TEST_CASE_TPL( nd, NT2_TYPES )
     NT2_TEST_EQUAL( nt2::extent(x2f), nt2::of_size(3,3,3) );
     NT2_TEST_EQUAL( x2f,ref );
 
-    ref.resize( nt2::of_size(3,3,3,3) );
+    ref.reuse( nt2::of_size(3,3,3,3) );
     for(int l=0;l< 3;++l)
       for(int k=0;k< 3;++k)
         for(int j=0;j< 3;++j)
@@ -225,7 +225,7 @@ NT2_TEST_CASE_TPL( nd_typed, NT2_TYPES )
     NT2_TEST_EQUAL( nt2::extent(x1f), nt2::of_size(3,4) );
     NT2_TEST_EQUAL( x1f,ref );
 
-    ref.resize( nt2::of_size(3,3,3) );
+    ref.reuse( nt2::of_size(3,3,3) );
     for(int k=0;k< 3;++k)
       for(int j=0;j< 3;++j)
         for(int i=0;i< 3;++i)
@@ -239,7 +239,7 @@ NT2_TEST_CASE_TPL( nd_typed, NT2_TYPES )
     NT2_TEST_EQUAL( nt2::extent(x2f), nt2::of_size(3,3,3) );
     NT2_TEST_EQUAL( x2f,ref );
 
-    ref.resize( nt2::of_size(3,3,3,3) );
+    ref.reuse( nt2::of_size(3,3,3,3) );
     for(int l=0;l< 3;++l)
       for(int k=0;k< 3;++k)
         for(int j=0;j< 3;++j)

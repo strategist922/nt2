@@ -77,7 +77,7 @@ namespace nt2 { namespace ext
 
     result_type operator()(A0& a0, I0&, boost::mpl::true_) const
     {
-      a0.resize(nt2::of_size(0));
+      a0.reuse(nt2::of_size(0));
       return a0;
     }
 

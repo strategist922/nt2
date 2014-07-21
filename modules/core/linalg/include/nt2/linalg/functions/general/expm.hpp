@@ -209,7 +209,7 @@ namespace ext
     template < class T >
     BOOST_FORCEINLINE static void compute_expm(const T& a0, A0& f)
     {
-      f.resize(extent(a0));
+      f.reuse(extent(a0));
       typedef nt2::table<value_type >                   tab_t;
       typedef typename meta::as_real<value_type>::type base_t;
       typedef typename meta::as_integer<base_t>::type ibase_t;

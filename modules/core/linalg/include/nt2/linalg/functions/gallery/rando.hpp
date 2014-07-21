@@ -129,7 +129,7 @@ namespace nt2 { namespace ext
       size_t m = siz[1];
       tab_t rnd = nt2::rand(n*m, 1, nt2::meta::as_<value_t>());
       value_t p = nt2::numel(x);
-      out.resize(siz);
+      out.reuse(siz);
       out(nt2::_) = x(nt2::iceil(rnd*p));
       return out;
     }

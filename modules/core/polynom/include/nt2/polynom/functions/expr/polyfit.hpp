@@ -96,7 +96,7 @@ namespace nt2 {
         BOOST_AUTO_TPL(p, boost::proto::child_c<0>(a1));
         BOOST_AUTO_TPL(vnd, nt2::vandermonde(nt2::colvect(x), l));
         p = nt2::rowvect(nt2::linsolve(vnd, nt2::colvect(y)));
-        p.resize(of_size(nt2::width(vnd),1u ));
+        p.reuse(of_size(nt2::width(vnd),1u ));
       }
 
       BOOST_FORCEINLINE
@@ -112,7 +112,7 @@ namespace nt2 {
         p = nt2::colvect(y);
         nt2::gels( boost::proto::value(fact),boost::proto::value(p) );
         s.r = nt2::triu(fact(nt2::_(1, std::min(nt2::height(fact),nt2::width(fact))), nt2::_) );
-        p.resize(of_size(nt2::width(vnd),1u ));
+        p.reuse(of_size(nt2::width(vnd),1u ));
         s.df = nt2::subs(nt2::length(y), nt2::oneplus(l));
         s.normr = nt2::norm(colvect(y)-nt2::mtimes(vnd, p));
       }
@@ -134,7 +134,7 @@ namespace nt2 {
         p = colvect(y);
         nt2::gels(boost::proto::value(fact),boost::proto::value(p) );
         r = nt2::triu(fact(nt2::_(1, std::min(nt2::height(fact),nt2::width(fact))), nt2::_) );
-        p.resize(of_size(nt2::width(vnd),1u ));
+        p.reuse(of_size(nt2::width(vnd),1u ));
         df = df_type(nt2::subs(nt2::numel(y), l));
         normr = nt2::norm(colvect(y)-nt2::mtimes(vnd, p));
       }
@@ -146,7 +146,7 @@ namespace nt2 {
         typedef typename boost::proto::result_of::child_c<A1&,2>::value_type  cdf_type;
         typedef typename cdf_type::value_type df_type;
         BOOST_AUTO_TPL(mu, boost::proto::child_c<4>(a1));
-        mu.resize(nt2::of_size(1, 2));
+        mu.reuse(nt2::of_size(1, 2));
         //      BOOST_AUTO_TPL(mm, nt2::mean(nt2::colvect(x))(1));
         //      BOOST_AUTO_TPL(ss, nt2::stdev(nt2::colvect(x))(1));
         mu(1) = globalmean(x);
@@ -160,7 +160,7 @@ namespace nt2 {
         p = colvect(y);
         nt2::gels(boost::proto::value(fact),boost::proto::value(p) );
         r = nt2::triu(fact(nt2::_(1, std::min(nt2::height(fact),nt2::width(fact))), nt2::_) );
-        p.resize(of_size(nt2::width(vnd),1u ));
+        p.reuse(of_size(nt2::width(vnd),1u ));
         df = df_type(nt2::subs(nt2::numel(y), l));
         normr = nt2::norm(colvect(y)-nt2::mtimes(vnd, p));
       }

@@ -41,7 +41,7 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE
     result_type operator()(A0& a0, A1 const& a1) const
     {
-      boost::proto::value(a0).resize(a1);
+      boost::proto::value(a0).reuse(a1);
     }
   };
 
@@ -118,7 +118,7 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE
     result_type operator()(A0& a0, A1 const& a1) const
     {
-      boost::proto::value(a0).resize(of_size_<1,1>());
+      boost::proto::value(a0).reuse(of_size_<1,1>());
       *(a0.raw()) = a1;
     }
   };
@@ -147,7 +147,7 @@ namespace nt2 { namespace ext
       , "Source range is larger than destination container."
       );
 
-      boost::proto::value(a0).resize(a1);
+      boost::proto::value(a0).reuse(a1);
       nt2::memory::copy( a2, a3, a0.raw() );
     }
   };
