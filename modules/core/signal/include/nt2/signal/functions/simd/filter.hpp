@@ -102,9 +102,10 @@ namespace nt2 { namespace ext
       std::size_t ds = boost::proto::child_c<2>(a0).size();
       std::size_t fs = boost::proto::child_c<0>(a0).size()-1;
       std::size_t ms = std::min(boost::proto::child_c<0>(a0).size(),ds);
+      std::size_t ls = std::min(std::size_t(ds>cd),ds-cd);
       std::size_t ii=1;
 
-      for (;ii<ms;ii++)
+      for (;ii<=ms;ii++)
       {
         real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),0,meta::as_<real_type>()),ii-1);
 
@@ -116,7 +117,7 @@ namespace nt2 { namespace ext
         nt2::run(boost::proto::child_c<0>(a1),ii-1,res);
       }
 
-      for (;ii<ds-cd;ii+=cd)
+      for (;ii<ls;ii+=cd)
       {
         n_t dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs-1,meta::as_<n_t>());
         n_t res = f.conv(dd,fs);
