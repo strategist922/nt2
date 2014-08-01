@@ -25,25 +25,34 @@
 #include <boost/simd/include/functions/simd/plus.hpp>
 #include <nt2/include/functions/run.hpp>
 #include <boost/dispatch/meta/as.hpp>
+#include <boost/simd/sdk/meta/scalar_of.hpp>
 
 namespace nt2 { namespace details
 {
+  template<typename A>
   struct filter
   {
-    template <typename A0, typename A1, typename A2>
-    BOOST_FORCEINLINE void operator()(A0 const& a0, A1 const& a1, A2 & a2) const
+    filter ( A const& filt_)
+           : filtA(filt_)
+           { }
+
+    A const& filtA;
+    std::size_t size;
+
+    template<typename T>
+    BOOST_FORCEINLINE T conv(T const& data, std::size_t index) const
     {
-      a2 += a0 * a1;
+      typedef typename boost::simd::meta::scalar_of<T>::type s_type;
+      return data * boost::simd::splat<T>( nt2::run(filtA,index,meta::as_<s_type>()) );
+    }
+
+    template<typename T>
+    BOOST_FORCEINLINE T reduce(T const& a,T const& b) const
+    {
+      return a + b;
     }
   };
-  struct erosion
-  {
-    template <typename A0, typename A1, typename A2>
-    BOOST_FORCEINLINE void operator()(A0 const& a0, A1 const& a1, A2 & a2) const
-    {
-      a2 = 0;
-    }
-  };
+
 } }
 
 namespace nt2 { namespace ext
@@ -70,59 +79,64 @@ namespace nt2 { namespace ext
 
     typedef typename boost::proto::result_of::child_c<A0&, 2>::value_type child2_t;
 
-    typedef typename boost::proto::result_of::child_c<A0&,3>::value_type child1_t;
-
     typedef typename meta::scalar_of<child2_t>::type f_type;
     typedef typename boost::dispatch::meta::as_floating<f_type>::type real_type;
 
-    typedef typename meta::option<child0_t, nt2::tag::of_size_>::type filt_of_size_;
-    typedef typename meta::option<child2_t, nt2::tag::of_size_>::type data_of_size_;
-
-    typedef nt2::memory::container<tag::table_, real_type, filt_of_size_> filt_semantic;
-    typedef nt2::memory::container<tag::table_, real_type, data_of_size_> data_semantic;
-
     BOOST_FORCEINLINE result_type operator()( A0 const& a0, A1 const& a1 ) const
     {
+      eval(a0, a1, N0());
+    }
 
-      NT2_AS_TERMINAL_IN(filt_semantic,filt,boost::proto::child_c<0>(a0));
-      NT2_AS_TERMINAL_IN(data_semantic,data,boost::proto::child_c<2>(a0));
+    result_type eval(A0 const& a0, A1 const& a1, boost::mpl::long_<4> const&) const
+    {
 
-      NT2_AS_TERMINAL_OUT(data_semantic,result,boost::proto::child_c<0>(a1));
+    }
 
+    result_type eval(A0 const& a0, A1 const& a1, boost::mpl::long_<3> const&) const
+    {
       typedef boost::simd::native<real_type,BOOST_SIMD_DEFAULT_EXTENSION> n_t;
 
+      details::filter<child0_t> f(boost::proto::child_c<0>(a0));
+
       std::size_t cd = boost::simd::meta::cardinal_of<n_t>::value;
-      NT2_DISPLAY(data);
-      for (std::size_t ii=0;ii<filt.size()-1,ii<data.size()-1;ii++)
+      std::size_t ds = boost::proto::child_c<2>(a0).size();
+      std::size_t fs = boost::proto::child_c<0>(a0).size()-1;
+      std::size_t ms = std::min(boost::proto::child_c<0>(a0).size(),ds);
+      std::size_t ii=1;
+
+      for (;ii<ms;ii++)
       {
-        real_type res(0);
-        for (std::size_t jj=0;jj<ii+1;jj++)
+        real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),0,meta::as_<real_type>()),ii-1);
+
+        for (std::size_t jj=2;jj<=ii;jj++)
         {
-          real_type dd = nt2::run(data,jj,meta::as_<real_type>());
-          real_type ff = nt2::run(filt,jj,meta::as_<real_type>());
-          boost::proto::value(boost::proto::child_c<3>(a0))(dd,ff,res);
+          real_type dd = nt2::run(boost::proto::child_c<2>(a0),jj-1,meta::as_<real_type>());
+          res = f.reduce(res,f.conv(dd,ii-jj));
         }
-        nt2::run(result,ii,res);
+        nt2::run(boost::proto::child_c<0>(a1),ii-1,res);
       }
-      if(data.size()>=cd){
-        for (std::size_t ii=filt.size()-1;ii<data.size()-cd;ii+=cd)
+
+      for (;ii<ds-cd;ii+=cd)
+      {
+        n_t dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs-1,meta::as_<n_t>());
+        n_t res = f.conv(dd,fs);
+        for (std::size_t jj=1;jj<=fs;jj++)
         {
-          n_t res = boost::simd::splat<n_t>(real_type(0));
-          for (std::size_t jj=0;jj<filt.size();jj++)
-          {
-            n_t dd = nt2::run(data,ii-filt.size()+jj+1,meta::as_<n_t>());
-            n_t ff = boost::simd::splat<n_t>(nt2::run(filt,jj,meta::as_<real_type>()));
-            boost::proto::value(boost::proto::child_c<3>(a0))(dd,ff,res);
-          }
-          nt2::run(result,ii,res);
+          dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs-1+jj,meta::as_<n_t>());
+          res = f.reduce(res,f.conv(dd,fs-jj));
         }
+        nt2::run(boost::proto::child_c<0>(a1),ii-1,res);
       }
-      for (std::size_t ii=data.size();ii<=data.size();ii++){
-        for (std::size_t kk=1;kk<=filt.size();kk++)
+
+      for (;ii<=ds;ii++)
+      {
+        real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),ii-fs-1,meta::as_<real_type>()),fs);
+        for (std::size_t jj=1;jj<=fs;jj++)
         {
-          boost::proto::value(boost::proto::child_c<3>(a0))(data(ii-filt.size()+kk,filt(kk),nt2::run(result,ii-1,boost::dispatch::meta::as_<real_type>())));
-          nt2::run(result,ii-1,res);
+          real_type dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs-1+jj,meta::as_<real_type>());
+          res = f.reduce(res,f.conv(dd,fs-jj));
         }
+        nt2::run(boost::proto::child_c<0>(a1),ii-1,res);
       }
     }
   };
