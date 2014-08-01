@@ -13,6 +13,7 @@ SET( SOURCES
   mag2db.cpp
   db2pow.cpp
   db2mag.cpp
+  filter.cpp
   unwrap.cpp
 # List of scalar test files for toolbox polynomials
    )
