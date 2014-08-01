@@ -46,6 +46,7 @@ namespace nt2
    *
    * \return  a tuple containing the time points and the solution at the time given in the first return value
    */
+  NT2_FUNCTION_IMPLEMENTATION(tag::filter_, filter, 3)
   NT2_FUNCTION_IMPLEMENTATION(tag::filter_, filter, 4)
 }
 
