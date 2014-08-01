@@ -48,13 +48,13 @@ struct test_filter
 
   friend std::ostream& operator<<(std::ostream& os, test_filter<T> const& p)
   {
-    return os << "(" << p.size() << ")";
+    return os << "(" << p.size() << " @ " << size_filt << ")";
   }
 
   std::size_t size() const { return data_size; }
 
   private:
-    static const std::size_t data_size = 370;
+    static const std::size_t data_size = 37000;
     nt2::table<T> data;
     static const std::size_t size_filt = 7;
     nt2::table<T> filt;
