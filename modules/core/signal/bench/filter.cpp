@@ -24,6 +24,11 @@
 #include <nt2/include/functions/linspace.hpp>
 #include <nt2/include/functions/ones.hpp>
 
+#include <nt2/sdk/bench/setup/geometric.hpp>
+#include <nt2/sdk/bench/setup/combination.hpp>
+#include <boost/fusion/include/at.hpp>
+#include <nt2/sdk/bench/setup/constant.hpp>
+
 using namespace nt2::bench;
 using namespace nt2;
 
@@ -34,7 +39,10 @@ struct test_filter
 
   typedef void experiment_is_immutable;
 
-  test_filter ( std::size_t const& s)
+  template<typename Setup>
+  test_filter ( Setup const& s)
+              : data_size(boost::fusion::at_c<0>(s))
+              , size_filt(boost::fusion::at_c<1>(s))
   {
     data = nt2::linspace<T>(T(1),T(data_size),data_size);
     filt = nt2::ones(nt2::of_size(1,size_filt),nt2::meta::as_<T>());
@@ -48,15 +56,15 @@ struct test_filter
 
   friend std::ostream& operator<<(std::ostream& os, test_filter<T> const& p)
   {
-    return os << "(" << p.size() << " @ " << size_filt << ")";
+    return os << "(" << p.size() << " @ " << p.size_filt << ")";
   }
 
   std::size_t size() const { return data_size; }
 
   private:
-    static const std::size_t data_size = 37000;
+    std::size_t data_size;
     nt2::table<T> data;
-    static const std::size_t size_filt = 7;
+    std::size_t size_filt;
     nt2::table<T> filt;
     nt2::table<T> res;
 };
@@ -64,7 +72,16 @@ struct test_filter
 
 NT2_REGISTER_BENCHMARK_TPL( test_filter, NT2_SIMD_REAL_TYPES )
 {
-  run_during< test_filter<T> > ( 1.
-                               , cycles_per_element<stats::median_>()
-                               );
+
+  std::size_t data_min= args("data_min",3700);
+  std::size_t data_max= args("data_max",3700);
+  std::size_t data_step= args("data_step",2);
+  std::size_t filt_size= args("filt_size",7);
+
+  run_during_with< test_filter<T> > ( 1.
+                                    , and_( geometric(data_min,data_max,data_step)
+                                          , constant(filt_size)
+                                          )
+                                    , cycles_per_element<stats::median_>()
+                                    );
 }
