@@ -14,7 +14,6 @@
 
 #include <nt2/table.hpp>
 #include <nt2/include/functions/filter.hpp>
-#include <iostream>
 
 #include <nt2/include/functions/tie.hpp>
 
@@ -35,7 +34,7 @@ NT2_TEST_CASE_TPL( small_filter, NT2_REAL_TYPES )
   nt2::table<T, nt2::of_size_<1,data_size> > res;
   nt2::tie(res) = nt2::filter(filt,1,data);
 
-  nt2::table<T, nt2::of_size_<1,data_size> > ref = nt2::cons<T>(nt2::of_size(1,data_size),1, 4, 10, 20, 35);//from matlab
+  nt2::table<T, nt2::of_size_<1,data_size> > ref = nt2::cons<T>(nt2::of_size(1,data_size),1, 4, 10, 20, 35);
 
   NT2_TEST_ULP_EQUAL(res,ref,1);
 }
@@ -49,7 +48,7 @@ NT2_TEST_CASE_TPL( same_filter, NT2_REAL_TYPES )
   nt2::table<T, nt2::of_size_<1,size_filt> > filt =nt2::linspace<T>(T(1),T(size_filt),size_filt);
   nt2::table<T, nt2::of_size_<1,data_size> > res;
 
-  nt2::table<T, nt2::of_size_<1,data_size> > ref = nt2::cons<T>(nt2::of_size(1,data_size),1, 4, 10, 20, 35, 56, 84);//from matlab
+  nt2::table<T, nt2::of_size_<1,data_size> > ref = nt2::cons<T>(nt2::of_size(1,data_size),1, 4, 10, 20, 35, 56, 84);
   nt2::tie(res) = nt2::filter(filt,1,data);
 
   NT2_TEST_ULP_EQUAL(res,ref,1);
@@ -65,7 +64,7 @@ NT2_TEST_CASE_TPL( big_filter,NT2_REAL_TYPES )
   nt2::table<T, nt2::of_size_<1,data_size> > res;
   nt2::tie(res) = nt2::filter(filt,1,data);
 
-  nt2::table<T, nt2::of_size_<1,data_size> > ref = nt2::cons<T>(nt2::of_size(1,data_size),1,4,10,20,35,50,65,80,95,110,125,140,155,170,185,200,215,230,245,260);//from matlab
+  nt2::table<T, nt2::of_size_<1,data_size> > ref = nt2::cons<T>(nt2::of_size(1,data_size),1,4,10,20,35,50,65,80,95,110,125,140,155,170,185,200,215,230,245,260);
 
   NT2_TEST_ULP_EQUAL(res,ref,1);
 }
