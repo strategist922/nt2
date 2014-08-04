@@ -9,7 +9,7 @@
 #ifndef NT2_CORE_FUNCTIONS_SCALAR_FILTER_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_SCALAR_FILTER_HPP_INCLUDED
 
-#ifndef BOOST_SIMD_NO_SIMD
+#ifdef BOOST_SIMD_NO_SIMD
 
 #include <nt2/signal/functions/filter.hpp>
 
