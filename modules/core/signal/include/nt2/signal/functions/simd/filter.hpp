@@ -9,7 +9,7 @@
 #ifndef NT2_CORE_FUNCTIONS_COMMON_FILTER_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_COMMON_FILTER_HPP_INCLUDED
 
-#ifndef BOOST_SIMD_NO_SIMD
+#ifdef BOOST_SIMD_NO_SIMD
 
 #include <nt2/signal/functions/filter.hpp>
 
@@ -26,34 +26,7 @@
 #include <nt2/include/functions/run.hpp>
 #include <boost/dispatch/meta/as.hpp>
 #include <boost/simd/sdk/meta/scalar_of.hpp>
-
-namespace nt2 { namespace details
-{
-  template<typename A>
-  struct filter
-  {
-    filter ( A const& filt_)
-           : filtA(filt_)
-           { }
-
-    A const& filtA;
-    std::size_t size;
-
-    template<typename T>
-    BOOST_FORCEINLINE T conv(T const& data, std::size_t index) const
-    {
-      typedef typename boost::simd::meta::scalar_of<T>::type s_type;
-      return data * boost::simd::splat<T>( nt2::run(filtA,index,meta::as_<s_type>()) );
-    }
-
-    template<typename T>
-    BOOST_FORCEINLINE T reduce(T const& a,T const& b) const
-    {
-      return a + b;
-    }
-  };
-
-} }
+#include <nt2/signal/details/filter_imp.hpp>
 
 namespace nt2 { namespace ext
 {
