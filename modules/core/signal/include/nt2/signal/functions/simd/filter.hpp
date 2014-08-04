@@ -102,7 +102,7 @@ namespace nt2 { namespace ext
       std::size_t ds = boost::proto::child_c<2>(a0).size();
       std::size_t fs = boost::proto::child_c<0>(a0).size()-1;
       std::size_t ms = std::min(boost::proto::child_c<0>(a0).size(),ds);
-      std::size_t ls = std::min(std::size_t(ds>cd),ds-cd);
+      std::size_t ls = ds>cd ? ds-cd : 0;
       std::size_t ii=0;
 
       for (;ii<ms;ii++)
