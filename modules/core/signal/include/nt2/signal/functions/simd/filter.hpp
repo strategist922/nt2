@@ -12,21 +12,13 @@
 #ifndef BOOST_SIMD_NO_SIMD
 
 #include <nt2/signal/functions/filter.hpp>
-
-#include <nt2/core/container/table/table.hpp>
 #include <nt2/include/functions/tie.hpp>
-#include <nt2/core/container/dsl/as_terminal.hpp>
-#include <boost/simd/sdk/simd/meta/is_vectorizable.hpp>
-
-#include <boost/simd/sdk/meta/cardinal_of.hpp>
-#include <boost/simd/sdk/simd/native.hpp>
-#include <boost/simd/include/functions/simd/splat.hpp>
-#include <boost/simd/include/functions/simd/multiplies.hpp>
-#include <boost/simd/include/functions/simd/plus.hpp>
 #include <nt2/include/functions/run.hpp>
-#include <boost/dispatch/meta/as.hpp>
+#include <boost/simd/sdk/simd/meta/is_vectorizable.hpp>
+#include <boost/simd/sdk/meta/cardinal_of.hpp>
 #include <boost/simd/sdk/meta/scalar_of.hpp>
-#include <nt2/signal/details/filter_imp.hpp>
+#include <boost/simd/sdk/simd/native.hpp>
+#include <boost/dispatch/meta/as.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -48,12 +40,10 @@ namespace nt2 { namespace ext
   {
     typedef void result_type;
 
-    typedef typename boost::proto::result_of::child_c<A0&,0>::value_type child0_t;
-
-    typedef typename boost::proto::result_of::child_c<A0&, 2>::value_type child2_t;
-
-    typedef typename meta::scalar_of<child2_t>::type f_type;
-    typedef typename boost::dispatch::meta::as_floating<f_type>::type real_type;
+    typedef typename boost::proto::result_of::child_c<A0&,0>::type child0_t;
+    typedef typename boost::proto::result_of::value<child0_t>::type filter_t;
+    typedef typename boost::proto::result_of::child_c<A0&,2>::value_type child2_t;
+    typedef typename child2_t::value_type real_type;
 
     BOOST_FORCEINLINE result_type operator()( A0 const& a0, A1 const& a1 ) const
     {
@@ -69,14 +59,16 @@ namespace nt2 { namespace ext
     {
       typedef boost::simd::native<real_type,BOOST_SIMD_DEFAULT_EXTENSION> n_t;
 
-      details::filter<child0_t> f(boost::proto::child_c<0>(a0));
+      filter_t const& f = boost::proto::value(boost::proto::child_c<0>(a0));
 
-      std::size_t cd = boost::simd::meta::cardinal_of<n_t>::value;
+      static const std::size_t cd = boost::simd::meta::cardinal_of<n_t>::value;
       std::size_t ds = boost::proto::child_c<2>(a0).size();
-      std::size_t fs = boost::proto::child_c<0>(a0).size()-1;
-      std::size_t ms = std::min(boost::proto::child_c<0>(a0).size(),ds);
+      std::size_t fs = f.size()-1;
+      std::size_t ms = std::min(f.size(),ds);
       std::size_t ls = ds>cd ? ds-cd : 0;
-      std::size_t ii=0;
+      std::size_t ii = 0;
+
+      boost::proto::child_c<0>(a1).resize(boost::proto::child_c<2>(a0).extent());
 
       for (;ii<ms;ii++)
       {
