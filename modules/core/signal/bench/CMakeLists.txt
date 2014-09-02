@@ -16,6 +16,7 @@ endif()
 SET( SOURCES
      static_fft.cpp
      filter.cpp
+     conv.cpp
    )
 
 nt2_module_add_tests(core.signal.simd.bench ${SOURCES})
