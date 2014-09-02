@@ -11,6 +11,7 @@
 
 #include <nt2/include/functions/run.hpp>
 #include <nt2/include/functions/numel.hpp>
+#include <nt2/core/container/dsl/as_terminal.hpp>
 #include <boost/simd/include/functions/simd/splat.hpp>
 #include <boost/simd/include/functions/simd/plus.hpp>
 #include <boost/simd/include/functions/simd/multiplies.hpp>
@@ -24,16 +25,19 @@ namespace nt2
     template<typename Expression>
     struct dynamic_filter
     {
-      dynamic_filter( Expression const& e)
-                    : filter_(e), size_(numel(e))
-      {}
+      typedef typename Expression::extent_type                          extent_type;
+      typedef typename Expression::value_type                           v_t;
+      typedef memory::container<tag::table_, v_t, extent_type>          sema_t;
+      typedef typename container::as_terminal<sema_t, Expression>::type f_t;
 
-      std::size_t size() const { return size_; }
+      dynamic_filter( Expression const& e ) : filter_(e) {}
+
+      extent_type const& extent() const { return filter_.extent(); }
 
       template<typename T> BOOST_FORCEINLINE T conv(T const& data, std::size_t index) const
       {
         typedef typename boost::simd::meta::scalar_of<T>::type s_type;
-        return data * boost::simd::splat<T>( nt2::run(filter_,index,meta::as_<s_type>()) );
+        return data * boost::simd::splat<T>( filter_(index) );
       }
 
       template<typename T> BOOST_FORCEINLINE T reduce(T const& reduced,T const& elem) const
@@ -42,8 +46,7 @@ namespace nt2
       }
 
       private:
-      Expression const& filter_;
-      std::size_t       size_;
+      f_t filter_;
     };
   }
 
