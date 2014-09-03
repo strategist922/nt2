@@ -73,7 +73,7 @@ namespace nt2 { namespace ext
       }
 
       // Center : Use all n stuff all the time up to the epilogue
-      int e = std::min(m-1-ok,int(r.first-1));
+      int e = std::min(m-1-ok,int(r.second-1));
       for(;k<=e;k++,ok++)
       {
         // we pass numel instead of n to keep the static informations for unrolling
