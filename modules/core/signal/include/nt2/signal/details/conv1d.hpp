@@ -36,7 +36,7 @@ namespace nt2 { namespace details
                     );
     }
 
-    return res;
+    return k.normalize(res);
   }
 
   /*
@@ -88,7 +88,7 @@ namespace nt2 { namespace details
     static_conv1D<K,In,Out,N> stepper(k,in,res,begin,size);
     boost::simd::meta::iterate<N-1>(stepper);
 
-    return res;
+    return k.normalize(res);
   }
 
 } }

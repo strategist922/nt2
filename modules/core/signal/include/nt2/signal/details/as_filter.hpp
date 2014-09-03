@@ -22,6 +22,7 @@ namespace nt2
 {
   namespace details
   {
+    // Adapt a table to the ConvolutionOperator concept
     template<typename Expression>
     struct dynamic_filter
     {
@@ -30,19 +31,38 @@ namespace nt2
       typedef memory::container<tag::table_, v_t, extent_type>          sema_t;
       typedef typename container::as_terminal<sema_t, Expression>::type f_t;
 
+      typedef typename boost::dispatch::meta
+                            ::call<tag::numel_(extent_type const&)>::type size_type;
+
       dynamic_filter( Expression const& e ) : filter_(e) {}
 
-      extent_type const& extent() const { return filter_.extent(); }
+      // TODO: C++11 use auto return type instead
+      BOOST_FORCEINLINE size_type size()    const
+      {
+        return numel(filter_.extent());
+      }
 
-      template<typename T> BOOST_FORCEINLINE T conv(T const& data, std::size_t index) const
+      // conv perform the inner operation between
+      // the correlated and the correlator
+      template<typename T>
+      BOOST_FORCEINLINE T conv(T const& data, std::size_t index) const
       {
         typedef typename boost::simd::meta::scalar_of<T>::type s_type;
         return data * boost::simd::splat<T>( filter_(index) );
       }
 
-      template<typename T> BOOST_FORCEINLINE T reduce(T const& reduced,T const& elem) const
+      // reduce aggregate correlation partial result
+      template<typename T>
+      BOOST_FORCEINLINE T reduce(T const& reduced,T const& elem) const
       {
         return reduced + elem;
+      }
+
+      // normalize may post-process the final result
+      template<typename T>
+      BOOST_FORCEINLINE T normalize(T const& v) const
+      {
+        return v;
       }
 
       private:

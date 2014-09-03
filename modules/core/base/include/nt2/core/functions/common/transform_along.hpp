@@ -12,7 +12,6 @@
 #include <nt2/core/functions/transform_along.hpp>
 #include <nt2/core/container/dsl/forward.hpp>
 #include <nt2/signal/details/conv1d.hpp>
-#include <nt2/include/functions/numel.hpp>
 #include <nt2/include/functions/run.hpp>
 
 namespace nt2 { namespace ext
@@ -35,8 +34,8 @@ namespace nt2 { namespace ext
                           , Rng const& r
                           ) const
     {
-      int m  = numel(in);
-      int n  = numel(kernel.extent());
+      int m  = in.size();
+      int n  = kernel.size();
       int n1 = n-1;
       int k=0, ok = r.second;
 
@@ -46,6 +45,7 @@ namespace nt2 { namespace ext
       int p = n1-ok-1;
       for(;k<=p;k++,ok++)
       {
+        // TODO: Find a formula keeping static numel in
         nt2::run(out,k,details::conv1D<out_t>(0,ok+1,ok+1,in,kernel));
       }
 
@@ -53,12 +53,14 @@ namespace nt2 { namespace ext
       int e = std::min(m-1-ok,int(r.first-1));
       for(;k<=e;k++,ok++)
       {
-        nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,numel(kernel.extent()),in,kernel));
+        // we pass numel instead of n to keep the static informations for unrolling
+        nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,kernel.size(),in,kernel));
       }
 
       // Epilogue, slide down the end
       for(;k!=r.first;k++,ok++)
       {
+        // TODO: Find a formula keeping static numel in
         nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,std::min(n,m+n1-ok),in,kernel));
       }
     }

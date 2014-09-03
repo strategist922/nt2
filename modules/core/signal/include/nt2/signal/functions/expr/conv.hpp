@@ -9,14 +9,13 @@
 #ifndef NT2_SIGNAL_FUNCTIONS_EXPR_CONV_HPP_INCLUDED
 #define NT2_SIGNAL_FUNCTIONS_EXPR_CONV_HPP_INCLUDED
 
+#include <nt2/signal/options.hpp>
 #include <nt2/signal/functions/conv.hpp>
 #include <nt2/signal/details/as_filter.hpp>
 #include <nt2/signal/details/conv_offset.hpp>
-#include <nt2/signal/options.hpp>
-#include <nt2/include/functions/run.hpp>
-#include <nt2/include/functions/isvector.hpp>
-#include <nt2/include/functions/scalar/length.hpp>
 #include <nt2/include/functions/transform_along.hpp>
+#include <nt2/include/functions/isvector.hpp>
+#include <nt2/include/functions/run.hpp>
 #include <boost/assert.hpp>
 
 namespace nt2 { namespace ext
@@ -35,7 +34,9 @@ namespace nt2 { namespace ext
 
       static BOOST_FORCEINLINE result_type call(A0 const& a0, A1 const& a1)
       {
-        std::ptrdiff_t n = length(a0)+length(a1)-1;
+        // We use numel(a1.extent()) as extent() is define din both
+        // Expression and ConvolutionOperator concept
+        std::ptrdiff_t n = a0.size()+a1.size()-1;
         return a0.extent()[0] == 1 ? result_type(1,n) : result_type(n);
       }
     };
@@ -56,8 +57,9 @@ namespace nt2 { namespace ext
 
       static BOOST_FORCEINLINE result_type call(A0 const& a0, A1 const& a1)
       {
-        std::ptrdiff_t l0 = length(a0);
-        std::ptrdiff_t l1 = length(a1);
+        std::ptrdiff_t l0 = a0.size();
+        std::ptrdiff_t l1 = a1.size();
+
         std::ptrdiff_t n  = std::max( l0 - std::max(std::ptrdiff_t(0), l1-1)
                                     , std::ptrdiff_t(0)
                                     );
