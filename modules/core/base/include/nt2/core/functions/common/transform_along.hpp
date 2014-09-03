@@ -61,6 +61,7 @@ namespace nt2 { namespace ext
       int n  = kernel.size();
       int n1 = n-1;
       int k=r.first, ok = k+offset;
+      int end = r.first+r.second;
 
       typedef typename Out::value_type  out_t;
 
@@ -73,7 +74,7 @@ namespace nt2 { namespace ext
       }
 
       // Center : Use all n stuff all the time up to the epilogue
-      int e = std::min(m-1-ok,int(r.second-1));
+      int e = std::min(m-1-ok,int(end-1));
       for(;k<=e;k++,ok++)
       {
         // we pass numel instead of n to keep the static informations for unrolling
@@ -81,7 +82,7 @@ namespace nt2 { namespace ext
       }
 
       // Epilogue, slide down the end
-      for(;k!=r.second;k++,ok++)
+      for(;k!=end;k++,ok++)
       {
         // TODO: Find a formula keeping static numel in
         nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,std::min(n,m+n1-ok),in,kernel));
