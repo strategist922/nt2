@@ -34,7 +34,7 @@ namespace nt2
       typedef typename boost::dispatch::meta
                             ::call<tag::numel_(extent_type const&)>::type size_type;
 
-      dynamic_filter( Expression const& e ) : filter_(e) {}
+      BOOST_FORCEINLINE dynamic_filter( Expression const& e ) : filter_(e) {}
 
       // TODO: C++11 use auto return type instead
       BOOST_FORCEINLINE size_type size()    const
@@ -71,7 +71,8 @@ namespace nt2
   }
 
   template<typename Expression>
-  details::dynamic_filter<Expression> as_filter(Expression const& e)
+  BOOST_FORCEINLINE details::dynamic_filter<Expression>
+  as_filter ( Expression const& e )
   {
     return details::dynamic_filter<Expression>(e);
   }

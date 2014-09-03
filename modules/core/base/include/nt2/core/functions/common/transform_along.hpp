@@ -20,10 +20,32 @@ namespace nt2 { namespace ext
   // Global version
   //============================================================================
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::transform_along_, tag::cpu_
-                            , (Out)(In)(K)(Rng)
+                            , (Out)(In)(K)(O)
                             , ((ast_<Out, nt2::container::domain>))
                               ((ast_<In, nt2::container::domain>))
                               (unspecified_<K>)
+                              (scalar_< integer_<O> >)
+                            )
+  {
+    typedef void result_type;
+
+    result_type operator()( Out& out, In& in, K const& kernel, O offset ) const
+    {
+      transform_along ( out, in, kernel, offset
+                      , std::make_pair( 0, out.size() )
+                      );
+    }
+  };
+
+  //============================================================================
+  // Ranged version
+  //============================================================================
+  NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::transform_along_, tag::cpu_
+                            , (Out)(In)(K)(Rng)(O)
+                            , ((ast_<Out, nt2::container::domain>))
+                              ((ast_<In, nt2::container::domain>))
+                              (unspecified_<K>)
+                              (scalar_< integer_<O> >)
                               (unspecified_<Rng>)
                             )
   {
@@ -31,13 +53,14 @@ namespace nt2 { namespace ext
 
     result_type operator()( Out& out
                           , In& in, K const& kernel
+                          , O offset
                           , Rng const& r
                           ) const
     {
       int m  = in.size();
       int n  = kernel.size();
       int n1 = n-1;
-      int k=0, ok = r.second;
+      int k=r.first, ok = k+offset;
 
       typedef typename Out::value_type  out_t;
 
@@ -58,7 +81,7 @@ namespace nt2 { namespace ext
       }
 
       // Epilogue, slide down the end
-      for(;k!=r.first;k++,ok++)
+      for(;k!=r.second;k++,ok++)
       {
         // TODO: Find a formula keeping static numel in
         nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,std::min(n,m+n1-ok),in,kernel));

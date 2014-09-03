@@ -32,6 +32,9 @@ namespace nt2
   /*!
 
    **/
+  NT2_FUNCTION_IMPLEMENTATION(tag::transform_along_, transform_along, 5)
+
+  /// @overload
   NT2_FUNCTION_IMPLEMENTATION(tag::transform_along_, transform_along, 4)
 
   /// @overload
@@ -54,6 +57,31 @@ namespace nt2
                                             , (A0&)(A1&)
                                               (A2 const&)(A3 const&)
                                             , 4
+                                            )
+
+  /// @overload
+  BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL( tag::transform_along_
+                                            , transform_along
+                                            , (A0&)(A1 const&)
+                                              (A2 const&)(A3 const&)
+                                              (A4 const&)
+                                            , 5
+                                            )
+  /// @overload
+  BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL( tag::transform_along_
+                                            , transform_along
+                                            , (A0 const&)(A1&)
+                                              (A2 const&)(A3 const&)
+                                              (A4 const&)
+                                            , 5
+                                            )
+  /// @overload
+  BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL( tag::transform_along_
+                                            , transform_along
+                                            , (A0&)(A1&)
+                                              (A2 const&)(A3 const&)
+                                              (A4 const&)
+                                            , 5
                                             )
 }
 
