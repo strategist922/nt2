@@ -44,11 +44,12 @@ namespace nt2
 
       // conv perform the inner operation between
       // the correlated and the correlator
-      template<typename T>
-      BOOST_FORCEINLINE T conv(T const& data, std::size_t index) const
+      template<typename T, typename Sz, typename Idx>
+      BOOST_FORCEINLINE
+      T conv(T const& data, Sz const& size, Idx const& index) const
       {
         typedef typename boost::simd::meta::scalar_of<T>::type s_type;
-        return data * boost::simd::splat<T>( filter_(index) );
+        return data * boost::simd::splat<T>( filter_(size - index) );
       }
 
       // reduce aggregate correlation partial result

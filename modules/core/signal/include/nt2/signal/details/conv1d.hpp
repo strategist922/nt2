@@ -25,13 +25,13 @@ namespace nt2 { namespace details
   {
     typedef typename In::value_type   in_t;
 
-    Out res = k.conv(nt2::run(in,begin,meta::as_<in_t>()),size);
+    Out res = k.conv(nt2::run(in,begin,meta::as_<in_t>()),size,0);
 
     for(int j=1;j<limit;++j)
     {
       res = k.reduce( res
                     , k.conv( nt2::run(in,j+begin,meta::as_<in_t>())
-                            , size-j
+                            , size, j
                             )
                     );
     }
@@ -59,7 +59,7 @@ namespace nt2 { namespace details
                                             , begin + I1::value
                                             , meta::as_<T>()
                                             )
-                                  , size - I1::value
+                                  , size, I1()
                                   )
                     );
     }
@@ -83,7 +83,7 @@ namespace nt2 { namespace details
             )
   {
     typedef typename In::value_type   in_t;
-    Out res = k.conv(nt2::run(in,begin,meta::as_<in_t>()),size);
+    Out res = k.conv(nt2::run(in,begin,meta::as_<in_t>()),size,boost::mpl::int_<0>());
 
     static_conv1D<K,In,Out,N> stepper(k,in,res,begin,size);
     boost::simd::meta::iterate<N-1>(stepper);
