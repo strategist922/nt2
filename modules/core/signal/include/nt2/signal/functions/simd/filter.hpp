@@ -72,12 +72,12 @@ namespace nt2 { namespace ext
 
       for (;ii<ms;ii++)
       {
-        real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),0,meta::as_<real_type>()),ii);
+        real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),0,meta::as_<real_type>()),ii,boost::mpl::int_<0>());
 
         for (std::size_t jj=1;jj<=ii;jj++)
         {
           real_type dd = nt2::run(boost::proto::child_c<2>(a0),jj,meta::as_<real_type>());
-          res = f.reduce(res,f.conv(dd,ii-jj));
+          res = f.reduce(res,f.conv(dd,ii-jj,boost::mpl::int_<0>()));
         }
         nt2::run(boost::proto::child_c<0>(a1),ii,res);
       }
@@ -85,22 +85,22 @@ namespace nt2 { namespace ext
       for (;ii<ls;ii+=cd)
       {
         n_t dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs,meta::as_<n_t>());
-        n_t res = f.conv(dd,fs);
+        n_t res = f.conv(dd,fs,boost::mpl::int_<0>());
         for (std::size_t jj=1;jj<=fs;jj++)
         {
           dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs+jj,meta::as_<n_t>());
-          res = f.reduce(res,f.conv(dd,fs-jj));
+          res = f.reduce(res,f.conv(dd,fs-jj,boost::mpl::int_<0>()));
         }
         nt2::run(boost::proto::child_c<0>(a1),ii,res);
       }
 
       for (;ii<ds;ii++)
       {
-        real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),ii-fs,meta::as_<real_type>()),fs);
+        real_type res = f.conv(nt2::run(boost::proto::child_c<2>(a0),ii-fs,meta::as_<real_type>()),fs,boost::mpl::int_<0>());
         for (std::size_t jj=1;jj<=fs;jj++)
         {
           real_type dd = nt2::run(boost::proto::child_c<2>(a0),ii-fs+jj,meta::as_<real_type>());
-          res = f.reduce(res,f.conv(dd,fs-jj));
+          res = f.reduce(res,f.conv(dd,fs-jj,boost::mpl::int_<0>()));
         }
         nt2::run(boost::proto::child_c<0>(a1),ii,res);
       }

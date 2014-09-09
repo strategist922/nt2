@@ -9,7 +9,7 @@
 
 SET( SOURCES
   compan.cpp
-  conv.cpp
+  #conv.cpp
   deconv.cpp
   degree.cpp
   polyadd.cpp

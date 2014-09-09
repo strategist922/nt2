@@ -11,12 +11,14 @@
 
 #include <nt2/include/functions/run.hpp>
 #include <boost/simd/sdk/meta/iterate.hpp>
+#include <boost/simd/sdk/simd/meta/vector_of.hpp>
 
 namespace nt2 { namespace details
 {
-  /*
-    Perform a dynamic loop for computing a 1D convolution product
-  */
+  //
+  //  Perform a dynamic loop for computing a 1D convolution product
+  //
+
   template<typename Out, typename In, typename K>
   BOOST_FORCEINLINE
   Out conv1D( int begin, int size, std::size_t limit
@@ -24,13 +26,15 @@ namespace nt2 { namespace details
             )
   {
     typedef typename In::value_type   in_t;
+    typedef typename boost::simd::meta::vector_of< in_t
+                      , boost::simd::meta::cardinal_of<Out>::value >::type in_tt;
 
-    Out res = k.conv(nt2::run(in,begin,meta::as_<in_t>()),size,0);
+    Out res = k.conv(nt2::run(in,begin,meta::as_<in_tt>()),size,0);
 
     for(int j=1;j<limit;++j)
     {
       res = k.reduce( res
-                    , k.conv( nt2::run(in,j+begin,meta::as_<in_t>())
+                    , k.conv( nt2::run(in,j+begin,meta::as_<in_tt>())
                             , size, j
                             )
                     );
@@ -76,6 +80,7 @@ namespace nt2 { namespace details
   /*
     Perform a statically unrolled loop for computing a 1D convolution product
   */
+
   template<typename Out, typename T, std::size_t N, typename In, typename K>
   BOOST_FORCEINLINE
   Out conv1D( int begin, int size, boost::mpl::integral_c<T,N> const&
@@ -83,7 +88,10 @@ namespace nt2 { namespace details
             )
   {
     typedef typename In::value_type   in_t;
-    Out res = k.conv(nt2::run(in,begin,meta::as_<in_t>()),size,boost::mpl::int_<0>());
+    typedef typename boost::simd::meta::vector_of< in_t
+                      , boost::simd::meta::cardinal_of<Out>::value >::type in_tt;
+
+     Out res = k.conv(nt2::run(in,begin,meta::as_<in_tt>()),size,boost::mpl::int_<0>());
 
     static_conv1D<K,In,Out,N> stepper(k,in,res,begin,size);
     boost::simd::meta::iterate<N-1>(stepper);
