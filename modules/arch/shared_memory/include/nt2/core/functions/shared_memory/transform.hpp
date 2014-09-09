@@ -14,6 +14,7 @@
 #include <nt2/sdk/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/worker/transform.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
+#include <nt2/sdk/shared_memory/details/compute_cost.hpp>
 #include <nt2/sdk/config/cache.hpp>
 
 namespace nt2 { namespace ext
@@ -44,8 +45,10 @@ namespace nt2 { namespace ext
       nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
       nt2::spawner<tag::transform_, BackEnd> s;
 
-      if(sz > 8*grain)  s(w,it,sz,grain);
-      else  w(it,sz);
+      if((sz > grain) && details::compute_cost(in,out))
+        s(w,it,sz,grain);
+      else
+        w(it,sz);
     }
   };
 

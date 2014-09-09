@@ -14,6 +14,7 @@
 #include <nt2/core/functions/outer_scan.hpp>
 #include <nt2/sdk/shared_memory/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/worker/outer_scan.hpp>
+#include <nt2/sdk/shared_memory/details/compute_cost.hpp>
 #include <nt2/sdk/config/cache.hpp>
 #include <cstdio>
 
@@ -45,21 +46,10 @@ namespace nt2 { namespace ext
 
       nt2::spawner< tag::transform_,BackEnd > s;
 
-      if( obound > grain )
+      if( (obound > grain) && details::compute_cost(in,out) )
         s(w,0,obound,grain);
       else
         w(0,obound);
-    }
-
-    private:
-    static std::size_t gcd (std::size_t a, std::size_t b)
-    {
-        while (b) {
-        std::size_t  r = a % b;
-        a = b;
-        b = r;
-        }
-        return a;
     }
   };
 

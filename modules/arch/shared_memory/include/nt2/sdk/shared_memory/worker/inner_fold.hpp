@@ -13,8 +13,7 @@
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/shared_memory/details/target_type_from_site.hpp>
-#include <nt2/include/functor.hpp>
-
+#include <nt2/sdk/shared_memory/details/compute_cost.hpp>
 #include <nt2/sdk/config/cache.hpp>
 
 namespace nt2
@@ -84,7 +83,7 @@ namespace nt2
         target_type vec_out = neutral_(nt2::meta::as_<target_type>());
         value_type s_out = neutral_(nt2::meta::as_<value_type>());
 
-        if( (size == obound) && (grain < iibound) )
+        if( (size == obound) && (grain < iibound) && details::compute_cost(in_,out_) )
            vec_out = s( vec_w, k, iibound, grain );
 
         else if( iibound != 0 )

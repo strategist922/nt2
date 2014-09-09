@@ -14,6 +14,7 @@
 #include <nt2/sdk/shared_memory/worker/outer_fold_step.hpp>
 #include <nt2/sdk/shared_memory/details/target_type_from_site.hpp>
 #include <nt2/include/functor.hpp>
+#include <nt2/sdk/shared_memory/details/compute_cost.hpp>
 
 #include <boost/simd/memory/align_under.hpp>
 
@@ -80,7 +81,7 @@ namespace nt2
 
               target_type result = neutral_(nt2::meta::as_<target_type>());
 
-              if( (size == obound) && (grain < mmbound) )
+              if( (size == obound) && (grain < mmbound) && details::compute_cost(in_,out_) )
                   result = s_simd( w, 0, mmbound, grain);
               else if(mmbound != 0)
                   result = w(result, 0, mmbound);
@@ -99,7 +100,7 @@ namespace nt2
 
               value_type result = neutral_(nt2::meta::as_<value_type>());
 
-              if( (size == obound) && (grain < mmbound) )
+              if( (size == obound) && (grain < mmbound) && details::compute_cost(in_,out_) )
                   result = s_scalar(w, 0, mmbound, grain);
               else if(mmbound != 0)
                   result = w(result, 0, mmbound);
@@ -132,7 +133,7 @@ namespace nt2
             w2.update(oout_, oin_);
 
             // parallelized part
-            if((size == obound) && (grain < iibound))
+            if((size == obound) && (grain < iibound) && details::compute_cost(in_,out_))
               s(w1,0,iibound,grain);
 
             else if(iibound != 0)

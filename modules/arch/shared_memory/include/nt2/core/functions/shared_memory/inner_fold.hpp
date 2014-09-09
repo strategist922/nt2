@@ -15,6 +15,7 @@
 #include <nt2/sdk/shared_memory/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/worker/inner_fold.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
+#include <nt2/sdk/shared_memory/details/compute_cost.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -49,7 +50,7 @@ namespace nt2 { namespace ext
       nt2::worker<tag::inner_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
       w(out, in, neutral, bop, uop);
 
-      if((obound > grain) && (8*grain < bound*obound))
+      if((obound > grain) && details::compute_cost(in,out) )
       {
         nt2::spawner< tag::transform_, BackEnd > s;
         s(w,0,obound,grain);
