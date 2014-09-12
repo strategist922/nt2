@@ -13,6 +13,7 @@
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/sdk/shared_memory/details/delay.hpp>
 #include <nt2/sdk/timing/now.hpp>
+#include <iostream>
 
 namespace nt2
 {
@@ -23,32 +24,33 @@ namespace nt2
   }
 
   // Transform Worker
-  template<class BackEnd,class Site, class Out, class In>
-  struct worker<tag::delay_worker_,BackEnd,Site,Out,In>
+  template<class Out, class In>
+  struct worker<tag::delay_worker_,void,void,Out,In>
   {
-      worker(Out & out, In & in, std::size_t delaylength)
+      worker(Out & out, In & in)
       :out_(out),in_(in)
       {}
 
       void operator()(std::size_t, std::size_t)
       {
-        nt2::details::delay(delaylength);
+        nt2::details::delay(delaylength,value_);
       };
 
-      int operator()(int out, std::size_t, std::size_t)
+      float operator()(float out, std::size_t, std::size_t)
       {
-          nt2::details::delay(delaylength);
-          return 0;
+          float result = 0.;
+          nt2::details::delay(delaylength, result);
+          return result;
       };
 
-      std::size_t setdelaylength(double delaytime) // in seconds
+      void setdelaylength(double delaytime) // in seconds
       {
           std::size_t reps = 1000;
           double lapsedtime = 0.0;
           double starttime;
 
           delaylength = 0;
-          nt2::details::delay(delaylength);
+          nt2::details::delay(delaylength, value_);
 
           while (lapsedtime < delaytime)
           {
@@ -56,17 +58,18 @@ namespace nt2
             starttime = nt2::now();
 
             for (std::size_t i = 0; i < reps; i++)
-              nt2::details::delay(delaylength);
+              nt2::details::delay(delaylength,value_);
 
             lapsedtime = (nt2::now() - starttime) / (double) reps;
           }
-          return delaylength;
+
+          std::cout<<delaylength<<" iterations"<<std::endl;
       }
 
       Out & out_;
       In & in_;
-      std::plus<int> bop_;
-
+      std::plus<float> bop_;
+      float value_;
       std::size_t delaylength;
 
   private:
