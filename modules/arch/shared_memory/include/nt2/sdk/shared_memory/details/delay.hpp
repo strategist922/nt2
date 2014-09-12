@@ -9,15 +9,16 @@
 #ifndef NT2_SDK_SHARED_MEMORY_DETAILS_DELAY_HPP_INCLUDED
 #define NT2_SDK_SHARED_MEMORY_DETAILS_DELAY_HPP_INCLUDED
 
+#include <cstddef>
+
 namespace nt2 { namespace details
 {
 
-  void delay(int delaylength)
+  inline void delay(std::size_t delaylength, float & a)
   {
-    float a = 0.;
-
     for (std::size_t i = 0; i < delaylength; i++)
     a += i;
+
   }
 
 } }

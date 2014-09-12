@@ -7,12 +7,9 @@
 ###                     http://www.boost.org/LICENSE_1_0.txt
 ##############################################################################
 
-nt2_module_use_modules( test.benchmark
-                        core.base
-                        core.generative
-                        core.trigonometric
-                        core.random
-                      )
+SET( SOURCES
+  transform.cpp
+  # fold.cpp
+   )
 
-ADD_SUBDIRECTORY(container)
-ADD_SUBDIRECTORY(microbench)
+nt2_module_add_tests(arch.openmp.microbench.bench ${SOURCES})
