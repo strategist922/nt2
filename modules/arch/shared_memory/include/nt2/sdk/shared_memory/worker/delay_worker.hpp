@@ -32,8 +32,13 @@ namespace nt2
 
       void operator()(std::size_t, std::size_t)
       {
-          for (std::size_t i = 0; i < delaylength; i++)
+        nt2::details::delay(delaylength);
+      };
+
+      int operator()(int out, std::size_t, std::size_t)
+      {
           nt2::details::delay(delaylength);
+          return 0;
       };
 
       std::size_t setdelaylength(double delaytime = 0.1) // microseconds
@@ -52,9 +57,7 @@ namespace nt2
             starttime = nt2::now();
 
             for (std::size_t i = 0; i < reps; i++)
-            {
               nt2::details::delay(delaylength);
-            }
 
             lapsedtime = (nt2::now() - starttime) / (double) reps;
           }
@@ -63,6 +66,8 @@ namespace nt2
 
       Out & out_;
       In & in_;
+      std::plus<int> bop_;
+
       std::size_t delaylength;
 
   private:
