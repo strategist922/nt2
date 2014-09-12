@@ -41,12 +41,11 @@ namespace nt2
           return 0;
       };
 
-      std::size_t setdelaylength(double delaytime = 0.1) // microseconds
+      std::size_t setdelaylength(double delaytime) // in seconds
       {
           std::size_t reps = 1000;
-          double lapsedtime = 0.0, starttime; // seconds
-
-          delaytime = delaytime/1.0E6;
+          double lapsedtime = 0.0;
+          double starttime;
 
           delaylength = 0;
           nt2::details::delay(delaylength);
