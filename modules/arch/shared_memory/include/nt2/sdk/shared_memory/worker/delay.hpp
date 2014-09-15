@@ -7,8 +7,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_SHARED_MEMORY_WORKER_DELAY_WORKER_HPP_INCLUDED
-#define NT2_SDK_SHARED_MEMORY_WORKER_DELAY_WORKER_HPP_INCLUDED
+#ifndef NT2_SDK_SHARED_MEMORY_WORKER_DELAY_HPP_INCLUDED
+#define NT2_SDK_SHARED_MEMORY_WORKER_DELAY_HPP_INCLUDED
 
 #include <nt2/include/functions/zeros.hpp>
 #include <nt2/sdk/shared_memory/worker.hpp>
@@ -21,12 +21,12 @@ namespace nt2
 
   namespace tag
   {
-    struct delay_worker_;
+    struct delay_;
   }
 
   // Transform Worker
   template<class Out, class In>
-  struct worker<tag::delay_worker_,void,void,Out,In>
+  struct worker<tag::delay_,void,void,Out,In>
   {
       worker(Out & out, In & in)
       :out_(out),in_(in),value_(100,0.)
