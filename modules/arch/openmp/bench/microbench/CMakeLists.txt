@@ -9,7 +9,8 @@
 
 SET( SOURCES
   transform.cpp
-  # fold.cpp
+  fold.cpp
+  scan.cpp
    )
 
 nt2_module_add_tests(arch.openmp.microbench.bench ${SOURCES})

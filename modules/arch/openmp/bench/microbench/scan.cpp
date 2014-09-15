@@ -24,22 +24,22 @@ using boost::dispatch::default_site;
 using nt2::table;
 
 //==============================================================================
-// transform spawner microbenchmark
+// fold spawner microbenchmark
 //==============================================================================
-struct shared_memory_transform
+struct shared_memory_fold
 {
-  shared_memory_transform(std::size_t n)
+  shared_memory_fold(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
     nt2::set_num_threads(n);
-    w_.setdelaylength(0.01e-6);
+    w_.setdelaylength(0.1e-6);
   }
 
-  void operator()() {
-     s_(w_, 0, n_, 1);
+  float operator()() {
+     return s_(w_, 0, n_, 1);
    }
 
-  friend std::ostream& operator<<(std::ostream& os, shared_memory_transform const& p)
+  friend std::ostream& operator<<(std::ostream& os, shared_memory_fold const& p)
   {
     return os << "(" << p.n_ << ")";
   }
@@ -50,8 +50,9 @@ struct shared_memory_transform
 
   nt2::table<double> out_, in_;
   std::size_t n_;
-  nt2::spawner< nt2::tag::transform_
+  nt2::spawner< nt2::tag::scan_
               , boost::dispatch::default_site<void>::type
+              , float
               > s_;
   nt2::worker< nt2::tag::delay_worker_
              ,void
@@ -62,11 +63,11 @@ struct shared_memory_transform
 };
 
 
-NT2_REGISTER_BENCHMARK( shared_memory_transform )
+NT2_REGISTER_BENCHMARK( shared_memory_fold )
 {
   std::size_t max_threads = nt2::get_num_threads();
 
-  run_during_with< shared_memory_transform >( 1.
+  run_during_with< shared_memory_fold >( 1.
                                   , arithmetic(1,max_threads,1)
                                   , absolute_time<stats::median_>()
                                   );
