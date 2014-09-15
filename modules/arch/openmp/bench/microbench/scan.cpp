@@ -8,7 +8,7 @@
 //==============================================================================
 #include <nt2/sdk/shared_memory/shared_memory.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
-#include <nt2/sdk/shared_memory/worker/delay_worker.hpp>
+#include <nt2/sdk/shared_memory/worker/delay.hpp>
 
 #include <nt2/sdk/bench/benchmark.hpp>
 #include <nt2/sdk/bench/metric/absolute_time.hpp>
@@ -54,7 +54,7 @@ struct shared_memory_fold
               , boost::dispatch::default_site<void>::type
               , float
               > s_;
-  nt2::worker< nt2::tag::delay_worker_
+  nt2::worker< nt2::tag::delay_
              ,void
              ,void
              ,nt2::table<double>
