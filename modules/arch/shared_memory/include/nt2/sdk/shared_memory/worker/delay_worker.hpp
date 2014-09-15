@@ -10,6 +10,7 @@
 #ifndef NT2_SDK_SHARED_MEMORY_WORKER_DELAY_WORKER_HPP_INCLUDED
 #define NT2_SDK_SHARED_MEMORY_WORKER_DELAY_WORKER_HPP_INCLUDED
 
+#include <nt2/include/functions/zeros.hpp>
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/sdk/shared_memory/details/delay.hpp>
 #include <nt2/sdk/timing/now.hpp>
@@ -28,17 +29,27 @@ namespace nt2
   struct worker<tag::delay_worker_,void,void,Out,In>
   {
       worker(Out & out, In & in)
-      :out_(out),in_(in)
+      :out_(out),in_(in),value_(100,0.)
       {}
 
-      void operator()(std::size_t, std::size_t)
+      // Transform call operator
+      void operator()(std::size_t rank, std::size_t)
       {
-        nt2::details::delay(delaylength,value_);
+        nt2::details::delay(delaylength,value_[rank]);
       };
 
-      float operator()(float out, std::size_t, std::size_t)
+      // Fold call operator
+      float operator()(float out, std::size_t rank, std::size_t)
       {
-          float result = 0.;
+          float result = value_[rank];
+          nt2::details::delay(delaylength, result);
+          return result;
+      };
+
+      // Scan call operator
+      float operator()(float out, std::size_t rank, std::size_t, bool)
+      {
+          float result = value_[rank];
           nt2::details::delay(delaylength, result);
           return result;
       };
@@ -48,9 +59,10 @@ namespace nt2
           std::size_t reps = 1000;
           double lapsedtime = 0.0;
           double starttime;
+          float result = 0.0;
 
           delaylength = 0;
-          nt2::details::delay(delaylength, value_);
+          nt2::details::delay(delaylength, value_[0]);
 
           while (lapsedtime < delaytime)
           {
@@ -58,19 +70,18 @@ namespace nt2
             starttime = nt2::now();
 
             for (std::size_t i = 0; i < reps; i++)
-              nt2::details::delay(delaylength,value_);
+              nt2::details::delay(delaylength,value_[0]);
 
             lapsedtime = (nt2::now() - starttime) / (double) reps;
           }
-
-          std::cout<<delaylength<<" iterations"<<std::endl;
       }
 
       Out & out_;
       In & in_;
       std::plus<float> bop_;
-      float value_;
+      nt2::functor< nt2::tag::Zero > neutral_;
       std::size_t delaylength;
+      std::vector<float> value_;
 
   private:
       worker& operator=(worker const&);
