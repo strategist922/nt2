@@ -59,7 +59,6 @@ namespace nt2
           std::size_t reps = 1000;
           double lapsedtime = 0.0;
           double starttime;
-          float result = 0.0;
 
           delaylength = 0;
           nt2::details::delay(delaylength, value_[0]);
