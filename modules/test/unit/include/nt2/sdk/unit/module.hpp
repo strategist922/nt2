@@ -19,6 +19,10 @@
 #include <hpx/hpx_init.hpp>
 #endif
 
+#if defined(NT2_USE_TBB)
+#include <nt2/sdk/tbb/tbb_initializer.hpp>
+#endif
+
 #if defined(NT2_USE_MAGMA)
 #include <magma.h>
 #endif
@@ -97,6 +101,7 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
 #endif
 
 #if defined(NT2_USE_HPX)
+
   std::vector<std::string> cfg;
   cfg.push_back("hpx.parcel.port=0");
 
@@ -105,8 +110,17 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
   char *dummy_argv[1] = { const_cast<char*>(HPX_APPLICATION_STRING) };
 
   return hpx::init(hpx_initializer(argc, argv), boost::program_options::options_description(), 1, dummy_argv, cfg);
+
+#elif defined(NT2_USE_TBB)
+
+  int value = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
+  nt2::tbb_initializer().kill();
+  return value;
+
 #else
+
   return nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
+
 #endif
 }
 

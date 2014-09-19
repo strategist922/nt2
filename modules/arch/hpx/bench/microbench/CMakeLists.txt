@@ -7,6 +7,10 @@
 ###                     http://www.boost.org/LICENSE_1_0.txt
 ##############################################################################
 
-nt2_module_use_modules(test.benchmark core.trigonometric core.base)
-ADD_SUBDIRECTORY(container)
-ADD_SUBDIRECTORY(microbench)
+SET( SOURCES
+  transform.cpp
+  fold.cpp
+  scan.cpp
+   )
+
+nt2_module_add_tests(arch.hpx.microbench.bench ${SOURCES})

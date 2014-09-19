@@ -9,3 +9,4 @@
 
 nt2_module_use_modules(test.benchmark core.trigonometric core.base)
 ADD_SUBDIRECTORY(container)
+ADD_SUBDIRECTORY(microbench)

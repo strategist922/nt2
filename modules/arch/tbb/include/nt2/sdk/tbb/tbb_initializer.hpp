@@ -7,25 +7,36 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_OPENMP_UTILITY_HPP_INCLUDED
-#define NT2_SDK_OPENMP_UTILITY_HPP_INCLUDED
+#ifndef NT2_SDK_TBB_TBB_INITIALIZER_HPP_INCLUDED
+#define NT2_SDK_TBB_TBB_INITIALIZER_HPP_INCLUDED
 
-#if defined(_OPENMP) && _OPENMP >= 200203 /* OpenMP 2.0 */
+#include <tbb/task_scheduler_init.h>
 
-#include <omp.h>
+namespace nt2 {
 
-namespace nt2
-{
-    inline int get_num_threads()
+class tbb_initializer{
+public:
+    static void init(int n)
     {
-        return omp_get_max_threads();
+       kill();
+       init_ = new tbb::task_scheduler_init(n);
     }
 
-    inline void set_num_threads(int n)
+    static void kill()
     {
-        omp_set_num_threads(n);
+        if (NULL != init_)
+        {
+           delete init_;
+        }
     }
-}
 
-#endif
+private:
+static tbb::task_scheduler_init * init_;
+};
+
+tbb::task_scheduler_init *
+tbb_initializer::init_ = NULL;
+
+} // namespace nt2
+
 #endif
