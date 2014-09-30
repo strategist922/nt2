@@ -45,8 +45,11 @@ namespace nt2 { namespace ext
       nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
       nt2::spawner<tag::transform_, BackEnd> s;
 
-      if((sz > grain) && details::compute_cost(in,out))
+      if( (sz > grain)
+       && details::compute_cost<tag::transform_,BackEnd,Out,In>(out,in)
+        )
         s(w,it,sz,grain);
+
       else
         w(it,sz);
     }

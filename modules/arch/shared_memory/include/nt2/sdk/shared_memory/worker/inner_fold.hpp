@@ -83,7 +83,10 @@ namespace nt2
         target_type vec_out = neutral_(nt2::meta::as_<target_type>());
         value_type s_out = neutral_(nt2::meta::as_<value_type>());
 
-        if( (size == obound) && (grain < iibound) && details::compute_cost(in_,out_) )
+        if(  (size == obound)
+          && (grain < iibound)
+          && details::compute_cost<tag::fold_,BackEnd,Out,In>(out_,in_)
+          )
            vec_out = s( vec_w, k, iibound, grain );
 
         else if( iibound != 0 )

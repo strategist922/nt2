@@ -46,7 +46,9 @@ namespace nt2 { namespace ext
 
       nt2::spawner< tag::transform_,BackEnd > s;
 
-      if( (obound > grain) && details::compute_cost(in,out) )
+      if( (obound > grain)
+       && details::compute_cost<tag::transform_,BackEnd,Out,In>(out,in)
+        )
         s(w,0,obound,grain);
       else
         w(0,obound);
