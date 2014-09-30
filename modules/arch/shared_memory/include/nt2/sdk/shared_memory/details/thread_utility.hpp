@@ -16,6 +16,9 @@ namespace nt2
 
    template<typename Arch>
    struct set_num_threads_impl;
+
+   template<typename Arch>
+   struct get_thread_id_impl;
 }
 
 #endif

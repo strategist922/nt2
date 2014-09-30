@@ -13,6 +13,7 @@
 
 #include <hpx/hpx_fwd.hpp>
 #include <nt2/sdk/shared_memory/details/thread_utility.hpp>
+#include <cstdio>
 
 namespace nt2
 {
@@ -26,7 +27,7 @@ namespace nt2
    {
      inline int call() const
      {
-       return hpx::get_os_thread_count();
+      return hpx::get_os_thread_count();
      }
    };
 
@@ -35,6 +36,16 @@ namespace nt2
    {
      inline void call(int n) const
      {
+        printf("HPX cannot set the number of OS-threads online\n");
+     }
+   };
+
+   template <typename Site>
+   struct get_thread_id_impl< nt2::tag::hpx_<Site> >
+   {
+     inline int call() const
+     {
+       return hpx::get_worker_thread_num();
      }
    };
 }

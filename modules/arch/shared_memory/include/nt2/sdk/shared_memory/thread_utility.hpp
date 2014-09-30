@@ -10,7 +10,7 @@
 #define NT2_SDK_SHARED_MEMORY_THREAD_UTILITY_HPP_INCLUDED
 
 #include <nt2/sdk/functor/site.hpp>
-#include <nt2/sdk/shared_memory.hpp>
+#include <nt2/sdk/shared_memory/details/thread_utility.hpp>
 
 namespace nt2
 {
@@ -26,6 +26,13 @@ namespace nt2
     typedef typename boost::dispatch::default_site<void>::type Arch;
 
     nt2::set_num_threads_impl<Arch>().call( n );
+  }
+
+  inline int get_thread_id()
+  {
+    typedef typename boost::dispatch::default_site<void>::type Arch;
+
+    return nt2::get_thread_id_impl<Arch>().call();
   }
 
  }
