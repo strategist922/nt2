@@ -64,6 +64,7 @@ namespace nt2 { namespace details
 #endif
 
 #if defined(NT2_USE_HPX)
+
 struct hpx_initializer
 {
   hpx_initializer(int argc_, char** argv_) : argc(argc_), argv(argv_) {}
@@ -79,6 +80,7 @@ private:
   int argc;
   char** argv;
 };
+
 #endif
 
 /*!
@@ -106,15 +108,14 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
   cfg.push_back("hpx.parcel.port=0");
 
   using boost::program_options::options_description;
-  options_description desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
-  char *dummy_argv[1] = { const_cast<char*>(HPX_APPLICATION_STRING) };
 
-  return hpx::init(hpx_initializer(argc, argv), boost::program_options::options_description(), 1, dummy_argv, cfg);
+  return hpx::init(hpx_initializer(argc, argv), boost::program_options::options_description(), argc, argv, cfg);
 
 #elif defined(NT2_USE_TBB)
 
   int value = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
   nt2::tbb_initializer().kill();
+
   return value;
 
 #else
