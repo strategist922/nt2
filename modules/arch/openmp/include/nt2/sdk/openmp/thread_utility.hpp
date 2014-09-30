@@ -13,6 +13,7 @@
 
 #include <omp.h>
 #include <nt2/sdk/shared_memory/details/thread_utility.hpp>
+#include <iostream>
 
 namespace nt2
 {
@@ -26,7 +27,8 @@ namespace nt2
    {
      inline int call() const
      {
-       return omp_get_max_threads();
+       int value = omp_get_max_threads();
+       return value;
      }
    };
 
@@ -36,6 +38,15 @@ namespace nt2
      inline void call(int n) const
      {
        return omp_set_num_threads(n);
+     }
+   };
+
+   template <typename Site>
+   struct get_thread_id_impl< nt2::tag::openmp_<Site> >
+   {
+     inline int call() const
+     {
+       return omp_get_thread_num();
      }
    };
 }

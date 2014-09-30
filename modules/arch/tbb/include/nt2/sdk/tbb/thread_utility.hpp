@@ -13,9 +13,11 @@
 
 #include <omp.h>
 #include <tbb/task_scheduler_init.h>
+#include <tbb/concurrent_hash_map.h>
 #include <nt2/sdk/tbb/tbb_initializer.hpp>
 #include <nt2/sdk/shared_memory/details/thread_utility.hpp>
-#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 
 namespace nt2
 {
@@ -29,7 +31,8 @@ namespace nt2
    {
      inline int call() const
      {
-       return tbb::task_scheduler_init::default_num_threads();
+       int value = tbb::task_scheduler_init::default_num_threads();
+       return value;
      }
    };
 
@@ -39,6 +42,16 @@ namespace nt2
      inline void call(int n) const
      {
        nt2::tbb_initializer().init(n);
+     }
+   };
+
+   template <typename Site>
+   struct get_thread_id_impl< nt2::tag::tbb_<Site> >
+   {
+     inline int call() const
+     {
+        printf("TBB cannot return any OS-thread id\n");
+        return 0;
      }
    };
 }
