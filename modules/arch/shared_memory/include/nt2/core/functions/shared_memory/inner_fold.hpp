@@ -50,7 +50,9 @@ namespace nt2 { namespace ext
       nt2::worker<tag::inner_fold_,BackEnd,Site,Out,In,Neutral,Bop,Uop>
       w(out, in, neutral, bop, uop);
 
-      if((obound > grain) && details::compute_cost(in,out) )
+      if( (obound > grain)
+       && details::compute_cost<tag::transform_,BackEnd,Out,In>(out,in)
+        )
       {
         nt2::spawner< tag::transform_, BackEnd > s;
         s(w,0,obound,grain);

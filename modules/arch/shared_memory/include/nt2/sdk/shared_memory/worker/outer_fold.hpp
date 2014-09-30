@@ -81,7 +81,10 @@ namespace nt2
 
               target_type result = neutral_(nt2::meta::as_<target_type>());
 
-              if( (size == obound) && (grain < mmbound) && details::compute_cost(in_,out_) )
+              if(  (size == obound)
+                && (grain < mmbound)
+                && details::compute_cost<tag::fold_,BackEnd,Out,In>(out_,in_)
+                )
                   result = s_simd( w, 0, mmbound, grain);
               else if(mmbound != 0)
                   result = w(result, 0, mmbound);
@@ -100,7 +103,10 @@ namespace nt2
 
               value_type result = neutral_(nt2::meta::as_<value_type>());
 
-              if( (size == obound) && (grain < mmbound) && details::compute_cost(in_,out_) )
+              if(  (size == obound)
+                && (grain < mmbound)
+                && details::compute_cost<tag::fold_,BackEnd,Out,In>(out_,in_)
+                )
                   result = s_scalar(w, 0, mmbound, grain);
               else if(mmbound != 0)
                   result = w(result, 0, mmbound);
@@ -133,7 +139,9 @@ namespace nt2
             w2.update(oout_, oin_);
 
             // parallelized part
-            if((size == obound) && (grain < iibound) && details::compute_cost(in_,out_))
+            if(  (size == obound) && (grain < iibound)
+              && details::compute_cost<tag::transform_,BackEnd,Out,In>(out_,in_)
+              )
               s(w1,0,iibound,grain);
 
             else if(iibound != 0)

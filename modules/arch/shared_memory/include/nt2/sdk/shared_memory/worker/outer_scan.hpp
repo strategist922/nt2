@@ -69,7 +69,10 @@ namespace nt2
 
               value_type s_out = neutral_(nt2::meta::as_<value_type>());
 
-              if( (size == obound) && (grain < mmbound) && details::compute_cost(in_,out_) )
+              if(  (size == obound)
+                && (grain < mmbound)
+                && details::compute_cost<tag::scan_,BackEnd,Out,In>(out_,in_)
+                )
                s_out = s( w, 0, mmbound, grain);
 
               else if (mmbound != 0)
@@ -92,7 +95,9 @@ namespace nt2
              nt2::worker<tag::outer_scan_step_incache_,BackEnd,Site,Out,In,Neutral,Bop>
              w(out_,in_,neutral_,bop_, o_);
 
-             if( (size == obound) && details::compute_cost(in_,out_) )
+             if(  (size == obound)
+               && details::compute_cost<tag::transform_,BackEnd,Out,In>(out_,in_)
+               )
                s(w,0,ibound,grain);
 
              else
