@@ -11,8 +11,8 @@
 #include <nt2/sdk/shared_memory/thread_utility.hpp>
 
 #include <nt2/sdk/bench/benchmark.hpp>
-#include <nt2/sdk/bench/metric/absolute_time.hpp>
-#include <nt2/sdk/bench/setup/arithmetic.hpp>
+#include <nt2/sdk/bench/metric/cycles_per_element.hpp>
+#include <nt2/sdk/bench/setup/fixed.hpp>
 #include <nt2/sdk/bench/protocol/max_duration.hpp>
 #include <nt2/sdk/bench/stats/median.hpp>
 
@@ -68,7 +68,7 @@ NT2_REGISTER_BENCHMARK( shared_memory_fold )
   std::size_t max_threads = nt2::get_num_threads();
 
   run_during_with< shared_memory_fold >( 1.
-                                  , arithmetic(1,max_threads,1)
-                                  , absolute_time<stats::median_>()
+                                  , fixed_<std::size_t>(max_threads)
+                                  , cycles_per_element<stats::median_>()
                                   );
 }
