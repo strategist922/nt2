@@ -14,7 +14,9 @@
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/sdk/shared_memory/details/delay.hpp>
 #include <nt2/sdk/timing/now.hpp>
-#include <iostream>
+#include <nt2/sdk/shared_memory/thread_utility.hpp>
+#include <cstdio>
+
 
 namespace nt2
 {
@@ -41,7 +43,7 @@ namespace nt2
       // Fold call operator
       float operator()(float out, std::size_t rank, std::size_t)
       {
-          float result = value_[rank];
+          float result = value_[rank] + out;
           nt2::details::delay(delaylength, result);
           return result;
       };
@@ -49,7 +51,7 @@ namespace nt2
       // Scan call operator
       float operator()(float out, std::size_t rank, std::size_t, bool)
       {
-          float result = value_[rank];
+          float result = value_[rank] + out;
           nt2::details::delay(delaylength, result);
           return result;
       };
