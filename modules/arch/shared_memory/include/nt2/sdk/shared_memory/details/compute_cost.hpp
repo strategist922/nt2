@@ -39,14 +39,14 @@ namespace nt2 { namespace details
       details::aggregate_terminals()(in,  0, terminal_set);
 
       std::size_t access_cost  = terminal_set.size() * size_i + size_o;
-      std::size_t compute_cost = details::aggregate_costs()(in) * size_i;
+      std::size_t computation_cost = details::aggregate_costs()(in) * size_i;
       std::size_t cache_cost = (access_cost/cache_size)*100;
       std::size_t skel_cost  = skel_cost_type();
 
-      std::size_t sequential = access_cost + compute_cost + cache_cost;
+      std::size_t sequential = access_cost + computation_cost + cache_cost;
 
       std::size_t parallel
-        = (access_cost + compute_cost) / nt2::get_num_threads()
+        = (access_cost + computation_cost) / nt2::get_num_threads()
         + cache_cost + skel_cost;
 
       return parallel < sequential;
