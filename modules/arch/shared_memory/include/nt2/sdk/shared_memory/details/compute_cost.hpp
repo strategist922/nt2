@@ -25,13 +25,14 @@
 namespace nt2 { namespace details
 {
     template < class Tag, class Arch, class Out, class In >
-    inline bool compute_cost(Out & out, In & in)
+    inline bool compute_cost( Out & out
+                            , In & in
+                            , std::size_t size_o
+                            , std::size_t size_i
+                            )
     {
       typedef typename In::const_pointer raw_type;
       typedef typename nt2::runtime_costs<Tag,Arch>::type skel_cost_type;
-
-      std::size_t nin  = nt2::numel(in);
-      std::size_t nout = nt2::numel(out);
 
       std::size_t cache_size
         = config::top_cache_size(3)/sizeof(typename Out::value_type);
@@ -39,8 +40,8 @@ namespace nt2 { namespace details
       std::set< raw_type > terminal_set;
       details::aggregate_terminals()(in,  0, terminal_set);
 
-      std::size_t access_cost  = terminal_set.size() * nin + nout;
-      std::size_t compute_cost = details::aggregate_costs()(in) * nin;
+      std::size_t access_cost  = terminal_set.size() * size_i + size_o;
+      std::size_t compute_cost = details::aggregate_costs()(in) * size_i;
       std::size_t cache_cost = (access_cost/cache_size)*100;
       std::size_t skel_cost  = skel_cost_type();
 

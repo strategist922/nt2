@@ -82,7 +82,8 @@ namespace nt2
         value_type s_out = neutral_(nt2::meta::as_<value_type>());
 
         if(  (size == obound)
-          && details::compute_cost<tag::scan_,BackEnd,Out,In>(out_,in_)
+          && details::compute_cost<tag::scan_,BackEnd,Out,In>
+             (out_,in_,1,iibound)
           )
           s_out = s( w, k, iibound, grain );
 
