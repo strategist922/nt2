@@ -28,7 +28,7 @@ namespace nt2 { namespace details
           boost::proto::terminal< boost::proto::_ >
          ,boost::mpl::size_t<0>()
       >
-     // Else recall aggregate_costs and increments the returned value
+     // Else recall aggregate_costs and increments the (reduced) returned value
      ,boost::proto::otherwise<
         boost::proto::fold<
           boost::proto::_
@@ -55,8 +55,8 @@ namespace nt2 { namespace details
 
     struct aggregate_terminals
     :boost::proto::or_<
-      // If the expression is a terminal
-      // return 0
+      // If the expression is a non-terminal
+      // Do nothing
      boost::proto::when<
         boost::proto::and_<
           boost::proto::terminal< boost::proto::_ >
@@ -69,7 +69,7 @@ namespace nt2 { namespace details
      , boost::mpl::size_t<0>()
      >
       // Else if the expression is a container terminal
-      // return 1
+      // call insert_raw
      ,boost::proto::when<
         boost::proto::and_<
           boost::proto::terminal< boost::proto::_ >
@@ -79,7 +79,7 @@ namespace nt2 { namespace details
         >
       ,insert_raw(boost::proto::_value,boost::proto::_data)
       >
-     // Else recall aggregate_costs and increments the current state
+     // Else recall aggregate_terminals with child nodes
      ,boost::proto::otherwise<
         boost::proto::fold<
           boost::proto::_
