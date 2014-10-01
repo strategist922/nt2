@@ -83,7 +83,8 @@ namespace nt2
 
               if(  (size == obound)
                 && (grain < mmbound)
-                && details::compute_cost<tag::fold_,BackEnd,Out,In>(out_,in_)
+                && details::compute_cost<tag::fold_,BackEnd,Out,In>
+                   (out_,in_,1,mmbound)
                 )
                   result = s_simd( w, 0, mmbound, grain);
               else if(mmbound != 0)
@@ -105,7 +106,8 @@ namespace nt2
 
               if(  (size == obound)
                 && (grain < mmbound)
-                && details::compute_cost<tag::fold_,BackEnd,Out,In>(out_,in_)
+                && details::compute_cost<tag::fold_,BackEnd,Out,In>
+                   (out_,in_,1,mmbound)
                 )
                   result = s_scalar(w, 0, mmbound, grain);
               else if(mmbound != 0)
@@ -140,7 +142,8 @@ namespace nt2
 
             // parallelized part
             if(  (size == obound) && (grain < iibound)
-              && details::compute_cost<tag::transform_,BackEnd,Out,In>(out_,in_)
+              && details::compute_cost<tag::transform_,BackEnd,Out,In>
+                 (out_,in_,iibound,iibound*mbound)
               )
               s(w1,0,iibound,grain);
 
