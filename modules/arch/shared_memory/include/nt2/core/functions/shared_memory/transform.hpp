@@ -47,7 +47,7 @@ namespace nt2 { namespace ext
 
       if( (sz > grain)
        && details::compute_cost<tag::transform_,BackEnd,Out,In>
-          (out,in,sz,sz)
+          (in,sz,sz)
         )
         s(w,it,sz,grain);
 

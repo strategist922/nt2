@@ -25,8 +25,7 @@
 namespace nt2 { namespace details
 {
     template < class Tag, class Arch, class Out, class In >
-    inline bool compute_cost( Out & out
-                            , In & in
+    inline bool compute_cost( In & in
                             , std::size_t size_o
                             , std::size_t size_i
                             )
