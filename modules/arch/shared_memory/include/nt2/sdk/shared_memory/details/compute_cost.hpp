@@ -30,13 +30,12 @@ namespace nt2 { namespace details
                             , std::size_t size_i
                             )
     {
-      typedef typename In::const_pointer raw_type;
       typedef typename nt2::runtime_costs<Tag,Arch>::type skel_cost_type;
 
       std::size_t cache_size
         = config::top_cache_size(3)/sizeof(typename Out::value_type);
 
-      std::set< raw_type > terminal_set;
+      std::set< const void * > terminal_set;
       details::aggregate_terminals()(in,  0, terminal_set);
 
       std::size_t access_cost  = terminal_set.size() * size_i + size_o;
