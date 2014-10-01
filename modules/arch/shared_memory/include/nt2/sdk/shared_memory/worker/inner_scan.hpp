@@ -83,7 +83,7 @@ namespace nt2
 
         if(  (size == obound)
           && details::compute_cost<tag::scan_,BackEnd,Out,In>
-             (out_,in_,1,iibound)
+             (in_,1,iibound)
           )
           s_out = s( w, k, iibound, grain );
 

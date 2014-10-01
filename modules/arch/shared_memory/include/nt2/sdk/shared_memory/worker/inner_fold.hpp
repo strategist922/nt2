@@ -86,7 +86,7 @@ namespace nt2
         if(  (size == obound)
           && (grain < iibound)
           && details::compute_cost<tag::fold_,BackEnd,Out,In>
-             (out_,in_,1,iibound)
+             (in_,1,iibound)
           )
            vec_out = s( vec_w, k, iibound, grain );
 
