@@ -3,6 +3,10 @@
 # define DOXYGEN_ONLY trigger
 PREDEFINED += DOXYGEN_ONLY
 
+# exclude some namespace
+EXCLUDE_SYMBOLS += details
+EXCLUDE_SYMBOLS += ext
+
 # exclude Boost.Preprocessor style local macros
 EXCLUDE_SYMBOLS += M0
 EXCLUDE_SYMBOLS += M1

@@ -1,5 +1,6 @@
 # Concepts and links to boost documentation
 ALIASES = metafunction="<a href=\"http://www.boost.org/doc/libs/release/libs/mpl/doc/refmanual/metafunction.html\">Metafunction</a>"
+ALIASES += iterator="<a href=\"http://en.cppreference.com/w/cpp/concept/Iterator\">Iterator</a>"
 ALIASES += metasequence="<a href=\"http://www.boost.org/doc/libs/release/libs/mpl/doc/refmanual/forward-sequence.html\">MPL Sequence</a>"
 ALIASES += true_="@c boost::mpl::true_"
 ALIASES += false_="@c boost::mpl::false_"
