@@ -9,11 +9,6 @@
 #ifndef BOOST_DISPATCH_PREPROCESSOR_REMOVE_TYPENAME_HPP_INCLUDED
 #define BOOST_DISPATCH_PREPROCESSOR_REMOVE_TYPENAME_HPP_INCLUDED
 
-/*!
-  @file
-  @brief Defines the BOOST_DISPATCH_PP_REMOVE_TYPENAME macro
-**/
-
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/expand.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
@@ -76,16 +71,13 @@ BOOST_DISPATCH_PP_DETAILS_KEYWORD_FACILITY_IS_FRONT(tokens,                    \
 
   @param X Symbol to remove @c typename from
 
-  @par Usage:
-
-  @include pp_remove_typename.cpp
+  @usage{pp_remove_typename.cpp}
 
   This produces the following output
   @code
   add_pointer<float>::type
   add_pointer<T>::type
   @endcode
-
 **/
 #define BOOST_DISPATCH_PP_REMOVE_TYPENAME(X)                                   \
 BOOST_DISPATCH_PP_DETAILS_KEYWORD_FACILITY_REMOVE_FRONT(X,                     \
