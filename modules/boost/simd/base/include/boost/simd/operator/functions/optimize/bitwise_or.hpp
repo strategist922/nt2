@@ -12,7 +12,7 @@
 #include <boost/simd/operator/functions/bitwise_or.hpp>
 #include <boost/simd/include/functions/bitwise_ornot.hpp>
 #include <boost/simd/operator/functions/complement.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 
 namespace boost { namespace simd { namespace ext

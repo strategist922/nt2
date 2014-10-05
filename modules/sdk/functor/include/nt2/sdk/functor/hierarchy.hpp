@@ -14,7 +14,7 @@
 #include <nt2/sdk/meta/fusion.hpp>
 #include <nt2/sdk/meta/mpl.hpp>
 #include <nt2/sdk/meta/as.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 
 #include <boost/dispatch/meta/as_floating.hpp>
 #include <nt2/sdk/meta/result_of.hpp>

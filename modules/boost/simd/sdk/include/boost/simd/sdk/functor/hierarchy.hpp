@@ -15,7 +15,7 @@
 #include <boost/dispatch/meta/mpl.hpp>
 #include <boost/dispatch/meta/tieable.hpp>
 #include <boost/dispatch/meta/as.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 #include <boost/dispatch/meta/proxy.hpp>
 
 #include <boost/dispatch/meta/ignore_unused.hpp>

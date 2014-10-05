@@ -10,16 +10,13 @@
 #ifndef BOOST_DISPATCH_DSL_CALL_HPP_INCLUDED
 #define BOOST_DISPATCH_DSL_CALL_HPP_INCLUDED
 
-////////////////////////////////////////////////////////////////////////////////
-// This file generate basic EDSL expression wrapper over any nt2 function
-////////////////////////////////////////////////////////////////////////////////
 #include <boost/proto/make_expr.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/dispatch/meta/any.hpp>
 #include <boost/dispatch/meta/as_ref.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 #include <boost/dispatch/functor/functor.hpp>
 #include <boost/dispatch/functor/meta/call.hpp>
 #include <boost/dispatch/functor/meta/hierarchy.hpp>
@@ -41,28 +38,56 @@ namespace boost { namespace dispatch { namespace tag
   /// INTERNAL ONLY
   struct ast_ {};
 }
+
 namespace meta
 {
-  template<class T>
-  struct proto_tag
+  template<class T> struct proto_tag
   {
     typedef T type;
   };
 
-  template<class T>
-  struct is_formal : is_formal<typename T::parent>
+  /*!
+    Check function tag formal aspect
+
+    @par Semantic
+    For any given function tag @c T, the following code:
+
+    @code
+    typedef is_formal<T>::type r;
+    @endcode
+
+    is equivalent to ;
+
+    @code
+    typedef boost::mpl::true_ r;
+    @endcode
+
+    if @c T inherits from boost::dispatch::tag::formal_ and to
+
+    @code
+    typedef boost::mpl::false_  r;
+    @endcode
+
+    otherwise.
+
+    @tparam T Tag to analyze
+  **/
+  template<typename T> struct  is_formal
+  #if !defined(DOXYGEN_ONLY)
+        : is_formal<typename T::parent>
+  #endif
   {
   };
 
+  /// INTERNAL ONLY
   template<>
-  struct is_formal<tag::formal_>
-   : mpl::true_
+  struct is_formal<tag::formal_> : mpl::true_
   {
   };
 
-  template<class T>
-  struct is_formal<unknown_<T> >
-   : mpl::false_
+  /// INTERNAL ONLY
+  template<typename T>
+  struct is_formal<unknown_<T> > : mpl::false_
   {
   };
 } } }
@@ -111,6 +136,7 @@ namespace boost { namespace dispatch { namespace meta
   };
 } } }
 
+
 #undef M1
 #undef M2
 #undef M3
@@ -123,6 +149,7 @@ namespace boost { namespace dispatch { namespace meta
 #endif
 
 #else
+#if !defined(DOXYGEN_ONLY)
 #define n BOOST_PP_ITERATION()
 #if BOOST_PP_ITERATION_FLAGS() == 1
   BOOST_DISPATCH_REGISTER_TO_IF( (boost)(dispatch)(meta), unspecified_<Func>
@@ -161,4 +188,5 @@ namespace boost { namespace dispatch { namespace meta
     }
 #endif
 #undef n
+#endif
 #endif

@@ -12,7 +12,7 @@
 #include <nt2/sdk/meta/strip.hpp>
 #include <nt2/sdk/config/types.hpp>
 #include <nt2/sdk/meta/enable_if_type.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 #include <boost/dispatch/meta/proxy.hpp>
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 

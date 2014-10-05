@@ -13,7 +13,7 @@
 #include <boost/simd/arithmetic/functions/fms.hpp>
 #include <boost/simd/operator/functions/unary_minus.hpp>
 #include <boost/simd/include/functions/fnma.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 
 namespace boost { namespace simd { namespace ext

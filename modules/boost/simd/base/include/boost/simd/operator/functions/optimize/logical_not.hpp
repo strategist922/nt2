@@ -18,7 +18,7 @@
 #include <boost/simd/operator/functions/is_greater.hpp>
 #include <boost/simd/operator/functions/is_less_equal.hpp>
 #include <boost/simd/operator/functions/is_greater_equal.hpp>
-#include <boost/dispatch/dsl/category.hpp>
+#include <boost/dispatch/meta/proto.hpp>
 #include <boost/dispatch/functor/preprocessor/call.hpp>
 
 namespace boost { namespace simd { namespace ext
