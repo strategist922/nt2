@@ -41,7 +41,7 @@
 #define BOOST_DISPATCH_NOINLINE
 
 /*!
-  @brief Mark a function as deprecated
+  @brief Specify that a function as deprecated
 
   This macro expands to a compiler specific function attribute emitting a
   warning indicating said function is deprecated.
@@ -59,7 +59,7 @@
  #define BOOST_DISPATCH_DEPRECATED
 
 /*!
-  @brief Mark a pointer or reference as restricted
+  @brief Specify that a pointer or reference is restricted
 
   This macro expands to a potential compiler specific parameters attribute
   indicating that a given pointer or reference is not aliasing any other pointer
@@ -87,7 +87,7 @@
 #define BOOST_DISPATCH_NO_RESTRICT_REFERENCES
 
 /*!
-  @brief Mark a function as non-throwing
+  @brief Specify that a function is non-throwing
 
   This macro expands to a compiler specific function attribute indicating that
   said function can not throw any kind of exceptions.
@@ -105,18 +105,30 @@
 #define BOOST_DISPATCH_NOTHROW
 
 /*!
-  @brief DOCTODO
+  @brief Specify that a virtual function overrides another virtual function.
+
+  This macro is a portable version of the C++11 @c override that specifies that
+  a function must be overriding a base class method.
 
   @par Usage:
 
   @code
+  struct A
+  {
+    virtual void foo();
+  };
+
+  struct B : A
+  {
+    void foo() override;
+  };
   @endcode
 
 **/
 #define BOOST_DISPATCH_OVERRIDE
 
 /*!
-  @brief Mark a class as having no VTABLE
+  @brief Specity that a class as having no VTABLE
 
   This macro expands to a compiler specific type attribute indicating that
   said class or structure can be optimized by knowing there is no VTABLE
