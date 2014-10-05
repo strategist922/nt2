@@ -1,0 +1,16 @@
+[section Target hierarchy]
+
+[heading Rationale]
+Some function requires to be passed a type as a parameter which is not the type
+of any of its parameters. If one could use a regular type hierarchy to dispatch
+to the correct implementation, it becomes quite unwieldy when multiple parameters
+of either types and values are used. To handle those situation Boost.Dispatch
+provides a simple lightweight type wrapper named [classref boost::dispatch::meta::as_ as_]
+which is tied to the [classref boost::dispatch::meta::target_ target_] hierarchy.
+
+[heading Example]
+For example, consider a function similar to static_cast that requires to
+dispatch on the type of the data to be converted and on the type in which
+it will be converted.
+
+[endsect]

@@ -1,0 +1,61 @@
+[section The Hierarchy Concept]
+
+[heading Description]
+A Hierarchy is a type used to identify a category of related types. A Hierarchy
+type can be used in tag dispatching context to notify the fact that a given
+overload is requiring some of its arguments to conform to the types category
+properties.
+
+[heading Associated types]
+For any type `H` being model of `Hierarchy`, the following types are defined:
+
+[table:id
+    [[Expression]         [Type]        [Semantics]                           ]
+    [[`H::parent`]        [Hierarchy]   [The parent `Hierarchy` of H]         ]
+    [[`H::hierarchy_tag`] [unspecified] [Tag flagging `H` as a `Hierarchy`]   ]
+]
+
+[note In current Boost.Dispatch model, models of `Hierarchy` must inherit from
+      a single other `Hierarchy` model. Multiple inheritance is discouraged as
+      it easily leads to ambiguities.
+]
+
+[heading Expression requirements]
+
+For any type `H`, model of [link type_hierarchies.the_hierarchy_concept Hierarchy] :
+
+* The expression `is_base_of<H::parent, H>::value` evaluates to `true`
+* The expression `typedef hierarcy_of<H>::type r;` is equivalent to `typedef H r;`
+* It exists a type `X` so that: `is_base_of<unspecified_<X>, H>::value == true` 
+  [footnote In a less formal way, this means that all hierarchies must inherit
+  directly or indirectly from an instance of the
+  [classref boost::dispatch::meta::unspecified_ unspecified_] `Hierarchy`.]
+
+[heading General Structure]
+For any type `P` being model of `Hierarchy`, one can define a new Hierarchy `H`
+simply as:
+
+[c++]
+``
+struct H : P
+{
+  typedef P parent;
+};
+``
+
+The choice made by Boost.Dispatch for its built-in hierarchies is to make
+them templates, with the actual type being categorized as the template parameter.
+
+[c++]
+``
+template<class T>
+struct H : P<T>
+{
+  typedef P<T> parent;
+};
+``
+This allows to select the parent hierarchy according to what the type is,
+removing some of the limitations of single inheritance. Embedding the type
+inside the hierarchy also enables to use them directly for declaring template overloads
+in place of the real arguments.
+[endsect]

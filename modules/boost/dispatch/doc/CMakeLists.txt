@@ -12,10 +12,18 @@ if(NOT NT2_DOCUMENTATION_ENABLED)
   return()
 endif()
 
+nt2_doc_doxygen( hierarchy_reference "Type Hierarchy API" )
+
 nt2_module_doc( boost.dispatch
                 dispatch.qbk
-                contents.qbk
+                overview.qbk
+                hierarchy.qbk
+                type_traits.qbk
+                functor.qbk
+                abi.qbk
+                rationale.qbk
                 reference.doxyfile
+                hierarchy_reference.xml
                 ${NT2_BINARY_DIR}/doc/html/dispatch/tags.png
               )
 

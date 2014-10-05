@@ -1,20 +1,44 @@
-[section Motivation]
+[chapter Overview
+    [quickbook 1.5]
+]
 
-The objective of Boost.Dispatch is to allow a flexible, scalable and easily
-extendable system for writing functions and functors dispatching using a
-generic Tag Dispatching system.
+[section Objectives]
+This library aims at providing an idiomatic way to define functions that can
+be extended or specialized, with each specialization being able to be generic
+and the most efficient possible with respect to architecture and compiler
+specificities. This is achieved through:
 
-This section will discuss what are the current options and why Boost.Dispatch
-helps making this idiom more generic and usable.
+* Macros and meta-functions abstracting and completing the various ABI specific
+  issues related to the efficient passing of arguments to functions.
 
-[section Free function dispatching]
-Let us consider a fairly artificial scenario, but representive of things that
+* Transparent tag dispatching system with which it becomes possible to select
+  the best specialization for the arguments provided, avoiding the limitations
+  inherent to unconstrained template function overloads.
+
+* Extensible generic functor abstraction wrapping the tag dispatching machinery
+  and providing a simple to use protocol to extend arbitrary functions.
+
+[warning Boost.Dispatch is a library in development and is not part of Boost.]
+
+[endsect]
+
+[section Introduction to Tag Dispatching]
+Let us consider a fairly artificial scenario, but representative of things that
 are quite common in generic programming: we want to define a unary function `f`,
 for all built-in arithmetic types, that implements different algorithms depending
 on the actual type of the argument. For example, consider that `f` returns 0 if
 its argument is a floating point value, returns 1 if it is a signed integer or
-return 2 otherwise. You could do this using *SFINAE* and `boost::enable_if` in
-the following way:
+return 2 otherwise.
+
+[section Implementation using SFINAE]
+You could do this using *SFINAE*. SFINAE - standing for Substitution Failure Is
+Not An Error - is a C++ idiom relying on the way the compiler prune invalid
+function definitions from an overload set instead of emitting errors. This pruning,
+when done on purpose, can be used to select a function implementation based on
+arbitrary compile-time checks on function argument types.
+
+The traditional way to implement SFINAE enabled functions is to use the
+`enable_if` meta-function helper. This is done in the following way:
 
 [c++]
 ``
@@ -39,12 +63,22 @@ f(T)
   return 2;
 }
 ``
-The SFINAE approach clearly doesn't scale in terms of programming, since all
-overloads must be mutually exclusive, but also in terms of compilation times,
-since SFINAE-based overload resolution is linear.
+The SFINAE approach has some well-known issues:
+
+* The number of instantiated template functions is linear with the number of
+  cases.
+* Conditions must be strictly disjoint or ambiguity may arise.
+* Code intent is blurred by the syntactic burden of `enable_if`.
+
+[endsect]
+
+[section Implementation using Tag Dispatching]
 
 Another solution, which is heralded by the Standard Template Library itself
-is to use a technique known as Tag Dispatching:
+is to use a technique known as Tag Dispatching. Tag dispatching relies on using
+a hierarchy of types describing the relationship between kind of types and
+their properties. Any type can be externally bound to a given tag, and so, bound
+to a given implementation of any function recognizing this tag.:
 
 [c++]
 ``
@@ -92,17 +126,6 @@ system of standard iterators is a good example of that.
 Doing this in a clean, concise, reusable and idiomatic manner is however of some
 difficulty, which is why that is only done in an ad-hoc way in practice.
 [endsect]
-
-[section Functor dispatching]
-Additionally, with Boost.Dispatch, all specializations are registered in an
-ADL context. That means that you can introduce specializations after the function
-is used in template contexts and those new specializations will still get used
-when that code is instantiated. This is not the case with regular function
-overloads, which usually perform name lookup eagerly.
-
-The approach also turns all incriminated functions into polymorphic function
-objects, which has a lot of uses in generic and functional programming.
-
 [endsect]
 
 [section Boost.Dispatch in action]
@@ -148,9 +171,6 @@ unsigned ones. However, since there is also a specialization for unsigned types,
 the latter gets preferred, since `unsigned_` is a refinement of `integer_`
 in the built-in hierarchies.
 
-The functor example becomes:
-
 [endsect]
 
-[endsect]
-
+[xinclude reference.xml]

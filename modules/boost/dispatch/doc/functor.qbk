@@ -1,3 +1,7 @@
+[chapter Functor Abstraction
+    [quickbook 1.5]
+]
+
 [section Using Boost.Dispacth with functors]
 
 [endsect]

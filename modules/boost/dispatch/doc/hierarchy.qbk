@@ -1,47 +1,18 @@
-[section Hierarchy: Definition and Usage]
+[chapter Type Hierarchies
+    [quickbook 1.5]
+]
 
-[section The Hierarchy Concept]
-[heading Synopsis:]
-
-[c++]
-``
-struct H : P
-{
-    typedef P parent;
-};
-``
-
-with `H` and `P` models of `Hierarchy`.
-
-A model `H` of `Hierarchy` is nothing more than an empty type used to identify a
-category of types. It must inherit from one other model of `Hierarchy` `P`;
-multiple inheritance is discouraged as it easily leads to ambiguities.
-
-It must also provide a `parent` typedef in order to allow composite hierarchies
-to be built around it.
-
-All hierarchies must inherit directly or indirectly from `boost::dispatch::meta::unspecified_<T>`,
-with `T` any concrete type (preferably the one being hierarchized).
-
-The choice that Boost.Dispatch makes for its built-in hierarchies is to make
-them templates, with the actual type being hierarchized as the
-template parameter.
-
-[c++]
-``
-template<class T>
-struct H : P<T>
-{
-    typedef P<T> parent;
-};
-``
-This allows to select the parent hierarchy according to what the type is,
-removing some of the limitations of single inheritance. Embedding the type
-inside the hierarchy also enables to use it directly for declaring template overloads
-in place of the real arguments.
+[section Overview]
+Types Hierarchies are the main component of Boost.Dispatch. Said Hierarchies
+provide a powerful and idiomatic way to define tags embedding arbitrary level
+of semantic, thus allowing for a fine or coarse grain function dispatching.
 [endsect]
 
-[section Built-in hierarchies]
+[include hierarchy/concept.qbk]
+
+[section Basic Hierarchies]
+
+[endsect]
 
 [section Scalar hierarchy]
 
@@ -91,8 +62,7 @@ A list of all properties available and how they relate to each other is listed b
 
 [endsect] [/Scalar]
 
-[section Target hierarchy]
-[endsect]
+[include hierarchy/target.qbk]
 
 [section Array hierarchy]
 [endsect]
@@ -103,6 +73,4 @@ A list of all properties available and how they relate to each other is listed b
 [section AST hierarchy]
 [endsect]
 
-[endsect] [/Built-in hierarchies]
-
-[endsect]
+[xinclude hierarchy_reference.xml]

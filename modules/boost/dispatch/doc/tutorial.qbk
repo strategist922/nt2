@@ -1,6 +1,12 @@
-[section Tutorials]
+[chapter Boost.Dispatch Tutorials
+    [quickbook 1.5]
+]
+
+[section Objectives]
 
 `TODO SIMPLIFY, REMOVE NT2 REFERENCE, BE MORE PIECEWISE`
+
+[endsect]
 
 [section Adding new specializations]
 
@@ -199,7 +205,5 @@ behave as integers as well.
 
 New basic types should be defined in the tree under [^nt2/sdk/[~some-directory]],
 and will need to be associated to a hierarchy to benefit from the dispatching system.
-
-[endsect]
 
 [endsect]
