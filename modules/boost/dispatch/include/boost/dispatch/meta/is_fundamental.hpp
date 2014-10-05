@@ -9,44 +9,38 @@
 #ifndef BOOST_DISPATCH_META_IS_FUNDAMENTAL_HPP_INCLUDED
 #define BOOST_DISPATCH_META_IS_FUNDAMENTAL_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines and implements the boost::dispatch::meta::is_fundamental \metafunction
- */
-
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 #include <boost/mpl/bool.hpp>
 
 namespace boost { namespace dispatch { namespace meta
 {
-  //==============================================================================
   /*!
-   * Checks if a given type is a fundamental type (i.e any scalar type natively
-   * supported by C++).
-   *
-   * \par Model:
-   *
-   * \metafunction
-   *
-   * For any type \c T
-   *
-   * \code
-   * typedef is_fundamental<T>::type r;
-   * \endcode
-   *
-   * evaluates to \true_ if \c T hierarchy inherits from \c fundamental_<T>
-   * and to \false_ otherwise
-   *
-   * \include is_fundamental.cpp
-   */
-  //==============================================================================
-  template<class T>
-  struct is_fundamental
+    @brief Checks if a given type is a fundamental type.
+
+    @par Model:
+
+    @metafunction
+
+    @par Semantic:
+
+    For any type @c T
+
+    @code
+    typedef is_fundamental<T>::type r;
+    @endcode
+
+    evaluates to @true_ if @c T hierarchy inherits from @c fundamental_<T>
+    and to @false_ otherwise
+
+    @usage{is_fundamental.cpp}
+
+  **/
+  template<typename T> struct is_fundamental
   {
     typedef char true_type;
     struct false_type { char dummy[2]; };
 
-    template<class X>
+    template<typename X>
     static true_type call( meta::scalar_< meta::fundamental_<X> > );
 
     static false_type call(...);
@@ -58,4 +52,3 @@ namespace boost { namespace dispatch { namespace meta
 } } }
 
 #endif
-

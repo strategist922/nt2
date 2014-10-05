@@ -9,11 +9,6 @@
 #ifndef BOOST_DISPATCH_META_AS_HPP_INCLUDED
 #define BOOST_DISPATCH_META_AS_HPP_INCLUDED
 
-/*!
- * @file
- * @brief Define the boost::dispatch::meta::as_ type wrapper.
- **/
-
 #include <boost/dispatch/meta/value_of.hpp>
 #include <boost/dispatch/meta/model_of.hpp>
 #include <boost/dispatch/meta/hierarchy_of.hpp>
@@ -21,18 +16,16 @@
 #if defined(DOXYGEN_ONLY)
 namespace boost { namespace dispatch { namespace meta
 {
-  //============================================================================
   /*!
-   * Type wrapper hierarchy.
-   *
-   * @par Models:
-   *
-   * Hierarchy
-   *
-   * @tparam T Wrapped type hierarchy
-   */
-  //============================================================================
-  template<class T> struct target_{};
+    Type wrapper hierarchy.
+
+    @par Models:
+
+    Hierarchy
+
+    @tparam T Wrapped type hierarchy
+   **/
+  template<typename T> struct target_ {};
 } } }
 #else
 BOOST_DISPATCH_REGISTER_HIERARCHY(target_)
@@ -41,19 +34,12 @@ BOOST_DISPATCH_REGISTER_HIERARCHY(target_)
 namespace boost { namespace dispatch { namespace meta
 {
   /*!
-   * @brief Lightweight type wrapper.
-   *
-   * Some implementation details of NT2 require types to be wrapped into an
-   * empty structure so the type can be passed as a "ghostly" instance.
-   * as_ performs such a wrapping.
-   *
-   * To discriminate as_ from the type @c T it wraps, its hierarcy is defined as
-   * @c target_<hierarchy_of<T>::type>
-   *
-   * @par Models:
-   *
-   * @metafunction
-   */
+    @brief Lightweight type wrapper.
+
+    Provide a lightweight object which type wraps another type to be passed as
+    a value paramater to a function
+
+  **/
   template<class T>
   struct as_
   {

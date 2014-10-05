@@ -9,31 +9,30 @@
 #ifndef BOOST_DISPATCH_META_IS_SCALAR_HPP_INCLUDED
 #define BOOST_DISPATCH_META_IS_SCALAR_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines and implements the boost::dispatch::meta::is_scalar \metafunction
- */
-
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 #include <boost/mpl/bool.hpp>
 
 namespace boost { namespace dispatch { namespace meta
 {
-  //============================================================================
   /*!
-   * Checks if a given Hierarchizable type is a scalar type.
-   *
-   * For any given Hierarchizable \c T,
-   *
-   * \code
-   * typedef boost::dispatch::meta::is_scalar<T>::type r;
-   * \endcode
-   *
-   * evaluates to \true_ is T has a hierarchy tied to \c scalar_
-   *
-   * \include is_scalar.cpp
-   */
-  //============================================================================
+    Checks if a given Hierarchizable type is a scalar type.
+
+    @par Models
+
+    @metafunction
+
+    @par Semantic:
+
+    For any given Hierarchizable @c T,
+
+    @code
+    typedef boost::dispatch::meta::is_scalar<T>::type r;
+    @endcode
+
+    evaluates to @true_ is @c T has a hierarchy inheriting from @c scalar_
+
+    @usage{is_scalar.cpp}
+  **/
   template<class T>
   struct  is_scalar
   {

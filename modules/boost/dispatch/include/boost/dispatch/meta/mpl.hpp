@@ -9,9 +9,6 @@
 #ifndef BOOST_DISPATCH_META_MPL_HPP_INCLUDED
 #define BOOST_DISPATCH_META_MPL_HPP_INCLUDED
 
-////////////////////////////////////////////////////////////////////////////////
-// Various memory hierarchy stuff
-////////////////////////////////////////////////////////////////////////////////
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -23,16 +20,18 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/dispatch/meta/enable_if_type.hpp>
 
-////////////////////////////////////////////////////////////////////////////////
-// Specialize hierarchy for mpl integral types
-////////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace dispatch { namespace meta
 {
-  template<class T> struct mpl_integral_ : mpl_integral_< typename T::parent >
+  template<class T>
+  struct  mpl_integral_
+#if !defined(DOXYGEN_ONLY)
+        : mpl_integral_< typename T::parent >
+#endif
   {
     typedef mpl_integral_< typename T::parent > parent;
   };
 
+  /// INTERNAL ONLY
   template<class T>
   struct  mpl_integral_< unspecified_<T> >
         : hierarchy_of<typename T::value_type,T>::type

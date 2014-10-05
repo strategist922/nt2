@@ -9,7 +9,7 @@
 #ifndef BOOST_DISPATCH_META_DETAILS_GENERIC_HPP_INCLUDED
 #define BOOST_DISPATCH_META_DETAILS_GENERIC_HPP_INCLUDED
 
-#include <boost/dispatch/meta/details/hierarchy_base.hpp>
+#include <boost/dispatch/meta/unspecified.hpp>
 #include <boost/dispatch/meta/scalar_of.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
 #include <boost/mpl/if.hpp>

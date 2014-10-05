@@ -8,10 +8,7 @@
 //==============================================================================
 #ifndef BOOST_DISPATCH_META_FACTORY_OF_HPP_INCLUDED
 #define BOOST_DISPATCH_META_FACTORY_OF_HPP_INCLUDED
-/*!
- * \file
- * \brief Defines the \c boost::dispatch::meta::factory_of \metafunction
- */
+
 #include <boost/dispatch/meta/model_of.hpp>
 #include <boost/dispatch/meta/value_of.hpp>
 #include <boost/dispatch/meta/primitive_of.hpp>
@@ -55,31 +52,36 @@ namespace boost { namespace dispatch { namespace details
 namespace meta
 {
   /*!
-   * \ingroup metafunctions
-   * For any Hierarchizable type, returns a @mpllambda which permits the lazy
-   * recomposition of any type of the same hierarchy from a set of types.
-   *
-   * \tparam Hierarchizable type to deconstruct
-   *
-   * For any Hierarchizable \c H,
-   * \code
-   *  typedef boost::dispatch::meta::factory_of<T>::type l;
-   * \endcode
-   *
-   * return a @mpllambda so that, for any types \c Tn...
-   *
-   * \code
-   *  typedef boost::mpl::apply<l, Tn...>::type r;
-   * \endcode
-   *
-   * returns a type \c r which is a Hierarchizable of the same hierarchy than
-   * \c H and an equivalent semantic.
-   *
-   * \include factory_of.cpp
-   */
-  template<class T, class U = typename meta::primitive_of<T>::type>
-  struct factory_of
-    : details::factory_of_impl<T, U>
+    @brief Type factory generator
+
+    For any Hierarchizable type, returns a @mpllambda which permits the lazy
+    recomposition of any type of the same hierarchy from a set of types.
+
+    @tparam Hierarchizable type to deconstruct
+
+    @par Semantic:
+
+    For any Hierarchizable @c H,
+
+    @code
+    typedef boost::dispatch::meta::factory_of<T>::type l;
+    @endcode
+
+    evaluates to a @mpllambda so that, for any types @c Tn...
+
+    @code
+    typedef boost::mpl::apply<l, Tn...>::type r;
+    @endcode
+
+    returns a type @c r which is a Hierarchizable of the same hierarchy than
+    @c H and an equivalent semantic.
+
+    @usage{factory_of.cpp}
+
+  **/
+  template<typename T, typename U = typename meta::primitive_of<T>::type>
+  struct  factory_of
+        : details::factory_of_impl<T, U>
   {
   };
 

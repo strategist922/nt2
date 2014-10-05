@@ -14,7 +14,7 @@
  * \brief Defines the basic evaluation context hierarchy for \ref boost::dispatch::functor
  */
 
-#include <boost/dispatch/meta/details/hierarchy_base.hpp>
+#include <boost/dispatch/meta/unspecified.hpp>
 
 namespace boost { namespace dispatch { namespace tag
 {
@@ -22,7 +22,7 @@ namespace boost { namespace dispatch { namespace tag
   /*!
    * \ingroup hierarchy
    * Defines the formal evaluation context for functors. This context is the
-   * most abstract one and correspond to high-level code trasnformation function
+   * most abstract one and correspond to high-level code transformation function
    */
   //============================================================================
   struct formal_ : meta::unspecified_<formal_>

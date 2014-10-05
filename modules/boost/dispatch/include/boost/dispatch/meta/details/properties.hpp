@@ -16,7 +16,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/dispatch/meta/adapted_traits.hpp>
-#include <boost/dispatch/meta/details/hierarchy_base.hpp>
+#include <boost/dispatch/meta/unspecified.hpp>
 
 namespace boost { namespace dispatch { namespace details
 {

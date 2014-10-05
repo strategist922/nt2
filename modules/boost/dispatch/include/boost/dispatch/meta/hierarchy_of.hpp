@@ -21,7 +21,7 @@
 // select at each lattice node which ancestor to use.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/dispatch/meta/details/hierarchy_base.hpp>
+#include <boost/dispatch/meta/unspecified.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_const.hpp>

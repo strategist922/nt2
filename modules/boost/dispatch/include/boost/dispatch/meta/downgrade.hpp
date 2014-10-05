@@ -9,11 +9,6 @@
 #ifndef BOOST_DISPATCH_META_DOWNGRADE_HPP_INCLUDED
 #define BOOST_DISPATCH_META_DOWNGRADE_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines and implements the boost::dispatch::meta::downgrade \metafunction
- */
-
 #include <boost/dispatch/meta/sign_of.hpp>
 #include <boost/dispatch/meta/factory_of.hpp>
 #include <boost/dispatch/meta/primitive_of.hpp>
@@ -31,54 +26,54 @@
 
 namespace boost { namespace dispatch { namespace meta
 {
-  //============================================================================
   /*!
-   * Returns the input type rebound with a type that is twice as small as
-   * its primitive, with optional sign change.\
-   *
-   * \tparam Type Hierarchizable type to downgrade.
-   * \tparam Sign Optional sign to use while downgrading \c Type. If unspecified,
-   * \c Sign is equals to the sign of \c Type.
-   *
-   * \par Models:
-   *
-   * \metafunction
-   *
-   * \par Semantic:
-   *
-   * \code
-   * typedef boost::dispatch::meta::downgrade<T, Sign>::type r;
-   * \endcode
-   *
-   * is equivalent to:
-   *
-   * \code
-   * typedef make_floating< max< sizeof(primitive_of<T>::type)/2
-   *                       , sizeof(float)
-   *                       >::value
-   *                  , factory_of<T>::type
-   *                  >::type                                  r;
-   * \endcode
-   *
-   * if \c primitive_of<T> is of hierarchy boost::dispatch::meta::floating_
-   * and to:
-   *
-   * \code
-   * typedef make_integer< max<sizeof(primitive_of<T>::type)/2, 1>::value
-   *                     , Sign
-   *                     , factory_of<T>::type
-   *                     >::type                                r;
-   * \endcode
-   *
-   * otherwise.
-   *
-   * \par Usage:
-   *
-   * \include downgrade.cpp
-   */
-  //============================================================================
-  template<class T, class Sign = void>
-  struct downgrade;
+    @brief Type downgrading
+
+    Returns the input type rebound with a type that is twice as small as
+    its primitive, with optional sign change.
+
+    @tparam Type  Hierarchizable type to downgrade.
+    @tparam Sign  Optional sign to use while downgrading @c Type. If unspecified,
+                  @c Sign is equals to the sign of \@ Type.
+
+    @par Models:
+
+    @metafunction
+
+    @par Semantic:
+
+    For any Hierarchizable type @c Type and @c Sign being @c unsigned or
+    @c signed, the following code:
+
+    @code
+    typedef boost::dispatch::meta::downgrade<T, Sign>::type r;
+    @endcode
+
+    is equivalent to:
+
+    @code
+    typedef make_floating< max< sizeof(primitive_of<T>::type)/2
+                          , sizeof(float)
+                          >::value
+                     , factory_of<T>::type
+                     >::type                                  r;
+    @endcode
+
+    if \c primitive_of<T> is of hierarchy boost::dispatch::meta::floating_
+    and to:
+
+    \code
+     typedef make_integer< max<sizeof(primitive_of<T>::type)/2, 1>::value
+                        , Sign
+                         , factory_of<T>::type
+                         >::type                                r;
+     \endcode
+
+     otherwise.
+
+     @usage{downgrade.cpp}
+  **/
+  template< class T, class Sign = void> struct downgrade;
 } } }
 
 namespace boost { namespace dispatch { namespace details

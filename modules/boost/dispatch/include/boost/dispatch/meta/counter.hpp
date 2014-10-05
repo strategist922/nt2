@@ -12,15 +12,24 @@
 #include <boost/dispatch/details/typeof.hpp>
 #include <boost/preprocessor/cat.hpp>
 
+#if defined(DOXYGEN_ONLY)
+/*
+  @brief Maximum value of static counter.
+
+  If defined, this preprocessor symbol modify the maximum value of
+  compile-time counters. If left unspecified, this value is set to 8.
+*/
+#define BOOST_DISPATCH_COUNTER_MAX
+#else
 #ifndef BOOST_DISPATCH_COUNTER_MAX
-/// INTERNAL ONLY
 #define BOOST_DISPATCH_COUNTER_MAX 8
 #endif
+#endif
 
+#if !defined(DOXYGEN_ONLY)
 namespace boost { namespace dispatch { namespace details
 {
-  template<int N>
-  struct depth_;
+  template<int N> struct depth_;
 
   template<>
   struct depth_<0>
@@ -38,6 +47,7 @@ namespace boost { namespace dispatch { namespace details
     typedef T type;
   };
 }
+#endif
 
 namespace meta
 {
@@ -46,21 +56,36 @@ namespace meta
 }
 } }
 
-#define BOOST_DISPATCH_COUNTER_INIT(name)                                                          \
-namespace boost { namespace dispatch { namespace meta                                              \
-{                                                                                                  \
-  boost::mpl::int_<0> name( details::depth_<0>, adl_helper_ const& );                              \
-} } }                                                                                              \
+/*
+  @brief Static counter constructor
+
+  Create a counter named @c NAME and initialize it to 0
+
+  @param NAME Name of the static counter to initialize
+*/
+#define BOOST_DISPATCH_COUNTER_INIT(NAME)                                      \
+namespace boost { namespace dispatch { namespace meta                          \
+{                                                                              \
+  boost::mpl::int_<0> NAME( details::depth_<0>, adl_helper_ const& );          \
+} } }                                                                          \
 /**/
 
-#define BOOST_DISPATCH_COUNTER_VALUE(name)                                                         \
-boost::dispatch::details::                                                                         \
-identity< BOOST_DISPATCH_TYPEOF(name                                                               \
-                                ( boost::dispatch::details::depth_<BOOST_DISPATCH_COUNTER_MAX>()   \
-                                , boost::dispatch::meta::adl_helper_()                             \
-                                )                                                                  \
-                               )                                                                   \
-        >::type::value                                                                             \
+/*
+  @brief Static counter value accessor
+
+  Retrieve the value of a static counter named @c
+
+  @param NAME Name of the static counter to retrieve
+*/
+#define BOOST_DISPATCH_COUNTER_VALUE(NAME)                                     \
+boost::dispatch::details::                                                     \
+identity< BOOST_DISPATCH_TYPEOF(NAME                                           \
+                                ( boost::dispatch::details                     \
+                                       ::depth_<BOOST_DISPATCH_COUNTER_MAX>()  \
+                                , boost::dispatch::meta::adl_helper_()         \
+                                )                                              \
+                               )                                               \
+        >::type::value                                                         \
 /**/
 
 #define BOOST_DISPATCH_COUNTER_VALUE_TPL(name, dummy)                                              \

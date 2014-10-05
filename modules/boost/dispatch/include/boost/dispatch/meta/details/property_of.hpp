@@ -10,7 +10,7 @@
 #define BOOST_DISPATCH_META_DETAILS_PROPERTY_OF_HPP_INCLUDED
 
 #include <boost/dispatch/meta/details/properties.hpp>
-#include <boost/dispatch/meta/details/hierarchy_base.hpp>
+#include <boost/dispatch/meta/unspecified.hpp>
 #include <boost/dispatch/meta/enable_if_type.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_integral.hpp>

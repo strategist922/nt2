@@ -9,11 +9,6 @@
 #ifndef BOOST_DISPATCH_META_IS_ITERATOR_HPP_INCLUDED
 #define BOOST_DISPATCH_META_IS_ITERATOR_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines and implements the boost::dispatch::meta::is_iterator \metafunction
- */
-
 #include <boost/dispatch/meta/strip.hpp>
 #include <boost/dispatch/meta/enable_if_type.hpp>
 #include <boost/dispatch/attributes.hpp>
@@ -28,7 +23,6 @@
 
 //============================================================================
 // Fix a couple of things for restrict pointers
-// FIXME: integrate upstream
 //============================================================================
 #ifndef BOOST_DISPATCH_NO_RESTRICT
 namespace boost
@@ -81,29 +75,31 @@ namespace std
 
 namespace boost { namespace dispatch { namespace meta
 {
-  //============================================================================
   /*!
-   * Checks if a given type models the iterator concept.
-   *
-   * For any type \c T,
-   *
-   * \code
-   *  typedef boost::dispatch::meta::is_iterator<T>::type v;
-   * \endcode
-   *
-   * evaluates to \true_ if \c T is a type modeling the iterator concept.
-   * Such types includes standard conforming iterator classes and non-function
-   * pointers.
-   *
-   * \include is_iterator.cpp
-   */
-  //============================================================================
+    Checks if a given type models the \iterator concept.
+
+    @par Model
+
+    @metafunction
+
+    @par Semantic:
+
+    For any type @c T,
+
+    @code
+    typedef boost::dispatch::meta::is_iterator<T>::type v;
+    @endcode
+
+    evaluates to @true_ if @c T is a type modeling the @iterator concept.
+    Such types includes standard conforming iterator classes and non-function
+    pointers.
+
+    @usage{is_iterator.cpp}
+  **/
   template<class T, class Enable=void>
   struct  is_iterator : boost::is_pointer<T>  {};
 
-  //============================================================================
-  // Overload for function pointers (which are not iterator)
-  //============================================================================
+  /// INTERNAL ONLY - Overload for function pointers (which are not iterator)
   template<class T>
   struct  is_iterator < T
                       , typename boost::
@@ -115,9 +111,7 @@ namespace boost { namespace dispatch { namespace meta
                       >
         : boost::mpl::false_ {};
 
-  //============================================================================
-  // Overload for standard conforming iterators
-  //============================================================================
+  /// INTERNAL ONLY - Overload for standard conforming iterators
   template<class T>
   struct  is_iterator < T
                       , typename

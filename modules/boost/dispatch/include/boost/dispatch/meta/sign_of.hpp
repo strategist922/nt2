@@ -17,47 +17,80 @@
 
 namespace boost { namespace dispatch { namespace meta
 {
-  //============================================================================
-  /*! Computes the signedness of a given type.
-   *
-   * \tparam T Type to compute signedness from.
-   * \return If \c T is signed, \c sign_of<T>::type is \c signed, otherwsie, it
-   * is \c unsigned.
-   **/
-  //============================================================================
-  template<class T> struct sign_of;
+  template<typename T> struct sign_of;
 } } }
 
+#if !defined(DOXYGEN_ONLY)
 namespace boost { namespace dispatch { namespace ext
 {
-  template<class T, class Enable = void>
+  template<typename T, typename Enable = void>
   struct  sign_of
         : sign_of< typename meta::primitive_of<T>::type >
   {};
 
-  template<class T>
+  template<typename T>
   struct sign_of<T, typename enable_if< boost::is_signed<T> >::type>
   {
     typedef signed type;
   };
 
-  template<class T>
+  template<typename T>
   struct sign_of<T, typename enable_if< boost::is_unsigned<T> >::type>
   {
     typedef unsigned type;
   };
 
-  template<class T>
+  template<typename T>
   struct sign_of<T, typename enable_if< boost::is_floating_point<T> >::type>
   {
     typedef signed type;
   };
 } } }
+#endif
 
 namespace boost { namespace dispatch { namespace meta
 {
-  template<class T> struct  sign_of           : ext::sign_of<T> {};
-  template<class T> struct  sign_of<T&>       : sign_of <T>     {};
-  template<class T> struct  sign_of<T const>  : sign_of <T>     {};
+
+  /*! Signedness of a type
+
+    Computes the signedness of a type, ie the fact that the type is able to
+    represent signed values like signed integers or floating point values.
+
+    @par Semantic
+
+    For any type @c T, the following code:
+
+    @code
+    typedef sign_of<T>::type r;
+    @endcode
+
+    is equivalent to :
+
+    @code
+    typedef signed r;
+    @endcode
+
+    if T is a type able to represent a signed value and to :
+
+    @code
+    typedef unsigned r;
+    @endcode
+
+    otherwise.
+
+    @tparam T Type to analyze
+   **/
+  template<typename T>
+  struct  sign_of
+#if !defined(DOXYGEN_ONLY)
+        : ext::sign_of<T>
+#endif
+  {};
+
+  /// INTERNAL ONLY
+  template<typename T> struct  sign_of<T&> : sign_of <T> {};
+
+  /// INTERNAL ONLY
+  template<typename T> struct  sign_of<T const> : sign_of <T> {};
 } } }
 #endif

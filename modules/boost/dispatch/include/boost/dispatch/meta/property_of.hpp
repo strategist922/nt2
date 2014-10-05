@@ -19,7 +19,7 @@
 // mimicking the type structuration in C++
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/dispatch/meta/details/hierarchy_base.hpp>
+#include <boost/dispatch/meta/unspecified.hpp>
 #include <boost/dispatch/meta/scalar_of.hpp>
 #include <boost/dispatch/meta/strip.hpp>
 

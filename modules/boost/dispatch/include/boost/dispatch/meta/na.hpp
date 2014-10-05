@@ -9,19 +9,13 @@
 #ifndef BOOST_DISPATCH_META_NA_HPP_INCLUDED
 #define BOOST_DISPATCH_META_NA_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines the boost::dispatch::meta::na_ type
- */
-
 namespace boost { namespace dispatch { namespace meta
 {
-  //============================================================================
   /*!
-   * Empty type used to represent empty elements in compile-time containers.
-   * boost::dispatch::meta::na_ is used in nt2 to prevent some ADL issues with Boost.MPL.
-   */
-  //============================================================================
+    @brief Generic irrelevant type
+
+    na_ is an empty type used to represent irrelevant types in meta-functions
+  **/
   struct na_ {};
 } } }
 

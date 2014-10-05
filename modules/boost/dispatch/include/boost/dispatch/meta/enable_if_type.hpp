@@ -9,21 +9,18 @@
 #ifndef BOOST_DISPATCH_META_ENABLE_IF_TYPE_HPP_INCLUDED
 #define BOOST_DISPATCH_META_ENABLE_IF_TYPE_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines the boost::dispatch::meta::enable_if_type @metafunction.
- */
-
 namespace boost { namespace dispatch { namespace meta
 {
   /*!
-   * Provides a SFINAE context to test the existence of a given type.
-   *
-   * @tparam T Type to check existence of.
-   * @tparam R Type to return if \c T is defined.
-   *
-   * @include enable_if_type.cpp
-   **/
+    @brief SFINAE-based type accessibility checker.
+
+    Provides a SFINAE context to test the existence of a given type.
+
+    @tparam T Type to check existence of.
+    @tparam R Type to return if @c T is defined.
+
+    @usage{enable_if_type.cpp}
+  **/
   template<class T, class R=void>
   struct enable_if_type
   {

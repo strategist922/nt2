@@ -12,7 +12,9 @@
 #include <boost/config.hpp>
 
 // Trick for GCC and Clang
-#if (defined(__GNUC__) && !defined(BOOST_INTEL) && !defined(__CUDACC__))
+#if     defined(DOXYGEN_ONLY) || ((defined(__GNUC__)                           \
+    && !defined(BOOST_INTEL) && !defined(__CUDACC__)))
+
 namespace boost { namespace dispatch { namespace meta
 {
   template<class T, int N = 0>

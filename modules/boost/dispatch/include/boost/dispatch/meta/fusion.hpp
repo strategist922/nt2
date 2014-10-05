@@ -9,11 +9,6 @@
 #ifndef BOOST_DISPATCH_META_FUSION_HPP_INCLUDED
 #define BOOST_DISPATCH_META_FUSION_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Register Fusion sequence and std::array as Hierarchizable
- */
-
 #include <boost/dispatch/meta/factory_of.hpp>
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 #include <boost/dispatch/meta/property_of.hpp>
@@ -25,38 +20,67 @@
 
 namespace boost { namespace dispatch { namespace meta
 {
-  //==========================================================================
-  /*! Fusion sequence hierarchy type                                        */
-  //==========================================================================
-  template<class T> struct fusion_sequence_ : unspecified_<T>
+  /*!
+    @brief Fusion sequence hierarchy
+
+    Represents any Fusion Sequence of type @c Type.
+
+    @par Model:
+    Hierarchy
+
+    @tparam Type FusionSequence to hierarchize
+  **/
+  template<typename Type>
+  struct  fusion_sequence_
+#if !defined(DOXYGEN_ONLY)
+        : unspecified_<Type>
+#endif
   {
-    typedef unspecified_<T> parent;
+    /// @brief Parent hierarchy
+    typedef unspecified_<Type> parent;
   };
 
-  //==========================================================================
-  /*! boost::array hierarchy type                                           */
-  //==========================================================================
-  template<typename T, typename N>
-  struct array_ : array_<typename T::parent, N>
+  /*!
+    @brief Array hierarchy
+
+    Represents an Array by using its @c Type and @c Size.
+
+    Parent hierarchy is computed by using the parent hierarchy of @c Type.
+    Once array_<unspecified_<T>,Size> is reached, the parent hierarchy becomes
+    fusion_sequence_<T>.
+
+    @par Model:
+    Hierarchy
+
+    @tparam Type Type of the hierarchized array
+    @tparam Size Size of the hierarchized array
+  **/
+  template<typename Type, typename Size>
+  struct array_
+#if !defined(DOXYGEN_ONLY)
+        : array_<typename Type::parent, Size>
+#endif
   {
-    typedef array_<typename T::parent, N> parent;
+    /// @brief Parent hierarchy
+    typedef array_<typename Type::parent, Size> parent;
   };
 
-  template<class T, typename N>
-  struct array_<unspecified_<T>, N> : fusion_sequence_<T>
+#if !defined(DOXYGEN_ONLY)
+  template<typename Type, typename N>
+  struct array_<unspecified_<Type>, N> : fusion_sequence_<Type>
   {
-    typedef fusion_sequence_<T> parent;
+    typedef fusion_sequence_<Type> parent;
   };
+#endif
 
-  //============================================================================
-  // Requirements for Buildable
-  //============================================================================
+  /// INTERNAL ONLY
   template<class T, std::size_t N>
   struct value_of< boost::array<T,N> >
   {
     typedef T type;
   };
 
+  /// INTERNAL ONLY
   template<class T, std::size_t N>
   struct model_of< boost::array<T, N> >
   {
@@ -110,6 +134,7 @@ namespace details
 
 namespace meta
 {
+  /// INTERNAL ONLY
   template<class T, std::size_t N,class Origin>
   struct  hierarchy_of< boost::array<T,N>
                       , Origin
@@ -119,7 +144,6 @@ namespace meta
                   , boost::mpl::size_t<N>
                   > type;
   };
-
 } } }
 
 #endif
