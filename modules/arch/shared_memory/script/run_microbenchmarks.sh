@@ -17,7 +17,7 @@ if [ -f $out ]; then
       if [ -f ${next_exe} ]; then
         echo -n `./${next_exe} ${opt} | grep "cpe" | cut -f 3` >> ${tmp}
       else
-        echo -n "0"
+        echo -n "0" >> ${tmp}
       fi
       echo -e " > ${nt2_arch}_${skel};" >> ${tmp}
     done
