@@ -13,7 +13,6 @@
 
 #include <omp.h>
 #include <tbb/task_scheduler_init.h>
-#include <tbb/concurrent_hash_map.h>
 #include <nt2/sdk/tbb/tbb_initializer.hpp>
 #include <nt2/sdk/shared_memory/details/thread_utility.hpp>
 #include <cstdio>
