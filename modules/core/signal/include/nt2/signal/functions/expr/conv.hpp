@@ -12,12 +12,13 @@
 #include <nt2/signal/options.hpp>
 #include <nt2/signal/functions/conv.hpp>
 #include <nt2/signal/details/conv_size.hpp>
-#include <nt2/signal/details/as_filter.hpp>
 #include <nt2/signal/details/conv_offset.hpp>
 #include <nt2/include/functions/transform_along.hpp>
 #include <nt2/include/functions/isvector.hpp>
 #include <nt2/include/functions/run.hpp>
+#include <nt2/signal/details/as_stencil.hpp>
 #include <boost/assert.hpp>
+#include <nt2/core/container/dsl/as_terminal.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -100,7 +101,6 @@ namespace nt2 { namespace ext
                                       );
     }
   };
-
   // Evaluation of x = conv(u,v)
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::run_assign_, tag::cpu_
                             , (A0)(A1)(N)
@@ -108,18 +108,21 @@ namespace nt2 { namespace ext
                               ((node_<A1,nt2::tag::conv_,N,nt2::container::domain>))
                             )
   {
-    typedef A0&             result_type;
+    typedef A0& result_type;
 
     typedef typename boost::proto::result_of::child_c<A1&,2>::value_type  c2_t;
     typedef typename boost::proto::result_of::value<c2_t>::value_type     mode_t;
 
     BOOST_FORCEINLINE result_type operator()(A0& out, const A1& in) const
     {
+
       out.resize(in.extent());
       std::size_t co = conv_offset(boost::proto::child_c<1>(in), mode_t());
 
       // TODO: Find better discrimination on the status of a1
+
       return eval(out,in,co, boost::proto::value(boost::proto::child_c<4>(in)));
+
     }
 
     // Require as_filter adaptation
@@ -130,20 +133,20 @@ namespace nt2 { namespace ext
       {
         transform_along ( out
                         , boost::proto::child_c<0>(in)
-                        , as_filter( boost::proto::child_c<1>(in) )
-                        , co
+                        , details::as_stencil( boost::proto::child_c<1>(in) )
+                        , boost::proto::value(boost::proto::child_c<2>(in))
                         );
       }
       else
       {
         transform_along ( out
                         , boost::proto::child_c<1>(in)
-                        , as_filter( boost::proto::child_c<0>(in) )
-                        , co
+                        , details::as_stencil( boost::proto::child_c<0>(in) )
+                        , boost::proto::value(boost::proto::child_c<2>(in))
                         );
       }
 
-      return out;
+          return out;
     }
 
     // a1 is already a ConvolutionOperator
@@ -153,7 +156,7 @@ namespace nt2 { namespace ext
       transform_along ( out
                       , boost::proto::child_c<0>(in)
                       , boost::proto::value(boost::proto::child_c<1>(in))
-                      , co
+                      , boost::proto::value(boost::proto::child_c<2>(in))
                       );
 
       return out;

@@ -6,89 +6,219 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_CORE_FUNCTIONS_EXPR_TRANSFORM_ALONG_HPP_INCLUDED
-#define NT2_CORE_FUNCTIONS_EXPR_TRANSFORM_ALONG_HPP_INCLUDED
+#ifndef NT2_CORE_FUNCTIONS_COMMON_TRANSFORM_ALONG_HPP_INCLUDED
+#define NT2_CORE_FUNCTIONS_COMMON_TRANSFORM_ALONG_HPP_INCLUDED
 
-#include <nt2/core/functions/transform_along.hpp>
-#include <nt2/core/container/dsl/forward.hpp>
-#include <nt2/signal/details/conv1d.hpp>
 #include <nt2/include/functions/run.hpp>
+
+#include <nt2/core/functions/common/static_stencil.hpp>
+#include <nt2/core/functions/common/dynamic_stencil.hpp>
 
 namespace nt2 { namespace ext
 {
+
   //============================================================================
   // Global version
   //============================================================================
   NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::transform_along_, tag::cpu_
-                            , (Out)(In)(K)(O)
+                            , (Out)(In)(K)(Shp)
                             , ((ast_<Out, nt2::container::domain>))
                               ((ast_<In, nt2::container::domain>))
                               (unspecified_<K>)
-                              (scalar_< integer_<O> >)
+                              (unspecified_<Shp>)
                             )
   {
     typedef void result_type;
-
-    result_type operator()( Out& out, In& in, K const& kernel, O offset ) const
+    result_type operator()( Out& out, In& in
+                          , K const& kernel, Shp const& s ) const
     {
-      transform_along ( out, in, kernel, offset
+      transform_along ( out, in, kernel
                       , std::make_pair( 0, out.size() )
+                      , s
                       );
     }
   };
-
   //============================================================================
   // Ranged version
   //============================================================================
-  NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::transform_along_, tag::cpu_
-                            , (Out)(In)(K)(Rng)(O)
+    NT2_FUNCTOR_IMPLEMENTATION( nt2::tag::transform_along_, tag::cpu_
+                            , (Out)(In)(K)(Rng)(Shp)
                             , ((ast_<Out, nt2::container::domain>))
                               ((ast_<In, nt2::container::domain>))
                               (unspecified_<K>)
-                              (scalar_< integer_<O> >)
                               (unspecified_<Rng>)
+                              (unspecified_<Shp>)
                             )
   {
+  //============================================================================
+  //Version valid
+  //============================================================================
     typedef void result_type;
-
+    BOOST_FORCEINLINE
     result_type operator()( Out& out
                           , In& in, K const& kernel
-                          , O offset
                           , Rng const& r
+                          , policy<ext::valid_> const&
                           ) const
     {
-      int m  = in.size();
-      int n  = kernel.size();
-      int n1 = n-1;
-      int k=r.first, ok = k+offset;
-      int end = r.first+r.second;
 
-      typedef typename Out::value_type  out_t;
+      typedef typename In::value_type in_t;
+      int start = r.first;
+      const int end  = r.first + r.second - 1  ;
 
-      // Prologue : Slide filter in
-      int p = n1-ok-1;
-      for(;k<=p;k++,ok++)
+      if(end >= 0)
       {
-        // TODO: Find a formula keeping static numel in
-        nt2::run(out,k,details::conv1D<out_t>(0,ok+1,ok+1,in,kernel));
-      }
 
-      // Center : Use all n stuff all the time up to the epilogue
-      int e = std::min(m-1-ok,int(end-1));
-      for(;k<=e;k++,ok++)
-      {
-        // we pass numel instead of n to keep the static informations for unrolling
-        nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,kernel.size(),in,kernel));
-      }
+        typename K::template window<in_t ,In>::type Window_( in  , 0);
+        typedef typename Out::value_type  out_t;
+        main_loop( out, in , Window_ , kernel , start , end );
+        Window_.load();
+        nt2::run(out,end, kernel( Window_, meta::as_<out_t>() ));
 
-      // Epilogue, slide down the end
-      for(;k!=end;k++,ok++)
-      {
-        // TODO: Find a formula keeping static numel in
-        nt2::run(out,k,details::conv1D<out_t>(ok-n1,n,std::min(n,m+n1-ok),in,kernel));
       }
     }
+
+    //MAIN LOOP
+    template< typename W >
+    BOOST_FORCEINLINE
+    result_type main_loop(Out & out , In & in , W & window_ , K const & kernel
+                         , int & start ,  int end
+                         )const
+    {
+      typedef typename Out::value_type  out_t;
+      for( ; start < end  ; ++start )
+      {
+
+        window_.load();
+        nt2::run(out , start , kernel( window_, meta::as_<out_t>() ));
+        window_.update();
+
+      }
+    }
+
+
+
+  //============================================================================
+  //Version same
+  //============================================================================
+    BOOST_FORCEINLINE
+    result_type operator()( Out& out
+                          , In& in, K const& kernel
+                          , Rng const& r
+                          , policy<ext::same_> const&
+                          ) const
+    {
+      typedef typename Out::value_type  out_t;
+      typedef typename In::value_type in_t;
+      int start = r.first;
+
+      //PROLOGUE => 1 WINDOW LOADING
+      const int n = kernel.size();
+      int kerD, kerG;
+      kerG = (n-(n%2))/2 - (1-n%2);
+      kerD = n/2 ;
+
+      if( n < out.size() )
+      {
+
+        typename K::template window<in_t , In>::type Window_( in  , start );
+        int end = kerG ;
+        for( ; start < end ; ++start )
+        {
+
+           nt2::run(out,start,kernel( Window_ , meta::as_<out_t>() , 0
+                                    , start + kerD + 1 , start + kerD + 1
+                                    )
+                    );
+
+        }
+
+      //MAIN LOOP
+        end = r.second - kerD;
+        main_loop( out, in , Window_ , kernel , start , end );
+        Window_.load();
+
+      //EPILOGUE => 1 window Loading
+        end = r.first + r.second;
+        for(int counter = kerD + kerG, t = 0 ;  start < end
+            ; ++t , ++start , --counter
+            )
+        {
+
+          nt2::run(out,start,kernel( Window_ , meta::as_<out_t>()
+                                   , t , n , counter
+                                   )
+                  );
+
+        }
+      }
+      else
+      {
+
+        int end =r.first + r.second;
+        typename K::template window<in_t , In>::type Window_( in  , kerG );
+
+        for(int pp = kerG; start < end ; ++start, ++pp )
+        {
+
+           Window_.load();
+           nt2::run(out,start,kernel( Window_ , meta::as_<out_t>() ));
+           Window_.update();
+
+        }
+      }
+    }
+
+  //============================================================================
+  //Version Full
+  //============================================================================
+    BOOST_FORCEINLINE
+    result_type operator()( Out& out
+                          , In& in, K const& kernel
+                          , Rng const& r
+                          , policy<ext::full_> const&
+                          ) const
+    {
+      typedef typename Out::value_type  out_t;
+      typedef typename In::value_type in_t;
+      int start = r.first;
+      typename K::template window<in_t , In>::type Window_( in  , start );
+
+      //PROLOGUE => 1 WINDOW LOADING
+      int n = kernel.size();
+      int end = start + n - 1 ;
+      typedef typename Out::value_type  out_t;
+
+       for( ; start < end ; ++start )
+       {
+
+         nt2::run(out,start,kernel( Window_ , meta::as_<out_t>(), 0
+                                  , start + 1 , start + 1
+                                  )
+                 );
+       }
+
+       //MAIN LOOP
+       end = r.first + r.second - n + 1;
+       main_loop( out, in , Window_ , kernel , start , end );
+       Window_.load();
+       int temp = out.size();
+
+       //EPILOGUE => 1 Window Loading
+       end =r.first + r.second;
+       for( int counter = 0 ; start < end ; ++start , ++counter )
+       {
+         nt2::run(out,start,kernel( Window_ , meta::as_<out_t>(), counter
+                                  , n ,  min(n , temp - start)
+                                  )
+                 );
+       }
+
+      }
+
   };
 } }
+
+
 
 #endif

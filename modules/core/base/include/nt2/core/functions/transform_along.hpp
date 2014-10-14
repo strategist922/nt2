@@ -83,6 +83,14 @@ namespace nt2
                                               (A4 const&)
                                             , 5
                                             )
+    /// @overload
+  BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL( tag::transform_along_
+                                            , transform_along
+                                            , (A0&)(A1&)
+                                              (A2 const&)(A3 const&)
+                                              (A4 const&)(A5 const&)
+                                            , 6
+                                            )
 }
 
 #endif
