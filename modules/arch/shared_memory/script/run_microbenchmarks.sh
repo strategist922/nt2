@@ -13,8 +13,9 @@ if [ -f $out ]; then
     for skel in "transform" "fold" "scan"
     do
       next_exe="bench/arch.${nt2_arch}.microbench.${skel}.bench"
-      echo -n "typedef typename boost::mpl::size_t< (std::size_t)" >> ${tmp}
+      echo -n "typedef typename boost::mpl::size_t< " >> ${tmp}
       if [ -f ${next_exe} ]; then
+        echo -n "(std::size_t) " >> ${tmp}
         echo -n `./${next_exe} ${opt} | grep "cpe" | cut -f 3` >> ${tmp}
       else
         echo -n "0" >> ${tmp}
@@ -36,7 +37,7 @@ else
   do
     for skel in "transform" "fold" "scan"
     do
-      echo "typedef typename boost::mpl::size_t<0> ${nt2_arch}_${skel};" >> ${out}
+      echo "typedef typename boost::mpl::size_t< 0 > ${nt2_arch}_${skel};" >> ${out}
     done
     echo "" >> ${out}
   done
