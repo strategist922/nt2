@@ -66,7 +66,7 @@ template<typename T> struct latticeboltzmann_scalar
     return os << "(" << p.size()<< ")";
   }
 
-  std::size_t size() const { return 1024*512; }
+  std::size_t size() const { return nx*ny; }
 
   void relaxation(std::array<T,6> const s_, T const rho, T const la)
   {
@@ -162,8 +162,8 @@ template<typename T> struct latticeboltzmann_scalar
     return m[ nx*ny*k + ny*i + j];
   }
 
-  latticeboltzmann_scalar(std::size_t)
-  :  nx(1024),ny(512)
+  latticeboltzmann_scalar(std::size_t size_)
+  :  nx(size_),ny(size_/2)
   , Longueur(2.), Largeur(1.)
   , xmin(0.0), xmax(Longueur), ymin(-0.5*Largeur), ymax(0.5*Largeur)
   , dx(Longueur/nx)

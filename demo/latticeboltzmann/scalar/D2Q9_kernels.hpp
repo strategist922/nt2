@@ -16,7 +16,7 @@
 #include <iostream>
 
 template< typename T>
-void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
+inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 {
       T la = 1.;
       T rhoo = T(1.);
@@ -34,7 +34,7 @@ void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 }
 
 template< typename T>
-void get_f( std::vector<T> const & f
+inline void get_f( std::vector<T> const & f
           , std::array<T,9> & f_loc
           , std::size_t nx
           , std::size_t ny
@@ -65,7 +65,7 @@ void get_f( std::vector<T> const & f
 }
 
 template<typename T>
-void f2m(std::array<T,9> const & in, std::array<T,9> & out)
+inline void f2m(std::array<T,9> const & in, std::array<T,9> & out)
 {
     T la = T(1.);
     out[0] = in[0]+in[1]+in[2]+in[3]+in[4]+in[5]+in[6]+in[7]+in[8];
@@ -80,7 +80,7 @@ void f2m(std::array<T,9> const & in, std::array<T,9> & out)
 }
 
 template<typename T>
-void m2f(std::array<T,9> const & in, std::array<T,9> & out)
+inline void m2f(std::array<T,9> const & in, std::array<T,9> & out)
 {
     T la = T(1.);
     T a  = T(1./9.)
@@ -101,7 +101,7 @@ void m2f(std::array<T,9> const & in, std::array<T,9> & out)
 }
 
 template< typename T>
-void set_f( std::vector<T> & f
+inline void set_f( std::vector<T> & f
           , std::array<T,9> const & f_loc
           , std::size_t nx
           , std::size_t ny
@@ -119,7 +119,7 @@ void set_f( std::vector<T> & f
 }
 
 template< typename T>
-void bouzidi( std::vector<T> const & f
+inline void bouzidi( std::vector<T> const & f
             , std::array<T,9> & f_loc
             , T rhs
             , std::size_t alpha
@@ -165,7 +165,7 @@ void bouzidi( std::vector<T> const & f
 
 
 template< typename T>
-void apply_bc( std::vector<T> const & f
+inline void apply_bc( std::vector<T> const & f
              , std::array<T,9> & f_loc
              , std::size_t bc
              , std::vector<std::size_t> const & alphaTab
@@ -187,7 +187,7 @@ void apply_bc( std::vector<T> const & f
 }
 
 template< typename T>
-void onetime_step(  std::vector<T> & f
+inline void onetime_step(  std::vector<T> & f
                    ,std::vector<T> & fcopy
                    ,std::vector<std::size_t> & bc
                    ,std::vector<std::size_t> & alpha
