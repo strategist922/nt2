@@ -26,7 +26,7 @@ inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
       T q2  = qx2 + qy2;
       T qxy = dummy*m[1]*m[2];
       m[3] = m[3]*(T(1.)-s[0]) + s[0]*(-T(2.)*m[0] + T(3.)*q2);
-      m[4] = m[4]*(T(1.)-s[1]) + s[1]*(m[0] + 1.5*q2);
+      m[4] = m[4]*(T(1.)-s[1]) + s[1]*(m[0] + T(1.5)*q2);
       m[5] = m[5]*(T(1.)-s[2]) - s[2]*m[1]/la;
       m[6] = m[6]*(T(1.)-s[3]) - s[3]*m[2]/la;
       m[7] = m[7]*(T(1.)-s[4]) + s[4]*(qx2-qy2);
@@ -36,32 +36,32 @@ inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 template< typename T>
 inline void get_f( std::vector<T> const & f
           , std::array<T,9> & f_loc
-          , std::size_t nx
-          , std::size_t ny
-          , std::size_t i
-          , std::size_t j
+          , int nx
+          , int ny
+          , int i
+          , int j
           )
 {
-    std::size_t dec = nx*ny;
-    std::size_t ind = 0;
+    int dec = nx*ny;
+    int ind = 0;
 
-    f_loc[0] = f[i*ny + j + ind];
+    f_loc[0] = f[i + j*nx + ind];
     ind += dec;
-    f_loc[1] = f[(i-1)*ny + j + ind];
+    f_loc[1] = f[(i-1) + j*nx + ind];
     ind += dec;
-    f_loc[2] = f[i*ny + j-1 + ind];
+    f_loc[2] = f[i + (j-1)*nx + ind];
     ind += dec;
-    f_loc[3] = f[(i+1)*ny + j + ind];
+    f_loc[3] = f[(i+1) + j*nx + ind];
     ind += dec;
-    f_loc[4] = f[i*ny + j+1 + ind];
+    f_loc[4] = f[i + (j+1)*nx + ind];
     ind += dec;
-    f_loc[5] = f[(i-1)*ny + j+1 + ind];
+    f_loc[5] = f[(i-1) + (j+1)*nx + ind];
     ind += dec;
-    f_loc[6] = f[(i+1)*ny + j-1 + ind];
+    f_loc[6] = f[(i+1) + (j-1)*nx + ind];
     ind += dec;
-    f_loc[7] = f[(i+1)*ny + j+1 + ind];
+    f_loc[7] = f[(i+1) + (j+1)*nx + ind];
     ind += dec;
-    f_loc[8] = f[(i-1)*ny + j+1 + ind];
+    f_loc[8] = f[(i-1) + (j+1)*nx + ind];
 }
 
 template<typename T>
@@ -103,16 +103,16 @@ inline void m2f(std::array<T,9> const & in, std::array<T,9> & out)
 template< typename T>
 inline void set_f( std::vector<T> & f
           , std::array<T,9> const & f_loc
-          , std::size_t nx
-          , std::size_t ny
-          , std::size_t i
-          , std::size_t j
+          , int nx
+          , int ny
+          , int i
+          , int j
           )
 {
-  std::size_t dec = nx*ny;
-  std::size_t ind = i*ny +j;
+  int dec = nx*ny;
+  int ind = i +j*nx;
 
-  for(std::size_t k=0;k<9;k++){
+  for(int k=0;k<9;k++){
       f[ind] = f_loc[k];
       ind += dec;
   }
@@ -122,23 +122,23 @@ template< typename T>
 inline void bouzidi( std::vector<T> const & f
             , std::array<T,9> & f_loc
             , T rhs
-            , std::size_t alpha
-            , std::size_t type
-            , std::size_t nx
-            , std::size_t ny
-            , std::size_t i
-            , std::size_t j
+            , int alpha
+            , int type
+            , int nx
+            , int ny
+            , int i
+            , int j
             )
 {
-    std::size_t dec = nx*ny;
-    std::array<std::size_t,9> invalpha={0, 3, 4, 1, 2, 7, 8, 5, 6};
+    int dec = nx*ny;
+    std::array<int,9> invalpha={0, 3, 4, 1, 2, 7, 8, 5, 6};
     T f1, f2, q;
 
     rhs = f_loc[invalpha[alpha]];
     q = T(.5);
 
-    f1 = f[i*ny + j + alpha*dec];
-    f2 = f[i*ny + j + invalpha[alpha]*dec];
+    f1 = f[i + j*nx + alpha*dec];
+    f2 = f[i + j*nx + invalpha[alpha]*dec];
 
     //bounce back conditions
     if (type == 1)
@@ -167,19 +167,17 @@ inline void bouzidi( std::vector<T> const & f
 template< typename T>
 inline void apply_bc( std::vector<T> const & f
              , std::array<T,9> & f_loc
-             , std::size_t bc
-             , std::vector<std::size_t> const & alphaTab
-             , std::size_t nx
-             , std::size_t ny
-             , std::size_t i
-             , std::size_t j
+             , int bc
+             , std::vector<int> const & alphaTab
+             , int nx
+             , int ny
+             , int i
+             , int j
              )
 {
-    std::size_t k;
+    int alpha = alphaTab[i+j*nx];
 
-    std::size_t alpha = alphaTab[i*ny+j];
-
-    for(k=0;k<8;k++){
+    for(int k=0;k<8;k++){
         if (alpha>>k&1){
             bouzidi(f, f_loc, T(0.), k+1, bc, nx, ny, i, j);
         }
@@ -189,19 +187,19 @@ inline void apply_bc( std::vector<T> const & f
 template< typename T>
 inline void onetime_step(  std::vector<T> & f
                    ,std::vector<T> & fcopy
-                   ,std::vector<std::size_t> & bc
-                   ,std::vector<std::size_t> & alpha
+                   ,std::vector<int> & bc
+                   ,std::vector<int> & alpha
                    ,std::array<T,6> const & s
-                   ,std::size_t nx
-                   ,std::size_t ny
-                   ,std::size_t i
-                   ,std::size_t j
+                   ,int nx
+                   ,int ny
+                   ,int i
+                   ,int j
                   )
 {
     std::array<T,9> m_loc({0,0,0,0,0,0,0,0,0});
     std::array<T,9> f_loc({0,0,0,0,0,0,0,0,0});
 
-    std::size_t bc_ = bc[ i*ny + j ];
+    int bc_ = bc[ i + j*nx ];
 
     if( bc_ == 0 )
     {
