@@ -32,8 +32,11 @@
 using namespace nt2;
 using namespace nt2::bench;
 
+int points = 0;
+
 template<typename T> struct latticeboltzmann_nt2
 {
+
   void operator()()
   {
     int max_steps = 10;
@@ -46,24 +49,23 @@ template<typename T> struct latticeboltzmann_nt2
 
     for(int step = 0; step<max_steps; step++)
     {
-           for(int i = 1; i<=nx; i+=bi)
-           {
-             for(int j = 1; j<=ny; j+=bj)
-             {
-              int chunk_i =  (i <= nx-bi+1) ? bi : nx-i+1;
-              int chunk_j =  (j <= ny-bj+1) ? bj : ny-j+1;
-              int max_i = i+chunk_i;
-              int max_j = j+chunk_j;
+       for(int j = 0; j<ny; j+=bj)
+       {
+         for(int i = 0; i<nx; i+=bi)
+         {
+          int chunk_i =  (i <= nx-bi) ? bi : nx-i;
+          int chunk_j =  (j <= ny-bj) ? bj : ny-j;
+          int max_i = i+chunk_i;
+          int max_j = j+chunk_j;
 
-              for(int i_ = i; i_<max_i; i_++)
-              for(int j_ = j; j_<max_j; j_++)
-              {
-                onetime_step<T>
-                (*fin, *fout, bc, alpha, s, i_, j_);
-              }
+          for(int j_ = j; j_<max_j; j_++)
+          for(int i_ = i; i_<max_i; i_++)
+          {
+              onetime_step<T>
+              (*fin, *fout, bc, alpha, s, i_+1, j_+1);
+          }
          }
        }
-
        std::swap(fout,fin);
    }
  }

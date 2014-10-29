@@ -15,6 +15,8 @@
 #include <array>
 #include <iostream>
 
+extern int points;
+
 template< typename T>
 inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 {
@@ -143,7 +145,7 @@ inline void bouzidi( std::vector<T> const & f
     //bounce back conditions
     if (type == 1)
     {
-        if (q<=.5)
+        if (q<=T(.5))
             f_loc[invalpha[alpha]] = (T(1.) - T(2.)*q)*f_loc[alpha] + T(2.)*q*f1 + rhs;
         else
             f_loc[invalpha[alpha]] = (T(1.) - T(.5)/q)*f2 +T(.5)/q*f1 + rhs;
@@ -151,7 +153,7 @@ inline void bouzidi( std::vector<T> const & f
     //anti bounce back conditions
     else if (type == 2)
     {
-        if (q<.5)
+        if (q<T(.5))
             f_loc[invalpha[alpha]] = -(T(1.) - T(2.)*q)*f_loc[alpha] - T(2.)*q*f1 + rhs;
         else
             f_loc[invalpha[alpha]] = -(T(1.) - T(.5)/q)*f2 -T(.5)/q*f1 + rhs;
@@ -203,6 +205,7 @@ inline void onetime_step(  std::vector<T> & f
 
     if( bc_ == 0 )
     {
+      points++;
       get_f(f, f_loc, nx, ny, i, j);
       apply_bc(f, f_loc, bc_, alpha, nx, ny, i, j);
       f2m(f_loc, m_loc);

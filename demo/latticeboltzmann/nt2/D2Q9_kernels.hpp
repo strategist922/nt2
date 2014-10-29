@@ -11,19 +11,19 @@
 #define D2Q9_KERNELS_HPP_INCLUDED
 
 #include <cmath>
-#include <vector>
-#include <array>
 #include <iostream>
 
 #include <nt2/table.hpp>
 #include <nt2/include/functions/of_size.hpp>
 #include <nt2/include/functions/cons.hpp>
 
+extern int points;
+
 template< typename T>
-void relaxation( nt2::table< T, nt2::of_size_<9> > & m
-               , nt2::table< T, nt2::of_size_<6> > const & s)
+inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
+                      , nt2::table< T, nt2::of_size_<6> > const & s)
 {
-      T la = 1.;
+      T la = T(1.);
       T rhoo = T(1.);
       T dummy = T(1.)/(la*la*rhoo);
       T qx2 = dummy*m(2)*m(2);
@@ -39,10 +39,10 @@ void relaxation( nt2::table< T, nt2::of_size_<9> > & m
 }
 
 template< typename T>
-void get_f( nt2::table<T> const & f
-          , nt2::table< T,nt2::of_size_<9> > & f_loc
-          , int i
-          , int j
+inline void get_f( nt2::table<T> const & f
+                 , nt2::table< T,nt2::of_size_<9> > & f_loc
+                 , int i
+                 , int j
           )
 {
     f_loc(1) = f( i   , j   , 1 );
@@ -57,7 +57,7 @@ void get_f( nt2::table<T> const & f
 }
 
 template<typename T>
-void f2m( nt2::table< T,nt2::of_size_<9> > const & in
+inline void f2m( nt2::table< T,nt2::of_size_<9> > const & in
                , nt2::table< T,nt2::of_size_<9> > & out)
 {
     T la = T(1.);
@@ -73,7 +73,7 @@ void f2m( nt2::table< T,nt2::of_size_<9> > const & in
 }
 
 template<typename T>
-void m2f( nt2::table< T,nt2::of_size_<9> > const & in
+inline void m2f( nt2::table< T,nt2::of_size_<9> > const & in
                , nt2::table< T,nt2::of_size_<9> > & out)
 {
     T la = T(1.);
@@ -95,7 +95,7 @@ void m2f( nt2::table< T,nt2::of_size_<9> > const & in
 }
 
 template< typename T>
-void set_f( nt2::table<T> & f
+inline void set_f( nt2::table<T> & f
                  , nt2::table< T,nt2::of_size_<9> > const & f_loc
                  , int i
                  , int j
@@ -106,7 +106,7 @@ void set_f( nt2::table<T> & f
 }
 
 template< typename T>
-void bouzidi( nt2::table<T> const & f
+inline void bouzidi( nt2::table<T> const & f
             , nt2::table< T,nt2::of_size_<9> > & f_loc
             , T rhs
             , int alpha
@@ -129,7 +129,7 @@ void bouzidi( nt2::table<T> const & f
     //bounce back conditions
     if (type == 1)
     {
-        if (q<=.5)
+        if (q<=T(.5))
             f_loc(invalpha(alpha)) = (T(1.) - T(2.)*q)*f_loc(alpha) + T(2.)*q*f1 + rhs;
         else
             f_loc(invalpha(alpha)) = (T(1.) - T(.5)/q)*f2 +T(.5)/q*f1 + rhs;
@@ -137,7 +137,7 @@ void bouzidi( nt2::table<T> const & f
     //anti bounce back conditions
     else if (type == 2)
     {
-        if (q<.5)
+        if (q<T(.5))
             f_loc(invalpha(alpha)) = -(T(1.) - T(2.)*q)*f_loc(alpha) - T(2.)*q*f1 + rhs;
         else
             f_loc(invalpha(alpha)) = -(T(1.) - T(.5)/q)*f2 -T(.5)/q*f1 + rhs;
@@ -151,12 +151,12 @@ void bouzidi( nt2::table<T> const & f
 
 
 template< typename T>
-void apply_bc( nt2::table<T> const & f
-             , nt2::table< T,nt2::of_size_<9> > & f_loc
-             , int bc
-             , nt2::table<int> const & alphaTab
-             , int i
-             , int j
+inline void apply_bc( nt2::table<T> const & f
+                    , nt2::table< T,nt2::of_size_<9> > & f_loc
+                    , int bc
+                    , nt2::table<int> const & alphaTab
+                    , int i
+                    , int j
              )
 {
     int alpha = alphaTab(i,j);
@@ -185,6 +185,7 @@ inline void onetime_step(  nt2::table<T> & f
 
     if( bc_ == 0 )
     {
+      points++;
       get_f(f, f_loc, i, j);
       apply_bc(f, f_loc, bc_, alpha, i, j);
       f2m(f_loc, m_loc);

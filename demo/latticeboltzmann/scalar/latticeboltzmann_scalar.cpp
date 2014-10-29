@@ -26,8 +26,60 @@
 using namespace nt2;
 using namespace nt2::bench;
 
+int points;
+
 template<typename T> struct latticeboltzmann_scalar
 {
+  void display_f()
+  {
+    std::cout.precision(3);
+    for(int k = 0; k<9; k++){
+    std::cout<<"f(:,:,"<<k<<") =\n[";
+    for(int i = 0; i<nx; i++){
+
+      std::cout<<"f("<<i<<",:,"<<k<<") =\n[";
+      for(int j = 0; j<ny; j++){
+
+        std::cout<< f_(k, i, j)<<", ";
+      }
+      std::cout<<"]\n";
+    }
+    std::cout<<"]\n";
+  }
+  }
+
+  void display_fcopy()
+  {
+    std::cout.precision(3);
+    for(int k = 0; k<9; k++){
+    std::cout<<"fcopy(:,:,"<<k<<") =\n[";
+    for(int i = 0; i<nx; i++){
+
+      std::cout<<"fcopy("<<i<<",:,"<<k<<") =\n[";
+      for(int j = 0; j<ny; j++){
+
+        std::cout<< fcopy_(k, i, j)<<", ";
+      }
+      std::cout<<"]\n";
+    }
+    std::cout<<"]\n";
+  }
+  }
+
+  void display_alpha()
+  {
+    std::cout.precision(3);
+    for(int i = 0; i<nx; i++){
+      std::cout<<"alpha("<<i<<",:) =\n[";
+      for(int j = 0; j<ny; j++){
+
+        std::cout<< alpha_(i, j)<<", ";
+      }
+      std::cout<<"]\n";
+    }
+  }
+
+
   void operator()()
   {
     int max_steps = 10;
@@ -40,17 +92,17 @@ template<typename T> struct latticeboltzmann_scalar
 
     for(int step = 0; step<max_steps; step++)
     {
-     for(int i = 0; i<nx; i+=bi)
+     for(int j = 0; j<ny; j+=bj)
      {
-       for(int j = 0; j<ny; j+=bj)
+       for(int i = 0; i<nx; i+=bi)
        {
         int chunk_i =  (i <= nx-bi) ? bi : nx-i;
         int chunk_j =  (j <= ny-bj) ? bj : ny-j;
         int max_i = i+chunk_i;
         int max_j = j+chunk_j;
 
-        for(int i_ = i; i_<max_i; i_++)
-          for(int j_ = j; j_<max_j; j_++)
+        for(int j_ = j; j_<max_j; j_++)
+          for(int i_ = i; i_<max_i; i_++)
           {
             onetime_step<T>
             (*fin, *fout, bc, alpha, s, nx, ny, i_, j_);
@@ -148,6 +200,16 @@ inline T& f_(int const k, int const i, int const j)
 inline T const & f_(int const k, int const i, int const j) const
 {
   return f[ nx*ny*k + i + nx*j];
+}
+
+inline T& fcopy_(int const k, int const i, int const j)
+{
+  return fcopy[ nx*ny*k + i + nx*j];
+}
+
+inline T const & fcopy_(int const k, int const i, int const j) const
+{
+  return fcopy[ nx*ny*k + i + nx*j];
 }
 
 inline int & bc_(int const i, int const j)
@@ -336,8 +398,6 @@ latticeboltzmann_scalar(int size_)
     for(int i = s1x; i<s2x; i++)
       for(int j = s1y; j<s2y; j++)
         f_(k, i, j) = 0;
-
-    fcopy = f;
   }
 
 private:
