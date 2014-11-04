@@ -15,8 +15,6 @@
 #include <array>
 #include <iostream>
 
-extern int points;
-
 template< typename T>
 inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 {
@@ -36,7 +34,7 @@ inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 }
 
 template< typename T>
-inline void get_f( std::vector<T> const & f
+void get_f( std::vector<T> const & f
           , std::array<T,9> & f_loc
           , int nx
           , int ny
@@ -205,7 +203,6 @@ inline void onetime_step(  std::vector<T> & f
 
     if( bc_ == 0 )
     {
-      points++;
       get_f(f, f_loc, nx, ny, i, j);
       apply_bc(f, f_loc, bc_, alpha, nx, ny, i, j);
       f2m(f_loc, m_loc);

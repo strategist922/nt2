@@ -67,3 +67,4 @@ endif()
 #latticeboltzmann
 add_subdirectory(latticeboltzmann/scalar)
 add_subdirectory(latticeboltzmann/nt2)
+add_subdirectory(latticeboltzmann/nt2_opt)

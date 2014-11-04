@@ -17,7 +17,7 @@
 #include <nt2/include/functions/of_size.hpp>
 #include <nt2/include/functions/cons.hpp>
 
-extern int points;
+using nt2::tag::table_;
 
 template< typename T>
 inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
@@ -95,7 +95,7 @@ inline void m2f( nt2::table< T,nt2::of_size_<9> > const & in
 }
 
 template< typename T>
-inline void set_f( nt2::table<T> & f
+inline void set_f( nt2::table<T> const & f
                  , nt2::table< T,nt2::of_size_<9> > const & f_loc
                  , int i
                  , int j
@@ -185,7 +185,6 @@ inline void onetime_step(  nt2::table<T> & f
 
     if( bc_ == 0 )
     {
-      points++;
       get_f(f, f_loc, i, j);
       apply_bc(f, f_loc, bc_, alpha, i, j);
       f2m(f_loc, m_loc);

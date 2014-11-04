@@ -26,7 +26,6 @@
 using namespace nt2;
 using namespace nt2::bench;
 
-int points;
 
 template<typename T> struct latticeboltzmann_scalar
 {

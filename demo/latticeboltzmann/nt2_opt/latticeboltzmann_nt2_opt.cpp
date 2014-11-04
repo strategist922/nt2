@@ -32,14 +32,12 @@
 using namespace nt2;
 using namespace nt2::bench;
 
-template<typename T> struct latticeboltzmann_nt2
+template<typename T> struct latticeboltzmann_nt2_opt
 {
 
   void operator()()
   {
     int max_steps = 10;
-    int bi = 128;
-    int bj = 1;
 
     nt2::table<T> * fout = &fcopy;
     nt2::table<T> * fin  = &f;
@@ -47,28 +45,14 @@ template<typename T> struct latticeboltzmann_nt2
 
     for(int step = 0; step<max_steps; step++)
     {
-       for(int j = 0; j<ny; j+=bj)
-       {
-         for(int i = 0; i<nx; i+=bi)
-         {
-          int chunk_i =  (i <= nx-bi) ? bi : nx-i;
-          int chunk_j =  (j <= ny-bj) ? bj : ny-j;
-          int max_i = i+chunk_i;
-          int max_j = j+chunk_j;
+        onetime_step<T>
+        (*fin, *fout, m, bc, alpha, s, nx, ny);
 
-          for(int j_ = j; j_<max_j; j_++)
-          for(int i_ = i; i_<max_i; i_++)
-          {
-              onetime_step<T>
-              (*fin, *fout, bc, alpha, s, i_+1, j_+1);
-          }
-         }
-       }
+     }
        std::swap(fout,fin);
    }
- }
 
-  friend std::ostream& operator<<(std::ostream& os, latticeboltzmann_nt2<T> const& p)
+  friend std::ostream& operator<<(std::ostream& os, latticeboltzmann_nt2_opt<T> const& p)
   {
     return os << "(" << p.size()<< ")";
   }
@@ -123,7 +107,7 @@ template<typename T> struct latticeboltzmann_nt2
    f.resize(nt2::of_size(nx,ny,9));
   }
 
-  latticeboltzmann_nt2(int size_)
+  latticeboltzmann_nt2_opt(int size_)
   :  nx(size_),ny(size_/2)
   , Longueur(2.), Largeur(1.)
   , xmin(0.0), xmax(Longueur), ymin(-0.5*Largeur), ymax(0.5*Largeur)
@@ -227,8 +211,6 @@ template<typename T> struct latticeboltzmann_nt2
     f(_(2,nx-1),1,7)   += -f(_(1,nx-2),2,9);
     // rectangular obstacle
     f(_(s1x,s2x-1),_(s1y,s2y-1),_) = T(0);
-
-    fcopy = f;
   }
 
   private:
@@ -275,9 +257,9 @@ template<typename T> struct latticeboltzmann_nt2
       ,s1y, s2y;
 };
 
-NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2, (float) )
+NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2_opt, (float) )
 {
-  run_until_with< latticeboltzmann_nt2<T> > ( 3., 1
+  run_until_with< latticeboltzmann_nt2_opt<T> > ( 3., 1
                                   , fixed(1024)
                                   , absolute_time<stats::median_>()
                                   );
