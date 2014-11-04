@@ -20,8 +20,8 @@
 using nt2::tag::table_;
 
 template< typename T>
-inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
-                      , nt2::table< T, nt2::of_size_<6> > const & s)
+BOOST_FORCEINLINE void relaxation( nt2::table< T, nt2::of_size_<9> > & m
+                                 , nt2::table< T, nt2::of_size_<6> > const & s)
 {
       T la = T(1.);
       T rhoo = T(1.);
@@ -39,7 +39,7 @@ inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
 }
 
 template< typename T>
-inline void get_f( nt2::table<T> const & f
+BOOST_FORCEINLINE void get_f( nt2::table<T> const & f
                  , nt2::table< T,nt2::of_size_<9> > & f_loc
                  , int i
                  , int j
@@ -57,7 +57,7 @@ inline void get_f( nt2::table<T> const & f
 }
 
 template<typename T>
-inline void f2m( nt2::table< T,nt2::of_size_<9> > const & in
+BOOST_FORCEINLINE void f2m( nt2::table< T,nt2::of_size_<9> > const & in
                , nt2::table< T,nt2::of_size_<9> > & out)
 {
     T la = T(1.);
@@ -73,7 +73,7 @@ inline void f2m( nt2::table< T,nt2::of_size_<9> > const & in
 }
 
 template<typename T>
-inline void m2f( nt2::table< T,nt2::of_size_<9> > const & in
+BOOST_FORCEINLINE void m2f( nt2::table< T,nt2::of_size_<9> > const & in
                , nt2::table< T,nt2::of_size_<9> > & out)
 {
     T la = T(1.);
@@ -95,7 +95,7 @@ inline void m2f( nt2::table< T,nt2::of_size_<9> > const & in
 }
 
 template< typename T>
-inline void set_f( nt2::table<T> const & f
+BOOST_FORCEINLINE void set_f( nt2::table<T> & f
                  , nt2::table< T,nt2::of_size_<9> > const & f_loc
                  , int i
                  , int j
