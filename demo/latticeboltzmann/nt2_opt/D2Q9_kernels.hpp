@@ -50,29 +50,20 @@ inline void get_f( nt2::table<T> const & f
     fcopy(_,_,1) = f(_,_,1);
 
     fcopy(_(2,nx),_,2)    = f(_(1,nx-1),_,2);
-    // fcopy(1,_,2)  = T(0);
 
     fcopy(_,_(2,ny),3)    = f(_,_(1,ny-1),3);
-    // fcopy(_,1,3)  = T(0);
 
     fcopy(_(1,nx-1),_, 4) = f(_(2,nx),_,4);
-    // fcopy(nx,_,4) = T(0);
 
     fcopy(_,_(1,ny-1), 5 ) = f(_,_(2,ny), 5 );
-    // fcopy(_,ny,4) = T(0);
 
     fcopy(_(2,nx),_(1,ny-1), 6 ) = f(_(1,nx-1),_(2,ny), 6 );
-    // fcopy(1,_,6) = T(0); fcopy(_,ny,6) = T(0);
-
 
     fcopy( _(1,nx-1),_(2,ny), 7 ) = f( _(2,nx), _(1,ny-1), 7 );
-    // fcopy(nx,_,7) = T(0); fcopy(_,1,7) = T(0);
 
     fcopy( _(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
-    // fcopy(nx,_,8) = T(0); fcopy(_,ny,8) = T(0);
 
     fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );
-    // fcopy(1,_,9) = T(0); fcopy(_,ny,9) = T(0);
 }
 
 template<typename T>
@@ -108,7 +99,7 @@ inline void f2m( nt2::table<T> & fcopy
 
 template<typename T>
 inline void m2f( nt2::table<T> & m
-               , nt2::table<T> & fcopy
+               , nt2::table<T> & f
                , int nx
                , int ny
                )
@@ -134,12 +125,12 @@ inline void m2f( nt2::table<T> & m
                        );
 
    m.resize(nt2::of_size(nx*ny,9));
-   fcopy.resize(nt2::of_size(nx*ny,9));
+   f.resize(nt2::of_size(nx*ny,9));
 
-   fcopy = nt2::mtimes(m,invM);
+   f = nt2::mtimes(m,invM);
 
    m.resize(nt2::of_size(nx,ny,9));
-   fcopy.resize(nt2::of_size(nx,ny,9));
+   f.resize(nt2::of_size(nx,ny,9));
 }
 
 template< typename T>

@@ -48,8 +48,9 @@ template<typename T> struct latticeboltzmann_nt2_opt
         onetime_step<T>
         (*fin, *fout, m, bc, alpha, s, nx, ny);
 
+        std::swap(fout,fin);
      }
-       std::swap(fout,fin);
+
    }
 
   friend std::ostream& operator<<(std::ostream& os, latticeboltzmann_nt2_opt<T> const& p)
@@ -58,54 +59,6 @@ template<typename T> struct latticeboltzmann_nt2_opt
   }
 
   int size() const { return nx*ny; }
-
-  void relaxation( nt2::table<T,nt2::of_size_<6> > const s_
-                 , T const rho
-                 , T const la)
-  {
-    T dummy_ = T(1.)/(la*la*rho);
-    nt2::table<T> qx2 = dummy_*m(_,_,2)*m(_,_,2);
-    nt2::table<T> qy2 = dummy_*m(_,_,3)*m(_,_,3);
-    nt2::table<T> q2  = qx2 + qy2;
-    nt2::table<T> qxy = dummy_*m(_,_,2)*m(_,_,3);
-
-    m(_,_,4) = m(_,_,4)*(T(1.)-s_(1)) + s_(1)*(-T(2.)*m(_,_,1) + T(3.)*q2);
-    m(_,_,5) = m(_,_,5)*(T(1.)-s_(2)) + s_(2)*(m(_,_,1) + T(1.5)*q2);
-    m(_,_,6) = m(_,_,6)*(T(1.)-s_(3)) - s_(3)*m(_,_,2)/la;
-    m(_,_,7) = m(_,_,7)*(T(1.)-s_(4)) - s_(4)*m(_,_,3)/la;
-    m(_,_,8) = m(_,_,8)*(T(1.)-s_(5)) + s_(5)*(qx2-qy2);
-    m(_,_,9) = m(_,_,9)*(T(1.)-s_(6)) + s_(6)*qxy;
-  }
-
-  void m2f(T const la)
-  {
-    T a(1./9)
-    , b(1./36.)
-    , c(1./(6.*la))
-    , d(1./12)
-    , e(1./4.);
-
-   nt2::table<T> invM (   nt2::cons<T>( nt2::of_size(9 ,9),
-                          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
-                          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
-                          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
-                          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
-                          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
-                          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
-                          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
-                          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
-                          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
-                          )
-                       );
-
-   m.resize(nt2::of_size(nx*ny,9));
-   f.resize(nt2::of_size(nx*ny,9));
-
-   f = nt2::mtimes(m,invM);
-
-   m.resize(nt2::of_size(nx,ny,9));
-   f.resize(nt2::of_size(nx,ny,9));
-  }
 
   latticeboltzmann_nt2_opt(int size_)
   :  nx(size_),ny(size_/2)
@@ -154,8 +107,11 @@ template<typename T> struct latticeboltzmann_nt2_opt
     m(_,_,1) = rhoo;
     m(_,_,2) = rhoo*max_velocity;
 
-    relaxation(nt2::ones(6,nt2::meta::as_<T>()),rhoo, 1.);
-    m2f(1.);
+    relaxation( m
+              , nt2::table< T,nt2::of_size_<6> >
+                (nt2::ones(6,nt2::meta::as_<T>()))
+              );
+    m2f(m,f,nx,ny);
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
 
