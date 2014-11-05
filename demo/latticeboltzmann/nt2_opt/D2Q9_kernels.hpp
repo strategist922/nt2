@@ -24,20 +24,37 @@ inline void relaxation( nt2::table<T> & m
                       , nt2::table<T,nt2::of_size_<6> > const s_
                       )
   {
-    T la = T(1.);
+    T la  = T(1.);
     T rho = T(1.);
     T dummy_ = T(1.)/(la*la*rho);
-    nt2::table<T> qx2 = dummy_*m(_,_,2)*m(_,_,2);
-    nt2::table<T> qy2 = dummy_*m(_,_,3)*m(_,_,3);
-    nt2::table<T> q2  = qx2 + qy2;
-    nt2::table<T> qxy = dummy_*m(_,_,2)*m(_,_,3);
 
-    m(_,_,4) = m(_,_,4)*(T(1.)-s_(1)) + s_(1)*(-T(2.)*m(_,_,1) + T(3.)*q2);
-    m(_,_,5) = m(_,_,5)*(T(1.)-s_(2)) + s_(2)*(m(_,_,1) + T(1.5)*q2);
-    m(_,_,6) = m(_,_,6)*(T(1.)-s_(3)) - s_(3)*m(_,_,2)/la;
-    m(_,_,7) = m(_,_,7)*(T(1.)-s_(4)) - s_(4)*m(_,_,3)/la;
-    m(_,_,8) = m(_,_,8)*(T(1.)-s_(5)) + s_(5)*(qx2-qy2);
-    m(_,_,9) = m(_,_,9)*(T(1.)-s_(6)) + s_(6)*qxy;
+    m(_,_,4) = m(_,_,4)*(T(1.)-s_(1))
+             + s_(1)*(-T(2.)*m(_,_,1)
+                     + T(3.)*( dummy_*m(_,_,2)*m(_,_,2)
+                             + dummy_*m(_,_,3)*m(_,_,3)
+                             )
+                     );
+
+    m(_,_,5) = m(_,_,5)*( T(1.)-s_(2))
+             + s_(2)*( m(_,_,1)
+                     + T(1.5)*( dummy_*m(_,_,2)*m(_,_,2)
+                              + dummy_*m(_,_,3)*m(_,_,3)
+                              )
+                     );
+
+    m(_,_,6) = m(_,_,6)*(T(1.)-s_(3))
+             - s_(3)*m(_,_,2)/la;
+
+    m(_,_,7) = m(_,_,7)*(T(1.)-s_(4))
+             - s_(4)*m(_,_,3)/la;
+
+    m(_,_,8) = m(_,_,8)*(T(1.)-s_(5))
+             + s_(5)*( dummy_*m(_,_,2)*m(_,_,2)
+                     - dummy_*m(_,_,3)*m(_,_,3)
+                     );
+
+    m(_,_,9) = m(_,_,9)*(T(1.)-s_(6))
+             + s_(6)*dummy_*m(_,_,2)*m(_,_,3);
   }
 
 template< typename T>
@@ -48,21 +65,13 @@ inline void get_f( nt2::table<T> const & f
                  )
 {
     fcopy(_,_,1) = f(_,_,1);
-
     fcopy(_(2,nx),_,2)    = f(_(1,nx-1),_,2);
-
     fcopy(_,_(2,ny),3)    = f(_,_(1,ny-1),3);
-
     fcopy(_(1,nx-1),_, 4) = f(_(2,nx),_,4);
-
     fcopy(_,_(1,ny-1), 5 ) = f(_,_(2,ny), 5 );
-
     fcopy(_(2,nx),_(1,ny-1), 6 ) = f(_(1,nx-1),_(2,ny), 6 );
-
-    fcopy( _(1,nx-1),_(2,ny), 7 ) = f( _(2,nx), _(1,ny-1), 7 );
-
-    fcopy( _(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
-
+    fcopy(_(1,nx-1),_(2,ny), 7 ) = f( _(2,nx), _(1,ny-1), 7 );
+    fcopy(_(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
     fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );
 }
 
@@ -143,38 +152,34 @@ inline void bouzidi( nt2::table<T> const & f
             , int ny
             )
 {
-    nt2::table<int,nt2::of_size_<9> > invalpha
-    (nt2::cons<int>(1, 4, 5, 2, 3, 8, 9, 6, 7));
+  nt2::table<int,nt2::of_size_<9> > invalpha
+  (nt2::cons<int>(1, 4, 5, 2, 3, 8, 9, 6, 7));
 
-    nt2::table<T> rhs = fcopy(_,_,invalpha(k));
-    T q = T(.5);
+  T q = T(.5);
 
-    nt2::table<T> f1 = f(_,_,k);
-    nt2::table<T> f2 = f(_,_,invalpha(k));
-
-    fcopy(_,_,invalpha(k))
-      //bounce back conditions
-    = nt2::if_else( (alpha >> (k-2)&1)
-          ,nt2::if_else( (bc == 1)
-               ,nt2::if_else(q*nt2::ones(nt2::of_size(nx,ny), nt2::meta::as_<T>()) < T(.5)
-                    ,(T(1.) - T(2.)*q)*fcopy(_,_,k) + T(2.)*q*f1 + rhs
-                    ,(T(1.) - T(.5)/q)*f2 +T(.5)/q*f1 + rhs
+  fcopy(_,_,invalpha(k))
+    //bounce back conditions
+  = nt2::if_else( (alpha >> (k-2)&1)
+        ,nt2::if_else( (bc == 1)
+             ,nt2::if_else(q*nt2::ones(nt2::of_size(nx,ny), nt2::meta::as_<T>()) < T(.5)
+                  ,(T(1.) - T(2.)*q)*fcopy(_,_,k) + T(2.)*q*f(_,_,k) + fcopy(_,_,invalpha(k))
+                  ,(T(1.) - T(.5)/q)*f(_,_,invalpha(k)) +T(.5)/q*f(_,_,k) + fcopy(_,_,invalpha(k))
+                  )
+    //anti bounce back conditions
+             , nt2::if_else( (bc == 2)
+                   ,nt2::if_else(q*nt2::ones(nt2::of_size(nx,ny), nt2::meta::as_<T>())< T(.5)
+                        ,-(T(1.) - T(2.)*q)*fcopy(_,_,k) - T(2.)*q*f(_,_,k) + fcopy(_,_,invalpha(k))
+                        ,-(T(1.) - T(.5)/q)*f(_,_,invalpha(k)) -T(.5)/q*f(_,_,k) + fcopy(_,_,invalpha(k))
+                        )
+    //Neumann conditions
+                   ,nt2::if_else( (bc == 3)
+                        , f(_,_,invalpha(k))
+                        , fcopy(_,_,invalpha(k))
+                        )
                     )
-      //anti bounce back conditions
-               , nt2::if_else( (bc == 2)
-                     ,nt2::if_else(q*nt2::ones(nt2::of_size(nx,ny), nt2::meta::as_<T>())< T(.5)
-                          ,-(T(1.) - T(2.)*q)*fcopy(_,_,k) - T(2.)*q*f1 + rhs
-                          ,-(T(1.) - T(.5)/q)*f2 -T(.5)/q*f1 + rhs
-                          )
-      //Neumann conditions
-                     ,nt2::if_else( (bc == 3)
-                          , f2
-                          ,fcopy(_,_,invalpha(k))
-                          )
-                      )
-                )
-          ,fcopy(_,_,invalpha(k))
-          );
+              )
+        ,fcopy(_,_,invalpha(k))
+        );
 }
 
 
@@ -202,7 +207,7 @@ inline void onetime_step( nt2::table<T> & f
                         , int ny
                         )
 {
-  get_f(f, fcopy,nx,ny);
+  get_f(f,fcopy,nx,ny);
   apply_bc(f, fcopy, bc, alpha, nx, ny);
   f2m(fcopy, m, nx, ny);
   relaxation(m,s);
