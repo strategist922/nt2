@@ -41,19 +41,21 @@ BOOST_FORCEINLINE void relaxation( nt2::table< T, nt2::of_size_<9> > & m
 template< typename T>
 BOOST_FORCEINLINE void get_f( nt2::table<T> const & f
                  , nt2::table< T,nt2::of_size_<9> > & f_loc
+                 , int nx
+                 , int ny
                  , int i
                  , int j
           )
 {
     f_loc(1) = f( i   , j   , 1 );
-    f_loc(2) = f( i-1 , j   , 2 );
-    f_loc(3) = f( i   , j-1 , 3 );
-    f_loc(4) = f( i+1 , j   , 4 );
-    f_loc(5) = f( i   , j+1 , 5 );
-    f_loc(6) = f( i-1 , j+1 , 6 );
-    f_loc(7) = f( i+1 , j-1 , 7 );
-    f_loc(8) = f( i+1 , j+1 , 8 );
-    f_loc(9) = f( i-1 , j+1 , 9 );
+    f_loc(2) = (i>1)  ? f( i-1 , j   , 2 ) : T(0.);
+    f_loc(3) = (j>1)  ? f( i   , j-1 , 3 ) : T(0.);
+    f_loc(4) = (i<nx) ? f( i+1 , j   , 4 ) : T(0.);
+    f_loc(5) = (j<ny) ? f( i   , j+1 , 5 ) : T(0.);
+    f_loc(6) = (i>1 && j<ny) ? f( i-1 , j+1 , 6 ) : T(0.);
+    f_loc(7) = (i<nx && j>1) ? f( i+1 , j-1 , 7 ) : T(0.);
+    f_loc(8) = (i<nx && j<ny)? f( i+1 , j+1 , 8 ) : T(0.);
+    f_loc(9) = (i>1 && j<ny) ? f( i-1 , j+1 , 9 ) : T(0.);
 }
 
 template<typename T>
@@ -176,6 +178,8 @@ inline void onetime_step(  nt2::table<T> & f
                    ,nt2::table< T, nt2::of_size_<6> > const & s
                    ,int i
                    ,int j
+                   ,int nx
+                   ,int ny
                   )
 {
     nt2::table< T,nt2::of_size_<9> > m_loc(nt2::zeros(9, nt2::meta::as_<T>()));
@@ -183,15 +187,13 @@ inline void onetime_step(  nt2::table<T> & f
 
     int bc_ = bc(i,j);
 
-    if( bc_ == 0 )
-    {
-      get_f(f, f_loc, i, j);
-      apply_bc(f, f_loc, bc_, alpha, i, j);
-      f2m(f_loc, m_loc);
-      relaxation(m_loc,s);
-      m2f(m_loc, f_loc);
-      set_f(fcopy, f_loc, i, j);
-    }
+    get_f(f, f_loc, nx, ny, i, j);
+    apply_bc(f, f_loc, bc_, alpha, i, j);
+    f2m(f_loc, m_loc);
+    relaxation(m_loc,s);
+    m2f(m_loc, f_loc);
+    set_f(fcopy, f_loc, i, j);
+
 }
 
 #endif

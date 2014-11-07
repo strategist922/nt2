@@ -60,7 +60,7 @@ template<typename T> struct latticeboltzmann_nt2
           for(int i_ = i; i_<max_i; i_++)
           {
               onetime_step<T>
-              (*fin, *fout, bc, alpha, s, i_+1, j_+1);
+              (*fin, *fout, bc, alpha, s, i_+1, j_+1, nx, ny);
           }
          }
        }

@@ -47,21 +47,29 @@ void get_f( std::vector<T> const & f
 
     f_loc[0] = f[i + j*nx + ind];
     ind += dec;
-    f_loc[1] = f[(i-1) + j*nx + ind];
+
+    f_loc[1] = (i>0) ? f[(i-1) + j*nx + ind] : T(0.);
     ind += dec;
-    f_loc[2] = f[i + (j-1)*nx + ind];
+
+    f_loc[2] = (j>0) ? f[i + (j-1)*nx + ind] : T(0.);
     ind += dec;
-    f_loc[3] = f[(i+1) + j*nx + ind];
+
+    f_loc[3] = (i<nx-1) ? f[(i+1) + j*nx + ind] : T(0.);
     ind += dec;
-    f_loc[4] = f[i + (j+1)*nx + ind];
+
+    f_loc[4] = (j<ny-1)? f[i + (j+1)*nx + ind] : T(0.);
     ind += dec;
-    f_loc[5] = f[(i-1) + (j+1)*nx + ind];
+
+    f_loc[5] = (i>0 && j<ny-1) ? f[(i-1) + (j+1)*nx + ind] : T(0.);
     ind += dec;
-    f_loc[6] = f[(i+1) + (j-1)*nx + ind];
+
+    f_loc[6] = (i<nx-1 && j>0) ? f[(i+1) + (j-1)*nx + ind] : T(0.);
     ind += dec;
-    f_loc[7] = f[(i+1) + (j+1)*nx + ind];
+
+    f_loc[7] = (i<nx-1 && j<ny-1) ? f[(i+1) + (j+1)*nx + ind] : T(0.);
     ind += dec;
-    f_loc[8] = f[(i-1) + (j+1)*nx + ind];
+
+    f_loc[8] = (i>0 && j<ny-1) ? f[(i-1) + (j+1)*nx + ind] : T(0.);
 }
 
 template<typename T>
@@ -201,15 +209,12 @@ inline void onetime_step(  std::vector<T> & f
 
     int bc_ = bc[ i + j*nx ];
 
-    if( bc_ == 0 )
-    {
-      get_f(f, f_loc, nx, ny, i, j);
-      apply_bc(f, f_loc, bc_, alpha, nx, ny, i, j);
-      f2m(f_loc, m_loc);
-      relaxation(m_loc,s);
-      m2f(m_loc, f_loc);
-      set_f(fcopy, f_loc, nx, ny, i, j);
-    }
+    get_f(f, f_loc, nx, ny, i, j);
+    apply_bc(f, f_loc, bc_, alpha, nx, ny, i, j);
+    f2m(f_loc, m_loc);
+    relaxation(m_loc,s);
+    m2f(m_loc, f_loc);
+    set_f(fcopy, f_loc, nx, ny, i, j);
 }
 
 #endif
