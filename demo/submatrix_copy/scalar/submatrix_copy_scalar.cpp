@@ -80,8 +80,8 @@ template<typename T> struct submatrix_copy_scalar
 
 NT2_REGISTER_BENCHMARK_TPL( submatrix_copy_scalar, (float) )
 {
-  run_until_with< submatrix_copy_scalar<T> > ( 3., 1
-                                  , fixed(1024)
+  run_until_with< submatrix_copy_scalar<T> > ( 3., 10
+                                  , fixed(64)
                                   , absolute_time<stats::median_>()
                                   );
 }
