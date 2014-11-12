@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <nt2/table.hpp>
+#include <nt2/sdk/meta/display_type.hpp>
 
 using namespace nt2;
 
@@ -27,7 +28,7 @@ inline void get_f( nt2::table<T> const & f
       // fcopy(_,_(2,ny),3)    = f(_,_(1,ny-1),3);
       // fcopy(_(1,nx-1),_, 4) = f(_(2,nx),_,4);
       // fcopy(_,_(1,ny-1), 5 ) = f(_,_(2,ny), 5 );
-      // fcopy(_(2,nx),_(1,ny-1), 6 ) = f(_(1,nx-1),_(2,ny), 6 );
+      // fcopy(_(2,nx),_(2,ny), 6 ) = f(_(1,nx-1),_(1,ny-1), 6 );
       // fcopy(_(1,nx-1),_(2,ny), 7 ) = f( _(2,nx), _(1,ny-1), 7 );
       // fcopy(_(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
       // fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );
@@ -40,7 +41,7 @@ inline void get_f( nt2::table<T> const & f
       fcopy(i,j,3) = (j>1) ? f(i,j-1,3) : T(0.);
       fcopy(i,j,4) = (i<nx) ? f(i+1,j,4) : T(0.);
       fcopy(i,j,5) = (j<ny)? f(i,j+1,5) : T(0.);
-      fcopy(i,j,6) = (i>1 && j<ny) ? f(i-1,j+1,6) : T(0.);
+      fcopy(i,j,6) = (i>1 && j>1) ? f(i-1,j-1,6) : T(0.);
       fcopy(i,j,7) = (i<nx && j>1) ? f(i+1,j-1,7) : T(0.);
       fcopy(i,j,8) = (i<nx && j<ny) ? f(i+1,j+1,8): T(0.);
       fcopy(i,j,9) = (i>1 && j<ny) ? f(i-1,j+1,9) : T(0.);

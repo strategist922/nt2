@@ -41,7 +41,7 @@ void get_f( std::vector<T> const & f
     fcopy[ind2] = (j<ny-1)? f[i + (j+1)*nx + ind1] : T(0.);
     ind1 += dec; ind2+=dec;
 
-    fcopy[ind2] = (i>0 && j<ny-1) ? f[(i-1) + (j+1)*nx + ind1] : T(0.);
+    fcopy[ind2] = (i>0 && j>0) ? f[(i-1) + (j-1)*nx + ind1] : T(0.);
     ind1 += dec; ind2+=dec;
 
     fcopy[ind2] = (i<nx-1 && j>0) ? f[(i+1) + (j-1)*nx + ind1] : T(0.);
