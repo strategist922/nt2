@@ -69,7 +69,7 @@ inline void get_f( nt2::table<T> const & f
     fcopy(_,_(2,ny),3)    = f(_,_(1,ny-1),3);
     fcopy(_(1,nx-1),_, 4) = f(_(2,nx),_,4);
     fcopy(_,_(1,ny-1), 5 ) = f(_,_(2,ny), 5 );
-    fcopy(_(2,nx),_(1,ny-1), 6 ) = f(_(1,nx-1),_(2,ny), 6 );
+    fcopy(_(2,nx),_(2,ny), 6 ) = f(_(1,nx-1),_(1,ny-1), 6 );
     fcopy(_(1,nx-1),_(2,ny), 7 ) = f( _(2,nx), _(1,ny-1), 7 );
     fcopy(_(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
     fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );

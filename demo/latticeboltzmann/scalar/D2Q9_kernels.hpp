@@ -60,7 +60,7 @@ void get_f( std::vector<T> const & f
     f_loc[4] = (j<ny-1)? f[i + (j+1)*nx + ind] : T(0.);
     ind += dec;
 
-    f_loc[5] = (i>0 && j<ny-1) ? f[(i-1) + (j+1)*nx + ind] : T(0.);
+    f_loc[5] = (i>0 && j>0) ? f[(i-1) + (j-1)*nx + ind] : T(0.);
     ind += dec;
 
     f_loc[6] = (i<nx-1 && j>0) ? f[(i+1) + (j-1)*nx + ind] : T(0.);

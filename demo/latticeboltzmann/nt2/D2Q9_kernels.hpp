@@ -52,7 +52,7 @@ BOOST_FORCEINLINE void get_f( nt2::table<T> const & f
     f_loc(3) = (j>1)  ? f( i   , j-1 , 3 ) : T(0.);
     f_loc(4) = (i<nx) ? f( i+1 , j   , 4 ) : T(0.);
     f_loc(5) = (j<ny) ? f( i   , j+1 , 5 ) : T(0.);
-    f_loc(6) = (i>1 && j<ny) ? f( i-1 , j+1 , 6 ) : T(0.);
+    f_loc(6) = (i>1 && j>1) ? f( i-1 , j-1 , 6 ) : T(0.);
     f_loc(7) = (i<nx && j>1) ? f( i+1 , j-1 , 7 ) : T(0.);
     f_loc(8) = (i<nx && j<ny)? f( i+1 , j+1 , 8 ) : T(0.);
     f_loc(9) = (i>1 && j<ny) ? f( i-1 , j+1 , 9 ) : T(0.);
