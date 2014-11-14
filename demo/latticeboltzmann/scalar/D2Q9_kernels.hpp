@@ -18,19 +18,15 @@
 template< typename T>
 inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 {
-      T la = 1.;
+      T la = T(1.);
       T rhoo = T(1.);
       T dummy = T(1.)/(la*la*rhoo);
-      T qx2 = dummy*m[1]*m[1];
-      T qy2 = dummy*m[2]*m[2];
-      T q2  = qx2 + qy2;
-      T qxy = dummy*m[1]*m[2];
-      m[3] = m[3]*(T(1.)-s[0]) + s[0]*(-T(2.)*m[0] + T(3.)*q2);
-      m[4] = m[4]*(T(1.)-s[1]) + s[1]*(m[0] + T(1.5)*q2);
+      m[3] = m[3]*(T(1.)-s[0]) + s[0]*(-T(2.)*m[0] + T(3.)*(dummy*m[1]*m[1]+dummy*m[2]*m[2]));
+      m[4] = m[4]*(T(1.)-s[1]) + s[1]*(m[0] + T(1.5)*(dummy*m[1]*m[1]+dummy*m[2]*m[2]));
       m[5] = m[5]*(T(1.)-s[2]) - s[2]*m[1]/la;
       m[6] = m[6]*(T(1.)-s[3]) - s[3]*m[2]/la;
-      m[7] = m[7]*(T(1.)-s[4]) + s[4]*(qx2-qy2);
-      m[8] = m[8]*(T(1.)-s[5]) + s[5]*qxy;
+      m[7] = m[7]*(T(1.)-s[4]) + s[4]*(dummy*m[1]*m[1]-dummy*m[2]*m[2]);
+      m[8] = m[8]*(T(1.)-s[5]) + s[5]*dummy*m[1]*m[2];
 }
 
 template< typename T>
@@ -48,43 +44,63 @@ void get_f( std::vector<T> const & f
     f_loc[0] = f[i + j*nx + ind];
     ind += dec;
 
-    f_loc[1] = (i>0) ? f[(i-1) + j*nx + ind] : T(0.);
+    f_loc[1] = (i>0) ? f[(i-1) + j*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[2] = (j>0) ? f[i + (j-1)*nx + ind] : T(0.);
+    f_loc[2] = (j>0) ? f[i + (j-1)*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[3] = (i<nx-1) ? f[(i+1) + j*nx + ind] : T(0.);
+    f_loc[3] = (i<nx-1) ? f[(i+1) + j*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[4] = (j<ny-1)? f[i + (j+1)*nx + ind] : T(0.);
+    f_loc[4] = (j<ny-1) ? f[i + (j+1)*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[5] = (i>0 && j>0) ? f[(i-1) + (j-1)*nx + ind] : T(0.);
+    f_loc[5] = ((i>0) && (j>0)) ? f[(i-1) + (j-1)*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[6] = (i<nx-1 && j>0) ? f[(i+1) + (j-1)*nx + ind] : T(0.);
+    f_loc[6] = ((i<nx-1) && (j>0)) ? f[(i+1) + (j-1)*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[7] = (i<nx-1 && j<ny-1) ? f[(i+1) + (j+1)*nx + ind] : T(0.);
+    f_loc[7] = ((i<nx-1) && (j<ny-1)) ? f[(i+1) + (j+1)*nx + ind] : T(0);
     ind += dec;
 
-    f_loc[8] = (i>0 && j<ny-1) ? f[(i-1) + (j+1)*nx + ind] : T(0.);
+    f_loc[8] = ((i>0) && (j<ny-1)) ? f[(i-1) + (j+1)*nx + ind] : T(0);
 }
 
 template<typename T>
 inline void f2m(std::array<T,9> const & in, std::array<T,9> & out)
 {
-    T la = T(1.);
-    out[0] = in[0]+in[1]+in[2]+in[3]+in[4]+in[5]+in[6]+in[7]+in[8];
-    out[1] = la*(in[1]-in[3]+in[5]-in[6]-in[7]+in[8]);
-    out[2] = la*(in[2]-in[4]+in[5]+in[6]-in[7]-in[8]);
-    out[3] = -T(4.)*in[0]-in[1]-in[2]-in[3]-in[4]+T(2.)*(in[5]+in[6]+in[7]+in[8]);
-    out[4] = T(4.)*in[0]-T(2.)*(in[1]+in[2]+in[3]+in[4])+in[5]+in[6]+in[7]+in[8];
-    out[5] = T(2.)*(-in[1]+in[3])+in[5]-in[6]-in[7]+in[8];
-    out[6] = T(2.)*(-in[2]+in[4])+in[5]+in[6]-in[7]-in[8];
-    out[7] = in[1]-in[2]+in[3]-in[4];
-    out[8] = in[5]-in[6]+in[7]-in[8];
+  T la   = T(1.);
+  T one  = T(1.);
+  T zero = T(0.);
+
+  int inc    = 1;
+  int nine   = 9;
+
+  std::vector<T> invF
+  =  {
+      1,  1,  1,  1,  1,  1,  1,  1,  1,
+      0, la,  0,-la,  0, la,-la,-la, la,
+      0,  0, la,  0,-la, la, la,-la,-la,
+     -4, -1, -1, -1, -1,  2,  2,  2,  2,
+      4, -2, -2, -2, -2,  1,  1,  1,  1,
+      0, -2,  0,  2,  0,  1, -1, -1,  1,
+      0,  0, -2,  0,  2,  1,  1, -1, -1,
+      0,  1, -1,  1, -1,  0,  0,  0,  0,
+      0,  0,  0,  0,  0,  1, -1,  1, -1
+     };
+
+// Row Major Matrix-Matrix multiplication with Column Major Blas
+  nt2::details::
+  gemm( "N", "N"
+    , &inc, &nine, &nine
+    , &one
+    , & in[0], &inc
+    , & invF[0], &nine
+    , &zero
+    , &out[0], &inc
+    );
 }
 
 template<typename T>
@@ -97,15 +113,34 @@ inline void m2f(std::array<T,9> const & in, std::array<T,9> & out)
     , d = T(1.)/T(12.)
     , e = T(.25);
 
-    out[0] = a*in[0]-T(T(4.))*b*(in[3]-in[4]);
-    out[1] = a*in[0]+c*in[1]-b*in[3]-T(2.)*b*in[4]-T(2.)*d*in[5]+e*in[7];
-    out[2] = a*in[0]+c*in[2]-b*in[3]-T(2.)*b*in[4]-T(2.)*d*in[6]-e*in[7];
-    out[3] = a*in[0]-c*in[1]-b*in[3]-T(2.)*b*in[4]+T(2.)*d*in[5]+e*in[7];
-    out[4] = a*in[0]-c*in[2]-b*in[3]-T(2.)*b*in[4]+T(2.)*d*in[6]-e*in[7];
-    out[5] = a*in[0]+c*in[1]+c*in[2]+T(2.)*b*in[3]+b*in[4]+d*in[5]+d*in[6]+e*in[8];
-    out[6] = a*in[0]-c*in[1]+c*in[2]+T(2.)*b*in[3]+b*in[4]-d*in[5]+d*in[6]-e*in[8];
-    out[7] = a*in[0]-c*in[1]-c*in[2]+T(2.)*b*in[3]+b*in[4]-d*in[5]-d*in[6]+e*in[8];
-    out[8] = a*in[0]+c*in[1]-c*in[2]+T(2.)*b*in[3]+b*in[4]+d*in[5]-d*in[6]-e*in[8];
+    T one  = T(1.);
+    T zero = T(0.);
+
+    int inc    = 1;
+    int nine   = 9;
+
+    std::vector<T> invM
+    =  {
+          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
+          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
+          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
+          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
+          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
+          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
+          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
+          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
+          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
+       };
+
+    nt2::details::
+    gemm( "N", "N"
+      , &inc, &nine, &nine
+      , &one
+      , & in[0], &inc
+      , & invM[0], &nine
+      , &zero
+      , &out[0], &inc
+      );
 }
 
 template< typename T>
@@ -202,10 +237,11 @@ inline void onetime_step(  std::vector<T> & f
                    ,int ny
                    ,int i
                    ,int j
+                   ,std::vector<T> & m
                   )
 {
-    std::array<T,9> m_loc({0,0,0,0,0,0,0,0,0});
-    std::array<T,9> f_loc({0,0,0,0,0,0,0,0,0});
+    std::array<T,9> m_loc = {0,0,0,0,0,0,0,0,0};
+    std::array<T,9> f_loc = {0,0,0,0,0,0,0,0,0};
 
     int bc_ = bc[ i + j*nx ];
 

@@ -20,26 +20,23 @@
 using nt2::tag::table_;
 
 template< typename T>
-BOOST_FORCEINLINE void relaxation( nt2::table< T, nt2::of_size_<9> > & m
+inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
                                  , nt2::table< T, nt2::of_size_<6> > const & s)
 {
       T la = T(1.);
       T rhoo = T(1.);
       T dummy = T(1.)/(la*la*rhoo);
-      T qx2 = dummy*m(2)*m(2);
-      T qy2 = dummy*m(3)*m(3);
-      T q2  = qx2 + qy2;
-      T qxy = dummy*m(2)*m(3);
-      m(4) = m(4)*(T(1.)-s(1)) + s(1)*(-T(2.)*m(1) + T(3.)*q2);
-      m(5) = m(5)*(T(1.)-s(2)) + s(2)*(m(1) + T(1.5)*q2);
+
+      m(4) = m(4)*(T(1.)-s(1)) + s(1)*(-T(2.)*m(1) + T(3.)*(dummy*m(2)*m(2)+dummy*m(3)*m(3)));
+      m(5) = m(5)*(T(1.)-s(2)) + s(2)*(m(1) + T(1.5)*(dummy*m(2)*m(2)+dummy*m(3)*m(3)));
       m(6) = m(6)*(T(1.)-s(3)) - s(3)*m(2)/la;
       m(7) = m(7)*(T(1.)-s(4)) - s(4)*m(3)/la;
-      m(8) = m(8)*(T(1.)-s(5)) + s(5)*(qx2-qy2);
-      m(9) = m(9)*(T(1.)-s(6)) + s(6)*qxy;
+      m(8) = m(8)*(T(1.)-s(5)) + s(5)*(dummy*m(2)*m(2)-dummy*m(3)*m(3));
+      m(9) = m(9)*(T(1.)-s(6)) + s(6)*dummy*m(2)*m(3);
 }
 
 template< typename T>
-BOOST_FORCEINLINE void get_f( nt2::table<T> const & f
+inline void get_f( nt2::table<T> const & f
                  , nt2::table< T,nt2::of_size_<9> > & f_loc
                  , int nx
                  , int ny
@@ -59,45 +56,68 @@ BOOST_FORCEINLINE void get_f( nt2::table<T> const & f
 }
 
 template<typename T>
-BOOST_FORCEINLINE void f2m( nt2::table< T,nt2::of_size_<9> > const & in
+inline void f2m( nt2::table< T,nt2::of_size_<9> > & in
                , nt2::table< T,nt2::of_size_<9> > & out)
 {
-    T la = T(1.);
-    out(1) = in(1)+in(2)+in(3)+in(4)+in(5)+in(6)+in(7)+in(8)+in(9);
-    out(2) = la*(in(2)-in(4)+in(6)-in(7)-in(8)+in(9));
-    out(3) = la*(in(3)-in(5)+in(6)+in(7)-in(8)-in(9));
-    out(4) = -T(4.)*in(1)-in(2)-in(3)-in(4)-in(5)+T(2.)*(in(6)+in(7)+in(8)+in(9));
-    out(5) = T(4.)*in(1)-T(2.)*(in(2)+in(3)+in(4)+in(5))+in(6)+in(7)+in(8)+in(9);
-    out(6) = T(2.)*(-in(2)+in(4))+in(6)-in(7)-in(8)+in(9);
-    out(7) = T(2.)*(-in(3)+in(5))+in(6)+in(7)-in(8)-in(9);
-    out(8) = in(2)-in(3)+in(4)-in(5);
-    out(9) = in(6)-in(7)+in(8)-in(9);
+   T la = T(1.);
+   nt2::table<T> invF (   nt2::cons<T>( nt2::of_size(9 ,9),
+                          1,  1,  1,  1,  1,  1,  1,  1,  1,
+                          0, la,  0,-la,  0, la,-la,-la, la,
+                          0,  0, la,  0,-la, la, la,-la,-la,
+                         -4, -1, -1, -1, -1,  2,  2,  2,  2,
+                          4, -2, -2, -2, -2,  1,  1,  1,  1,
+                          0, -2,  0,  2,  0,  1, -1, -1,  1,
+                          0,  0, -2,  0,  2,  1,  1, -1, -1,
+                          0,  1, -1,  1, -1,  0,  0,  0,  0,
+                          0,  0,  0,  0,  0,  1, -1,  1, -1
+                          )
+                       );
+
+   out.resize(nt2::of_size(1,9));
+   in.resize(nt2::of_size(1,9));
+
+   out = nt2::mtimes(in,invF);
+
+   out.resize(nt2::of_size(1,9));
+   in.resize(nt2::of_size(1,9));
 }
 
 template<typename T>
-BOOST_FORCEINLINE void m2f( nt2::table< T,nt2::of_size_<9> > const & in
+inline void m2f( nt2::table< T,nt2::of_size_<9> > & in
                , nt2::table< T,nt2::of_size_<9> > & out)
 {
-    T la = T(1.);
-    T a  = T(1./9.)
-    , b  = T(1./36.)
-    , c = T(1.)/(T(6.)*la)
-    , d = T(1.)/T(12.)
-    , e = T(.25);
+  T la = T(1.);
+  T a  = T(1./9.)
+  , b  = T(1./36.)
+  , c = T(1.)/(T(6.)*la)
+  , d = T(1.)/T(12.)
+  , e = T(.25);
 
-    out(1) = a*in(1)-T(4.)*b*(in(4)-in(5));
-    out(2) = a*in(1)+c*in(2)-b*in(4)-T(2.)*b*in(5)-T(2.)*d*in(6)+e*in(8);
-    out(3) = a*in(1)+c*in(3)-b*in(4)-T(2.)*b*in(5)-T(2.)*d*in(7)-e*in(8);
-    out(4) = a*in(1)-c*in(2)-b*in(4)-T(2.)*b*in(5)+T(2.)*d*in(6)+e*in(8);
-    out(5) = a*in(1)-c*in(3)-b*in(4)-T(2.)*b*in(5)+T(2.)*d*in(7)-e*in(8);
-    out(6) = a*in(1)+c*in(2)+c*in(3)+T(2.)*b*in(4)+b*in(5)+d*in(6)+d*in(7)+e*in(9);
-    out(7) = a*in(1)-c*in(2)+c*in(3)+T(2.)*b*in(4)+b*in(5)-d*in(6)+d*in(7)-e*in(9);
-    out(8) = a*in(1)-c*in(2)-c*in(3)+T(2.)*b*in(4)+b*in(5)-d*in(6)-d*in(7)+e*in(9);
-    out(9) = a*in(1)+c*in(2)-c*in(3)+T(2.)*b*in(4)+b*in(5)+d*in(6)-d*in(7)-e*in(9);
+   nt2::table<T> invM (   nt2::cons<T>( nt2::of_size(9 ,9),
+                          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
+                          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
+                          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
+                          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
+                          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
+                          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
+                          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
+                          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
+                          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
+                          )
+                       );
+
+   out.resize(nt2::of_size(1,9));
+   in.resize(nt2::of_size(1,9));
+
+   out = nt2::mtimes(in,invM);
+
+   out.resize(nt2::of_size(1,9));
+   in.resize(nt2::of_size(1,9));
+
 }
 
 template< typename T>
-BOOST_FORCEINLINE void set_f( nt2::table<T> & f
+inline void set_f( nt2::table<T> & f
                  , nt2::table< T,nt2::of_size_<9> > const & f_loc
                  , int i
                  , int j
@@ -149,6 +169,39 @@ inline void bouzidi( nt2::table<T> const & f
     {
         f_loc(invalpha(alpha)) = f2;
     }
+
+
+    // std::array<int,9> invalpha={1, 4, 5, 2, 3, 8, 9, 6, 7};
+
+    // T f1, f2, q;
+
+    // rhs = f_loc(invalpha[alpha-1]);
+    // q = T(.5);
+
+    // f1 = f(i,j,alpha);
+    // f2 = f(i,j,invalpha[alpha-1]);
+
+    // //bounce back conditions
+    // if (type == 1)
+    // {
+    //     if (q<=T(.5))
+    //         f_loc(invalpha[alpha-1]) = (T(1.) - T(2.)*q)*f_loc(alpha) + T(2.)*q*f1 + rhs;
+    //     else
+    //         f_loc(invalpha[alpha-1]) = (T(1.) - T(.5)/q)*f2 +T(.5)/q*f1 + rhs;
+    // }
+    // //anti bounce back conditions
+    // else if (type == 2)
+    // {
+    //     if (q<T(.5))
+    //         f_loc(invalpha[alpha-1]) = -(T(1.) - T(2.)*q)*f_loc(alpha) - T(2.)*q*f1 + rhs;
+    //     else
+    //         f_loc(invalpha[alpha-1]) = -(T(1.) - T(.5)/q)*f2 -T(.5)/q*f1 + rhs;
+    // }
+    // //Neumann conditions
+    // else if (type == 3)
+    // {
+    //     f_loc(invalpha[alpha-1]) = f2;
+    // }
 }
 
 
@@ -182,8 +235,8 @@ inline void onetime_step(  nt2::table<T> & f
                    ,int ny
                   )
 {
-    nt2::table< T,nt2::of_size_<9> > m_loc(nt2::zeros(9, nt2::meta::as_<T>()));
-    nt2::table< T,nt2::of_size_<9> > f_loc(nt2::zeros(9, nt2::meta::as_<T>()));
+    nt2::table< T,nt2::of_size_<9> > m_loc;
+    nt2::table< T,nt2::of_size_<9> > f_loc;
 
     int bc_ = bc(i,j);
 

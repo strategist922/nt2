@@ -211,14 +211,14 @@ template<typename T> struct latticeboltzmann_nt2
     // Set rhs on the boundary
     // right border
     f(nx,_,4)          += -f(nx-1,_,2);
-    f(nx,_(1,nx-1),7)  += -f(nx-1,_(2,ny),9);
+    f(nx,_(1,ny-1),7)  += -f(nx-1,_(2,ny),9);
     f(nx,_(2,ny),8)    += -f(nx-1,_(1,ny-1),6);
     // left border
     f(1,_,2)           += -f(2,_,4);
     f(1,_(2,ny),9)     += -f(2,_(1,ny-1),7);
     f(1,_(1,ny-1),6)   += -f(2,_(2,ny),8);
-    // top border
-    f(_,ny,5)          += -f(_,ny-1,4);
+    // // top border
+    f(_,ny,5)          += -f(_,ny-1,3);
     f(_(2,nx-1),ny,8)  += -f(_(1,nx-2),ny-1,6);
     f(_(2,nx-1),ny,9)  += -f(_(3,nx),ny-1,7);
     // bottom border
@@ -228,10 +228,7 @@ template<typename T> struct latticeboltzmann_nt2
     // rectangular obstacle
     f(_(s1x,s2x-1),_(s1y,s2y-1),_) = T(0);
 
-    fcopy = f;
   }
-
-  private:
 
   // Domain, space and time step
   int nx, ny;
@@ -277,8 +274,8 @@ template<typename T> struct latticeboltzmann_nt2
 
 NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2, (float) )
 {
-  run_until_with< latticeboltzmann_nt2<T> > ( 3., 1
-                                  , fixed(1024)
-                                  , absolute_time<stats::median_>()
-                                  );
+ run_until_with< latticeboltzmann_nt2<T> > ( 10., 10
+                                 , fixed(1024)
+                                 , absolute_time<stats::median_>()
+                                 );
 }

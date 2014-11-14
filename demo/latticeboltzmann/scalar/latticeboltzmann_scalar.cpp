@@ -445,7 +445,7 @@ private:
 
 NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_scalar, (float) )
 {
-  run_until_with< latticeboltzmann_scalar<T> > ( 3., 1
+  run_until_with< latticeboltzmann_scalar<T> > ( 10., 10
                                   , fixed(1024)
                                   , absolute_time<stats::median_>()
                                   );
