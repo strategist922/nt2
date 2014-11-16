@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include <vector>
-#include <array>
 #include <iostream>
 
 #include <nt2/linalg/details/blas/mm.hpp>
@@ -120,7 +119,7 @@ template<typename T> struct latticeboltzmann_scalar
 
   int size() const { return nx*ny; }
 
-  void relaxation(std::array<T,6> const s_, T const rho, T const la)
+  void relaxation(std::vector<T> s_, T const rho, T const la)
   {
     T dummy_ = T(1.)/(la*la*rho);
 
@@ -128,17 +127,29 @@ template<typename T> struct latticeboltzmann_scalar
     {
      for(int j = 0; j < ny; j++)
      {
-      T qx2 = dummy_*m_(1,i,j)*m_(1,i,j);
-      T qy2 = dummy_*m_(2,i,j)*m_(2,i,j);
-      T q2  = qx2 + qy2;
-      T qxy = dummy_*m_(1,i,j)*m_(2,i,j);
+      m_(3,i,j) = m_(3,i,j)*(1-s_[0])
+                + s_[0]*(-2.*m_(0,i,j)
+                        + T(3.)*(dummy_*m_(1,i,j)*m_(1,i,j)
+                                +dummy_*m_(2,i,j)*m_(2,i,j)
+                                )
+                        );
 
-      m_(3,i,j) = m_(3,i,j)*(1-s_[0]) + s_[0]*(-2.*m_(0,i,j) + T(3.)*q2);
-      m_(4,i,j) = m_(4,i,j)*(1-s_[1]) + s_[1]*(m_(0,i,j) + T(1.5)*q2);
+      m_(4,i,j) = m_(4,i,j)*(1-s_[1])
+                + s_[1]*( m_(0,i,j)
+                        + T(1.5)*(dummy_*m_(1,i,j)*m_(1,i,j)
+                                 +dummy_*m_(2,i,j)*m_(2,i,j)
+                                 )
+                        );
+
       m_(5,i,j) = m_(5,i,j)*(1-s_[2]) - s_[2]*m_(1,i,j)/la;
       m_(6,i,j) = m_(6,i,j)*(1-s_[3]) - s_[3]*m_(2,i,j)/la;
-      m_(7,i,j) = m_(7,i,j)*(1-s_[4]) + s_[4]*(qx2-qy2);
-      m_(8,i,j) = m_(8,i,j)*(1-s_[5]) + s_[5]*qxy;
+
+      m_(7,i,j) = m_(7,i,j)*(1-s_[4])
+                + s_[4]*(dummy_*m_(1,i,j)*m_(1,i,j)
+                        -dummy_*m_(2,i,j)*m_(2,i,j)
+                        );
+
+      m_(8,i,j) = m_(8,i,j)*(1-s_[5]) + s_[5]*dummy_*m_(1,i,j)*m_(2,i,j);
     }
    }
   }
@@ -428,7 +439,7 @@ private:
   ,s7
   ,s8;
 
-  std::array<T,6> s;
+  std::vector<T> s;
 
 // Set boundary conditions outside the domain and on the rectangular obstacle
   std::vector<int> bc;

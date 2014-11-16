@@ -94,6 +94,8 @@ template<typename T> struct latticeboltzmann_nt2_opt
   , s1x(1 + (posx_obs - l_obs/2)/dx), s2x(1 + (posx_obs + l_obs/2)/dx)
   , s1y(1 + (posy_obs - L_obs/2)/dx), s2y(1 + (posy_obs + L_obs/2)/dx)
   {
+    nt2::table<T> s_init = nt2::ones(6,nt2::meta::as_<T>());
+
     bc    = nt2::zeros(nt2::of_size(nx, ny), nt2::meta::as_<int>());
     alpha = nt2::zeros(nt2::of_size(nx, ny), nt2::meta::as_<int>());;
     m     = nt2::zeros(nt2::of_size(nx, ny, 9), nt2::meta::as_<T>());
@@ -111,9 +113,9 @@ template<typename T> struct latticeboltzmann_nt2_opt
     m(_,_,2) = rhoo*max_velocity;
 
     relaxation( m
-              , nt2::table< T,nt2::of_size_<6> >
-                (nt2::ones(6,nt2::meta::as_<T>()))
+              , s_init
               );
+
     m2f(m,f,nx,ny);
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
@@ -199,7 +201,7 @@ template<typename T> struct latticeboltzmann_nt2_opt
    ,s7
    ,s8;
 
-   nt2::table<T,nt2::of_size_<6> > s;
+   nt2::table<T> s;
 
 // Set boundary conditions outside the domain and on the rectangular obstacle
    nt2::table<int> bc;
@@ -218,7 +220,6 @@ template<typename T> struct latticeboltzmann_nt2_opt
 
 template<typename T> struct latticeboltzmann_scalar
 {
-
   void operator()()
   {
     int max_steps = 1;
@@ -244,7 +245,7 @@ template<typename T> struct latticeboltzmann_scalar
           for(int i_ = i; i_<max_i; i_++)
           {
             onetime_step_scalar<T>
-            (*fin, *fout, bc, alpha, s, nx, ny, i_, j_,m);
+            (*fin, *fout, bc, alpha, s, nx, ny, i_, j_, m);
           }
         }
       }
@@ -260,7 +261,7 @@ template<typename T> struct latticeboltzmann_scalar
 
   int size() const { return nx*ny; }
 
-  void relaxation(std::array<T,6> const s_, T const rho, T const la)
+  void relaxation(std::vector<T> s_, T const rho, T const la)
   {
     T dummy_ = T(1.)/(la*la*rho);
 
@@ -268,18 +269,30 @@ template<typename T> struct latticeboltzmann_scalar
     {
      for(int j = 0; j < ny; j++)
      {
-      T qx2 = dummy_*m_(1,i,j)*m_(1,i,j);
-      T qy2 = dummy_*m_(2,i,j)*m_(2,i,j);
-      T q2  = qx2 + qy2;
-      T qxy = dummy_*m_(1,i,j)*m_(2,i,j);
+      m_(3,i,j) = m_(3,i,j)*(1-s_[0])
+                + s_[0]*(-2.*m_(0,i,j)
+                        + T(3.)*(dummy_*m_(1,i,j)*m_(1,i,j)
+                                +dummy_*m_(2,i,j)*m_(2,i,j)
+                                )
+                        );
 
-      m_(3,i,j) = m_(3,i,j)*(1-s_[0]) + s_[0]*(-2.*m_(0,i,j) + T(3.)*q2);
-      m_(4,i,j) = m_(4,i,j)*(1-s_[1]) + s_[1]*(m_(0,i,j) + T(1.5)*q2);
+      m_(4,i,j) = m_(4,i,j)*(1-s_[1])
+                + s_[1]*( m_(0,i,j)
+                        + T(1.5)*(dummy_*m_(1,i,j)*m_(1,i,j)
+                                 +dummy_*m_(2,i,j)*m_(2,i,j)
+                                 )
+                        );
+
       m_(5,i,j) = m_(5,i,j)*(1-s_[2]) - s_[2]*m_(1,i,j)/la;
       m_(6,i,j) = m_(6,i,j)*(1-s_[3]) - s_[3]*m_(2,i,j)/la;
-      m_(7,i,j) = m_(7,i,j)*(1-s_[4]) + s_[4]*(qx2-qy2);
-      m_(8,i,j) = m_(8,i,j)*(1-s_[5]) + s_[5]*qxy;
-    }
+
+      m_(7,i,j) = m_(7,i,j)*(1-s_[4])
+                + s_[4]*(dummy_*m_(1,i,j)*m_(1,i,j)
+                        -dummy_*m_(2,i,j)*m_(2,i,j)
+                        );
+
+      m_(8,i,j) = m_(8,i,j)*(1-s_[5]) + s_[5]*dummy_*m_(1,i,j)*m_(2,i,j);
+     }
    }
   }
 
@@ -299,15 +312,15 @@ void m2f(T const la)
 
   std::vector<T> invM
   =  {  a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
-    a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
-    a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
-    a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
-    a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
-    a,  c,  c,  2*b,    b,    d,    d,  0,  e,
-    a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
-    a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
-    a,  c, -c,  2*b,    b,    d,   -d,  0, -e
-  };
+        a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
+        a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
+        a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
+        a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
+        a,  c,  c,  2*b,    b,    d,    d,  0,  e,
+        a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
+        a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
+        a,  c, -c,  2*b,    b,    d,   -d,  0, -e
+      };
 
 // Row Major Matrix-Matrix multiplication with Column Major Blas
   nt2::details::
@@ -402,8 +415,7 @@ latticeboltzmann_scalar(int size_)
 , s1x((posx_obs - l_obs/2)/dx), s2x((posx_obs + l_obs/2)/dx)
 , s1y((posy_obs - L_obs/2)/dx), s2y((posy_obs + L_obs/2)/dx)
 {
-
-    // Set boundary conditions outside the domain and on the rectangular obstacle
+  // Set boundary conditions outside the domain and on the rectangular obstacle
   for(int j = 0; j<ny; j++)
     bc_(0, j)  = 1;
   for(int j = 0; j<ny; j++)
@@ -539,6 +551,8 @@ latticeboltzmann_scalar(int size_)
         f_(k, i, j) = 0;
   }
 
+private:
+
   // Domain, space and time step
   int nx, ny;
 
@@ -566,7 +580,7 @@ latticeboltzmann_scalar(int size_)
   ,s7
   ,s8;
 
-  std::array<T,6> s;
+  std::vector<T> s;
 
 // Set boundary conditions outside the domain and on the rectangular obstacle
   std::vector<int> bc;

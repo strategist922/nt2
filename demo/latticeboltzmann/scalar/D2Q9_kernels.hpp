@@ -12,11 +12,10 @@
 
 #include <cmath>
 #include <vector>
-#include <array>
 #include <iostream>
 
 template< typename T>
-inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
+inline void relaxation(std::vector<T> & m, std::vector<T> const & s)
 {
       T la = T(1.);
       T rhoo = T(1.);
@@ -31,7 +30,7 @@ inline void relaxation(std::array<T,9> & m, std::array<T,6> const & s)
 
 template< typename T>
 void get_f( std::vector<T> const & f
-          , std::array<T,9> & f_loc
+          , std::vector<T> & f_loc
           , int nx
           , int ny
           , int i
@@ -69,7 +68,7 @@ void get_f( std::vector<T> const & f
 }
 
 template<typename T>
-inline void f2m(std::array<T,9> const & in, std::array<T,9> & out)
+inline void f2m(std::vector<T> const & in, std::vector<T> & out)
 {
   T la   = T(1.);
   T one  = T(1.);
@@ -104,7 +103,7 @@ inline void f2m(std::array<T,9> const & in, std::array<T,9> & out)
 }
 
 template<typename T>
-inline void m2f(std::array<T,9> const & in, std::array<T,9> & out)
+inline void m2f(std::vector<T> const & in, std::vector<T> & out)
 {
     T la = T(1.);
     T a  = T(1./9.)
@@ -145,7 +144,7 @@ inline void m2f(std::array<T,9> const & in, std::array<T,9> & out)
 
 template< typename T>
 inline void set_f( std::vector<T> & f
-          , std::array<T,9> const & f_loc
+          , std::vector<T> const & f_loc
           , int nx
           , int ny
           , int i
@@ -163,7 +162,7 @@ inline void set_f( std::vector<T> & f
 
 template< typename T>
 inline void bouzidi( std::vector<T> const & f
-            , std::array<T,9> & f_loc
+            , std::vector<T> & f_loc
             , T rhs
             , int alpha
             , int type
@@ -174,7 +173,7 @@ inline void bouzidi( std::vector<T> const & f
             )
 {
     int dec = nx*ny;
-    std::array<int,9> invalpha={0, 3, 4, 1, 2, 7, 8, 5, 6};
+    std::vector<int> invalpha={0, 3, 4, 1, 2, 7, 8, 5, 6};
     T f1, f2, q;
 
     rhs = f_loc[invalpha[alpha]];
@@ -209,7 +208,7 @@ inline void bouzidi( std::vector<T> const & f
 
 template< typename T>
 inline void apply_bc( std::vector<T> const & f
-             , std::array<T,9> & f_loc
+             , std::vector<T> & f_loc
              , int bc
              , std::vector<int> const & alphaTab
              , int nx
@@ -232,15 +231,15 @@ inline void onetime_step(  std::vector<T> & f
                    ,std::vector<T> & fcopy
                    ,std::vector<int> & bc
                    ,std::vector<int> & alpha
-                   ,std::array<T,6> const & s
+                   ,std::vector<T> const & s
                    ,int nx
                    ,int ny
                    ,int i
                    ,int j
                   )
 {
-    std::array<T,9> m_loc = {0,0,0,0,0,0,0,0,0};
-    std::array<T,9> f_loc = {0,0,0,0,0,0,0,0,0};
+    std::vector<T> m_loc = {0,0,0,0,0,0,0,0,0};
+    std::vector<T> f_loc = {0,0,0,0,0,0,0,0,0};
 
     int bc_ = bc[ i + j*nx ];
 

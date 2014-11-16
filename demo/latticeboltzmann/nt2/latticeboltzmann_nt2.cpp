@@ -44,7 +44,6 @@ template<typename T> struct latticeboltzmann_nt2
     nt2::table<T> * fout = &fcopy;
     nt2::table<T> * fin  = &f;
 
-
     for(int step = 0; step<max_steps; step++)
     {
        for(int j = 0; j<ny; j+=bj)
@@ -66,6 +65,7 @@ template<typename T> struct latticeboltzmann_nt2
        }
        std::swap(fout,fin);
    }
+
  }
 
   friend std::ostream& operator<<(std::ostream& os, latticeboltzmann_nt2<T> const& p)
@@ -75,7 +75,7 @@ template<typename T> struct latticeboltzmann_nt2
 
   int size() const { return nx*ny; }
 
-  void relaxation( nt2::table<T,nt2::of_size_<6> > const s_
+  void relaxation( nt2::table<T> const & s_
                  , T const rho
                  , T const la)
   {
@@ -154,6 +154,8 @@ template<typename T> struct latticeboltzmann_nt2
   , s1x(1 + (posx_obs - l_obs/2)/dx), s2x(1 + (posx_obs + l_obs/2)/dx)
   , s1y(1 + (posy_obs - L_obs/2)/dx), s2y(1 + (posy_obs + L_obs/2)/dx)
   {
+    nt2::table<T> s_init = nt2::ones(6,nt2::meta::as_<T>());
+
     bc    = nt2::zeros(nt2::of_size(nx, ny), nt2::meta::as_<int>());
     alpha = nt2::zeros(nt2::of_size(nx, ny), nt2::meta::as_<int>());;
     m     = nt2::zeros(nt2::of_size(nx, ny, 9), nt2::meta::as_<T>());
@@ -170,8 +172,8 @@ template<typename T> struct latticeboltzmann_nt2
     m(_,_,1) = rhoo;
     m(_,_,2) = rhoo*max_velocity;
 
-    relaxation(nt2::ones(6,nt2::meta::as_<T>()),rhoo, 1.);
     m2f(1.);
+    relaxation(s_init ,rhoo, 1.);
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
 
@@ -257,7 +259,7 @@ template<typename T> struct latticeboltzmann_nt2
    ,s7
    ,s8;
 
-   nt2::table<T,nt2::of_size_<6> > s;
+   nt2::table<T> s;
 
 // Set boundary conditions outside the domain and on the rectangular obstacle
    nt2::table<int> bc;

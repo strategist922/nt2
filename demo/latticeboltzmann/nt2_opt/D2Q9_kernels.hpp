@@ -12,7 +12,6 @@
 
 #include <cmath>
 #include <iostream>
-#include <array>
 
 #include <nt2/table.hpp>
 #include <nt2/include/functions/of_size.hpp>
@@ -24,7 +23,7 @@ using namespace nt2;
 
 template< typename T>
 inline void relaxation( nt2::table<T> & m
-                      , nt2::table<T,nt2::of_size_<6> > const s_
+                      , nt2::table<T> const s_
                       )
   {
     T la  = T(1.);
@@ -219,7 +218,7 @@ inline void onetime_step( nt2::table<T> & f
                         , nt2::table<T> & m
                         , nt2::table<int> & bc
                         , nt2::table<int> & alpha
-                        , nt2::table< T, nt2::of_size_<6> > const & s
+                        , nt2::table<T> const & s
                         , int nx
                         , int ny
                         )
@@ -233,7 +232,7 @@ inline void onetime_step( nt2::table<T> & f
 
 /********************************************************************************************/
 template< typename T>
-inline void relaxation_scalar(std::array<T,9> & m, std::array<T,6> const & s)
+inline void relaxation_scalar(std::vector<T> & m, std::vector<T> const & s)
 {
       T la = T(1.);
       T rhoo = T(1.);
@@ -248,7 +247,7 @@ inline void relaxation_scalar(std::array<T,9> & m, std::array<T,6> const & s)
 
 template< typename T>
 void get_f_scalar( std::vector<T> const & f
-          , std::array<T,9> & f_loc
+          , std::vector<T> & f_loc
           , int nx
           , int ny
           , int i
@@ -286,7 +285,7 @@ void get_f_scalar( std::vector<T> const & f
 }
 
 template<typename T>
-inline void f2m_scalar(std::array<T,9> const & in, std::array<T,9> & out)
+inline void f2m_scalar(std::vector<T> const & in, std::vector<T> & out)
 {
   T la   = T(1.);
   T one  = T(1.);
@@ -321,7 +320,7 @@ inline void f2m_scalar(std::array<T,9> const & in, std::array<T,9> & out)
 }
 
 template<typename T>
-inline void m2f_scalar(std::array<T,9> const & in, std::array<T,9> & out)
+inline void m2f_scalar(std::vector<T> const & in, std::vector<T> & out)
 {
     T la = T(1.);
     T a  = T(1./9.)
@@ -362,7 +361,7 @@ inline void m2f_scalar(std::array<T,9> const & in, std::array<T,9> & out)
 
 template< typename T>
 inline void set_f_scalar( std::vector<T> & f
-          , std::array<T,9> const & f_loc
+          , std::vector<T> const & f_loc
           , int nx
           , int ny
           , int i
@@ -380,7 +379,7 @@ inline void set_f_scalar( std::vector<T> & f
 
 template< typename T>
 inline void bouzidi_scalar( std::vector<T> const & f
-            , std::array<T,9> & f_loc
+            , std::vector<T> & f_loc
             , T rhs
             , int alpha
             , int type
@@ -391,7 +390,7 @@ inline void bouzidi_scalar( std::vector<T> const & f
             )
 {
     int dec = nx*ny;
-    std::array<int,9> invalpha={0, 3, 4, 1, 2, 7, 8, 5, 6};
+    std::vector<int> invalpha={0, 3, 4, 1, 2, 7, 8, 5, 6};
     T f1, f2, q;
 
     rhs = f_loc[invalpha[alpha]];
@@ -403,7 +402,6 @@ inline void bouzidi_scalar( std::vector<T> const & f
     //bounce back conditions
     if (type == 1)
     {
-        std::cout<<"Condition 1"<<std::endl;
         if (q<=T(.5))
             f_loc[invalpha[alpha]] = (T(1.) - T(2.)*q)*f_loc[alpha] + T(2.)*q*f1 + rhs;
         else
@@ -412,7 +410,6 @@ inline void bouzidi_scalar( std::vector<T> const & f
     //anti bounce back conditions
     else if (type == 2)
     {
-        std::cout<<"Condition 2"<<std::endl;
         if (q<T(.5))
             f_loc[invalpha[alpha]] = -(T(1.) - T(2.)*q)*f_loc[alpha] - T(2.)*q*f1 + rhs;
         else
@@ -421,7 +418,6 @@ inline void bouzidi_scalar( std::vector<T> const & f
     //Neumann conditions
     else if (type == 3)
     {
-        std::cout<<"Condition 3"<<std::endl;
         f_loc[invalpha[alpha]] = f2;
     }
 }
@@ -429,7 +425,7 @@ inline void bouzidi_scalar( std::vector<T> const & f
 
 template< typename T>
 inline void apply_bc_scalar( std::vector<T> const & f
-             , std::array<T,9> & f_loc
+             , std::vector<T> & f_loc
              , int bc
              , std::vector<int> const & alphaTab
              , int nx
@@ -452,7 +448,7 @@ inline void onetime_step_scalar(  std::vector<T> & f
                    ,std::vector<T> & fcopy
                    ,std::vector<int> & bc
                    ,std::vector<int> & alpha
-                   ,std::array<T,6> const & s
+                   ,std::vector<T> const & s
                    ,int nx
                    ,int ny
                    ,int i
@@ -460,8 +456,8 @@ inline void onetime_step_scalar(  std::vector<T> & f
                    ,std::vector<T> & m
                   )
 {
-    std::array<T,9> m_loc = {0.,0.,0.,0.,0.,0.,0.,0.,0.};
-    std::array<T,9> f_loc = {0,0,0,0,0,0,0,0,0};
+    std::vector<T> m_loc = {0,0,0,0,0,0,0,0,0};
+    std::vector<T> f_loc = {0,0,0,0,0,0,0,0,0};
 
     int bc_ = bc[ i + j*nx ];
 

@@ -20,8 +20,8 @@
 using nt2::tag::table_;
 
 template< typename T>
-inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
-                                 , nt2::table< T, nt2::of_size_<6> > const & s)
+inline void relaxation( nt2::table<T> & m
+                      , nt2::table<T> const & s)
 {
       T la = T(1.);
       T rhoo = T(1.);
@@ -37,7 +37,7 @@ inline void relaxation( nt2::table< T, nt2::of_size_<9> > & m
 
 template< typename T>
 inline void get_f( nt2::table<T> const & f
-                 , nt2::table< T,nt2::of_size_<9> > & f_loc
+                 , nt2::table<T> & f_loc
                  , int nx
                  , int ny
                  , int i
@@ -56,8 +56,8 @@ inline void get_f( nt2::table<T> const & f
 }
 
 template<typename T>
-inline void f2m( nt2::table< T,nt2::of_size_<9> > & in
-               , nt2::table< T,nt2::of_size_<9> > & out)
+inline void f2m( nt2::table<T> & in
+               , nt2::table<T> & out)
 {
    T la = T(1.);
    nt2::table<T> invF (   nt2::cons<T>( nt2::of_size(9 ,9),
@@ -78,13 +78,13 @@ inline void f2m( nt2::table< T,nt2::of_size_<9> > & in
 
    out = nt2::mtimes(in,invF);
 
-   out.resize(nt2::of_size(1,9));
-   in.resize(nt2::of_size(1,9));
+   out.resize(nt2::of_size(9));
+   in.resize(nt2::of_size(9));
 }
 
 template<typename T>
-inline void m2f( nt2::table< T,nt2::of_size_<9> > & in
-               , nt2::table< T,nt2::of_size_<9> > & out)
+inline void m2f( nt2::table<T> & in
+               , nt2::table<T> & out)
 {
   T la = T(1.);
   T a  = T(1./9.)
@@ -111,14 +111,14 @@ inline void m2f( nt2::table< T,nt2::of_size_<9> > & in
 
    out = nt2::mtimes(in,invM);
 
-   out.resize(nt2::of_size(1,9));
-   in.resize(nt2::of_size(1,9));
+   out.resize(nt2::of_size(9));
+   in.resize(nt2::of_size(9));
 
 }
 
 template< typename T>
 inline void set_f( nt2::table<T> & f
-                 , nt2::table< T,nt2::of_size_<9> > const & f_loc
+                 , nt2::table<T> const & f_loc
                  , int i
                  , int j
                  )
@@ -129,7 +129,7 @@ inline void set_f( nt2::table<T> & f
 
 template< typename T>
 inline void bouzidi( nt2::table<T> const & f
-            , nt2::table< T,nt2::of_size_<9> > & f_loc
+            , nt2::table<T> & f_loc
             , T rhs
             , int alpha
             , int type
@@ -137,7 +137,7 @@ inline void bouzidi( nt2::table<T> const & f
             , int j
             )
 {
-    nt2::table<int,nt2::of_size_<9> > invalpha
+    nt2::table<int> invalpha
     (nt2::cons<int>(1, 4, 5, 2, 3, 8, 9, 6, 7));
 
     T f1, f2, q;
@@ -169,45 +169,12 @@ inline void bouzidi( nt2::table<T> const & f
     {
         f_loc(invalpha(alpha)) = f2;
     }
-
-
-    // std::array<int,9> invalpha={1, 4, 5, 2, 3, 8, 9, 6, 7};
-
-    // T f1, f2, q;
-
-    // rhs = f_loc(invalpha[alpha-1]);
-    // q = T(.5);
-
-    // f1 = f(i,j,alpha);
-    // f2 = f(i,j,invalpha[alpha-1]);
-
-    // //bounce back conditions
-    // if (type == 1)
-    // {
-    //     if (q<=T(.5))
-    //         f_loc(invalpha[alpha-1]) = (T(1.) - T(2.)*q)*f_loc(alpha) + T(2.)*q*f1 + rhs;
-    //     else
-    //         f_loc(invalpha[alpha-1]) = (T(1.) - T(.5)/q)*f2 +T(.5)/q*f1 + rhs;
-    // }
-    // //anti bounce back conditions
-    // else if (type == 2)
-    // {
-    //     if (q<T(.5))
-    //         f_loc(invalpha[alpha-1]) = -(T(1.) - T(2.)*q)*f_loc(alpha) - T(2.)*q*f1 + rhs;
-    //     else
-    //         f_loc(invalpha[alpha-1]) = -(T(1.) - T(.5)/q)*f2 -T(.5)/q*f1 + rhs;
-    // }
-    // //Neumann conditions
-    // else if (type == 3)
-    // {
-    //     f_loc(invalpha[alpha-1]) = f2;
-    // }
 }
 
 
 template< typename T>
 inline void apply_bc( nt2::table<T> const & f
-                    , nt2::table< T,nt2::of_size_<9> > & f_loc
+                    , nt2::table<T> & f_loc
                     , int bc
                     , nt2::table<int> const & alphaTab
                     , int i
@@ -228,15 +195,15 @@ inline void onetime_step(  nt2::table<T> & f
                    ,nt2::table<T> & fcopy
                    ,nt2::table<int> & bc
                    ,nt2::table<int> & alpha
-                   ,nt2::table< T, nt2::of_size_<6> > const & s
+                   ,nt2::table<T> const & s
                    ,int i
                    ,int j
                    ,int nx
                    ,int ny
                   )
 {
-    nt2::table< T,nt2::of_size_<9> > m_loc;
-    nt2::table< T,nt2::of_size_<9> > f_loc;
+    nt2::table<T> m_loc( nt2::of_size(9) );
+    nt2::table<T> f_loc( nt2::of_size(9) );
 
     int bc_ = bc(i,j);
 
