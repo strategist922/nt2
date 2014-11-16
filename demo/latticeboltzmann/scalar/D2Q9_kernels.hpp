@@ -237,7 +237,6 @@ inline void onetime_step(  std::vector<T> & f
                    ,int ny
                    ,int i
                    ,int j
-                   ,std::vector<T> & m
                   )
 {
     std::array<T,9> m_loc = {0,0,0,0,0,0,0,0,0};

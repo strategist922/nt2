@@ -12,6 +12,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <array>
 
 #include <nt2/table.hpp>
 #include <nt2/include/functions/of_size.hpp>
