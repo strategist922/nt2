@@ -68,27 +68,16 @@ void get_f( std::vector<T> const & f
 }
 
 template<typename T>
-inline void f2m(std::vector<T> const & in, std::vector<T> & out)
+inline void m2f_f2m(std::vector<T> const & in
+                   ,std::vector<T> & out
+                   ,std::vector<T> & inv
+                   )
 {
-  T la   = T(1.);
   T one  = T(1.);
   T zero = T(0.);
 
   int inc    = 1;
   int nine   = 9;
-
-  std::vector<T> invF
-  =  {
-      1,  1,  1,  1,  1,  1,  1,  1,  1,
-      0, la,  0,-la,  0, la,-la,-la, la,
-      0,  0, la,  0,-la, la, la,-la,-la,
-     -4, -1, -1, -1, -1,  2,  2,  2,  2,
-      4, -2, -2, -2, -2,  1,  1,  1,  1,
-      0, -2,  0,  2,  0,  1, -1, -1,  1,
-      0,  0, -2,  0,  2,  1,  1, -1, -1,
-      0,  1, -1,  1, -1,  0,  0,  0,  0,
-      0,  0,  0,  0,  0,  1, -1,  1, -1
-     };
 
 // Row Major Matrix-Matrix multiplication with Column Major Blas
   nt2::details::
@@ -96,50 +85,10 @@ inline void f2m(std::vector<T> const & in, std::vector<T> & out)
     , &inc, &nine, &nine
     , &one
     , & in[0], &inc
-    , & invF[0], &nine
+    , & inv[0], &nine
     , &zero
     , &out[0], &inc
     );
-}
-
-template<typename T>
-inline void m2f(std::vector<T> const & in, std::vector<T> & out)
-{
-    T la = T(1.);
-    T a  = T(1./9.)
-    , b  = T(1./36.)
-    , c = T(1.)/(T(6.)*la)
-    , d = T(1.)/T(12.)
-    , e = T(.25);
-
-    T one  = T(1.);
-    T zero = T(0.);
-
-    int inc    = 1;
-    int nine   = 9;
-
-    std::vector<T> invM
-    =  {
-          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
-          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
-          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
-          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
-          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
-          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
-          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
-          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
-          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
-       };
-
-    nt2::details::
-    gemm( "N", "N"
-      , &inc, &nine, &nine
-      , &one
-      , & in[0], &inc
-      , & invM[0], &nine
-      , &zero
-      , &out[0], &inc
-      );
 }
 
 template< typename T>
@@ -224,31 +173,6 @@ inline void apply_bc( std::vector<T> const & f
             bouzidi(f, f_loc, T(0.), k+1, bc, nx, ny, i, j);
         }
     }
-}
-
-template< typename T>
-inline void onetime_step(  std::vector<T> & f
-                   ,std::vector<T> & fcopy
-                   ,std::vector<int> & bc
-                   ,std::vector<int> & alpha
-                   ,std::vector<T> const & s
-                   ,int nx
-                   ,int ny
-                   ,int i
-                   ,int j
-                  )
-{
-    std::vector<T> m_loc = {0,0,0,0,0,0,0,0,0};
-    std::vector<T> f_loc = {0,0,0,0,0,0,0,0,0};
-
-    int bc_ = bc[ i + j*nx ];
-
-    get_f(f, f_loc, nx, ny, i, j);
-    apply_bc(f, f_loc, bc_, alpha, nx, ny, i, j);
-    f2m(f_loc, m_loc);
-    relaxation(m_loc,s);
-    m2f(m_loc, f_loc);
-    set_f(fcopy, f_loc, nx, ny, i, j);
 }
 
 #endif

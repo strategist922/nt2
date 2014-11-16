@@ -77,6 +77,21 @@ template<typename T> struct latticeboltzmann_scalar
     }
   }
 
+  inline void onetime_step(  std::vector<T> & f_
+                           , std::vector<T> & fcopy_
+                           , int i
+                           , int j
+                          )
+  {
+      int bc_ = bc[ i + j*nx ];
+
+      get_f(f_, f_loc, nx, ny, i, j);
+      apply_bc(f_, f_loc, bc_, alpha, nx, ny, i, j);
+      m2f_f2m(f_loc, m_loc, invF);
+      relaxation(m_loc,s);
+      m2f_f2m(m_loc, f_loc, invM);
+      set_f(fcopy_, f_loc, nx, ny, i, j);
+  }
 
   void operator()()
   {
@@ -102,8 +117,7 @@ template<typename T> struct latticeboltzmann_scalar
         for(int j_ = j; j_<max_j; j_++)
           for(int i_ = i; i_<max_i; i_++)
           {
-            onetime_step<T>
-            (*fin, *fout, bc, alpha, s, nx, ny, i_, j_);
+            onetime_step(*fin, *fout,i_, j_);
           }
         }
       }
@@ -119,7 +133,7 @@ template<typename T> struct latticeboltzmann_scalar
 
   int size() const { return nx*ny; }
 
-  void relaxation(std::vector<T> s_, T const rho, T const la)
+  void pre_relaxation(std::vector<T> s_, T const rho)
   {
     T dummy_ = T(1.)/(la*la*rho);
 
@@ -154,31 +168,13 @@ template<typename T> struct latticeboltzmann_scalar
    }
   }
 
-void m2f(T const la)
+void pre_m2f()
 {
-  T a(1./9)
-  , b(1./36.)
-  , c(1./(6.*la))
-  , d(1./12)
-  , e(1./4.);
-
   int nine   = 9;
   int bound  = nx*ny;
 
   T one  = 1.;
   T zero = 0.;
-
-  std::vector<T> invM
-  =  {  a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
-    a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
-    a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
-    a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
-    a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
-    a,  c,  c,  2*b,    b,    d,    d,  0,  e,
-    a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
-    a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
-    a,  c, -c,  2*b,    b,    d,   -d,  0, -e
-  };
 
 // Row Major Matrix-Matrix multiplication with Column Major Blas
   nt2::details::
@@ -243,7 +239,7 @@ inline T const & m_(int const k, int const i, int const j) const
 }
 
 latticeboltzmann_scalar(int size_)
-:  nx(size_),ny(size_/2)
+: nx(size_),ny(size_/2)
 , Longueur(2.), Largeur(1.)
 , xmin(0.0), xmax(Longueur), ymin(-0.5*Largeur), ymax(0.5*Largeur)
 , dx(Longueur/nx)
@@ -272,6 +268,40 @@ latticeboltzmann_scalar(int size_)
 , alpha (nx * ny, 0)
 , s1x((posx_obs - l_obs/2)/dx), s2x((posx_obs + l_obs/2)/dx)
 , s1y((posy_obs - L_obs/2)/dx), s2y((posy_obs + L_obs/2)/dx)
+, m_loc(9,0.)
+, f_loc(9,0.)
+, la (1.)
+, a (1./9.)
+, b (1./36.)
+, c (1./(6.*la))
+, d (1./12.)
+, e (.25)
+, invF(
+       {
+        1,  1,  1,  1,  1,  1,  1,  1,  1,
+        0, la,  0,-la,  0, la,-la,-la, la,
+        0,  0, la,  0,-la, la, la,-la,-la,
+       -4, -1, -1, -1, -1,  2,  2,  2,  2,
+        4, -2, -2, -2, -2,  1,  1,  1,  1,
+        0, -2,  0,  2,  0,  1, -1, -1,  1,
+        0,  0, -2,  0,  2,  1,  1, -1, -1,
+        0,  1, -1,  1, -1,  0,  0,  0,  0,
+        0,  0,  0,  0,  0,  1, -1,  1, -1
+       }
+     )
+ , invM(
+       {
+        a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
+        a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
+        a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
+        a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
+        a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
+        a,  c,  c,  2*b,    b,    d,    d,  0,  e,
+        a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
+        a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
+        a,  c, -c,  2*b,    b,    d,   -d,  0, -e
+       }
+  )
 {
 
     // Set boundary conditions outside the domain and on the rectangular obstacle
@@ -291,9 +321,9 @@ latticeboltzmann_scalar(int size_)
     m_(1, i, j) = rhoo*max_velocity;
   }
 
-  relaxation({1,1,1,1,1,1},rhoo, 1.);
+  pre_relaxation({1,1,1,1,1,1},rhoo);
 
-  m2f(1.);
+  pre_m2f();
 
   for(int i = s1x; i<s2x; i++)
    for(int j = s1y; j<s2y; j++)
@@ -452,6 +482,14 @@ private:
 
   int s1x, s2x
   ,s1y, s2y;
+
+  std::vector<T> m_loc;
+  std::vector<T> f_loc;
+
+  T la, a, b, c, d, e;
+
+  std::vector<T> invF;
+  std::vector<T> invM;
 };
 
 NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_scalar, (float) )

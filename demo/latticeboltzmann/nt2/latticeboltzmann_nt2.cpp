@@ -34,6 +34,22 @@ using namespace nt2::bench;
 
 template<typename T> struct latticeboltzmann_nt2
 {
+  inline void onetime_step(  nt2::table<T> & f_
+                          ,  nt2::table<T> & fcopy_
+                          ,  int i
+                          ,  int j
+                          )
+  {
+      int bc_ = bc(i,j);
+
+      get_f(f_, f_loc, nx, ny, i, j);
+      apply_bc(f_, f_loc, bc_, alpha, i, j);
+      f2m_m2f(f_loc, m_loc, invF);
+      relaxation(m_loc,s);
+      f2m_m2f(m_loc, f_loc, invM);
+      set_f(fcopy_, f_loc, i, j);
+
+  }
 
   void operator()()
   {
@@ -58,8 +74,7 @@ template<typename T> struct latticeboltzmann_nt2
           for(int j_ = j; j_<max_j; j_++)
           for(int i_ = i; i_<max_i; i_++)
           {
-              onetime_step<T>
-              (*fin, *fout, bc, alpha, s, i_+1, j_+1, nx, ny);
+              onetime_step(*fin, *fout, i_+1, j_+1);
           }
          }
        }
@@ -75,9 +90,8 @@ template<typename T> struct latticeboltzmann_nt2
 
   int size() const { return nx*ny; }
 
-  void relaxation( nt2::table<T> const & s_
-                 , T const rho
-                 , T const la)
+  void pre_relaxation( nt2::table<T> const & s_
+                 , T const rho)
   {
     T dummy_ = T(1.)/(la*la*rho);
     nt2::table<T> qx2 = dummy_*m(_,_,2)*m(_,_,2);
@@ -93,27 +107,8 @@ template<typename T> struct latticeboltzmann_nt2
     m(_,_,9) = m(_,_,9)*(T(1.)-s_(6)) + s_(6)*qxy;
   }
 
-  void m2f(T const la)
+  void pre_m2f()
   {
-    T a(1./9)
-    , b(1./36.)
-    , c(1./(6.*la))
-    , d(1./12)
-    , e(1./4.);
-
-   nt2::table<T> invM (   nt2::cons<T>( nt2::of_size(9 ,9),
-                          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
-                          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
-                          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
-                          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
-                          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
-                          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
-                          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
-                          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
-                          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
-                          )
-                       );
-
    m.resize(nt2::of_size(nx*ny,9));
    f.resize(nt2::of_size(nx*ny,9));
 
@@ -153,6 +148,36 @@ template<typename T> struct latticeboltzmann_nt2
   , alpha (nt2::of_size(nx, ny))
   , s1x(1 + (posx_obs - l_obs/2)/dx), s2x(1 + (posx_obs + l_obs/2)/dx)
   , s1y(1 + (posy_obs - L_obs/2)/dx), s2y(1 + (posy_obs + L_obs/2)/dx)
+  , m_loc( nt2::of_size(9) )
+  , f_loc( nt2::of_size(9) )
+  , la (1.)
+  , a (1./9.)
+  , b (1./36.)
+  , c (1./(6.*la))
+  , d (1./12.)
+  , e (.25)
+  , invF (   nt2::cons<T>( nt2::of_size(9 ,9),
+                1,  1,  1,  1,  1,  1,  1,  1,  1,
+                0, la,  0,-la,  0, la,-la,-la, la,
+                0,  0, la,  0,-la, la, la,-la,-la,
+               -4, -1, -1, -1, -1,  2,  2,  2,  2,
+                4, -2, -2, -2, -2,  1,  1,  1,  1,
+                0, -2,  0,  2,  0,  1, -1, -1,  1,
+                0,  0, -2,  0,  2,  1,  1, -1, -1,
+                0,  1, -1,  1, -1,  0,  0,  0,  0,
+                0,  0,  0,  0,  0,  1, -1,  1, -1
+          ))
+  , invM (nt2::cons<T>( nt2::of_size(9 ,9),
+          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
+          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
+          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
+          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
+          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
+          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
+          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
+          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
+          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
+          ))
   {
     nt2::table<T> s_init = nt2::ones(6,nt2::meta::as_<T>());
 
@@ -172,8 +197,8 @@ template<typename T> struct latticeboltzmann_nt2
     m(_,_,1) = rhoo;
     m(_,_,2) = rhoo*max_velocity;
 
-    m2f(1.);
-    relaxation(s_init ,rhoo, 1.);
+    pre_m2f();
+    pre_relaxation(s_init ,rhoo);
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
 
@@ -272,6 +297,13 @@ template<typename T> struct latticeboltzmann_nt2
 
    int s1x, s2x
       ,s1y, s2y;
+
+  T la, a, b, c, d, e;
+
+  nt2::table<T> invF, invM;
+
+   nt2::table<T> m_loc;
+   nt2::table<T> f_loc;
 };
 
 NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2, (float) )

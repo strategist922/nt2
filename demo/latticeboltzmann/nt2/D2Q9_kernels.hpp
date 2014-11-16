@@ -56,64 +56,18 @@ inline void get_f( nt2::table<T> const & f
 }
 
 template<typename T>
-inline void f2m( nt2::table<T> & in
-               , nt2::table<T> & out)
+inline void f2m_m2f( nt2::table<T> & in
+               , nt2::table<T> & out
+               , nt2::table<T> & inv)
 {
-   T la = T(1.);
-   nt2::table<T> invF (   nt2::cons<T>( nt2::of_size(9 ,9),
-                          1,  1,  1,  1,  1,  1,  1,  1,  1,
-                          0, la,  0,-la,  0, la,-la,-la, la,
-                          0,  0, la,  0,-la, la, la,-la,-la,
-                         -4, -1, -1, -1, -1,  2,  2,  2,  2,
-                          4, -2, -2, -2, -2,  1,  1,  1,  1,
-                          0, -2,  0,  2,  0,  1, -1, -1,  1,
-                          0,  0, -2,  0,  2,  1,  1, -1, -1,
-                          0,  1, -1,  1, -1,  0,  0,  0,  0,
-                          0,  0,  0,  0,  0,  1, -1,  1, -1
-                          )
-                       );
 
    out.resize(nt2::of_size(1,9));
    in.resize(nt2::of_size(1,9));
 
-   out = nt2::mtimes(in,invF);
+   out = nt2::mtimes(in,inv);
 
    out.resize(nt2::of_size(9));
    in.resize(nt2::of_size(9));
-}
-
-template<typename T>
-inline void m2f( nt2::table<T> & in
-               , nt2::table<T> & out)
-{
-  T la = T(1.);
-  T a  = T(1./9.)
-  , b  = T(1./36.)
-  , c = T(1.)/(T(6.)*la)
-  , d = T(1.)/T(12.)
-  , e = T(.25);
-
-   nt2::table<T> invM (   nt2::cons<T>( nt2::of_size(9 ,9),
-                          a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
-                          a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
-                          a,  0,  c,   -b, -2*b,    0, -2*d, -e,  0,
-                          a, -c,  0,   -b, -2*b,  2*d,    0,  e,  0,
-                          a,  0, -c,   -b, -2*b,    0,  2*d, -e,  0,
-                          a,  c,  c,  2*b,    b,    d,    d,  0,  e,
-                          a, -c,  c,  2*b,    b,   -d,    d,  0, -e,
-                          a, -c, -c,  2*b,    b,   -d,   -d,  0,  e,
-                          a,  c, -c,  2*b,    b,    d,   -d,  0, -e
-                          )
-                       );
-
-   out.resize(nt2::of_size(1,9));
-   in.resize(nt2::of_size(1,9));
-
-   out = nt2::mtimes(in,invM);
-
-   out.resize(nt2::of_size(9));
-   in.resize(nt2::of_size(9));
-
 }
 
 template< typename T>
@@ -188,32 +142,6 @@ inline void apply_bc( nt2::table<T> const & f
             bouzidi(f, f_loc, T(0.), k+2, bc, i, j);
         }
     }
-}
-
-template< typename T>
-inline void onetime_step(  nt2::table<T> & f
-                   ,nt2::table<T> & fcopy
-                   ,nt2::table<int> & bc
-                   ,nt2::table<int> & alpha
-                   ,nt2::table<T> const & s
-                   ,int i
-                   ,int j
-                   ,int nx
-                   ,int ny
-                  )
-{
-    nt2::table<T> m_loc( nt2::of_size(9) );
-    nt2::table<T> f_loc( nt2::of_size(9) );
-
-    int bc_ = bc(i,j);
-
-    get_f(f, f_loc, nx, ny, i, j);
-    apply_bc(f, f_loc, bc_, alpha, i, j);
-    f2m(f_loc, m_loc);
-    relaxation(m_loc,s);
-    m2f(m_loc, f_loc);
-    set_f(fcopy, f_loc, i, j);
-
 }
 
 #endif
