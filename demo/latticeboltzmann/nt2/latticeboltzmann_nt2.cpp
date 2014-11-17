@@ -298,12 +298,12 @@ template<typename T> struct latticeboltzmann_nt2
    int s1x, s2x
       ,s1y, s2y;
 
-  T la, a, b, c, d, e;
-
-  nt2::table<T> invF, invM;
-
    nt2::table<T> m_loc;
    nt2::table<T> f_loc;
+
+   T la, a, b, c, d, e;
+
+   nt2::table<T> invF, invM;
 };
 
 NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2, (float) )
