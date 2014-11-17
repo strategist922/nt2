@@ -87,9 +87,9 @@ template<typename T> struct latticeboltzmann_scalar
 
       get_f(in, f_loc, nx, ny, i, j);
       apply_bc(in, f_loc, condition, alpha, nx, ny, i, j);
-      f2m_m2f(f_loc, m_loc, invF);
+      f2m(f_loc, m_loc);
       relaxation(m_loc,s);
-      f2m_m2f(m_loc, f_loc, invM);
+      m2f(m_loc, f_loc);
       set_f(out, f_loc, nx, ny, i, j);
   }
 
@@ -276,20 +276,7 @@ latticeboltzmann_scalar(int size_)
 , c (1./(6.*la))
 , d (1./12.)
 , e (.25)
-, invF(
-       {
-        1,  1,  1,  1,  1,  1,  1,  1,  1,
-        0, la,  0,-la,  0, la,-la,-la, la,
-        0,  0, la,  0,-la, la, la,-la,-la,
-       -4, -1, -1, -1, -1,  2,  2,  2,  2,
-        4, -2, -2, -2, -2,  1,  1,  1,  1,
-        0, -2,  0,  2,  0,  1, -1, -1,  1,
-        0,  0, -2,  0,  2,  1,  1, -1, -1,
-        0,  1, -1,  1, -1,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  1, -1,  1, -1
-       }
-     )
- , invM(
+, invM(
        {
         a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
         a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
@@ -488,7 +475,6 @@ private:
 
   T la, a, b, c, d, e;
 
-  std::vector<T> invF;
   std::vector<T> invM;
 };
 

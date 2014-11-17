@@ -57,11 +57,43 @@ inline void get_f( nt2::table<T> const & f
 }
 
 template<typename T>
-inline void f2m_m2f( nt2::table<T> & in
+inline void f2m( nt2::table<T> & in
                , nt2::table<T> & out
-               , nt2::table<T> & inv)
+               )
 {
-   out = nt2::mtimes( nt2::transpose(inv), in);
+  const T la = T(1.);
+  out(1) = in(1)+in(2)+in(3)+in(4)+in(5)+in(6)+in(7)+in(8)+in(9);
+  out(2) = la*(in(2)-in(4)+in(6)-in(7)-in(8)+in(9));
+  out(3) = la*(in(3)-in(5)+in(6)+in(7)-in(8)-in(9));
+  out(4) = -T(4.)*in(1)-in(2)-in(3)-in(4)-in(5)+T(2.)*(in(6)+in(7)+in(8)+in(9));
+  out(5) = T(4.)*in(1)-T(2.)*(in(2)+in(3)+in(4)+in(5))+in(6)+in(7)+in(8)+in(9);
+  out(6) = T(2.)*(-in(2)+in(4))+in(6)-in(7)-in(8)+in(9);
+  out(7) = T(2.)*(-in(3)+in(5))+in(6)+in(7)-in(8)-in(9);
+  out(8) = in(2)-in(3)+in(4)-in(5);
+  out(9) = in(6)-in(7)+in(8)-in(9);
+}
+
+template<typename T>
+inline void m2f( nt2::table<T> & in
+               , nt2::table<T> & out
+               )
+{
+    const T la = T(1.);
+    const T a  = T(1./9.)
+          , b  = T(1./36.)
+          , c = T(1.)/(T(6.)*la)
+          , d = T(1.)/T(12.)
+          , e = T(.25);
+
+    out(1) = a*in(1)-T(4.)*b*(in(4)-in(5));
+    out(2) = a*in(1)+c*in(2)-b*in(4)-T(2.)*b*in(5)-T(2.)*d*in(6)+e*in(8);
+    out(3) = a*in(1)+c*in(3)-b*in(4)-T(2.)*b*in(5)-T(2.)*d*in(7)-e*in(8);
+    out(4) = a*in(1)-c*in(2)-b*in(4)-T(2.)*b*in(5)+T(2.)*d*in(6)+e*in(8);
+    out(5) = a*in(1)-c*in(3)-b*in(4)-T(2.)*b*in(5)+T(2.)*d*in(7)-e*in(8);
+    out(6) = a*in(1)+c*in(2)+c*in(3)+T(2.)*b*in(4)+b*in(5)+d*in(6)+d*in(7)+e*in(9);
+    out(7) = a*in(1)-c*in(2)+c*in(3)+T(2.)*b*in(4)+b*in(5)-d*in(6)+d*in(7)-e*in(9);
+    out(8) = a*in(1)-c*in(2)-c*in(3)+T(2.)*b*in(4)+b*in(5)-d*in(6)-d*in(7)+e*in(9);
+    out(9) = a*in(1)+c*in(2)-c*in(3)+T(2.)*b*in(4)+b*in(5)+d*in(6)-d*in(7)-e*in(9);
 }
 
 template< typename T>

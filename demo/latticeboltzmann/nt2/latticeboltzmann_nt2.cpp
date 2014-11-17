@@ -44,9 +44,9 @@ template<typename T> struct latticeboltzmann_nt2
 
       get_f(f_, f_loc, nx, ny, i, j);
       apply_bc(f_, f_loc, bc_, alpha, i, j);
-      f2m_m2f(f_loc, m_loc, invF);
+      f2m(f_loc, m_loc);
       relaxation(m_loc,s);
-      f2m_m2f(m_loc, f_loc, invM);
+      m2f(m_loc, f_loc);
       set_f(fcopy_, f_loc, i, j);
 
   }
@@ -156,17 +156,6 @@ template<typename T> struct latticeboltzmann_nt2
   , c (1./(6.*la))
   , d (1./12.)
   , e (.25)
-  , invF (nt2::cons<T>( nt2::of_size(9 ,9),
-          1,  1,  1,  1,  1,  1,  1,  1,  1,
-          0, la,  0,-la,  0, la,-la,-la, la,
-          0,  0, la,  0,-la, la, la,-la,-la,
-         -4, -1, -1, -1, -1,  2,  2,  2,  2,
-          4, -2, -2, -2, -2,  1,  1,  1,  1,
-          0, -2,  0,  2,  0,  1, -1, -1,  1,
-          0,  0, -2,  0,  2,  1,  1, -1, -1,
-          0,  1, -1,  1, -1,  0,  0,  0,  0,
-          0,  0,  0,  0,  0,  1, -1,  1, -1
-         ))
   , invM (nt2::cons<T>( nt2::of_size(9 ,9),
           a,  0,  0, -4*b,  4*b,    0,    0,  0,  0,
           a,  c,  0,   -b, -2*b, -2*d,    0,  e,  0,
@@ -303,7 +292,7 @@ template<typename T> struct latticeboltzmann_nt2
 
    T la, a, b, c, d, e;
 
-   nt2::table<T> invF, invM;
+   nt2::table<T> invM;
 };
 
 NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2, (float) )

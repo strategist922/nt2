@@ -68,28 +68,45 @@ void get_f( std::vector<T> const & f
 }
 
 template<typename T>
-inline void f2m_m2f(std::vector<T> const & in
-                   ,std::vector<T> & out
-                   ,std::vector<T> & inv
-                   )
+inline void f2m(std::vector<T> const & in
+               ,std::vector<T> & out
+               )
 {
-  T one  = T(1.);
-  T zero = T(0.);
-
-  int inc    = 1;
-  int nine   = 9;
-
-// Row Major Matrix-Matrix multiplication with Column Major Blas
-  nt2::details::
-  gemm( "T", "N"
-    , &nine, &inc, &nine
-    , &one
-    , & inv[0], &nine
-    , & in[0], &nine
-    , &zero
-    , &out[0], &nine
-    );
+  const T la = T(1.);
+  out[0] = in[0]+in[1]+in[2]+in[3]+in[4]+in[5]+in[6]+in[7]+in[8];
+  out[1] = la*(in[1]-in[3]+in[5]-in[6]-in[7]+in[8]);
+  out[2] = la*(in[2]-in[4]+in[5]+in[6]-in[7]-in[8]);
+  out[3] = -T(4.)*in[0]-in[1]-in[2]-in[3]-in[4]+T(2.)*(in[5]+in[6]+in[7]+in[8]);
+  out[4] = T(4.)*in[0]-T(2.)*(in[1]+in[2]+in[3]+in[4])+in[5]+in[6]+in[7]+in[8];
+  out[5] = T(2.)*(-in[1]+in[3])+in[5]-in[6]-in[7]+in[8];
+  out[6] = T(2.)*(-in[2]+in[4])+in[5]+in[6]-in[7]-in[8];
+  out[7] = in[1]-in[2]+in[3]-in[4];
+  out[8] = in[5]-in[6]+in[7]-in[8];
 }
+
+template<typename T>
+inline void m2f(std::vector<T> const & in
+               ,std::vector<T> & out
+               )
+{
+    const T la = T(1.);
+    const T a  = T(1./9.)
+          , b  = T(1./36.)
+          , c = T(1.)/(T(6.)*la)
+          , d = T(1.)/T(12.)
+          , e = T(.25);
+
+    out[0] = a*in[0]-T(T(4.))*b*(in[3]-in[4]);
+    out[1] = a*in[0]+c*in[1]-b*in[3]-T(2.)*b*in[4]-T(2.)*d*in[5]+e*in[7];
+    out[2] = a*in[0]+c*in[2]-b*in[3]-T(2.)*b*in[4]-T(2.)*d*in[6]-e*in[7];
+    out[3] = a*in[0]-c*in[1]-b*in[3]-T(2.)*b*in[4]+T(2.)*d*in[5]+e*in[7];
+    out[4] = a*in[0]-c*in[2]-b*in[3]-T(2.)*b*in[4]+T(2.)*d*in[6]-e*in[7];
+    out[5] = a*in[0]+c*in[1]+c*in[2]+T(2.)*b*in[3]+b*in[4]+d*in[5]+d*in[6]+e*in[8];
+    out[6] = a*in[0]-c*in[1]+c*in[2]+T(2.)*b*in[3]+b*in[4]-d*in[5]+d*in[6]-e*in[8];
+    out[7] = a*in[0]-c*in[1]-c*in[2]+T(2.)*b*in[3]+b*in[4]-d*in[5]-d*in[6]+e*in[8];
+    out[8] = a*in[0]+c*in[1]-c*in[2]+T(2.)*b*in[3]+b*in[4]+d*in[5]-d*in[6]-e*in[8];
+}
+
 
 template< typename T>
 inline void set_f( std::vector<T> & f
