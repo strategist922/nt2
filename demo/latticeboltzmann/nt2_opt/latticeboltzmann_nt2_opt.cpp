@@ -37,15 +37,15 @@ using namespace nt2;
 
 template<typename T> struct latticeboltzmann_nt2_opt
 {
-  inline void onetime_step( nt2::table<T> & f
-                          , nt2::table<T> & fcopy
+  inline void onetime_step( nt2::table<T> & in
+                          , nt2::table<T> & out
                           )
   {
-    get_f(f,fcopy,nx,ny);
-    apply_bc(f, fcopy, bc, alpha, nx, ny);
-    f2m_m2f(fcopy, m, nx, ny, invF);
+    get_f(in,out,nx,ny);
+    apply_bc(in, out, bc, alpha, nx, ny);
+    f2m_m2f(out, m, nx, ny, invF);
     relaxation(m,s);
-    f2m_m2f(m, fcopy, nx, ny, invM);
+    f2m_m2f(m, out, nx, ny, invM);
   }
 
   void operator()()
@@ -310,20 +310,20 @@ template<typename T> struct latticeboltzmann_scalar
     }
   }
 
-  inline void onetime_step(  std::vector<T> & f_
-                           , std::vector<T> & fcopy_
+  inline void onetime_step(  std::vector<T> & in
+                           , std::vector<T> & out
                            , int i
                            , int j
                           )
   {
-      int bc_ = bc[ i + j*nx ];
+      int condition = bc[ i + j*nx ];
 
-      get_f_scalar(f_, f_loc, nx, ny, i, j);
-      apply_bc_scalar(f_, f_loc, bc_, alpha, nx, ny, i, j);
+      get_f_scalar(in, f_loc, nx, ny, i, j);
+      apply_bc_scalar(in, f_loc, condition, alpha, nx, ny, i, j);
       f2m_m2f_scalar(f_loc, m_loc, invF);
       relaxation_scalar(m_loc,s);
       f2m_m2f_scalar(m_loc, f_loc, invM);
-      set_f_scalar(fcopy_, f_loc, nx, ny, i, j);
+      set_f_scalar(out, f_loc, nx, ny, i, j);
   }
 
   void operator()()

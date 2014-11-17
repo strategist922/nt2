@@ -77,20 +77,20 @@ template<typename T> struct latticeboltzmann_scalar
     }
   }
 
-  inline void onetime_step(  std::vector<T> & f_
-                           , std::vector<T> & fcopy_
+  inline void onetime_step(  std::vector<T> & in
+                           , std::vector<T> & out
                            , int i
                            , int j
                           )
   {
-      int bc_ = bc[ i + j*nx ];
+      int condition = bc[ i + j*nx ];
 
-      get_f(f_, f_loc, nx, ny, i, j);
-      apply_bc(f_, f_loc, bc_, alpha, nx, ny, i, j);
-      m2f_f2m(f_loc, m_loc, invF);
+      get_f(in, f_loc, nx, ny, i, j);
+      apply_bc(in, f_loc, condition, alpha, nx, ny, i, j);
+      f2m_m2f(f_loc, m_loc, invF);
       relaxation(m_loc,s);
-      m2f_f2m(m_loc, f_loc, invM);
-      set_f(fcopy_, f_loc, nx, ny, i, j);
+      f2m_m2f(m_loc, f_loc, invM);
+      set_f(out, f_loc, nx, ny, i, j);
   }
 
   void operator()()

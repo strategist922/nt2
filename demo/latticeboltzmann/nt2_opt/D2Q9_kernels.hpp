@@ -323,39 +323,4 @@ inline void apply_bc_scalar( std::vector<T> const & f
     }
 }
 
-template< typename T>
-inline void onetime_step_scalar(  std::vector<T> & f
-                   ,std::vector<T> & fcopy
-                   ,std::vector<int> & bc
-                   ,std::vector<int> & alpha
-                   ,std::vector<T> const & s
-                   ,int nx
-                   ,int ny
-                   ,int i
-                   ,int j
-                   ,std::vector<T> & m
-                  )
-{
-    std::vector<T> m_loc = {0,0,0,0,0,0,0,0,0};
-    std::vector<T> f_loc = {0,0,0,0,0,0,0,0,0};
-
-    int bc_ = bc[ i + j*nx ];
-
-    get_f_scalar(f, f_loc, nx, ny, i, j);
-    apply_bc_scalar(f, f_loc, bc_, alpha, nx, ny, i, j);
-    f2m_scalar(f_loc, m_loc);
-    relaxation_scalar(m_loc,s);
-    m2f_scalar(m_loc, f_loc);
-
-    int dec = nx*ny;
-    int ind = i +j*nx;
-
-    for(int k=0;k<9;k++){
-    m[ind] = m_loc[k];
-    ind += dec;
-    }
-
-    set_f_scalar(fcopy, f_loc, nx, ny, i, j);
-}
-
 #endif

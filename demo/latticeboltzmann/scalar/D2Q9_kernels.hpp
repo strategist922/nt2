@@ -68,7 +68,7 @@ void get_f( std::vector<T> const & f
 }
 
 template<typename T>
-inline void m2f_f2m(std::vector<T> const & in
+inline void f2m_m2f(std::vector<T> const & in
                    ,std::vector<T> & out
                    ,std::vector<T> & inv
                    )
