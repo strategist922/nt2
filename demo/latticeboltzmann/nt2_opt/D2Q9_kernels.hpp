@@ -80,8 +80,6 @@ inline void get_f( nt2::table<T> const & f
    // fcopy(_(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
    // fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );
 
-   fcopy = T(0.);
-
    for(int j=1; j<=ny; j++)
    for(int i=1; i<=nx; i++)
    {
@@ -106,8 +104,6 @@ inline void f2m( nt2::table<T> & in
 {
   in.resize(nt2::of_size(nx*ny,9));
   out.resize(nt2::of_size(nx*ny,9));
-
-  out = T(0.);
 
   const T la = T(1.);
   out(_,1) = in(_,1)+in(_,2)+in(_,3)+in(_,4)+in(_,5)+in(_,6)+in(_,7)+in(_,8)+in(_,9);
@@ -140,8 +136,6 @@ inline void m2f( nt2::table<T> & in
 
   in.resize(nt2::of_size(nx*ny,9));
   out.resize(nt2::of_size(nx*ny,9));
-
-  out = T(0.);
 
   out(_,1) = a*in(_,1)-T(4.)*b*(in(_,4)-in(_,5));
   out(_,2) = a*in(_,1)+c*in(_,2)-b*in(_,4)-T(2.)*b*in(_,5)-T(2.)*d*in(_,6)+e*in(_,8);

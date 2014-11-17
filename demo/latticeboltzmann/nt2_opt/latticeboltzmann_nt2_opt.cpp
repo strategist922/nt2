@@ -56,9 +56,8 @@ template<typename T> struct latticeboltzmann_nt2_opt
     for(int step = 0; step<max_steps; step++)
     {
         onetime_step(*fin, *fout);
-
         std::swap(fout,fin);
-     }
+    }
 
    }
 
