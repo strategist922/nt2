@@ -186,8 +186,8 @@ template<typename T> struct latticeboltzmann_nt2
     m(_,_,1) = rhoo;
     m(_,_,2) = rhoo*max_velocity;
 
-    pre_m2f();
     pre_relaxation(s_init ,rhoo);
+    pre_m2f();
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
 
