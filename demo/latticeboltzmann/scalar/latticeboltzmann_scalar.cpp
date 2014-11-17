@@ -81,8 +81,8 @@ template<typename T> struct latticeboltzmann_scalar
                            , std::vector<T> & out
                            , int i
                            , int j
-                          )
-  {
+
+  ){
       int condition = bc[ i + j*nx ];
 
       get_f(in, f_loc, nx, ny, i, j);

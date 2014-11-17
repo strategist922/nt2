@@ -15,6 +15,7 @@
 
 #include <nt2/table.hpp>
 #include <nt2/include/functions/of_size.hpp>
+#include <nt2/include/functions/transpose.hpp>
 #include <nt2/include/functions/cons.hpp>
 
 using nt2::tag::table_;
@@ -60,14 +61,7 @@ inline void f2m_m2f( nt2::table<T> & in
                , nt2::table<T> & out
                , nt2::table<T> & inv)
 {
-
-   out.resize(nt2::of_size(1,9));
-   in.resize(nt2::of_size(1,9));
-
-   out = nt2::mtimes(in,inv);
-
-   out.resize(nt2::of_size(9));
-   in.resize(nt2::of_size(9));
+   out = nt2::mtimes( nt2::transpose(inv), in);
 }
 
 template< typename T>

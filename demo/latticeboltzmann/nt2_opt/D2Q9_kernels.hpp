@@ -229,13 +229,13 @@ inline void f2m_m2f_scalar(std::vector<T> const & in
 
 // Row Major Matrix-Matrix multiplication with Column Major Blas
   nt2::details::
-  gemm( "N", "N"
-    , &inc, &nine, &nine
+  gemm( "T", "N"
+    , &nine, &inc, &nine
     , &one
-    , & in[0], &inc
     , & inv[0], &nine
+    , & in[0], &nine
     , &zero
-    , &out[0], &inc
+    , &out[0], &nine
     );
 }
 

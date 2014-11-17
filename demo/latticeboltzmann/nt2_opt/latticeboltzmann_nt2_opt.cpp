@@ -18,22 +18,22 @@
 #include <nt2/sdk/meta/as.hpp>
 
 #include <nt2/sdk/unit/module.hpp>
-#include <nt2/sdk/unit/tests/relation.hpp>
+#include <nt2/sdk/unit/tests.hpp>
 
-//#include <nt2/sdk/bench/benchmark.hpp>
-//#include <nt2/sdk/unit/details/prng.hpp>
-//#include <nt2/sdk/bench/metric/absolute_time.hpp>
-//#include <nt2/sdk/bench/metric/speedup.hpp>
-//#include <nt2/sdk/bench/setup/fixed.hpp>
-//#include <nt2/sdk/bench/protocol/until.hpp>
-//#include <nt2/sdk/bench/stats/median.hpp>
+// #include <nt2/sdk/bench/benchmark.hpp>
+// #include <nt2/sdk/unit/details/prng.hpp>
+// #include <nt2/sdk/bench/metric/absolute_time.hpp>
+// #include <nt2/sdk/bench/metric/speedup.hpp>
+// #include <nt2/sdk/bench/setup/fixed.hpp>
+// #include <nt2/sdk/bench/protocol/until.hpp>
+// #include <nt2/sdk/bench/stats/median.hpp>
 
 #include <iostream>
 
 #include "D2Q9_kernels.hpp"
 
 using namespace nt2;
-//using namespace nt2::bench;
+// using namespace nt2::bench;
 
 template<typename T> struct latticeboltzmann_nt2_opt
 {
@@ -725,13 +725,13 @@ private:
   std::vector<T> invM;
 };
 
-//NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2_opt, (float) )
-//{
+// NT2_REGISTER_BENCHMARK_TPL( latticeboltzmann_nt2_opt, (float) )
+// {
 //  run_until_with< latticeboltzmann_nt2_opt<T> > ( 10., 10
 //                                  , fixed(1024)
 //                                  , absolute_time<stats::median_>()
 //                                  );
-//}
+// }
 
 NT2_TEST_CASE( latticeboltzmann_test )
 {
@@ -743,16 +743,18 @@ NT2_TEST_CASE( latticeboltzmann_test )
   // for(int i = 0; i<16; i++)
   // for(int j = 0; j<8; j++)
   // {
-  //  NT2_TEST_EQUAL(test_nt2.alpha(i+1,j+1)
-  //                ,test_scalar.alpha_(i,j)
+  //  NT2_TEST_ULP_EQUAL(test_nt2.alpha(i+1,j+1)
+  //                    ,test_scalar.alpha_(i,j)
+  //                    ,100
   //                );
   // }
 
   // for(int i = 0; i<16; i++)
   // for(int j = 0; j<8; j++)
   // {
-  //  NT2_TEST_EQUAL(test_nt2.bc(i+1,j+1)
+  //  NT2_TEST_ULP_EQUAL(test_nt2.bc(i+1,j+1)
   //                ,test_scalar.bc_(i,j)
+  //                ,100
   //                );
   // }
 
@@ -760,8 +762,9 @@ NT2_TEST_CASE( latticeboltzmann_test )
   // for(int i = 0; i<16; i++)
   // for(int j = 0; j<8; j++)
   // {
-  //  NT2_TEST_EQUAL(test_nt2.m(i+1,j+1,k+1)
+  //  NT2_TEST_ULP_EQUAL(test_nt2.m(i+1,j+1,k+1)
   //                ,test_scalar.m_(k,i,j)
+  //                ,100
   //                );
   // }
 
@@ -769,8 +772,9 @@ NT2_TEST_CASE( latticeboltzmann_test )
   for(int i = 0; i<16; i++)
   for(int j = 0; j<8; j++)
   {
-   NT2_TEST_EQUAL(test_nt2.fcopy(i+1,j+1,k+1)
-                 ,test_scalar.fcopy_(k,i,j)
+   NT2_TEST_ULP_EQUAL(test_nt2.fcopy(i+1,j+1,k+1)
+                     ,test_scalar.fcopy_(k,i,j)
+                     ,100
                  );
   }
 
