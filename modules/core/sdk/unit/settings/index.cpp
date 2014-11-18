@@ -27,11 +27,11 @@ NT2_TEST_CASE( index_concept )
 
   NT2_TEST( (match_option< nt2::index_<3,2,4,5>, nt2::tag::index_ >::value) );
 
-  NT2_TEST_EQUAL( boost::mpl::size<index_option>::value, NT2_MAX_DIMENSIONS );
-  NT2_TEST_EQUAL( (boost::mpl::at_c<index_option,0>::type::value), 3 );
-  NT2_TEST_EQUAL( (boost::mpl::at_c<index_option,1>::type::value), 2 );
-  NT2_TEST_EQUAL( (boost::mpl::at_c<index_option,2>::type::value), 4 );
-  NT2_TEST_EQUAL( (boost::mpl::at_c<index_option,3>::type::value), 5 );
+  NT2_TEST_EQUAL( index_option::at<0>(), 3 );
+  NT2_TEST_EQUAL( index_option::at<1>(), 2 );
+  NT2_TEST_EQUAL( index_option::at<2>(), 4 );
+  NT2_TEST_EQUAL( index_option::at<3>(), 5 );
+  NT2_TEST_EQUAL( index_option::at<157>(), 5 );
 }
 
 NT2_TEST_CASE( single_index_ )

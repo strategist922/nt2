@@ -9,28 +9,52 @@
 #ifndef NT2_CORE_SETTINGS_INTERLEAVING_HPP_INCLUDED
 #define NT2_CORE_SETTINGS_INTERLEAVING_HPP_INCLUDED
 
-#include <nt2/core/settings/forward/interleaving.hpp>
+#include <boost/mpl/bool.hpp>
 
-namespace nt2 { namespace tag
+namespace nt2
 {
-  struct interleaving_
+  namespace details
   {
-    template<class T>
-    struct apply : boost::mpl::false_
-    {};
+    template<bool B> struct soa_status
+    {
+      using interleaving_type = boost::mpl::bool_<B>;
+    };
+  }
 
-    typedef nt2::interleaved_ default_type;
-  };
+  /*!
+    @brief interleaved_ option
 
-  template<>
-  struct interleaving_::apply<nt2::interleaved_>
-                      : boost::mpl::true_
-  {};
+    Containers can be marked interleaved_ to express the fact that their
+    contents is stored as an Array of Structure whenever needed.
+  **/
+  using interleaved_ = details::soa_status<false>;
 
-  template<>
-  struct interleaving_::apply<nt2::deinterleaved_>
-                      : boost::mpl::true_
-  {};
-} }
+  /*!
+    @brief deinterleaved_ option
+
+    Containers can be marked deinterleaved_ to express the fact that their
+    contents is stored as a Structure of Array whenever needed.
+  **/
+  using deinterleaved_ = details::soa_status<true>;
+
+  namespace tag
+  {
+    /// @brief Interleaved data layout option mark-up
+    struct interleaving_
+    {
+      /// @brief Default option type
+      using default_type = nt2::interleaved_;
+    };
+
+    //--------------------------------------------------------------------------
+    /// INTERNAL ONLY
+    template<typename T>
+    boost::mpl::false_ match_(interleaving_, T);
+
+    /// INTERNAL ONLY
+    template<bool B>
+    boost::mpl::true_ match_(interleaving_, details::soa_status<B>);
+  }
+}
 
 #endif

@@ -79,12 +79,6 @@ struct some_kind_::default_<nt2::tag::storage_duration_>
 };
 
 template<>
-struct some_kind_::default_<nt2::tag::buffer_>
-{
-  typedef nt2::built_in_ type;
-};
-
-template<>
 struct some_kind_::default_<nt2::tag::sharing_>
 {
   typedef nt2::owned_ type;

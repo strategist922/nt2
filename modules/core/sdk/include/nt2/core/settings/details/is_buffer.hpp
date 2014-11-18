@@ -14,17 +14,15 @@
 
 namespace nt2 { namespace details
 {
-  /// Check if a type support the allocator_type interface, thus qualifying
-  /// as an Container for us
+  /// Check if a type has a iterator type
   template<class T, class Enable=void>
-  struct  is_buffer
-        : boost::mpl::false_
+  struct  is_buffer : boost::mpl::false_
   {};
 
   template<class T>
   struct  is_buffer < T
                     , typename  boost::dispatch::meta::
-                                enable_if_type<typename T::allocator_type>::type
+                                enable_if_type<typename T::iterator>::type
                     >
         : boost::mpl::true_
   {};

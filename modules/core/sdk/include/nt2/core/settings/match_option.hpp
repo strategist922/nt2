@@ -9,15 +9,8 @@
 #ifndef NT2_CORE_SETTINGS_MATCH_OPTION_HPP_INCLUDED
 #define NT2_CORE_SETTINGS_MATCH_OPTION_HPP_INCLUDED
 
-/*!
- * \file
- * \brief Defines NT2 container option base system
- **/
-
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
+#include <utility>
 
 namespace nt2 { namespace meta
 {
@@ -25,20 +18,26 @@ namespace nt2 { namespace meta
    * @brief Check if a type is a valid Option
    *
    **/
-  template<class T, class Option>
+  template<typename T, typename Option>
   struct  match_option
-        : Option::template apply<typename boost::remove_pointer<T>::type>::type
+        : decltype( match_(std::declval<Option>(), std::declval<T>()) )
   {};
 
-  template<class T, class Option>
-  struct  match_option<T*, Option>
-        : match_option<T,Option>
+  /// INTERNAL ONLY
+  template<typename Option>
+  struct match_option<void, Option> : boost::mpl::false_
   {};
 
-  template<class Option>
+  /// INTERNAL ONLY
+  template<typename T, typename Option>
+  struct match_option<T*, Option> : match_option<T,Option>
+  {};
+
+  /// INTERNAL ONLY
+  template<typename Option>
   struct lambda_match_option
   {
-    template<class T> struct apply : match_option<T,Option> {};
+    template<typename T> struct apply : match_option<T,Option> {};
   };
 } }
 

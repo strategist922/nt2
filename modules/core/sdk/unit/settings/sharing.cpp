@@ -155,6 +155,7 @@ NT2_TEST_CASE( nested_settings_sharing_ )
                   );
 }
 
+/*
 template<class U, class C>
 struct  apply_
 {
@@ -218,3 +219,4 @@ NT2_TEST_CASE( owned_output )
                     , (buffer<int,std::allocator<int> >)
                     );
 }
+*/

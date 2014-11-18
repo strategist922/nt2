@@ -31,12 +31,12 @@ namespace nt2
 
       @tparam Container Container type used as options source
     **/
-    template<typename Container> struct apply
+/*    template<typename Container> struct apply
     {
       typedef typename meta::option<Container, tag::buffer_>::type  buffer_t;
       typedef typename details::make_buffer<buffer_t>
                               ::template apply<Container>::type type;
-    };
+    };*/
 
     /*!
       @brief Number of non-trivial elements
@@ -47,11 +47,11 @@ namespace nt2
       @param sz Extent of current Container
       @return Number of non-trivial elements to allocate
     **/
-    template<typename Size> static
+/*    template<typename Size> static
     BOOST_FORCEINLINE std::size_t nnz(Size const& sz)
     {
       return nt2::numel(sz);
-    }
+    }*/
   };
 }
 

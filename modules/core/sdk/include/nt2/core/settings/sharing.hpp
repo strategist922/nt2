@@ -9,30 +9,53 @@
 #ifndef NT2_CORE_SETTINGS_SHARING_HPP_INCLUDED
 #define NT2_CORE_SETTINGS_SHARING_HPP_INCLUDED
 
-#include <nt2/core/settings/forward/sharing.hpp>
+#include <boost/mpl/bool.hpp>
 
-namespace nt2 { namespace tag
+namespace nt2
 {
-  struct sharing_
+  namespace details
   {
-    template<class T>
-    struct apply : boost::mpl::false_
-    {};
+    template<bool B> struct sharing_status
+    {
+      using sharing_type = boost::mpl::bool_<B>;
+    };
+  }
 
-    typedef nt2::owned_ default_type;
-  };
+  /*!
+    @brief Memory ownership tag representing shared memory
 
-  template<>
-  struct sharing_::apply<nt2::shared_>
-                  : boost::mpl::true_
-  {};
+    This tag indicates that current Container shares its memory with an
+    external source to which it delegates the memory handling (including clean
+    up of said memory).
+  **/
+  using shared_ = details::sharing_status<true>;
 
-  template<>
-  struct sharing_::apply<nt2::owned_>
-                  : boost::mpl::true_
-  {};
-} }
+  /*!
+    @brief Memory ownership tag representing owned memory
 
-#include <nt2/core/settings/details/sharing.hpp>
+    This tag indicates that current Container owns its own memory and
+    handles it on its own, including clean-up of said memory.
+  **/
+  using owned_  = details::sharing_status<false>;
+
+  namespace tag
+  {
+    /// @brief Data ownership option mark-up
+    struct sharing_
+    {
+      /// @brief Default option type
+      using default_type = nt2::owned_;
+    };
+
+    //--------------------------------------------------------------------------
+    /// INTERNAL ONLY
+    template<typename T>
+    boost::mpl::false_ match_(sharing_, T);
+
+    /// INTERNAL ONLY
+    template<bool B>
+    boost::mpl::true_ match_(sharing_, details::sharing_status<B>);
+  }
+}
 
 #endif

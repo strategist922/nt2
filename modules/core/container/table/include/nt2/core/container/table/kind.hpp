@@ -63,13 +63,6 @@ namespace nt2 { namespace tag
   {
     typedef _4D type;
   };
-
-  /// INTERNAL ONLY Table default option for allocator
-  template<>
-  struct table_::default_<nt2::tag::allocator_>
-  {
-    typedef boost::simd::allocator<void> type;
-  };
 } }
 
 #endif

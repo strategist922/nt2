@@ -16,13 +16,6 @@
 
 namespace nt2
 {
-  /*!
-    @brief Memory ownership tag representing shared memory
-
-    This tag indicates that current Container shares its memory with an
-    external source to which it delegates the memory handling (including clean
-    up of said memory).
-  **/
   struct shared_
   {
     template<class Container> struct apply
@@ -33,12 +26,6 @@ namespace nt2
     };
   };
 
-  /*!
-    @brief Memory ownership tag representing owned memory
-
-    This tag indicates that current Container owns its own memory and
-    handles it on its own, including clean-up of said memory.
-  **/
   struct owned_
   {
     template<class Container> struct apply

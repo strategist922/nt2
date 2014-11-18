@@ -28,7 +28,7 @@ namespace nt2
     template<typename Original, typename New = nt2::settings()>
     struct add_settings
     {
-      using type =  nt2::settings(New,Original);
+      typedef nt2::settings type(New,Original);
     };
 
     //--------------------------------------------------------------------------
@@ -36,49 +36,49 @@ namespace nt2
     template<typename T>
     struct add_settings<T, nt2::settings()>
     {
-      using type = T;
+      typedef T type;
     };
 
     /// INTERNAL ONLY
     template<typename T,typename U>
     struct add_settings<T, nt2::settings(U)>
     {
-      using type = nt2::settings(U,T);
+      typedef nt2::settings type(U,T);
     };
 
     /// INTERNAL ONLY
     template<typename T,typename U, typename... Us>
     struct add_settings<T, nt2::settings(U,Us...)>
     {
-      using type = nt2::settings(U,Us...,T);
+      typedef nt2::settings type(U,Us...,T);
     };
 
     //--------------------------------------------------------------------------
     template<typename U>
     struct add_settings<nt2::settings(),U>
     {
-      using type = U;
+      typedef U type;
     };
 
     /// INTERNAL ONLY
     template<>
     struct add_settings<nt2::settings(), nt2::settings()>
     {
-      using type = nt2::settings();
+      typedef nt2::settings type();
     };
 
     /// INTERNAL ONLY
     template<typename U>
     struct add_settings<nt2::settings(), nt2::settings(U)>
     {
-      using type = U;
+      typedef U type;
     };
 
     /// INTERNAL ONLY
     template<typename U, typename... Us>
     struct add_settings<nt2::settings(), nt2::settings(U,Us...)>
     {
-      using type = nt2::settings(U,Us...);
+      typedef nt2::settings type(U,Us...);
     };
 
     //--------------------------------------------------------------------------
@@ -86,28 +86,28 @@ namespace nt2
     template<typename T>
     struct add_settings<nt2::settings(T), nt2::settings()>
     {
-      using type = T;
+      typedef T type;
     };
 
     /// INTERNAL ONLY
     template<typename T, typename U>
     struct add_settings<nt2::settings(T), U>
     {
-      using type = nt2::settings(U,T);
+      typedef nt2::settings type(U,T);
     };
 
     /// INTERNAL ONLY
     template<typename T,typename U>
     struct add_settings<nt2::settings(T), nt2::settings(U)>
     {
-      using type = nt2::settings(U,T);
+      typedef nt2::settings type(U,T);
     };
 
     /// INTERNAL ONLY
     template<typename T,typename U, typename... Us>
     struct add_settings<nt2::settings(T), nt2::settings(U,Us...)>
     {
-      using type = nt2::settings(U,Us...,T);
+      typedef nt2::settings type(U,Us...,T);
     };
 
     //--------------------------------------------------------------------------
@@ -115,28 +115,28 @@ namespace nt2
     template<typename T, typename... Ts>
     struct add_settings<nt2::settings(T,Ts...), nt2::settings()>
     {
-      using type = nt2::settings(T,Ts...);
+      typedef nt2::settings type(T,Ts...);
     };
 
     /// INTERNAL ONLY
     template<typename T, typename... Ts,typename U>
     struct add_settings<nt2::settings(T,Ts...), U>
     {
-      using type = nt2::settings(U,T,Ts...);
+      typedef nt2::settings type(U,T,Ts...);
     };
 
     /// INTERNAL ONLY
     template<typename T, typename... Ts,typename U>
     struct add_settings<nt2::settings(T,Ts...), nt2::settings(U)>
     {
-      using type = nt2::settings(U,T,Ts...);
+      typedef nt2::settings type(U,T,Ts...);
     };
 
     /// INTERNAL ONLY
     template<typename T, typename... Ts,typename U, typename... Us>
     struct add_settings<nt2::settings(T,Ts...), nt2::settings(U,Us...)>
     {
-      using type = nt2::settings(U,Us...,T,Ts...);
+      typedef nt2::settings type(U,Us...,T,Ts...);
     };
 
     //--------------------------------------------------------------------------

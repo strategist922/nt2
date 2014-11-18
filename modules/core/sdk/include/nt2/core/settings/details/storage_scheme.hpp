@@ -20,13 +20,13 @@ namespace nt2
   {
     template<class Container> struct apply
     {
-      typedef typename rectangular_::apply<Container>::type type;
+/*      typedef typename rectangular_::apply<Container>::type type;
 
       template<class Size>
       static BOOST_FORCEINLINE std::size_t nnz(Size const& sz)
       {
         return rectangular_::nnz(sz);
-      }
+      }*/
     };
   };
 
