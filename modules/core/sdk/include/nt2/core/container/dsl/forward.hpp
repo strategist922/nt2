@@ -9,8 +9,6 @@
 #ifndef NT2_CORE_CONTAINER_DSL_FORWARD_HPP_INCLUDED
 #define NT2_CORE_CONTAINER_DSL_FORWARD_HPP_INCLUDED
 
-#include <nt2/core/settings/forward.hpp>
-
 namespace nt2 { namespace tag
 {
   struct container_;
@@ -18,8 +16,7 @@ namespace nt2 { namespace tag
 
 namespace nt2
 {
-  template<class T>
-  struct box;
+  struct settings;
 }
 
 namespace nt2 { namespace container
