@@ -33,20 +33,46 @@ inline void get_f( nt2::table<T> const & f
       // fcopy(_(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
       // fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );
 
-    for(std::size_t j=1; j<=ny; j++)
-    for(std::size_t i=1; i<=nx; i++)
-    {
-      fcopy(i,j,1) = f(i,j,1);
-      fcopy(i,j,2) = (i>1) ? f(i-1,j,2) : T(0.);
-      fcopy(i,j,3) = (j>1) ? f(i,j-1,3) : T(0.);
-      fcopy(i,j,4) = (i<nx) ? f(i+1,j,4) : T(0.);
-      fcopy(i,j,5) = (j<ny)? f(i,j+1,5) : T(0.);
-      fcopy(i,j,6) = (i>1 && j>1) ? f(i-1,j-1,6) : T(0.);
-      fcopy(i,j,7) = (i<nx && j>1) ? f(i+1,j-1,7) : T(0.);
-      fcopy(i,j,8) = (i<nx && j<ny) ? f(i+1,j+1,8): T(0.);
-      fcopy(i,j,9) = (i>1 && j<ny) ? f(i-1,j+1,9) : T(0.);
-    }
+      //for(std::size_t j=1; j<=ny; j++)
+      //for(std::size_t i=1; i<=nx; i++)
+      //{
+      //fcopy(i,j,1) = f(i,j,1);
+      //fcopy(i,j,2) = (i>1) ? f(i-1,j,2) : T(0.);
+      //fcopy(i,j,3) = (j>1) ? f(i,j-1,3) : T(0.);
+      //fcopy(i,j,4) = (i<nx) ? f(i+1,j,4) : T(0.);
+      //fcopy(i,j,5) = (j<ny)? f(i,j+1,5) : T(0.);
+      //fcopy(i,j,6) = (i>1 && j>1) ? f(i-1,j-1,6) : T(0.);
+      //fcopy(i,j,7) = (i<nx && j>1) ? f(i+1,j-1,7) : T(0.);
+      //fcopy(i,j,8) = (i<nx && j<ny) ? f(i+1,j+1,8): T(0.);
+      //fcopy(i,j,9) = (i>1 && j<ny) ? f(i-1,j+1,9) : T(0.);
+      //}
+      
+   for(int j=1; j<=ny; j++)
+   fcopy(_,j,1) = f(_,j,1);
 
+   for(int j=1; j<=ny; j++)
+   fcopy(_(2,nx),j,2) = f(_(1,nx-1),j,2);
+
+   for(int j=2; j<=ny; j++)
+   fcopy(_,j,3) =  f(_,j-1,3);
+
+   for(int j=1; j<=ny; j++)
+   fcopy(_(1,nx-1),j,4) = f(_(2,nx),j,4);
+
+   for(int j=1; j<=ny-1; j++)
+   fcopy(_,j,5) = f(_,j+1,5);
+
+   for(int j=2; j<=ny; j++)
+   fcopy(_(2,nx),j,6) = f(_(1,nx-1),j-1,6);
+
+   for(int j=2; j<=ny; j++)
+   fcopy(_(1,nx-1),j, 7 ) = f( _(2,nx), j-1, 7 );
+
+   for(int j=1; j<=ny-1; j++)
+   fcopy(_(1,nx-1),j, 8 ) = f( _(2,nx),j+1, 8 );
+
+   for(int j=1; j<=ny-1; j++)
+   fcopy(_(2,nx),j, 9 ) = f(_(1,nx-1),j+1, 9 );
 }
 
 #endif
