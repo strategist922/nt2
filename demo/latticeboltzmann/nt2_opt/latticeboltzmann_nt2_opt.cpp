@@ -39,10 +39,10 @@ template<typename T> struct latticeboltzmann_nt2_opt
                           )
   {
     get_f(in,out,nx,ny);
-    apply_bc(in, out, bc, alpha, nx, ny);
-    f2m(out, m, nx, ny);
-    relaxation(m,s,nx,ny);
-    m2f(m, out, nx, ny);
+    apply_bc(in, out, bc, alpha,nx,ny);
+    f2m(out, m);
+    relaxation(m,s);
+    m2f(m, out);
   }
 
   void operator()()
@@ -117,9 +117,9 @@ template<typename T> struct latticeboltzmann_nt2_opt
     m(_,_,1) = rhoo;
     m(_,_,2) = rhoo*max_velocity;
 
-    relaxation( m, s_init, nx, ny);
+    relaxation( m, s_init);
 
-    m2f(m,f,nx,ny);
+    m2f(m,f);
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
 
