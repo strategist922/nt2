@@ -70,43 +70,50 @@ void get_f( nt2::table<T> const & f
            ,int ny
            )
 {
-   // fcopy(_,_,1) = f(_,_,1);
-   // fcopy(_(2,nx),_,2)    = f(_(1,nx-1),_,2);
-   // fcopy(_,_(2,ny),3)    = f(_,_(1,ny-1),3);
-   // fcopy(_(1,nx-1),_, 4) = f(_(2,nx),_,4);
-   // fcopy(_,_(1,ny-1), 5 ) = f(_,_(2,ny), 5 );
-   // fcopy(_(2,nx),_(2,ny), 6 ) = f(_(1,nx-1),_(1,ny-1), 6 );
-   // fcopy(_(1,nx-1),_(2,ny), 7 ) = f( _(2,nx), _(1,ny-1), 7 );
-   // fcopy(_(1,nx-1), _(1,ny-1), 8 ) = f( _(2,nx),_(2,ny), 8 );
-   // fcopy(_(2,nx),_(1,ny-1), 9 ) = f(_(1,nx-1),_(2,ny), 9 );
-
    for(int j=1; j<=ny; j++)
    fcopy(_,j,1) = f(_,j,1);
 
    for(int j=1; j<=ny; j++)
-   fcopy(_(2,nx),j,2) = f(_(1,nx-1),j,2);
+   { fcopy(1,j,2) = T(0.);
+     fcopy(_(2,nx),j,2) = f(_(1,nx-1),j,2);
+   }
 
+   fcopy(_,1,3) = T(0.);
    for(int j=2; j<=ny; j++)
    fcopy(_,j,3) =  f(_,j-1,3);
 
    for(int j=1; j<=ny; j++)
-   fcopy(_(1,nx-1),j,4) = f(_(2,nx),j,4);
+   { fcopy(_(1,nx-1),j,4) = f(_(2,nx),j,4);
+     fcopy(nx,j,4) = T(0.);
+   }
 
    for(int j=1; j<=ny-1; j++)
    fcopy(_,j,5) = f(_,j+1,5);
+   fcopy(_,ny,5) = T(0.);
 
+   fcopy(_,1,6) = T(0.);
    for(int j=2; j<=ny; j++)
-   fcopy(_(2,nx),j,6) = f(_(1,nx-1),j-1,6);
+   { fcopy(1,j,6) = T(0.);
+     fcopy(_(2,nx),j,6) = f(_(1,nx-1),j-1,6);
+   }
 
+   fcopy(_,1,7) = T(0.);
    for(int j=2; j<=ny; j++)
-   fcopy(_(1,nx-1),j, 7 ) = f( _(2,nx), j-1, 7 );
+   { fcopy(_(1,nx-1),j, 7 ) = f( _(2,nx), j-1, 7 );
+     fcopy(nx,j,7 ) = T(0.);
+   }
 
    for(int j=1; j<=ny-1; j++)
-   fcopy(_(1,nx-1),j, 8 ) = f( _(2,nx),j+1, 8 );
+   { fcopy(_(1,nx-1),j, 8 ) = f( _(2,nx),j+1, 8 );
+     fcopy(nx,j,8) = T(0.);
+   }
+   fcopy(_,ny,8) = T(0.);
 
    for(int j=1; j<=ny-1; j++)
-   fcopy(_(2,nx),j, 9 ) = f(_(1,nx-1),j+1, 9 );
-
+   { fcopy(1,j,9) = T(0.);
+     fcopy(_(2,nx),j, 9 ) = f(_(1,nx-1),j+1, 9 );
+   }
+   fcopy(_,ny,9) = T(0.);
 }
 
 template<typename T>
