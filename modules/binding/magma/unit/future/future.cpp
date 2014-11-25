@@ -34,13 +34,15 @@ NT2_TEST_CASE( future_get )
   cudaMemcpy(  d_res , res.raw() , size, cudaMemcpyHostToDevice);
 
   future_1 f1 = nt2::async<Arch>(Obj_cuda(),d_res,d_a,d_b,10);
-  // res= f1.get();
 
   std::vector<int> h_res(10,0) ;
-  cudaMemcpy(  h_res.data() , d_res , size, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(  d_a , h_res.data()  , size, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(  h_res.data() , d_res , size, cudaMemcpyDeviceToHost);
+  int* test = f1.get();
 
-  for(auto i : h_res)
-    std::cout << i << std::endl;
-  // NT2_TEST_EQUAL(x+x, res);
+  std::cout << test[0] << std::endl;
+  std::cout << test[1] << std::endl;
+  std::cout << test[2] << std::endl;
+  std::cout << test[3] << std::endl;
+
+ // NT2_TEST_EQUAL(10*(x+x), h_res);
 }
