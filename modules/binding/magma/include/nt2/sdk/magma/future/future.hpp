@@ -5,6 +5,7 @@
 #if defined(NT2_USE_MAGMA)
 
 #include <type_traits>
+#include <tuple>
 #include <magma.h>
 #include <cublas.h>
 #include <cuda.h>
@@ -31,7 +32,8 @@ namespace nt2{
 
   template<class Arch, class F, class... ArgTypes>
   inline typename make_future< Arch
-  , typename F::result_type
+  // , typename std::result_of<F(ArgTypes...)>::type
+ , typename F::type
   >::type
   async(F && f, ArgTypes && ... args)
   {
@@ -43,16 +45,31 @@ namespace nt2{
   {
     template<class F, class... ArgTypes>
     inline typename make_future< tag::magma_<Site>
-    , typename F::result_type
+    // , typename std::result_of<F(ArgTypes...)>::type
+   , typename F::type
     >::type
-    call(F f , ArgTypes && ... args)
+    call(F && f , ArgTypes && ... args)
     {
 
-      using result_type = typename F::result_type;
+      using result_type = typename F::type;
+      // using result_type = typename std::result_of<F(ArgTypes...)>::type;
       using future = typename details::magma_future<result_type> ;
 
-      future f1;
-      f.call(f1.get_dres(), std::forward<ArgTypes>(args)...);
+      // -> init future with first param which represents the resutl
+      // std::tuple<args...> params;
+      future f1 ;
+      // future f1(std::get<0>(params)) ;
+
+      // -> give the user the possibility for transfer control by letting him
+      // the choice of giving cpu or gpu pointer.
+
+      // make a tuple of args... to forward
+      // for (auto & elem : {args...})
+      //   if(elem == CudaAlloc)
+      //     ok
+      //   else CudaMemcpy(...) ;
+
+      f.call(std::forward<ArgTypes>(args)...);
 
       return f1;
     }

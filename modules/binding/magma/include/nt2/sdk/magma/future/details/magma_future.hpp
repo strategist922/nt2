@@ -21,7 +21,7 @@ namespace nt2{
       // may need a shared_ptr ?
       magma_future() : h_res( new result_type ), ready(false)
       {
-        cudaMalloc( (result_type**) &d_res, sizeof(result_type) );
+        cudaMalloc( (void**) &d_res, sizeof(int)*10);
       }
 
       inline bool is_ready() const
@@ -43,16 +43,15 @@ namespace nt2{
       inline result_type get()
       {
        if(!ready) wait();
-       std::size_t size = sizeof(result_type);
+       std::size_t size = sizeof(result_type)*10;
        cudaMemcpy(h_res, d_res , size, cudaMemcpyDeviceToHost );
        cudaFree(d_res);
        return *h_res;
      }
 
-   private:
-    result_type  *h_res;
+    result_type * h_res;
     bool ready ;
-    result_type *d_res;
+    result_type * d_res;
   };
 
 

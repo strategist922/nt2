@@ -2,6 +2,6 @@
 
 struct Obj_cuda
 {
-  typedef int result_type;
-  void call(result_type*, int);
+  typedef int type;
+  void call(int*, int*,int*,int);
 };
