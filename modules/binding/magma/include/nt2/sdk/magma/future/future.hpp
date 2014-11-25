@@ -32,8 +32,8 @@ namespace nt2{
 
   template<class Arch, class F, class... ArgTypes>
   inline typename make_future< Arch
-  // , typename std::result_of<F(ArgTypes...)>::type
- , typename F::type
+ , typename std::result_of<F(ArgTypes...)>::type
+ //, typename F::type
   >::type
   async(F && f, ArgTypes && ... args)
   {
@@ -45,19 +45,18 @@ namespace nt2{
   {
     template<class F, class... ArgTypes>
     inline typename make_future< tag::magma_<Site>
-    // , typename std::result_of<F(ArgTypes...)>::type
-   , typename F::type
+ , typename std::result_of<F(ArgTypes...)>::type
+   //, typename F::type
     >::type
     call(F && f , ArgTypes && ... args)
     {
-
-      using result_type = typename F::type;
-      // using result_type = typename std::result_of<F(ArgTypes...)>::type;
+      // using result_type = typename F::type;
+      using result_type = typename std::result_of<F(ArgTypes...)>::type;
       using future = typename details::magma_future<result_type> ;
 
       // -> init future with first param which represents the resutl
-      // std::tuple<args...> params;
-      future f1 ;
+      auto tup = std::make_tuple(args...);
+      future f1(std::get<0>(tup) ) ;
       // future f1(std::get<0>(params)) ;
 
       // -> give the user the possibility for transfer control by letting him
@@ -69,7 +68,7 @@ namespace nt2{
       //     ok
       //   else CudaMemcpy(...) ;
 
-      f.call(std::forward<ArgTypes>(args)...);
+      f(std::forward<ArgTypes>(args)...);
 
       return f1;
     }

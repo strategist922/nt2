@@ -24,6 +24,10 @@ namespace nt2{
         cudaMalloc( (void**) &d_res, sizeof(int)*10);
       }
 
+      magma_future(result_type* r) : h_res( new result_type ), ready(false), d_res(r)
+      {
+      }
+
       inline bool is_ready() const
       {
         return ready;
@@ -40,13 +44,13 @@ namespace nt2{
         ready = true;
       }
 
-      inline result_type get()
+      inline result_type* get()
       {
        if(!ready) wait();
        std::size_t size = sizeof(result_type)*10;
        cudaMemcpy(h_res, d_res , size, cudaMemcpyDeviceToHost );
        cudaFree(d_res);
-       return *h_res;
+       return h_res;
      }
 
     result_type * h_res;
