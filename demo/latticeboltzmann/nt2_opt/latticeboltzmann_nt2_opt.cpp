@@ -38,11 +38,27 @@ template<typename T> struct latticeboltzmann_nt2_opt
                           , nt2::table<T> & out
                           )
   {
+
+    int bound = nx*ny;
+
     get_f(in,out,nx,ny);
+
+    in.resize(nt2::of_size(bound,9));
+    out.resize(nt2::of_size(bound,9));
+    m.resize(nt2::of_size(bound,9));
+    alpha.resize(nt2::of_size(bound));
+    bc.resize(nt2::of_size(bound));
+
     apply_bc(in, out, bc, alpha,nx,ny);
     f2m(out, m);
     relaxation(m,s);
     m2f(m, out);
+
+    in.resize(nt2::of_size(nx,ny,9));
+    out.resize(nt2::of_size(nx,ny,9));
+    m.resize(nt2::of_size(nx,ny,9));
+    alpha.resize(nt2::of_size(nx,ny));
+    bc.resize(nt2::of_size(nx,ny));
   }
 
   void operator()()
@@ -99,6 +115,8 @@ template<typename T> struct latticeboltzmann_nt2_opt
   , s1x(1 + (posx_obs - l_obs/2)/dx), s2x(1 + (posx_obs + l_obs/2)/dx)
   , s1y(1 + (posy_obs - L_obs/2)/dx), s2y(1 + (posy_obs + L_obs/2)/dx)
   {
+    int bound = nx*ny;
+
     nt2::table<T> s_init = nt2::ones(6,nt2::meta::as_<T>());
 
     bc    = nt2::zeros(nt2::of_size(nx, ny), nt2::meta::as_<int>());
@@ -117,9 +135,14 @@ template<typename T> struct latticeboltzmann_nt2_opt
     m(_,_,1) = rhoo;
     m(_,_,2) = rhoo*max_velocity;
 
-    relaxation( m, s_init);
+    m.resize(nt2::of_size(bound,9));
+    f.resize(nt2::of_size(bound,9));
 
+    relaxation(m, s_init);
     m2f(m,f);
+
+    m.resize(nt2::of_size(nx,ny,9));
+    f.resize(nt2::of_size(nx,ny,9));
 
     bc(_(s1x,s2x-1),_(s1y,s2y-1)) = 1;
 
