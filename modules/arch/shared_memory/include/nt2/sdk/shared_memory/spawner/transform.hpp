@@ -50,9 +50,9 @@ namespace nt2
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
-             details::container_has_futures<Arch> * pout_specifics;
-             details::aggregate_specifics()(w.out_, 0, pout_specifics);
-             details::container_has_futures<Arch> & s = * pout_specifics;
+             details::container_has_futures<Arch> * ps;
+             details::aggregate_specifics()(w.out_, 0, ps);
+             details::container_has_futures<Arch> & s = * ps;
 
              details::aggregate_futures aggregate_f;
 
