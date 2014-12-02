@@ -38,6 +38,7 @@ namespace boost
   {
   };
 
+#if (BOOST_VERSION < 105600)
   namespace detail
   {
     template<class T>
@@ -53,6 +54,7 @@ namespace boost
 #endif
     };
   }
+  #endif
 }
 
 // Looks like stlport and other do not handle restrict in iterator_traits
