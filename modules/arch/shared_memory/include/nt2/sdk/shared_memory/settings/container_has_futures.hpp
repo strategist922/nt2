@@ -26,6 +26,16 @@ namespace nt2 { namespace details {
       container_has_futures *
     >::iterator call_it;
 
+    container_has_futures()
+    {
+      //synchronize();
+    }
+
+    inline bool empty()
+    {
+      return futures_.empty();
+    }
+
     inline future & tile(std::size_t m, std::size_t n)
     {
       return futures_[m + n*NTiles_.first];
@@ -40,19 +50,6 @@ namespace nt2 { namespace details {
     inline Iterator leftup(Iterator raw, std::size_t m, std::size_t n)
     {
       return raw +  size_.first * grain_.second * n + grain_.first * m ;
-    }
-
-    inline void swap(container_has_futures& src)
-    {
-      boost::swap(futures_,src.futures_);
-      boost::swap(grain_,src.grain_);
-      boost::swap(calling_cards_,src.calling_cards_);
-      boost::swap(NTiles_,src.NTiles_);
-      boost::swap(size_,src.size_);
-
-      // Clear previous futures to avoid premature
-      // synchronization
-      src.futures_.clear();
     }
 
     inline void synchronize()

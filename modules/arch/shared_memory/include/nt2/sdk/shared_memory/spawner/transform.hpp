@@ -42,7 +42,7 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w, std::pair<std::size_t,std::size_t> grain_out)
+        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
         {
              typedef typename
              nt2::make_future< Arch ,int >::type future;
@@ -50,39 +50,32 @@ namespace nt2
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
+             details::container_has_futures<Arch> * pout_specifics;
+             details::aggregate_specifics()(w.out_, 0, pout_specifics);
+             details::container_has_futures<Arch> & s = * pout_specifics;
+
+             details::aggregate_futures aggregate_f;
 
         // 2D parameters of In table
              std::size_t height = w.bound_;
              std::size_t width  = w.obound_;
 
-        // Update grain_out to have a valid grain
-              grain_out = std::make_pair(
-                (height > grain_out.first)  ? grain_out.first  : height
-               ,(width  > grain_out.second) ? grain_out.second : width
-               );
+        // Update specifics if it is empty
+             if ( s.empty() )
+             {
+                 s.grain_ = std::make_pair(
+                  (height > grain)  ? grain : height
+                 ,(width  > grain)  ? grain : width
+                 );
 
-        // A Tile has a surface of grain_out(1) x grain_out(2), check leftovers
-             std::size_t leftover_row = height % grain_out.first;
-             std::size_t leftover_col = width  % grain_out.second;
+                 s.NTiles_ = std::make_pair(
+                  height / s.grain_.first
+                 ,width  / s.grain_.second
+                 );
 
-        // Height/Width of Out in number of tiles
-             std::size_t nblocks_row  = height / grain_out.first;
-             std::size_t nblocks_col  = width  / grain_out.second;
-
-             std::size_t last_chunk_row =  grain_out.first  + leftover_row;
-             std::size_t last_chunk_col =  grain_out.second + leftover_col;
-
-             details::container_has_futures<Arch> * pout_specifics;
-             details::aggregate_specifics()(w.out_, 0, pout_specifics);
-             details::container_has_futures<Arch> & out_specifics = * pout_specifics;
-
-             details::container_has_futures<Arch> tmp;
-             tmp.grain_  = grain_out;
-             tmp.NTiles_ = std::make_pair(nblocks_row,nblocks_col);
-             tmp.size_   = std::make_pair(height,width);
-             tmp.futures_.reserve(nblocks_row*nblocks_col);
-
-             details::aggregate_futures aggregate_f;
+                 s.size_ = std::make_pair(height,width);
+                 s.futures_.resize(s.NTiles_.first * s.NTiles_.second);
+             }
 
              #ifndef BOOST_NO_EXCEPTIONS
              boost::exception_ptr exception;
@@ -91,23 +84,38 @@ namespace nt2
              {
              #endif
 
+        // A Tile has a surface of grain x grain, check leftovers
+             const std::size_t leftover_row = height % s.grain_.first;
+             const std::size_t leftover_col = width  % s.grain_.second;
 
-             for(std::size_t nn=0, n=0; nn<nblocks_col; ++nn, n+=grain_out.second)
+        // Height/Width of Out in number of tiles
+             const std::size_t last_chunk_row =  s.grain_.first  + leftover_row;
+             const std::size_t last_chunk_col =  s.grain_.second + leftover_col;
+
+             const std::size_t nblocks_row = s.NTiles_.first;
+             const std::size_t nblocks_col = s.NTiles_.second;
+
+             for(std::size_t nn=0, n=0; nn<nblocks_col; ++nn, n+=s.grain_.second)
              {
-                 for(std::size_t mm=0, m=0; mm<nblocks_row; ++mm, m+=grain_out.first)
+                 for(std::size_t mm=0, m=0; mm<nblocks_row; ++mm, m+=s.grain_.first)
                  {
-                     std::size_t chunk_m = (mm<nblocks_row-1) ? grain_out.first   : last_chunk_row;
-                     std::size_t chunk_n = (nn<nblocks_col-1) ? grain_out.second  : last_chunk_col;
+                     std::size_t chunk_m = (mm<nblocks_row-1)
+                                         ? s.grain_.first
+                                         : last_chunk_row;
+
+                     std::size_t chunk_n = (nn<nblocks_col-1)
+                                         ? s.grain_.second
+                                         : last_chunk_col;
 
                      std::pair<std::size_t,std::size_t> begin (m,n);
                      std::pair<std::size_t,std::size_t> chunk (chunk_m,chunk_n);
 
                      details::proto_data_with_futures< future
                       ,details::container_has_futures<Arch>
-                      > data_in ( begin, chunk, out_specifics );
+                      > data_in ( begin, chunk, s );
 
-                    for(call_it i=out_specifics.calling_cards_.begin();
-                         i!=out_specifics.calling_cards_.end();
+                    for(call_it i = s.calling_cards_.begin();
+                         i != s.calling_cards_.end();
                          ++i)
                      {
                         details::insert_dependencies( data_in.futures_, begin , chunk, **i );
@@ -120,31 +128,24 @@ namespace nt2
                      {
                      case 0:
                          // Call operation
-                       tmp.futures_.push_back(
-                           nt2::async<Arch>(Worker(w), begin, chunk)
-                           );
+                       s.tile(mm,nn) = nt2::async<Arch>(Worker(w), begin, chunk);
                      break;
 
                      case 1:
-                       tmp.futures_.push_back(
-                           data_in.futures_[0]
-                           .then( details::then_worker<Worker>(Worker(w), begin, chunk)
-                          )
-                        );
+                       s.tile(mm,nn)
+                       = data_in.futures_[0]
+                         .then( details::then_worker<Worker>(Worker(w), begin, chunk));
                      break;
 
                      default:
-                        tmp.futures_.push_back(
-                           nt2::when_all<Arch>(boost::move(data_in.futures_))
-                           .then( details::then_worker<Worker>(Worker(w), begin, chunk)
-                           )
+                        s.tile(mm,nn)
+                        = nt2::when_all<Arch>(boost::move(data_in.futures_))
+                          .then( details::then_worker<Worker>(Worker(w), begin, chunk)
                         );
                      break;
                      }
                  }
              }
-
-             out_specifics.swap(tmp);
 
              #ifndef BOOST_NO_EXCEPTIONS
              }
