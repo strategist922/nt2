@@ -88,10 +88,10 @@ namespace nt2
              const std::size_t leftover_row = height % s.grain_.first;
              const std::size_t leftover_col = width  % s.grain_.second;
 
-        // Height/Width of Out in number of tiles
              const std::size_t last_chunk_row =  s.grain_.first  + leftover_row;
              const std::size_t last_chunk_col =  s.grain_.second + leftover_col;
 
+        // Height/Width of Out in number of tiles
              const std::size_t nblocks_row = s.NTiles_.first;
              const std::size_t nblocks_col = s.NTiles_.second;
 
@@ -127,7 +127,6 @@ namespace nt2
                      switch( data_in.futures_.size() )
                      {
                      case 0:
-                         // Call operation
                        s.tile(mm,nn) = nt2::async<Arch>(Worker(w), begin, chunk);
                      break;
 
