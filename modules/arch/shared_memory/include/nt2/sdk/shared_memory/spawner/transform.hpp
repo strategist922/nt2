@@ -42,7 +42,7 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w, std::size_t begin, std::size_t size, std::size_t grain)
+        void operator()(Worker & w, std::size_t, std::size_t, std::size_t grain)
         {
              typedef typename
              nt2::make_future< Arch ,int >::type future;

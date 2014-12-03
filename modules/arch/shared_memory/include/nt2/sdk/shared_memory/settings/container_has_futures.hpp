@@ -26,11 +26,6 @@ namespace nt2 { namespace details {
       container_has_futures *
     >::iterator call_it;
 
-    container_has_futures()
-    {
-      //synchronize();
-    }
-
     inline bool empty()
     {
       return futures_.empty();
