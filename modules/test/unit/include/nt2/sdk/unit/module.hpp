@@ -17,11 +17,9 @@
 
 #if defined(NT2_USE_HPX)
 #include <hpx/hpx_init.hpp>
-#elif defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
-#include <omp.h>
 #endif
 
-#if defined(DNT2_USE_MAGMA)
+#if defined(NT2_USE_MAGMA)
 #include <magma.h>
 #endif
 
@@ -62,30 +60,21 @@ namespace nt2 { namespace details
 #endif
 
 #if defined(NT2_USE_HPX)
-// struct hpx_initializer
-// {
-//   hpx_initializer(int argc_, char** argv_) : argc(argc_), argv(argv_) {}
-
-//   int operator()(boost::program_options::variables_map&) const
-//   {
-//     std::cout<<"Welcome to HPX!"<<std::endl;
-//     int res = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
-//     hpx::finalize();
-//     return res;
-//   }
-
-// private:
-//   int argc;
-//   char** argv;
-// };
-
-int hpx_main(int argc, char* argv[])
+struct hpx_initializer
 {
-    std::cout<<"Welcome to HPX!"<<std::endl;
-    int res = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
-    return hpx::finalize();
-}
+  hpx_initializer(int argc_, char** argv_) : argc(argc_), argv(argv_) {}
 
+  int operator()(boost::program_options::variables_map&) const
+  {
+    int res = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
+    hpx::finalize();
+    return res;
+  }
+
+private:
+  int argc;
+  char** argv;
+};
 #endif
 
 /*!
@@ -108,37 +97,16 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
 #endif
 
 #if defined(NT2_USE_HPX)
+  std::vector<std::string> cfg;
+  cfg.push_back("hpx.parcel.port=0");
 
-  // std::vector<std::string> cfg;
-  // cfg.push_back("hpx.parcel.port=0");
+  using boost::program_options::options_description;
+  options_description desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
+  char *dummy_argv[1] = { const_cast<char*>(HPX_APPLICATION_STRING) };
 
-  // using boost::program_options::options_description;
-  // options_description desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
-  // char *dummy_argv[1] = { const_cast<char*>(HPX_APPLICATION_STRING) };
-
-  // return hpx::init(hpx_initializer(argc, argv), boost::program_options::options_description(), 1, dummy_argv, cfg);
-
-  return hpx::init(argc, argv);
-
-#elif defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
-
-  int res;
-  omp_set_nested(1);
-  #pragma omp parallel
-    {
-  #pragma omp single
-  {
-    std::cout<<"Welcome to OpenMP!"<<std::endl;
-    res = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
-  }
-    }
-
-  return res;
-
+  return hpx::init(hpx_initializer(argc, argv), boost::program_options::options_description(), argc, argv, cfg);
 #else
-
   return nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
-
 #endif
 }
 
