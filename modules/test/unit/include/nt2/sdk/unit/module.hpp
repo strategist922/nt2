@@ -96,6 +96,22 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
   magma_init();
 #endif
 
+#elif defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
+
+  int res;
+  omp_set_nested(1);
+  #pragma omp parallel
+    {
+      #pragma omp single
+      {
+        std::cout<<"Welcome to OpenMP!"<<std::endl;
+        res = nt2::details::unit_main(argc,argv,NT2_UNIT_MAIN_SUITE);
+      }
+    }
+
+  return res;
+
+#else
 #if defined(NT2_USE_HPX)
   std::vector<std::string> cfg;
   cfg.push_back("hpx.parcel.port=0");
