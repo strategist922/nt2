@@ -77,12 +77,12 @@ template<typename T> struct blackandscholes_nt2_merged
 
 NT2_REGISTER_BENCHMARK_TPL( blackandscholes_nt2_merged, (float) )
 {
-  std::size_t size_min  = args("size_min",   16);
-  std::size_t size_max  = args("size_max", 4096);
-  std::size_t size_step = args("size_step",   2);
+  std::size_t size_min  = args("size_min" , 6000);
+  std::size_t size_max  = args("size_max" , 24000);
+  std::size_t size_step = args("size_step",    2);
 
-  run_during_with< blackandscholes_nt2_merged<float> > ( 1.
-                                                       , geometric(size_min,size_max,size_step)
-                                                       , cycles_per_element<stats::median_>()
-                                                       );
+  run_during_with< blackandscholes_nt2_merged<float> > ( 10.
+                                                 , geometric(size_min,size_max,size_step)
+                                                 , cycles_per_element<stats::median_>()
+                                                 );
 }

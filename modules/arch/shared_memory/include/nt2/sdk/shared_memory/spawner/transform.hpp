@@ -42,7 +42,7 @@ namespace nt2
         spawner(){}
 
         template<typename Worker>
-        void operator()(Worker & w, std::size_t, std::size_t, std::size_t grain)
+        void operator()(Worker & w, std::size_t, std::size_t, std::pair<std::size_t,std::size_t> grain_out)
         {
              typedef typename
              nt2::make_future< Arch ,int >::type future;
@@ -64,8 +64,8 @@ namespace nt2
              if ( s.empty() )
              {
                  s.grain_ = std::make_pair(
-                  (height > grain)  ? grain : height
-                 ,(width  > grain)  ? grain : width
+                  (height > grain_out.first )  ? grain_out.first  : height
+                 ,(width  > grain_out.second)  ? grain_out.second : width
                  );
 
                  s.NTiles_ = std::make_pair(

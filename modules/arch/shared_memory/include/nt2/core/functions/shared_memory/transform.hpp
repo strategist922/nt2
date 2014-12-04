@@ -41,7 +41,7 @@ namespace nt2 { namespace ext
     {
       // std::size_t cache  = 1024*config::top_cache_size(1)/sizeof(typename Out::value_type);
       // std::size_t grain  = 800*800;
-       std::size_t grain  = 100;
+       std::size_t grain  = 3000*3000;
 
        std::size_t begin = range.first;
        std::size_t size = range.second;
@@ -51,7 +51,7 @@ namespace nt2 { namespace ext
        nt2::worker<tag::transform_,BackEnd,Site,Out,In> w(out,in);
 
        nt2::spawner<tag::transform_,tag::asynchronous_<BackEnd> > s;
-       s(w,begin,size,grain);
+       s(w,begin,size,std::make_pair(grain,w.obound_));
 
        // nt2::spawner<tag::transform_,BackEnd > s;
        // s(w,begin,size,grain);

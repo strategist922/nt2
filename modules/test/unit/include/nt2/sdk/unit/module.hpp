@@ -106,6 +106,7 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
 
   return hpx::init(hpx_initializer(argc, argv), boost::program_options::options_description(), argc, argv, cfg);
 
+
 #elif defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
 
   int res;
