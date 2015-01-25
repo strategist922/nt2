@@ -11,15 +11,12 @@
 
 #include <nt2/sdk/meta/is_container.hpp>
 
-#include <algorithm>
-
 #include <boost/proto/proto.hpp>
 #include <boost/mpl/size_t.hpp>
+#include <boost/mpl/plus.hpp>
 
 namespace nt2 { namespace details
 {
-    struct iplus : std::plus<std::size_t>, boost::proto::callable {};
-
     struct aggregate_costs
     :boost::proto::or_<
       // If the expression is a terminal
@@ -33,7 +30,7 @@ namespace nt2 { namespace details
         boost::proto::fold<
           boost::proto::_
          ,boost::mpl::size_t<1>()
-         ,iplus(boost::proto::_state,aggregate_costs)
+         ,boost::mpl::plus<boost::proto::_state,aggregate_costs>()
         >
       >
     >
