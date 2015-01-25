@@ -11,7 +11,6 @@
 
 #if defined(NT2_USE_TBB)
 
-#include <omp.h>
 #include <tbb/task_scheduler_init.h>
 #include <nt2/sdk/tbb/tbb_initializer.hpp>
 #include <nt2/sdk/shared_memory/details/thread_utility.hpp>
