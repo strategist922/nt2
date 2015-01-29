@@ -68,6 +68,11 @@ namespace nt2 { namespace meta
   {
   };
 
+  template<class T, class Enable=void>
+  struct iterator_ : pointer_<T>
+  {
+  };
+
   //==============================================================================
   //==============================================================================
   template<class T, class Enable=void>
@@ -78,8 +83,17 @@ namespace nt2 { namespace meta
   {
   };
 
+  template<class T, class Enable=void>
+  struct const_iterator_ : const_pointer_<T>
+  {
+  };
+
   template<class T> struct pointer_<T const> : const_pointer_<T> {};
   template<class T> struct pointer_<T&> : pointer_<T> {};
+
+  template<class T> struct iterator_<T const> : const_iterator_<T> {};
+  template<class T> struct iterator_<T&> : iterator_<T> {};
+
   template<class T> struct const_pointer_<T&> : pointer_<T> {};
 
   //==============================================================================
@@ -139,12 +153,32 @@ namespace nt2 { namespace meta
   };
 
   template<class T>
+  struct iterator_ < T
+                  , typename  boost::dispatch::meta::
+                    enable_if_type< typename T::iterator
+                                  , typename boost::disable_if< boost::is_const<T> >::type
+                                  >::type
+                  >
+  {
+    typedef typename T::iterator type;
+  };
+
+  template<class T>
   struct const_pointer_ < T
                   , typename  boost::dispatch::meta::
                     enable_if_type< typename T::const_pointer >::type
                   >
   {
     typedef typename T::const_pointer type;
+  };
+
+  template<class T>
+  struct const_iterator_ < T
+                  , typename  boost::dispatch::meta::
+                    enable_if_type< typename T::const_iterator >::type
+                  >
+  {
+    typedef typename T::const_iterator type;
   };
 } }
 

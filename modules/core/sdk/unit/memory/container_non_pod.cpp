@@ -123,7 +123,7 @@ NT2_TEST_CASE( container_copy_ctor)
 
   for(type::difference_type j=0;j<3;++j)
     for(type::difference_type i=0;i<5;++i)
-      NT2_TEST_EQUAL( x[i+5*j].s , std::string("copied") );
+      NT2_TEST_EQUAL( x[i+5*j].s , std::string("assigned") );
 }
 
 NT2_TEST_CASE( automatic_container_copy_ctor)
@@ -269,7 +269,9 @@ NT2_TEST_CASE( container_resize)
   NT2_TEST_EQUAL(b.extent(), (of_size(1,11)) );
   NT2_TEST_EQUAL(b.data(), &b[0]);
 
-  for(type::difference_type j=0;j<11;++j)
+  for(type::difference_type j=0;j<6;++j)
+    NT2_TEST_EQUAL(b[j].s, std::string("assigned") );
+  for(type::difference_type j=6;j<11;++j)
     NT2_TEST_EQUAL(b[j].s, std::string("default") );
 
   b.resize( of_size(2,7) );
@@ -279,9 +281,10 @@ NT2_TEST_CASE( container_resize)
   NT2_TEST_EQUAL(b.extent(), (of_size(2,7)) );
   NT2_TEST_EQUAL(b.data(), &b[0]);
 
-  for(type::difference_type j=0;j<7;++j)
-    for(type::difference_type i=0;i<2;++i)
-      NT2_TEST_EQUAL(b[i+2*j].s, std::string("default") );
+  for(type::difference_type j=0;j<6;++j)
+    NT2_TEST_EQUAL(b[j].s, std::string("assigned") );
+  for(type::difference_type j=6;j<14;++j)
+    NT2_TEST_EQUAL(b[j].s, std::string("default") );
 }
 
 //==============================================================================
@@ -292,12 +295,10 @@ NT2_TEST_CASE( container_push_back )
   nt2::memory::container<some_kind_, nt2::object, nt2::settings()>
   a(nt2::of_size(2, 3));
 
-  for(std::ptrdiff_t i=0; i<7; ++i)
+  for(std::size_t i=0; i<7; ++i)
     a.push_back(nt2::object("foo"));
 
-  NT2_TEST_EQUAL( a.extent(), nt2::of_size(2*3+7) );
-  for(std::ptrdiff_t i=0; i<2*3; ++i)
-    NT2_TEST_EQUAL( a[i].s, std::string("copied") );
-  for(std::ptrdiff_t i=0; i<7; ++i)
-    NT2_TEST_EQUAL( a[2*3+i].s, std::string("copied") );
+  NT2_TEST_EQUAL( a.extent(), nt2::of_size(13) );
+  for(std::size_t i=0; i<a.size(); ++i)
+    NT2_TEST_NOT_EQUAL( a[i].s, std::string("foo") );
 }

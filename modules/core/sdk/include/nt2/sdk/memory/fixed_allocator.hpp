@@ -11,6 +11,7 @@
 
 #include <boost/core/ignore_unused.hpp>
 #include <boost/assert.hpp>
+#include <utility>
 #include <cstddef>
 
 namespace nt2 {  namespace memory
@@ -81,8 +82,13 @@ namespace nt2 {  namespace memory
     ////////////////////////////////////////////////////////////////////////////
     // Object lifetime handling
     ////////////////////////////////////////////////////////////////////////////
-    void construct(pointer p, const T& t) { p = new (p) value_type(t);  }
-    void destroy(pointer p)               { p->~value_type();           }
+    template<typename... Args>
+    void construct(pointer p, Args&&... args)
+    {
+      p = new (p) value_type(std::forward<Args>(args)...);
+    }
+
+    void destroy(pointer p) { p->~value_type(); }
 
     ////////////////////////////////////////////////////////////////////////////
     // Memory handling

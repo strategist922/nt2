@@ -73,15 +73,25 @@ namespace nt2 { namespace memory
                       , meta::const_pointer_<boost::mpl::_>
                       >::type                           const_pointer;
 
+    typedef typename boost::mpl::
+            transform < data_t
+                      , meta::iterator_<boost::mpl::_>
+                      >::type                           iterator_seq;
+
+    typedef typename boost::mpl::
+            transform < data_t
+                      , meta::const_iterator_<boost::mpl::_>
+                      >::type                           const_iterator_seq;
+
     typedef nt2::container::composite_reference<value_type>        reference;
     typedef nt2::container::composite_reference<value_type const>  const_reference;
 
-    typedef composite_iterator< pointer
+    typedef composite_iterator< iterator_seq
                               , value_type
                               , reference
                               >                         iterator;
 
-    typedef composite_iterator< const_pointer
+    typedef composite_iterator< const_iterator_seq
                               , value_type
                               , const_reference
                               >                         const_iterator;

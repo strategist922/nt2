@@ -64,12 +64,12 @@ namespace nt2 { namespace memory
                >::type                                           pointer;
     typedef typename boost::mpl::
             if_< boost::is_const<T>
-               , typename base_t::const_iterator
-               , typename base_t::iterator
+               , typename base_t::const_pointer
+               , typename base_t::pointer
                >::type                                           iterator;
     typedef typename base_t::const_reference                     const_reference;
     typedef typename base_t::const_pointer                       const_pointer;
-    typedef typename base_t::const_iterator                      const_iterator;
+    typedef typename base_t::const_pointer                       const_iterator;
 
     container_ref() : ptr(), base_()
     {

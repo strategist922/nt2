@@ -51,7 +51,7 @@ NT2_TEST_CASE( buffer_size_ctor )
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 5u    );
   NT2_TEST_EQUAL(b.capacity() , 5u    );
-  NT2_TEST_EQUAL(b.data()      , &b[0] );
+  NT2_TEST_EQUAL(b.data()     , &b[0] );
 
   for ( std::size_t i = 0; i < 5; ++i )
     NT2_TEST_EQUAL( b[i].s, std::string("default") );
@@ -65,7 +65,7 @@ NT2_TEST_CASE( buffer_copy_ctor )
   using nt2::memory::buffer;
 
   buffer<nt2::object>  b(5);
-  buffer<nt2::object>       x(b);
+  buffer<nt2::object>  x(b);
 
   NT2_TEST(!x.empty());
   NT2_TEST_EQUAL(x.size()     , 5u    );
@@ -73,7 +73,7 @@ NT2_TEST_CASE( buffer_copy_ctor )
   NT2_TEST_EQUAL(x.data()      , &x[0] );
 
   for( std::size_t i = 0; i < 5; ++i )
-    NT2_TEST_EQUAL( x[i].s, std::string("copied") );
+    NT2_TEST_EQUAL( x[i].s, std::string("assigned") );
 }
 
 //==============================================================================
@@ -88,34 +88,86 @@ NT2_TEST_CASE( buffer_resize )
   b.resize(9);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 9u    );
-  NT2_TEST_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
   NT2_TEST_EQUAL(b.data()      , &b[0] );
 
-  for( std::size_t i = 0; i < 9; ++i )
+  for( std::size_t i = 0; i < 5; ++i )
+    NT2_TEST_EQUAL( b[i].s, std::string("assigned") );
+
+  for( std::size_t i = 5; i < 9; ++i )
     NT2_TEST_EQUAL( b[i].s, std::string("default") );
 
   b.resize(3);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 3u    );
-  NT2_TEST_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
   NT2_TEST_EQUAL(b.data()      , &b[0] );
 
   for( std::size_t i = 0; i < 3; ++i )
-    NT2_TEST_EQUAL( b[i].s, std::string("default") );
+    NT2_TEST_EQUAL( b[i].s, std::string("assigned") );
 
   b.resize(5);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 5u    );
-  NT2_TEST_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
   NT2_TEST_EQUAL(b.data()      , &b[0] );
 
-  for( std::size_t i = 0; i < 5; ++i )
+  for( std::size_t i = 0; i < 3; ++i )
+    NT2_TEST_EQUAL( b[i].s, std::string("assigned") );
+
+  for( std::size_t i = 3; i < 5; ++i )
     NT2_TEST_EQUAL( b[i].s, std::string("default") );
 
   b.resize(1);
   NT2_TEST(!b.empty());
   NT2_TEST_EQUAL(b.size()     , 1u    );
-  NT2_TEST_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_EQUAL(b.data()      , &b[0] );
+
+  for( std::size_t i = 0; i < 1; ++i )
+    NT2_TEST_EQUAL( b[i].s, std::string("assigned") );
+}
+
+//==============================================================================
+// Test for buffer reuse
+//==============================================================================
+NT2_TEST_CASE( buffer_reuse )
+{
+  using nt2::memory::buffer;
+
+  buffer<nt2::object> b(5);
+
+  b.reuse(9);
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 9u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_EQUAL(b.data()      , &b[0] );
+
+  for( std::size_t i = 0; i < 9; ++i )
+    NT2_TEST_EQUAL( b[i].s, std::string("default") );
+
+  b.reuse(3);
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 3u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_EQUAL(b.data()      , &b[0] );
+
+  for( std::size_t i = 0; i < 3; ++i )
+    NT2_TEST_EQUAL( b[i].s, std::string("default") );
+
+  b.reuse(5);
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 5u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
+  NT2_TEST_EQUAL(b.data()      , &b[0] );
+
+  for( std::size_t i = 0; i < 5; ++i )
+    NT2_TEST_EQUAL( b[i].s, std::string("default") );
+
+  b.reuse(1);
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 1u    );
+  NT2_TEST_GREATER_EQUAL(b.capacity() , 9u    );
   NT2_TEST_EQUAL(b.data()      , &b[0] );
 
   for( std::size_t i = 0; i < 1; ++i )
@@ -193,26 +245,18 @@ NT2_TEST_CASE( buffer_swap )
 //==============================================================================
 // buffer Range interface
 //==============================================================================
-struct f_
-{
-  template<class T> std::string operator()(T const&) const
-  {
-    return "transformed";
-  }
-};
-
 NT2_TEST_CASE( buffer_iterator )
 {
   using nt2::memory::buffer;
 
   buffer<nt2::object> x(5);
 
-  f_ f;
-
   buffer<nt2::object>::iterator b = x.begin();
   buffer<nt2::object>::iterator e = x.end();
 
-  std::transform(b,e,b,f);
+  std::transform( b, e, b
+                , [](nt2::object const&) { return std::string("transformed"); }
+                );
 
   for ( std::size_t i = 0; i < 5; ++i )
     NT2_TEST_EQUAL( x[i].s, std::string("transformed") );
@@ -222,28 +266,26 @@ NT2_TEST_CASE(buffer_push_back )
 {
   using nt2::memory::buffer;
 
-  buffer<nt2::object> x(5);
-  for ( std::ptrdiff_t i = 0; i < 5; ++i ) x[i] = nt2::object("foo");
-  for ( std::ptrdiff_t i = 0; i < 7; ++i ) x.push_back("bar");
+  buffer<std::string> x(5);
+  for ( std::ptrdiff_t i = 0; i < 5; ++i )  x[i] = "foo";
+  for ( std::ptrdiff_t i = 0; i < 7; ++i )  x.push_back( "bar" );
 
-  NT2_TEST_EQUAL( x.size(), (std::size_t)5+7 );
-  std::ptrdiff_t i = 0;
-  for ( ; i < 5; ++i ) NT2_TEST_EQUAL( x[i].s, std::string("copied") );
-  for ( ; i < 5+7; ++i ) NT2_TEST_EQUAL( x[i].s, std::string("copied") );
-
-  std::cout << "capacity = " << x.capacity() << std::endl;
+  NT2_TEST_EQUAL( x.size(), 12UL );
+  for( std::ptrdiff_t i=0; i < 5; ++i )
+    NT2_TEST_EQUAL( x[i], std::string("foo") );
+  for( std::ptrdiff_t i=5; i < 12; ++i )
+    NT2_TEST_EQUAL( x[i], std::string("bar") );
 }
 
 NT2_TEST_CASE(buffer_push_back_def )
 {
   using nt2::memory::buffer;
 
-  buffer<nt2::object> x;
-  for ( std::ptrdiff_t i = 0; i < 7; ++i ) x.push_back("bar");
-
-  NT2_TEST_EQUAL( x.size(), (std::size_t)7 );
-  std::ptrdiff_t i = 0;
-  for ( ; i < 7; ++i ) NT2_TEST_EQUAL( x[i].s, std::string("copied") );
-
-  std::cout << "capacity = " << x.capacity() << std::endl;
+  buffer<std::string> x;
+  for ( std::ptrdiff_t i = 0; i < 7; ++i )
+  {
+    x.push_back( "bar" );
+    NT2_TEST_EQUAL( x.size(), 1UL+i );
+    NT2_TEST_EQUAL( x[i], std::string("bar") );
+  }
 }

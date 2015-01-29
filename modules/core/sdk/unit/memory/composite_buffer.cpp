@@ -145,9 +145,7 @@ NT2_TEST_CASE( composite_buffer_default_ctor )
   composite_buffer< buffer<foo> > b;
 
   NT2_TEST(b.empty());
-  NT2_TEST_EQUAL(b.size()     , 0u      );
-  NT2_TEST_EQUAL(b.capacity() , 0u      );
-  NT2_TEST_EQUAL(b.begin()    , b.end() );
+  NT2_TEST(b.begin() == b.end() );
 }
 
 //==============================================================================
@@ -162,9 +160,7 @@ NT2_TEST_CASE( composite_buffer_allocator_ctor )
   composite_buffer< buffer<foo> > b(allocs);
 
   NT2_TEST(b.empty());
-  NT2_TEST_EQUAL(b.size()     , 0u      );
-  NT2_TEST_GREATER_EQUAL(b.capacity() , 0u      );
-  NT2_TEST_EQUAL(b.begin()    , b.end() );
+  NT2_TEST(b.begin() == b.end() );
 }
 
 //==============================================================================

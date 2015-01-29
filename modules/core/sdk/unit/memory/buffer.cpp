@@ -32,11 +32,7 @@ NT2_TEST_CASE_TPL( buffer_default_ctor, NT2_TYPES)
   using nt2::memory::buffer;
 
   buffer<T> b;
-
   NT2_TEST(b.empty());
-  NT2_TEST_EQUAL(b.size()     , 0u      );
-  NT2_TEST_EQUAL(b.capacity() , 0u      );
-  NT2_TEST_EQUAL(b.begin()    , b.end() );
 }
 
 //==============================================================================
@@ -48,13 +44,39 @@ NT2_TEST_CASE_TPL( buffer_size_ctor, NT2_TYPES)
 
   buffer<T> b(5);
 
-  NT2_TEST(!b.empty());
-  NT2_TEST_EQUAL(b.size()     , 5u    );
-  NT2_TEST_EQUAL(b.capacity() , 5u    );
-  NT2_TEST_EQUAL(b.data()      , &b[0] );
+  NT2_TEST_EQUAL(b.size() , 5u);
 
   for ( std::ptrdiff_t i = 0; i < 5; ++i ) b[i] = T(3+i);
   for ( std::ptrdiff_t i = 0; i < 5; ++i ) NT2_TEST_EQUAL( b[i], T(3+i) );
+}
+
+//==============================================================================
+// Test for init-list buffer ctor
+//==============================================================================
+NT2_TEST_CASE_TPL( buffer_list_ctor, NT2_TYPES)
+{
+  using nt2::memory::buffer;
+
+  buffer<T> b{1,2,3,4,5,6,7};
+
+  NT2_TEST_EQUAL(b.size() , 7u);
+
+  for ( std::ptrdiff_t i = 0; i < 7; ++i ) NT2_TEST_EQUAL( b[i], T(1+i) );
+}
+
+//==============================================================================
+// Test for move buffer ctor
+//==============================================================================
+NT2_TEST_CASE_TPL( buffer_move_ctor, NT2_TYPES)
+{
+  using nt2::memory::buffer;
+
+  buffer<T> b{1,2,3,4,5,6,7},x(std::move(b));
+
+  NT2_TEST_EQUAL(b.size() , 0u);
+  NT2_TEST_EQUAL(x.size() , 7u);
+
+  for(std::ptrdiff_t i = 0; i < 7; ++i) NT2_TEST_EQUAL( x[i], T(1+i) );
 }
 
 //==============================================================================
@@ -70,11 +92,7 @@ NT2_TEST_CASE_TPL( buffer_data_ctor, NT2_TYPES)
 
   buffer<T>  x(b);
 
-  NT2_TEST(!x.empty());
-  NT2_TEST_EQUAL(x.size()     , 5u    );
-  NT2_TEST_EQUAL(x.capacity() , 5u    );
-  NT2_TEST_EQUAL(x.data()      , &x[0] );
-
+  NT2_TEST_EQUAL(x.size(), 5u );
   NT2_TEST_EQUAL( x, b );
 }
 
@@ -86,43 +104,42 @@ NT2_TEST_CASE_TPL(buffer_resize, NT2_TYPES )
   using nt2::memory::buffer;
 
   buffer<T> b(5);
-
   for ( std::ptrdiff_t i = 0; i < 5; ++i ) b[i] = T(3+i);
 
   b.resize(3);
-  NT2_TEST(!b.empty());
-  NT2_TEST_EQUAL(b.size()       , 3u        );
-  NT2_TEST_GREATER_EQUAL(b.capacity() , b.size()  );
-  NT2_TEST_EQUAL(b.data()        , &b[0]     );
-
+  NT2_TEST_EQUAL(b.size() , 3u);
   for ( std::ptrdiff_t i = 0; i < 3; ++i ) NT2_TEST_EQUAL( b[i], T(3+i) );
 
   b.resize(5);
-  NT2_TEST(!b.empty());
-  NT2_TEST_EQUAL(b.size()     , 5u    );
-  NT2_TEST_GREATER_EQUAL(b.capacity() , b.size()  );
-  NT2_TEST_EQUAL(b.data()      , &b[0] );
-
+  NT2_TEST_EQUAL(b.size() , 5u);
   for ( std::ptrdiff_t i = 0; i < 5; ++i ) NT2_TEST_EQUAL( b[i], T(3+i) );
 
   b.resize(9);
-  NT2_TEST(!b.empty());
-  NT2_TEST_EQUAL(b.size()     , 9u    );
-  NT2_TEST_GREATER_EQUAL(b.capacity() , b.size()  );
-  NT2_TEST_EQUAL(b.data()      , &b[0] );
-
+  NT2_TEST_EQUAL(b.size() , 9u);
   for ( std::ptrdiff_t i = 0; i < 9; ++i ) b[i] = T(4*(i+1));
   for ( std::ptrdiff_t i = 0; i < 9; ++i ) NT2_TEST_EQUAL( b[i], T(4*(i+1)) );
 
   b.resize(1);
-  NT2_TEST(!b.empty());
-  NT2_TEST_EQUAL(b.size()     , 1u    );
-  NT2_TEST_GREATER_EQUAL(b.capacity() , b.size()  );
-  NT2_TEST_EQUAL(b.data()      , &b[0] );
-
+  NT2_TEST_EQUAL(b.size() , 1u);
   for ( std::ptrdiff_t i = 0; i < 1; ++i ) NT2_TEST_EQUAL( b[i], T(4*(i+1)) );
 }
 
+//==============================================================================
+// Test for move buffer assignment
+//==============================================================================
+NT2_TEST_CASE_TPL( buffer_move_assign, NT2_TYPES)
+{
+  using nt2::memory::buffer;
+
+  buffer<T> b{1,2,3,4,5,6,7},x;
+
+  x = std::move(b);
+
+  NT2_TEST_EQUAL(b.size() , 0u);
+  NT2_TEST_EQUAL(x.size() , 7u);
+
+  for(std::ptrdiff_t i = 0; i < 7; ++i) NT2_TEST_EQUAL( x[i], T(1+i) );
+}
 //==============================================================================
 // Test for buffer assignment
 //==============================================================================
@@ -137,10 +154,7 @@ NT2_TEST_CASE_TPL(buffer_assignment, NT2_TYPES )
   buffer<T> x;
   x = b;
 
-  NT2_TEST(!x.empty());
-  NT2_TEST_EQUAL(x.size() , 5u  );
-  NT2_TEST_EQUAL(x.data()  , &x[0] );
-  NT2_TEST_GREATER_EQUAL(x.capacity(), x.size() );
+  NT2_TEST_EQUAL(x.size() , 5u);
   NT2_TEST_EQUAL( x, b );
 }
 
@@ -159,15 +173,8 @@ NT2_TEST_CASE_TPL(buffer_swap, NT2_TYPES )
 
   swap(x,b);
 
-  NT2_TEST(!x.empty());
-  NT2_TEST_EQUAL(x.size()     , 5u    );
-  NT2_TEST_EQUAL(x.capacity() , 5u    );
-  NT2_TEST_EQUAL(x.data()      , &x[0] );
-
-  NT2_TEST(!b.empty());
-  NT2_TEST_EQUAL(b.size()     , 7u    );
-  NT2_TEST_EQUAL(b.capacity() , 7u    );
-  NT2_TEST_EQUAL(b.data()      , &b[0] );
+  NT2_TEST_EQUAL(x.size() , 5u);
+  NT2_TEST_EQUAL(b.size() , 7u);
 
   for ( std::ptrdiff_t i = 0; i < 7; ++i ) NT2_TEST_EQUAL( b[i], T(3*(i+1)) );
   for ( std::ptrdiff_t i = 0; i < 5; ++i ) NT2_TEST_EQUAL( x[i], T(3+i) );
@@ -213,10 +220,8 @@ NT2_TEST_CASE_TPL(buffer_push_back, NT2_TYPES )
   std::ptrdiff_t i = 0;
   for ( ; i < 5;  ++i ) NT2_TEST_EQUAL( x[i], T(3+i) );
   for ( ; i < 12; ++i ) NT2_TEST_EQUAL( x[i], T(11+i-5) );
-
-  std::cout << "capacity = " << x.capacity() << std::endl;
 }
-
+/*
 //==============================================================================
 // buffer push_back range of values
 //==============================================================================
@@ -229,7 +234,7 @@ NT2_TEST_CASE_TPL(buffer_append, NT2_TYPES )
   for ( std::ptrdiff_t i = 0; i < 5; ++i ) x[i] = T(3+i);
   for ( std::ptrdiff_t i = 0; i < 7; ++i ) y[i] = T(2*i);
 
-  x.append(y.begin(),y.end());
+  nt2::memory::append(x,y.begin(),y.end());
 
   NT2_TEST_EQUAL( x.size(), 12u );
 
@@ -237,12 +242,10 @@ NT2_TEST_CASE_TPL(buffer_append, NT2_TYPES )
   for ( ; i < 5;  ++i ) NT2_TEST_EQUAL( x[i], T(3+i) );
   for ( ; i < 12; ++i ) NT2_TEST_EQUAL( x[i], T(2*(i-5)) );
 
-  x.append(y.begin(),y.end());
+  nt2::memory::append(x,y.begin(),y.end());
 
   NT2_TEST_EQUAL( x.size(), 19u );
   for ( ; i < 19; ++i ) NT2_TEST_EQUAL( x[i], T(2*(i-12)) );
-
-  std::cout << "capacity = " << x.capacity() << std::endl;
 }
 
 //==============================================================================
@@ -258,8 +261,6 @@ NT2_TEST_CASE_TPL(buffer_append_def, NT2_TYPES )
   NT2_TEST_EQUAL( x.size(), (std::size_t)7 );
   std::ptrdiff_t i = 0;
   for ( ; i < 7; ++i ) NT2_TEST_EQUAL( x[i], T(11+i) );
-
-  std::cout << "capacity = " << x.capacity() << std::endl;
 }
 
 //==============================================================================
@@ -273,12 +274,11 @@ NT2_TEST_CASE_TPL(buffer_push_backs_def, NT2_TYPES )
   buffer<T> y(7);
   for ( std::ptrdiff_t i = 0; i < 7; ++i ) y[i] = T(2*i);
 
-  x.append(y.begin(),y.end());
+  nt2::memory::append(x,y.begin(),y.end());
 
   NT2_TEST_EQUAL( x.size(), 7u );
 
   std::ptrdiff_t i = 0;
   for ( ; i < 7; ++i ) NT2_TEST_EQUAL( x[i], T(2*i) );
-
-  std::cout << "capacity = " << x.capacity() << std::endl;
 }
+*/

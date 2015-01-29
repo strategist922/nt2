@@ -11,7 +11,6 @@
 
 #include <string>
 
-
 namespace nt2
 {
   struct object
@@ -31,8 +30,6 @@ namespace nt2
       s = src;
       return *this;
     }
-
-    ~object() {}
 
     std::string s;
   };

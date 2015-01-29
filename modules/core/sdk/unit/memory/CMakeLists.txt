@@ -19,7 +19,6 @@ SET( SOURCES
   container.cpp
   container_non_pod.cpp
   composite_container.cpp
-  fixed_allocator.cpp
 ## List of scalar test files for toolbox core.memory
    )
 

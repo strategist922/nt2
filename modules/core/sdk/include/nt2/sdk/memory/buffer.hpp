@@ -1,6 +1,6 @@
 //==============================================================================
-//         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -9,360 +9,370 @@
 #ifndef NT2_SDK_MEMORY_BUFFER_HPP_INCLUDED
 #define NT2_SDK_MEMORY_BUFFER_HPP_INCLUDED
 
-#include <nt2/sdk/memory/copy.hpp>
-#include <nt2/sdk/memory/destruct.hpp>
-#include <nt2/sdk/memory/local_ptr.hpp>
-#include <nt2/sdk/memory/construct.hpp>
-#include <nt2/sdk/memory/is_safe.hpp>
 #include <nt2/sdk/memory/adapted/buffer.hpp>
-#include <nt2/sdk/memory/fixed_allocator.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/detail/iterator.hpp>
-#include <boost/assert.hpp>
-#include <boost/swap.hpp>
+#include <nt2/sdk/memory/details/buffer.hpp>
+#include <nt2/sdk/memory/copy.hpp>
+#include <initializer_list>
+#include <type_traits>
 #include <cstddef>
-
-// Growth factor is globally optimizable
-#ifndef NT2_BUFFER_GROWTH_FACTOR
-#define NT2_BUFFER_GROWTH_FACTOR 2
-#endif
+#include <memory>
 
 namespace nt2 { namespace memory
 {
-  //============================================================================
-  /**!
-   * @brief buffer is a dynamically-sized sequence using dynamic storage.
-   **/
-  //===========================================================================
-  template<class T, class Allocator>
-  class buffer : private Allocator
-  {
-  public:
-    //==========================================================================
-    // Container types
-    //==========================================================================
-    typedef typename Allocator::template rebind<T>::other allocator_type;
-    typedef typename allocator_type::value_type           value_type;
-    typedef typename allocator_type::reference            reference;
-    typedef typename allocator_type::const_reference      const_reference;
-    typedef typename allocator_type::pointer              pointer;
-    typedef typename allocator_type::const_pointer        const_pointer;
-    typedef typename allocator_type::pointer              iterator;
-    typedef typename allocator_type::const_pointer        const_iterator;
-    typedef std::reverse_iterator<iterator>               reverse_iterator;
-    typedef std::reverse_iterator<const_iterator>         const_reverse_iterator;
-    typedef typename allocator_type::size_type            size_type;
-    typedef typename allocator_type::difference_type      difference_type;
+  /*!
+    @brief Releasable sequence container
 
-    //==========================================================================
-    // Default constructor
-    //==========================================================================
-    buffer( allocator_type a = allocator_type())
-          : allocator_type(a)
-          , begin_(0), end_(0), capacity_(0)
+    buffer is a sequence container that encapsulates dynamic size arrays with
+    various enhancement with respect to memory ownership and reuse.
+
+    Main difference with std::vector are:
+
+      * a release() method which, similarly to unique_ptr, allow to extract data
+        from a buffer
+      * a reuse() method with perform destructive resizing.
+      * the non-implementation of some members or members variation
+        for KISS reasons.
+
+    @tparam T The type of the elements.
+    @tparam A An allocator that is used to acquire memory to store the elements.
+              The type must meet the requirements of Allocator.
+  **/
+  template<typename T, typename A> struct buffer
+  {
+    /// INTERNAL ONLY
+    using alloc_t         = std::allocator_traits<A>;
+
+    /// INTERNAL ONLY
+    using del_t           = details::deleter<A>;
+
+    /// INTERNAL ONLY
+    using data_type       = std::unique_ptr<T[],del_t>;
+
+    using allocator_type  = typename alloc_t::allocator_type;
+    using value_type      = typename alloc_t::value_type;
+    using iterator        = typename alloc_t::pointer;
+    using const_iterator  = typename alloc_t::const_pointer;
+    using pointer         = typename alloc_t::pointer;
+    using const_pointer   = typename alloc_t::const_pointer;
+    using size_type       = typename alloc_t::size_type;
+    using difference_type = typename alloc_t::difference_type;
+    using reference       = typename std::iterator_traits<iterator>::reference;
+    using const_reference = typename std::iterator_traits<const_iterator>::reference;
+
+    /*!
+      @brief Constructs a buffer of n elements
+
+      @param n Number of elements to allocate
+      @param a Allocator value to use as initialization
+    **/
+    buffer( std::size_t n, A const& a )
+          : alloc_{a}
+          , data_{alloc_t::allocate(alloc_,n), del_t{&alloc_,n,n}}
+          , size_{n}, capacity_{n}
+    {
+      details::may_construct( begin() , end(), alloc_ );
+    }
+
+    /*!
+      @brief Default Constructor with allocator support
+
+      Constructs an empty buffer and initializes its allocator
+
+      @param a Allocator value to use as initialization
+    **/
+    buffer(A const& a)
+          : alloc_{a}, data_{pointer{0}, del_t{&alloc_,0,0}}
+          , size_{0}, capacity_{0}
     {}
 
-  private:
-    //==========================================================================
-    // Local helper for constructor dealing with memory
-    //==========================================================================
-    struct deleter
+
+    /*!
+      @brief Default Constructor
+
+      Constructs an empty buffer.
+    **/
+    BOOST_FORCEINLINE  buffer() : buffer(A{}) {}
+
+    /*!
+      @brief Constructs a buffer of n elements
+
+      @param n Number of elements to allocate
+    **/
+    buffer( std::size_t n ) : buffer{n,A{}} {}
+
+    /// @brief Copy Constructor
+    buffer( buffer const& other ) : buffer(other.size_,other.alloc_)
     {
-      std::size_t size_;
-      allocator_type& alloc_;
-
-      deleter(std::size_t s, allocator_type& a) : size_(s), alloc_(a) {}
-      void operator()(pointer ptr) { alloc_.deallocate(ptr,size_); }
-    private:
-      deleter& operator=(deleter const&);
-    };
-
-  public:
-    //==========================================================================
-    // Size constructor
-    //==========================================================================
-    buffer( size_type n, allocator_type a = allocator_type())
-          : allocator_type(a)
-          , begin_(0), end_(0), capacity_(0)
-    {
-      if(!n) return;
-
-      local_ptr<T,deleter> that ( allocator_type::allocate(n)
-                                , deleter(n,get_allocator())
-                                );
-
-      self_construct( that.get(), that.get() + n
-                    , typename boost::is_same < Allocator
-                                              , fixed_allocator<T>
-                                              >::type()
-                    );
-
-      begin_ = that.release();
-      end_ = capacity_ = begin_ + n;
+      nt2::memory::copy(other.begin(),other.end(),begin());
     }
 
-    //==========================================================================
-    // Copy constructor with extra capacity
-    //==========================================================================
-    buffer( buffer const& src, std::size_t capa )
-          : allocator_type(src.get_allocator())
-          , begin_(0), end_(0), capacity_(0)
+    /// @brief Move constructor
+    BOOST_FORCEINLINE buffer(buffer&& other) : buffer() { swap( other ); }
+
+    /// @brief Initializer list constructor
+    buffer(std::initializer_list<T> args) : buffer(args.size())
     {
-      if(!capa) return;
-
-      local_ptr<T,deleter> that ( allocator_type::allocate(capa)
-                                , deleter(capa,get_allocator())
-                                );
-
-      nt2::memory::copy_construct ( src.begin(),src.end()
-                                  , that.get()
-                                  , get_allocator()
-                                  );
-
-      begin_    = that.release();
-      end_      = begin_ + src.size();
-      capacity_ = begin_ + capa;
+      nt2::memory::copy(args.begin(),args.end(),begin());
     }
 
-    //==========================================================================
-    // Copy constructor
-    //==========================================================================
-    buffer( buffer const& src )
-          : allocator_type(src.get_allocator())
-          , begin_(0), end_(0), capacity_(0)
+    /*!
+      @brief Copy assignment operator
+
+      Replaces the contents with a copy of the contents of other.
+
+      @param  other Data to copy
+      @return Current instance with copied data
+    **/
+    buffer& operator=(buffer const& other)
     {
-      if(!src.size()) return;
-
-      local_ptr<T,deleter> that ( allocator_type::allocate(src.size())
-                                , deleter(src.size(),get_allocator())
-                                );
-
-      nt2::memory::copy_construct ( src.begin(),src.end()
-                                  , that.get()
-                                  , get_allocator()
-                                  );
-
-      begin_ = that.release();
-      end_ = capacity_ = begin_ + src.size();
-    }
-
-    //==========================================================================
-    // Destructor
-    //==========================================================================
-    ~buffer()
-    {
-      if(begin_)
+      if(&other != this)
       {
-        self_destruct ( typename boost::is_same < Allocator
-                                                , fixed_allocator<T>
-                                                >::type()
-                      );
-
-        allocator_type::deallocate(begin_,capacity());
+        buffer that(other);
+        swap(that);
       }
-    }
 
-    //==========================================================================
-    // Assignment
-    //==========================================================================
-    buffer& operator=(buffer const& src)
-    {
-      resize(src.size());
-      nt2::memory::copy(src.begin(),src.end(),begin());
       return *this;
     }
 
-    //==========================================================================
-    // Non-conservative resize
-    //==========================================================================
-    void resize( size_type sz )
+    /*!
+      @brief Copy assignment operator from r-value reference
+
+      Replaces the contents with the contents of other.
+
+      @param other Data to extract data from
+      @return Current instance with assigned data
+    **/
+    BOOST_FORCEINLINE buffer& operator=(buffer&& other)
     {
-      if(sz > capacity() )
-      {
-        // Resize to twice the requested size to optimize capacity usage
-        buffer that(sz,get_allocator());
-        swap(that);
-        return;
-      }
-
-      finish_resize ( sz
-                    , typename boost::is_same < Allocator
-                                              , fixed_allocator<T>
-                                              >::type()
-                    );
-
-      end_ = begin_ + sz;
+      swap(other);
+      return *this;
     }
 
-    //==========================================================================
-    // Resizes and add one element at the end
-    //==========================================================================
-    void push_back( T const& t )
+    /*!
+      @brief Copy assignment operator from initializer list
+
+      Replaces the contents with those identified by the initializer list.
+
+      @param args List of value to copy from
+      @return Current instance with copied data
+    **/
+    buffer& operator=(std::initializer_list<T> args)
     {
-      std::ptrdiff_t osz = size();
+      buffer that(args);
+      swap(that);
 
-      if( end_ >= capacity_ )
-      {
-        typename boost::is_same<Allocator,fixed_allocator<T> >::type is_fixed;
-        buffer that(*this, new_size(osz, 1, is_fixed));
-        swap(that);
-      }
-
-      new(end_) T(t);
-      ++end_;
+      return *this;
     }
 
-    //==========================================================================
-    // Resizes and add a range of elements at the end
-    //==========================================================================
+    /// @brief Check if the buffer contains 0 element
+    BOOST_FORCEINLINE bool  empty() const { return !size_;  }
+
+    /// @brief Return the logical number of elements of the buffer
+    BOOST_FORCEINLINE std::size_t size()  const { return size_; }
+
+    /// @brief Return the allocated number of elements of the buffer
+    BOOST_FORCEINLINE std::size_t capacity()  const { return capacity_; }
+
+    /*!
+      @brief Access to a specified element
+
+      Returns a reference to the element at specified location i.
+      No bounds checking is performed.
+
+      @param i position of the element to return
+
+      @return Reference to the requested element.
+    **/
+    BOOST_FORCEINLINE T& operator[](std::size_t i)
+    {
+      return data_[i];
+    }
+
+    /// @overload
+    BOOST_FORCEINLINE T const& operator[](std::size_t i) const
+    {
+      return data_[i];
+    }
+
+    /*!
+      @brief Exchanges the given buffers' values
+
+      @params other value to be swapped
+    **/
+    void swap(buffer& other)
+    {
+      using std::swap;
+      swap( alloc_   , other.alloc_    );
+      swap( data_    , other.data_     );
+      swap( size_    , other.size_     );
+      swap( capacity_, other.capacity_ );
+    }
+
+    /*!
+      @brief Changes the number of elements stored
+
+      Resizes the container to contain @c n elements.
+
+      @param n  new size of the buffer
+    **/
+    void resize( std::size_t n )
+    {
+      realloc ( n , [](buffer const& c, pointer o)
+                    {
+                      nt2::memory::copy( c.begin(),c.end(), o );
+                    }
+                  , [&](std::size_t sz) { complete_realloc(sz); }
+              );
+    }
+
+    /*!
+      @brief Reset the number of elements stored
+
+      Resizes the container to contain @c n elements while losing any
+      preexistign data.
+
+      @param n  new size of the buffer
+    **/
+    void reuse( std::size_t n )
+    {
+      realloc ( n , [](buffer const&, pointer)  {}
+                  , [&](std::size_t sz) { complete_realloc(sz); }
+              );
+    }
+
+    /*!
+      @brief Adds element to the end
+
+      Appends the given element value to the end of the buffer.
+
+      @param v element to insert
+    **/
+    void push_back(const_reference v)
+    {
+      auto pos        = size_;
+      auto next_size  = size_+1;
+
+      realloc ( next_size
+              , [](buffer const& c, pointer o)
+                {
+                  nt2::memory::copy( c.begin(),c.end(), o );
+                }
+              , [&](std::size_t) { alloc_t::construct(alloc_, &data_[pos], v); }
+              );
+    }
+
+    /*!
+      @brief Adds elements to the end
+
+      Appends the each elements of the given range to the end of the buffer.
+
+      @param b begining of the range to insert
+      @param e end of the range to insert
+
+    **/
     template<typename Iterator> void append( Iterator b, Iterator e )
     {
-      std::ptrdiff_t osz = size();
-      std::ptrdiff_t sz = e-b;
-
-      if( end_ >= capacity_ )
-      {
-        typename boost::is_same<Allocator,fixed_allocator<T> >::type is_fixed;
-        buffer that(*this, new_size(osz, sz, is_fixed));
-        swap(that);
-      }
-
-      nt2::memory::copy(b,e,begin_+osz);
-
-      end_ += sz;
+      auto s = size_;
+      resize(s + (e-b));
+      nt2::memory::copy(b,e,begin()+s);
     }
 
-    //==========================================================================
-    // Swap
-    //==========================================================================
-    void swap( buffer& src )
+    /*!
+      @brief Release buffer data ownership
+
+      Returns a pointer to the buffer data and releases the ownership.
+
+      @return Pointer to the buffer data.
+    **/
+    BOOST_FORCEINLINE T* release()
     {
-      boost::swap(begin_          , src.begin_          );
-      boost::swap(end_            , src.end_            );
-      boost::swap(capacity_       , src.capacity_       );
-      boost::swap(get_allocator() , src.get_allocator() );
+      size_ = capacity_ = 0;
+      return data_.release();
     }
 
-    //==========================================================================
-    // Iterators
-    //==========================================================================
-    iterator        begin()       { return begin_;  }
-    const_iterator  begin() const { return begin_;  }
-    iterator        end()         { return end_;    }
-    const_iterator  end()   const { return end_;    }
-
-    reverse_iterator rbegin()     { return reverse_iterator(end());   }
-    reverse_iterator rend()       { return reverse_iterator(begin()); }
-
-    const_reverse_iterator rbegin() const
+    /// @brief Returns the allocator associated with the container.
+    BOOST_FORCEINLINE allocator_type& get_allocator()
     {
-      return const_reverse_iterator(end());
+      return alloc_;
     }
 
-    const_reverse_iterator rend() const
+    /// @overload
+    BOOST_FORCEINLINE allocator_type const& get_allocator() const
     {
-      return const_reverse_iterator(begin());
+      return alloc_;
     }
 
-    //==========================================================================
-    // Allocator access
-    //==========================================================================
-    allocator_type& get_allocator()
-    {
-      return static_cast<allocator_type&>(*this);
-    }
+    /// @brief Direct access to the underlying array
+    BOOST_FORCEINLINE pointer  data()  { return data_.get(); }
 
-    allocator_type const& get_allocator() const
-    {
-      return static_cast<allocator_type const&>(*this);
-    }
+    /// @overload
+    BOOST_FORCEINLINE const_pointer  data() const  { return data_.get(); }
 
-    //==========================================================================
-    // Raw values
-    //==========================================================================
-    pointer        data()       { return begin_;  }
-    const_pointer  data() const { return begin_;  }
+    /// @brief Iterator referencing the first buffer element
+    BOOST_FORCEINLINE iterator begin() { return data_.get(); }
 
-    //==========================================================================
-    // Size related members
-    //==========================================================================
-    inline size_type  size()      const { return end_ - begin_;       }
-    inline size_type  capacity()  const { return capacity_ - begin_;  }
-    inline bool       empty()     const { return size() == 0;         }
+    /// @overload
+    BOOST_FORCEINLINE const_iterator begin() const { return data_.get(); }
 
-    //==========================================================================
-    // Random access
-    //==========================================================================
-    inline reference       operator[](size_type i)
-    {
-      BOOST_ASSERT_MSG( nt2::memory::is_safe(*this,i)
-                      , "Out of range acces on buffer"
-                      );
-      return begin_[i];
-    }
+    /// @brief Iterator referencing the after-the-last buffer element
+    BOOST_FORCEINLINE iterator end() { return data_.get() + size_;  }
 
-    inline const_reference operator[](size_type i) const
-    {
-      BOOST_ASSERT_MSG(  nt2::memory::is_safe(*this,i)
-                      , "Out of range acces on buffer"
-                      );
-      return begin_[i];
-    }
-
-  private:
-
-    inline std::size_t new_size ( std::size_t osz, std::size_t
-                                , boost::mpl::true_ const&
-                                )
-    {
-      return osz;
-    }
-
-    inline std::size_t new_size ( std::size_t osz, std::size_t extra
-                                , boost::mpl::false_ const&
-                                )
-    {
-      return NT2_BUFFER_GROWTH_FACTOR*(osz + extra);
-    }
-
-    inline void self_destruct(boost::mpl::false_ const&)
-    {
-      nt2::memory::destruct(begin_,end_,get_allocator());
-    }
-
-    inline void self_destruct(boost::mpl::true_ const&) {}
-
-    inline void self_construct( T* b, T* e, boost::mpl::false_ const& )
-    {
-      nt2::memory::default_construct(b,e,get_allocator());
-    }
-
-    inline void self_construct( T*, T*, boost::mpl::true_ const&) {}
-
-    inline void finish_resize(size_type sz, boost::mpl::false_ const&)
-    {
-      if(sz < size())
-        nt2::memory::destruct(begin_ + sz, end_, get_allocator());
-      else
-        nt2::memory::default_construct(end_, begin_ + sz, get_allocator());
-    }
-
-    inline void finish_resize(size_type, boost::mpl::true_ const&) {}
+    /// @overload
+    BOOST_FORCEINLINE const_iterator end() const { return data_.get() + size_; }
 
     private:
-    pointer     begin_, end_, capacity_;
+
+    /// INTERNAL ONLY - Helper function that finish the work of resize/reuse
+    void complete_realloc(std::size_t n)
+    {
+      if(n < size_)
+        details::may_destroy( begin() + n, end(), alloc_ );
+      else
+        details::may_construct( end(), begin() + n, alloc_ );
+    }
+
+    /// INTERNAL ONLY - Helper function that execute a customizable reallocation
+    template<typename Pre, typename Post>
+    void realloc(std::size_t n, Pre pre_process, Post post_process)
+    {
+      if(n > capacity_)
+      {
+        // x1.5 is better than x2 as it maximizes page reuse
+        capacity_ = 1 + n + n/2;
+
+        data_type local { alloc_t::allocate(alloc_,capacity_)
+                        , del_t{&alloc_,n,capacity_}
+                        };
+
+        details::may_construct( local.get(), local.get()+size_, alloc_ );
+        pre_process(*this,local.get());
+        data_.swap(local);
+      }
+      else
+      {
+        // Update deleter size info for correct deallocation & destruction
+        data_.get_deleter().sz = n;
+      }
+
+      post_process(n);
+      size_ = n;
+    }
+
+    A           alloc_;
+    data_type   data_;
+    std::size_t size_, capacity_;
   };
 
-  //============================================================================
-  /**!
-   * Swap the contents of two buffer of same type and allocator settings
-   * \param x First \c pointer_buffer to swap
-   * \param y Second \c pointer_buffer to swap
-   **/
-  //============================================================================
-  template<class T, class A> inline void swap(buffer<T,A>& x, buffer<T,A>& y)
+  /*!
+    @brief Exchanges the given buffers' values
+
+    @params a buffer to be swapped
+    @params b buffer to be swapped
+  **/
+  template<typename T, typename A>
+  BOOST_FORCEINLINE void swap( buffer<T,A>& a, buffer<T,A>& b )
   {
-    x.swap(y);
+    a.swap(b);
   }
 } }
 
