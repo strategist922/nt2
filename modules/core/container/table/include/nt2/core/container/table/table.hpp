@@ -14,6 +14,8 @@
 #include <nt2/core/container/table/adapted/table.hpp>
 #include <nt2/include/functions/construct.hpp>
 #include <nt2/sdk/memory/container.hpp>
+#include <nt2/sdk/meta/layout.hpp>
+#include <type_traits>
 
 // Disable the 'class : multiple assignment operators specified' warning
 #if defined(BOOST_MSVC)
@@ -110,6 +112,20 @@ namespace nt2 { namespace container
     BOOST_FORCEINLINE table& operator=(table const& xpr)
     {
       nt2_expression::operator=(xpr);
+      return *this;
+    }
+
+    template<typename S1>
+    BOOST_FORCEINLINE table& operator=(nt2::container::table<T,S1>  const& xpr)
+    {
+      using nt2_expression1 = typename nt2::container::table<T,S1>::nt2_expression;
+
+      static_assert( typename meta::is_layout_compatible<nt2_expression,nt2_expression1>::type()
+                   , "different settings not authorized");
+
+
+      boost::proto::value(*this).assign(boost::proto::value(xpr));
+
       return *this;
     }
 
