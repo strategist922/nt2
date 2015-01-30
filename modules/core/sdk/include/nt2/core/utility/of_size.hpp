@@ -14,7 +14,7 @@
 #include <nt2/core/utility/of_size/fusion.hpp>
 #include <nt2/core/utility/fusion.hpp>
 #include <nt2/core/functions/scalar/numel.hpp>
-#include <nt2/sdk/memory/copy.hpp>
+#include <nt2/memory/functions/copy.hpp>
 #include <nt2/sdk/meta/is_iterator.hpp>
 #include <boost/fusion/adapted/boost_array.hpp>
 #include <boost/fusion/include/out.hpp>
