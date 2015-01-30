@@ -18,6 +18,7 @@
 #include <nt2/core/settings/specific_data.hpp>
 #include <nt2/core/settings/storage_scheme.hpp>
 #include <nt2/core/utility/of_size.hpp>
+#include <nt2/include/functions/copy.hpp>
 #include <nt2/include/functions/scalar/numel.hpp>
 #include <nt2/include/functions/scalar/ndims.hpp>
 #include <nt2/sdk/memory/adapted/container.hpp>
@@ -28,10 +29,12 @@
 #include <boost/mpl/at.hpp>
 #include <boost/assert.hpp>
 #include <algorithm>
+#include <type_traits>
 
 #ifdef NT2_LOG_COPIES
 #include <iostream>
 #endif
+
 
 namespace nt2 { namespace tag
 {
@@ -224,6 +227,14 @@ namespace nt2 { namespace memory
       init(sizes_, require_static_init());
     }
 
+    template<typename K1,typename S1>
+    void assign(nt2::memory::container<K1,Type,S1> const& other)
+    {
+        sizes_ = other.sizes_;
+        copy(other.data_,data_);
+    }
+
+
     /*!
       @brief Construct a container from a dimension set
 
@@ -246,7 +257,6 @@ namespace nt2 { namespace memory
       BOOST_ASSERT_MSG( !has_static_size::value || sz == extent_type()
                       , "Invalid constructor for statically sized container"
                       );
-
       init(sizes_);
     }
 
