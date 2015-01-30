@@ -10,7 +10,7 @@
 #define NT2_SDK_MEMORY_CONSTRUCT_HPP_INCLUDED
 
 #include <boost/mpl/bool.hpp>
-#include <nt2/sdk/memory/copy.hpp>
+#include <nt2/include/functions/copy.hpp>
 #include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 
