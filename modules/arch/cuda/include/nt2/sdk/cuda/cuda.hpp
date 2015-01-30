@@ -1,6 +1,5 @@
 //==============================================================================
-//         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2014 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -20,6 +19,13 @@ namespace nt2 { namespace tag
 } }
 
 #ifdef NT2_HAS_CUDA
+
+#define CUDA_ERROR(status)                                        \
+  {                                                               \
+    BOOST_ASSERT_MSG( status == cudaSuccess                       \
+                    , cudaGetErrorString(status));                \
+  }                                                               \
+
 BOOST_DISPATCH_COMBINE_SITE( nt2::tag::cuda_<tag::cpu_> )
 #endif
 

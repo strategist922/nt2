@@ -1,38 +1,25 @@
 //==============================================================================
-//         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 20014 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_CUDA_MEMORY_BUFFER_HPP_INCLUDED
-#define NT2_SDK_CUDA_MEMORY_BUFFER_HPP_INCLUDED
+#ifndef NT2_SDK_MEMORY_CUDA_BUFFER_HPP_INCLUDED
+#define NT2_SDK_MEMORY_CUDA_BUFFER_HPP_INCLUDED
+
+#if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/cuda/cuda.hpp>
-#include <cublas.h>
+#include <nt2/sdk/memory/cuda/allocator.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/assert.hpp>
 #include <boost/swap.hpp>
-#include <nt2/sdk/memory/container.hpp>
-#include <nt2/include/functions/resize.hpp>
-#include <nt2/include/functions/size.hpp>
+#include <cublas.h>
 #include <limits>
-
-#define CUDA_ERROR(status)                                   \
-  {                                                               \
-    BOOST_ASSERT_MSG( status == cudaSuccess                       \
-                    , cudaGetErrorString(status));                \
-  }                                                               \
-
 
 namespace nt2 { namespace memory
 {
-  //============================================================================
-  /**!
-   * @brief cuda_buffer is a dynamically-sized sequence using dynamic storage.
-   **/
-  //===========================================================================
   template<class T>
   class cuda_buffer
   {
@@ -41,15 +28,16 @@ namespace nt2 { namespace memory
     // Container types
     //==========================================================================
 
-    typedef T               value_type;
-    typedef T*              pointer;
-    typedef T const*        const_pointer;
-    typedef T*              iterator;
-    typedef T const*        const_iterator;
-    typedef T&              reference;
-    typedef T const&        const_reference;
-    typedef std::size_t     size_type;
-    typedef std::ptrdiff_t  difference_type;
+    typedef T                  value_type;
+    typedef T*                 pointer;
+    typedef T const*           const_pointer;
+    typedef T&                 reference;
+    typedef T const&           const_reference;
+    typedef std::size_t        size_type;
+    typedef std::ptrdiff_t     difference_type;
+    typedef cuda_allocator<T>  allocator_type;
+    typedef T*                 iterator;
+    typedef T const*           const_iterator;
 
     //==========================================================================
     // Default constructor
@@ -61,7 +49,7 @@ namespace nt2 { namespace memory
     //==========================================================================
     // Size constructor
     //==========================================================================
-    cuda_buffer( int n)
+    cuda_buffer( size_type n)
           :  begin_(0), end_(0), stream_(0)
     {
       if(!n) return;
@@ -106,7 +94,7 @@ namespace nt2 { namespace memory
 
       CUDA_ERROR(cudaMemcpyAsync( begin_
                                 , src.data()
-                                , 10 * sizeof(value_type)
+                                , src.size() * sizeof(value_type)
                                 ,  cudaMemcpyHostToDevice
                                 , stream_
                                 ));
@@ -181,6 +169,17 @@ namespace nt2 { namespace memory
       return *this;
     }
 
+    bool operator==(cuda_buffer const& src)
+    {
+      return true;
+    }
+
+    template<typename container>
+    bool operator==(container const& src)
+    {
+      return false;
+    }
+
     //==========================================================================
     // Swap
     //==========================================================================
@@ -189,6 +188,27 @@ namespace nt2 { namespace memory
       boost::swap(begin_          , src.begin_          );
       boost::swap(end_            , src.end_            );
       boost::swap(stream_         , src.stream_         );
+    }
+
+    //==========================================================================
+    // Resize
+    //==========================================================================
+
+    void resize( size_type sz )
+    {
+      if (sz < this->size())
+      {
+        end_ = begin_ + sz ;
+      }
+      else if (sz > this->size())
+      {
+       cudaFree(begin_);
+       CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
+                            , sz*sizeof(value_type)
+                            ));
+
+        end_ = begin_ + sz;
+      }
     }
 
     //==========================================================================
@@ -209,7 +229,7 @@ namespace nt2 { namespace memory
     void data(Container & dst) const
     {
       if(!this->size()) return;
-      if ( dst.size() != this->size() ) dst.resize(nt2::of_size(this->size(),1));
+      if ( dst.size() != this->size() ) dst.resize(of_size(this->size(),1));
 
       CUDA_ERROR(cudaMemcpyAsync( dst.data()
                                 , this->begin_
@@ -241,14 +261,7 @@ namespace nt2 { namespace memory
     cudaStream_t stream_;
   };
 
-  //============================================================================
-  /**!
-   * Swap the contents of two buffer
-   * \param x First \c pointer_buffer to swap
-   * \param y Second \c pointer_buffer to swap
-   **/
-  //============================================================================
-  template<class T> inline void swap(cuda_buffer<T>& x, cuda_buffer<T>& y)
+  template<class T,class A> inline void swap(cuda_buffer<T>& x, cuda_buffer<T>& y)
   {
     x.swap(y);
   }
@@ -256,3 +269,5 @@ namespace nt2 { namespace memory
 } }
 
 #endif
+#endif
+
