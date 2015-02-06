@@ -1,30 +1,28 @@
-#ifndef NT2_SDK_MAGMA_FUTURE_FUTURE_HPP_INCLUDED
-#define NT2_SDK_MAGMA_FUTURE_FUTURE_HPP_INCLUDED
+#ifndef NT2_SDK_CUDA_FUTURE_FUTURE_HPP_INCLUDED
+#define NT2_SDK_CUDA_FUTURE_FUTURE_HPP_INCLUDED
 
 
-#if defined(NT2_USE_MAGMA)
+#if defined(NT2_HAS_CUDA)
 
 #include <type_traits>
 #include <tuple>
-#include <magma.h>
 #include <cublas.h>
 #include <cuda.h>
-#include <nt2/sdk/magma/future/details/magma_future.hpp>
+#include <nt2/sdk/cuda/future/details/cuda_future.hpp>
 
 namespace nt2{
 
-
   namespace tag{
-    template<class T> struct magma_;
+    template<class T> struct cuda_;
   }
 
   template<class Arch, class result_type>
   struct make_future;
 
     template<class Site, class result_type>
-  struct make_future<tag::magma_<Site> , result_type>
+  struct make_future<tag::cuda_<Site> , result_type>
   {
-    typedef details::magma_future<result_type> type;
+    typedef details::cuda_future<result_type> type;
   };
 
   template<class Arch>
@@ -32,8 +30,8 @@ namespace nt2{
 
   template<class Arch, class F, class... ArgTypes>
   inline typename make_future< Arch
- , typename std::result_of<F(ArgTypes...)>::type
- //, typename F::type
+ // , typename std::result_of<F(ArgTypes...)>::type
+ , typename F::type
   >::type
   async(F && f, ArgTypes && ... args)
   {
@@ -41,34 +39,27 @@ namespace nt2{
   }
 
   template<class Site>
-  struct async_impl< tag::magma_<Site> >
+  struct async_impl< tag::cuda_<Site> >
   {
     template<class F, class... ArgTypes>
-    inline typename make_future< tag::magma_<Site>
- , typename std::result_of<F(ArgTypes...)>::type
-   //, typename F::type
+    inline typename make_future< tag::cuda_<Site>
+ // , typename std::result_of<F(ArgTypes...)>::type
+   , typename F::type
     >::type
     call(F && f , ArgTypes && ... args)
     {
-      // using result_type = typename F::type;
-      using result_type = typename std::result_of<F(ArgTypes...)>::type;
-      using future = typename details::magma_future<result_type> ;
+      using result_type = typename F::type;
+      // using result_type = typename std::result_of<F(ArgTypes...)>::type;
+      using future = typename details::cuda_future<result_type> ;
 
-      // -> init future with first param which represents the resutl
+      // -> init future
+      future f1;
+
+      // get args for function object
       auto tup = std::make_tuple(args...);
-      future f1(std::get<0>(tup) ) ;
-      // future f1(std::get<0>(params)) ;
 
-      // -> give the user the possibility for transfer control by letting him
-      // the choice of giving cpu or gpu pointer.
-
-      // make a tuple of args... to forward
-      // for (auto & elem : {args...})
-      //   if(elem == CudaAlloc)
-      //     ok
-      //   else CudaMemcpy(...) ;
-
-      f(std::forward<ArgTypes>(args)...);
+      // asynchronous call to function object
+      f(std::forward<ArgTypes>(args)... , 10);
 
       return f1;
     }

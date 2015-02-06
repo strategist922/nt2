@@ -6,15 +6,17 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_MAGMA_FUTURE_HPP_INCLUDED
-#define NT2_SDK_MAGMA_FUTURE_HPP_INCLUDED
+#ifndef NT2_SDK_CUDA_FUTURE_HPP_INCLUDED
+#define NT2_SDK_CUDA_FUTURE_HPP_INCLUDED
 
-#include <nt2/sdk/magma/future/future.hpp>
+#include <nt2/sdk/cuda/cuda.hpp>
+#include <nt2/sdk/cuda/future/future.hpp>
+#include <nt2/sdk/memory/buffer.hpp>
 
 namespace nt2{
 
   namespace tag{
-    template<class T> struct magma_;
+    template<class T> struct cuda_;
   }
 }
 
