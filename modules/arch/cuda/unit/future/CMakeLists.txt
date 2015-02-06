@@ -11,4 +11,4 @@ SET ( SOURCES
   future.cpp
 )
 
-nt2_module_add_tests(binding.linalg.future.unit ${SOURCES})
+nt2_module_add_tests(arch.cuda.future.unit ${SOURCES})
