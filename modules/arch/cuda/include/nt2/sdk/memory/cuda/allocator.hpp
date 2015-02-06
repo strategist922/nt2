@@ -46,6 +46,9 @@ namespace nt2 { namespace memory
       return *this;
     }
 
+    /// Destructor
+    ~cuda_allocator() {}
+
     /// Retrieve the address of an element
     pointer       address(reference r)       { return &r; }
 
@@ -55,7 +58,7 @@ namespace nt2 { namespace memory
     /// Maximum amount of memory that can be allocated
     size_type max_size() const  { return size_type(~0); }
 
-    /// Allocate a block of SIMD compatible memory
+    /// Allocate a block of CUDA compatible memory
     pointer allocate( size_type c, const void* = 0 ) const
     {
       pointer ptr;
@@ -65,10 +68,11 @@ namespace nt2 { namespace memory
       return ptr;
     }
 
+
     /// Deallocate a pointer allocated by the current cuda_allocator
-    void deallocate (pointer p, size_type ) const
+    void deallocate (pointer p, size_type = 0 ) const
     {
-      cudafree(p);
+      cudaFree(p);
     }
   };
 

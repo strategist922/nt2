@@ -8,13 +8,12 @@
 #ifndef NT2_MEMORY_FUNCTIONS_CONTAINER_COPY_HPP_INCLUDED
 #define NT2_MEMORY_FUNCTIONS_CONTAINER_COPY_HPP_INCLUDED
 
+#include <nt2/sdk/memory/buffer.hpp>
 
 namespace nt2 { namespace memory
 {
-  template<class T>
-  class cuda_buffer;
-
-  template<class T> inline void copy(cuda_buffer<T> const& a, cuda_buffer<T> & b )
+  template<typename In, typename Out>
+  inline void copy(In const& a, Out & b )
   {
     b = a;
   }

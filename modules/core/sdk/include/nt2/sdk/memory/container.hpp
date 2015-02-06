@@ -31,9 +31,9 @@
 #include <algorithm>
 #include <type_traits>
 
-#ifdef NT2_LOG_COPIES
+// #ifdef NT2_LOG_COPIES
 #include <iostream>
-#endif
+// #endif
 
 
 namespace nt2 { namespace tag
@@ -194,7 +194,7 @@ namespace nt2 { namespace memory
       init(sizes_, require_static_init());
     }
 
-#ifdef NT2_LOG_COPIES
+// #ifdef NT2_LOG_COPIES
     container(container const& other) : data_(other.data_), sizes_(other.sizes_)
     {
       std::cout << "copying container" << std::endl;
@@ -207,7 +207,7 @@ namespace nt2 { namespace memory
       std::cout << "assigning container" << std::endl;
       return *this;
     }
-#endif
+// #endif
 
     /*!
       @brief Constructor from an allocator
@@ -230,6 +230,14 @@ namespace nt2 { namespace memory
     template<typename K1,typename S1>
     void assign(nt2::memory::container<K1,Type,S1> const& other)
     {
+        using C1 = typename nt2::memory::container<K1,Type,S1>;
+
+        static_assert( std::is_same<scheme_t,typename C1::scheme_t>::value
+                    && std::is_same<order_type,typename C1::order_type>::value
+                    && std::is_same<duration_t,typename C1::duration_t>::value
+                     , "difference in settings not authorized"
+                     );
+
         sizes_ = other.sizes_;
         copy(other.data_,data_);
     }
