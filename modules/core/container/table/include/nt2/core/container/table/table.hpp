@@ -16,7 +16,7 @@
 #include <nt2/sdk/memory/container.hpp>
 #include <nt2/sdk/meta/layout.hpp>
 #include <type_traits>
-
+#include <iostream>
 // Disable the 'class : multiple assignment operators specified' warning
 #if defined(BOOST_MSVC)
 #pragma warning( push )
@@ -121,8 +121,7 @@ namespace nt2 { namespace container
       using nt2_expression1 = typename nt2::container::table<T,S1>::nt2_expression;
 
       static_assert( typename meta::is_layout_compatible<nt2_expression,nt2_expression1>::type()
-                   , "different settings not authorized");
-
+                   , "difference in settings not authorized");
 
       boost::proto::value(*this).assign(boost::proto::value(xpr));
 

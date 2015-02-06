@@ -12,6 +12,7 @@
 
 #include <nt2/sdk/cuda/cuda.hpp>
 #include <nt2/sdk/memory/cuda/allocator.hpp>
+#include <nt2/include/functions/copy.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/assert.hpp>
 #include <boost/swap.hpp>
@@ -28,21 +29,21 @@ namespace nt2 { namespace memory
     // Container types
     //==========================================================================
 
-    typedef T                  value_type;
-    typedef T*                 pointer;
-    typedef T const*           const_pointer;
-    typedef T&                 reference;
-    typedef T const&           const_reference;
-    typedef std::size_t        size_type;
-    typedef std::ptrdiff_t     difference_type;
-    typedef cuda_allocator<T>  allocator_type;
-    typedef T*                 iterator;
-    typedef T const*           const_iterator;
+    typedef cuda_allocator<T>                               allocator_type;
+    typedef typename allocator_type::value_type             value_type;
+    typedef typename allocator_type::pointer                pointer;
+    typedef typename allocator_type::const_pointer          const_pointer;
+    typedef typename allocator_type::reference              reference;
+    typedef typename allocator_type::const_reference        const_reference;
+    typedef typename allocator_type::size_type              size_type;
+    typedef typename allocator_type::difference_type        difference_type;
+    typedef typename allocator_type::pointer                iterator;
+    typedef typename allocator_type::const_pointer          const_iterator;
 
     //==========================================================================
     // Default constructor
     //==========================================================================
-    cuda_buffer() : begin_(0), end_(0), stream_(0)
+    cuda_buffer() : begin_(0), end_(0)
     {}
 
   public:
@@ -50,13 +51,13 @@ namespace nt2 { namespace memory
     // Size constructor
     //==========================================================================
     cuda_buffer( size_type n)
-          :  begin_(0), end_(0), stream_(0)
+          :  begin_(0), end_(0)
     {
       if(!n) return;
 
-      CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
-                           , n* sizeof(value_type)
-                           ));
+      allocator_type alloc_;
+
+      begin_ = alloc_.allocate(n);
       end_ = begin_ + n;
     }
 
@@ -64,40 +65,16 @@ namespace nt2 { namespace memory
     // Copy constructor
     //==========================================================================
     cuda_buffer( cuda_buffer const& src )
-          : begin_(0), end_(0), stream_(0)
+          : begin_(0), end_(0)
     {
       if(!src.size()) return;
 
-      CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
-                           , src.size()*sizeof(value_type)
-                           ));
+      allocator_type alloc_;
 
-       CUDA_ERROR(cudaMemcpyAsync( begin_
-                                 , src.data()
-                                 , src.size()* sizeof(value_type)
-                                 , cudaMemcpyDeviceToDevice
-                                 , stream_
-                                 ));
+      begin_ = alloc_.allocate(src.size());
 
-      end_ = begin_ + src.size();
-    }
+      copy(src, *this);
 
-    template<typename Container>
-    cuda_buffer( Container const& src )
-          : begin_(0), end_(0), stream_(0)
-    {
-      if(!src.size()) return;
-
-      CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
-                           , src.size()*sizeof(value_type)
-                           ));
-
-      CUDA_ERROR(cudaMemcpyAsync( begin_
-                                , src.data()
-                                , src.size() * sizeof(value_type)
-                                ,  cudaMemcpyHostToDevice
-                                , stream_
-                                ));
       end_ = begin_ + src.size();
     }
 
@@ -106,15 +83,8 @@ namespace nt2 { namespace memory
     //==========================================================================
     ~cuda_buffer()
     {
-      if(stream_ != NULL)
-      {
-        cudaStreamDestroy(stream_);
-      }
-
-      if(begin_)
-      {
-        cudaFree(begin_);
-      }
+      allocator_type alloc_;
+      alloc_.deallocate(begin_);
     }
 
     //==========================================================================
@@ -126,45 +96,13 @@ namespace nt2 { namespace memory
 
       if( src.size() > this->size() )
       {
-        cudaFree(begin_);
-        CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
-                             , src.size()*sizeof(value_type)
-                             ));
-
+        allocator_type alloc_;
+        alloc_.deallocate(begin_);
+        begin_ = alloc_.allocate(src.size());
         end_ = begin_ + src.size();
       }
 
-      CUDA_ERROR(cudaMemcpyAsync( begin_
-                                , src.data()
-                                , src.size()*sizeof(value_type)
-                                , cudaMemcpyDeviceToDevice
-                                , stream_
-                                ));
-
-      return *this;
-    }
-
-    template<class Container>
-    cuda_buffer& operator=(Container const& src)
-    {
-      if(!src.size()) return *this;
-
-      if( src.size() > this->size() )
-      {
-        cudaFree(begin_);
-        CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
-                             , src.size()*sizeof(value_type)
-                             ));
-
-        end_ = begin_ + src.size();
-      }
-
-      CUDA_ERROR(cudaMemcpyAsync( begin_
-                                , src.data()
-                                , src.size()* sizeof(value_type)
-                                , cudaMemcpyHostToDevice
-                                , stream_
-                                ));
+      copy(src, *this);
 
       return *this;
     }
@@ -187,7 +125,6 @@ namespace nt2 { namespace memory
     {
       boost::swap(begin_          , src.begin_          );
       boost::swap(end_            , src.end_            );
-      boost::swap(stream_         , src.stream_         );
     }
 
     //==========================================================================
@@ -202,12 +139,10 @@ namespace nt2 { namespace memory
       }
       else if (sz > this->size())
       {
-       cudaFree(begin_);
-       CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&begin_)
-                            , sz*sizeof(value_type)
-                            ));
-
-        end_ = begin_ + sz;
+       allocator_type alloc_;
+       alloc_.deallocate(begin_);
+       begin_ = alloc_.allocate(sz);
+       end_ = begin_ + sz;
       }
     }
 
@@ -225,19 +160,6 @@ namespace nt2 { namespace memory
     pointer        data()       { return begin_;  }
     const_pointer  data() const { return begin_;  }
 
-    template<typename Container>
-    void data(Container & dst) const
-    {
-      if(!this->size()) return;
-      if ( dst.size() != this->size() ) dst.resize(of_size(this->size(),1));
-
-      CUDA_ERROR(cudaMemcpyAsync( dst.data()
-                                , this->begin_
-                                , this->size() * sizeof(value_type)
-                                , cudaMemcpyDeviceToHost, stream_
-                                ));
-    }
-
     //==========================================================================
     // Size related members
     //==========================================================================
@@ -248,17 +170,9 @@ namespace nt2 { namespace memory
       return (std::numeric_limits<size_type>::max)() / sizeof(T);
     }
 
-    //==========================================================================
-    // Stream related -- if neccesary
-    //==========================================================================
-    inline cudaStream_t   stream()     const { return stream_;  }
-    inline cudaError_t   setStream()     const
-      { return cudaStreamCreate(&stream_); }
-
-
   private:
     pointer     begin_, end_;
-    cudaStream_t stream_;
+
   };
 
   template<class T,class A> inline void swap(cuda_buffer<T>& x, cuda_buffer<T>& y)
