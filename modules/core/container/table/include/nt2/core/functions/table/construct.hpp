@@ -99,31 +99,6 @@ namespace nt2 { namespace ext
     }
   };
 
-// terminal = terminal for multi architectural
- BOOST_DISPATCH_IMPLEMENT  ( construct_, tag::cpu_
-                            , (A0)(A1)
-                            , ((node_ < A0,nt2::tag::terminal_
-                                      , boost::mpl::long_<0>
-                                      , nt2::container::domain
-                                      >
-                              ))
-                               ((node_ < A1,nt2::tag::terminal_
-                                      , boost::mpl::long_<0>
-                                      , nt2::container::domain
-                                      >
-                              ))
-                            )
-  {
-    typedef void result_type;
-
-    BOOST_FORCEINLINE
-    result_type operator()(A0& a0, A1 const& a1) const
-    {
-      boost::proto::value(a0).assign(boost::proto::value(a1));
-    }
-  };
-
-
   /// INTERNAL ONLY
   /// Construct a terminal from a scalar:
   ///  * Resize table to [1 1]
@@ -176,6 +151,7 @@ namespace nt2 { namespace ext
       nt2::memory::copy( a2, a3, a0.data() );
     }
   };
+
 } }
 
 #endif

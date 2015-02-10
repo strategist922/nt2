@@ -31,10 +31,9 @@
 #include <algorithm>
 #include <type_traits>
 
-// #ifdef NT2_LOG_COPIES
+#ifdef NT2_LOG_COPIES
 #include <iostream>
-// #endif
-
+#endif
 
 namespace nt2 { namespace tag
 {
@@ -194,7 +193,7 @@ namespace nt2 { namespace memory
       init(sizes_, require_static_init());
     }
 
-// #ifdef NT2_LOG_COPIES
+#ifdef NT2_LOG_COPIES
     container(container const& other) : data_(other.data_), sizes_(other.sizes_)
     {
       std::cout << "copying container" << std::endl;
@@ -207,7 +206,7 @@ namespace nt2 { namespace memory
       std::cout << "assigning container" << std::endl;
       return *this;
     }
-// #endif
+#endif
 
     /*!
       @brief Constructor from an allocator
@@ -227,21 +226,35 @@ namespace nt2 { namespace memory
       init(sizes_, require_static_init());
     }
 
+
+  /*!
+      @brief Constructor from a container with different settings
+
+      Should be called only if both containers are layout compatible
+      and an implementation of copy is available for these buffers.
+  **/
     template<typename K1,typename S1>
     void assign(nt2::memory::container<K1,Type,S1> const& other)
     {
-        using C1 = typename nt2::memory::container<K1,Type,S1>;
-
-        static_assert( std::is_same<scheme_t,typename C1::scheme_t>::value
-                    && std::is_same<order_type,typename C1::order_type>::value
-                    && std::is_same<duration_t,typename C1::duration_t>::value
-                     , "difference in settings not authorized"
-                     );
-
         sizes_ = other.sizes_;
         copy(other.data_,data_);
     }
 
+
+    // template<typename K1,typename T1,typename S1>
+    // void assign(nt2::memory::container_ref<K1,T1,S1> const& other)
+    // {
+    //     using CR1 = typename nt2::memory::container_ref<K1,T1,S1>;
+    //     // static_assert( std::is_same< typename std::remove_cv<Type>::type
+    //     //                            , typename CR1::value_type
+    //     //                            >::value
+    //     //               , " not same value type"
+    //     //              );
+    //   std::cout << "in assign2" << std::endl;
+
+    //     sizes_ = other.extent();
+    //     nt2::memory::copy(other,*this);
+    // }
 
     /*!
       @brief Construct a container from a dimension set

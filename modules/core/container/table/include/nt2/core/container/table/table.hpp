@@ -14,9 +14,10 @@
 #include <nt2/core/container/table/adapted/table.hpp>
 #include <nt2/include/functions/construct.hpp>
 #include <nt2/sdk/memory/container.hpp>
+#include <nt2/sdk/memory/adapted/container_ref.hpp>
 #include <nt2/sdk/meta/layout.hpp>
 #include <type_traits>
-#include <iostream>
+
 // Disable the 'class : multiple assignment operators specified' warning
 #if defined(BOOST_MSVC)
 #pragma warning( push )
@@ -71,11 +72,30 @@ namespace nt2 { namespace container
     // table constructor from a single initializer.
     // This version handles initializing from of_size or expression.
     //==========================================================================
+
     template<typename A0>
-    table( A0 const& a0 )
+    table( A0 const& a0)
     {
       nt2::construct(*this,a0);
     }
+
+    template<typename S1>
+    table( nt2::container::table<T,S1> const& a0
+         , typename std::enable_if< !std::is_same< typename container_type::buffer_type
+                                                 , typename nt2::container::table<T,S1>
+                                                            ::container_type::buffer_type
+                                                  >::value
+                                  && meta::is_layout_compatible< nt2_expression
+                                                               , typename nt2::container::table<T,S1>
+                                                                          ::nt2_expression
+                                                                >::value
+
+                                  >::type* = 0
+         )
+    {
+      boost::proto::value(*this).assign(boost::proto::value(a0));
+    }
+
 
     //==========================================================================
     // table constructor from a pair of initializer.
@@ -116,15 +136,20 @@ namespace nt2 { namespace container
     }
 
     template<typename S1>
-    BOOST_FORCEINLINE table& operator=(nt2::container::table<T,S1>  const& xpr)
+    BOOST_FORCEINLINE
+    typename std::enable_if< !std::is_same< typename container_type::buffer_type
+                                          , typename nt2::container::table<T,S1>
+                                                     ::container_type::buffer_type
+                                          >::value
+                             && meta::is_layout_compatible< nt2_expression
+                                                          , typename nt2::container::table<T,S1>
+                                                                    ::nt2_expression
+                                                          >::value
+                            , table&
+                           >::type
+    operator=(nt2::container::table<T,S1>  const& xpr)
     {
-      using nt2_expression1 = typename nt2::container::table<T,S1>::nt2_expression;
-
-      static_assert( typename meta::is_layout_compatible<nt2_expression,nt2_expression1>::type()
-                   , "difference in settings not authorized");
-
       boost::proto::value(*this).assign(boost::proto::value(xpr));
-
       return *this;
     }
 
