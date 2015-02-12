@@ -15,6 +15,7 @@
 #include <nt2/core/settings/option.hpp>
 #include <nt2/core/settings/interleaving.hpp>
 #include <nt2/core/settings/storage_order.hpp>
+#include <nt2/core/settings/locality.hpp>
 #include <nt2/core/settings/specific_data.hpp>
 #include <nt2/core/settings/storage_scheme.hpp>
 #include <nt2/core/utility/of_size.hpp>
@@ -66,6 +67,12 @@ namespace nt2 { namespace memory
     /// INTERNAL ONLY Precomputed settings type
     typedef Settings                                      settings_type;
 
+    /// INTERNAL ONLY locality option
+    typedef typename meta::option < Settings
+                                  , tag::locality_
+                                  , Kind
+                                  >::type                 locality_t;
+
     /// INTERNAL ONLY storage_scheme option
     typedef typename meta::option < Settings
                                   , tag::storage_scheme_
@@ -75,8 +82,8 @@ namespace nt2 { namespace memory
     /// INTERNAL ONLY Storage Scheme option
     typedef typename scheme_t::template apply<container> scheme_type;
 
-    /// INTERNAL ONLY Check if Type is a Fusion Sequence
-    typedef boost::fusion::traits::is_sequence<Type>      composite_t;
+    /// INTERNAL ONLY Base buffer type
+    typedef typename locality_t::template traits<container>::buffer_type buffer_t;
 
     /// INTERNAL ONLY Retrieve interleaving option
     typedef typename meta::option < Settings
@@ -84,8 +91,8 @@ namespace nt2 { namespace memory
                                   , Kind
                                   >::type::interleaving_type  inter_t;
 
-    /// INTERNAL ONLY Base buffer type
-    typedef typename scheme_type::type                        buffer_t;
+    /// INTERNAL ONLY Check if Type is a Fusion Sequence
+    typedef boost::fusion::traits::is_sequence<Type>      composite_t;
 
     /*!
       @brief Container memory buffer type
