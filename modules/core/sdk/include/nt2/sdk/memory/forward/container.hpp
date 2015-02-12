@@ -18,6 +18,8 @@ namespace nt2 { namespace memory
 {
   template<class T> struct container_base
   {
+    typedef T                                         declared_value_type;
+
     container_base() : specific_() {}
 
     //==========================================================================

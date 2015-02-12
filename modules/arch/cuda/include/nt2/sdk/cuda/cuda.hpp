@@ -13,7 +13,7 @@
 namespace nt2 { namespace memory
 {
   template<class T> class cuda_buffer;
-} }
+} }
 
 namespace nt2 { namespace tag
 {
@@ -23,8 +23,8 @@ namespace nt2 { namespace tag
 
     template<typename Container> struct device_traits
     {
-      using value_type  = typename Container::value_type;
-      using buffer_type = cuda_buffer<value_type>;
+      using value_type  = typename Container::declared_value_type;
+      using buffer_type = memory::cuda_buffer<value_type>;
     };
 
     typedef Site  parent;
@@ -33,11 +33,9 @@ namespace nt2 { namespace tag
 
 #ifdef NT2_HAS_CUDA
 
-#define CUDA_ERROR(status)                                        \
-  {                                                               \
-    BOOST_ASSERT_MSG( status == cudaSuccess                       \
-                    , cudaGetErrorString(status));                \
-  }                                                               \
+#define CUDA_ERROR(status)                                                      \
+BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))            \
+/**/
 
 BOOST_DISPATCH_COMBINE_SITE( nt2::tag::cuda_<tag::cpu_> )
 #endif
