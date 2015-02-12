@@ -10,11 +10,24 @@
 
 #include <boost/dispatch/functor/forward.hpp>
 
+namespace nt2 { namespace memory
+{
+  template<class T> class cuda_buffer;
+} }
+
 namespace nt2 { namespace tag
 {
   template<typename Site> struct cuda_ : Site
   {
-    typedef Site parent;
+    typedef void   device_tag;
+
+    template<typename Container> struct device_traits
+    {
+      using value_type  = typename Container::value_type;
+      using buffer_type = cuda_buffer<value_type>;
+    };
+
+    typedef Site  parent;
   };
 } }
 
