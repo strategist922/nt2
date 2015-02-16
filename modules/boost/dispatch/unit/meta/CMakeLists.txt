@@ -20,6 +20,7 @@ SET( SOURCES
     downgrade.cpp
     fusion.cpp
     hierarchy.cpp
+    is_homogeneous.cpp
     is_scalar.cpp
     is_signed.cpp
     make_integer.cpp
