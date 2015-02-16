@@ -13,6 +13,7 @@
 
 #include <boost/dispatch/meta/fusion.hpp>
 #include <boost/dispatch/meta/hierarchy_of.hpp>
+#include <boost/dispatch/meta/nth_hierarchy.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <nt2/sdk/unit/module.hpp>
 #include <nt2/sdk/unit/tests/basic.hpp>
@@ -62,30 +63,164 @@ NT2_TEST_CASE(hierarchy_of_fusion_vector)
 NT2_TEST_CASE(hierarchy_of_array)
 {
   using boost::array;
-  using boost::is_same;
+  using boost::mpl::int_;
   using namespace boost::dispatch::meta;
 
-  typedef hierarchy_of< array<double,7> >::type base;
+  using type = array<double,7>;
 
-  NT2_TEST( (is_same<array_<scalar_<double_< array<double,7> > >, boost::mpl::size_t<7>  >      , base >::value) );
-  NT2_TEST( (is_same<array_<scalar_<type64_< array<double,7> > >, boost::mpl::size_t<7>  >      , UP(base,1) >::value) );
-  NT2_TEST( (is_same<array_<scalar_<floating_sized_< array<double,7> > >, boost::mpl::size_t<7>  >  , UP(base,2) >::value) );
-  NT2_TEST( (is_same<array_<scalar_<floating_< array<double,7> > >, boost::mpl::size_t<7>  >        , UP(base,3) >::value) );
-  NT2_TEST( (is_same<array_<scalar_<signed_< array<double,7> > >, boost::mpl::size_t<7>  >      , UP(base,4) >::value) );
-  NT2_TEST( (is_same<array_<scalar_<arithmetic_< array<double,7> > >, boost::mpl::size_t<7>  >  , UP(base,5) >::value) );
-  NT2_TEST( (is_same<array_<scalar_<fundamental_< array<double,7> > >, boost::mpl::size_t<7>  > , UP(base,6) >::value) );
-  NT2_TEST( (is_same<array_<scalar_<unspecified_< array<double,7> > >, boost::mpl::size_t<7>  > , UP(base,7) >::value) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<double_< type > >, boost::mpl::size_t<7>  >     ) , UP(base,8) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<type64_< type > >, boost::mpl::size_t<7>  >     ) , UP(base,9) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<floating_sized_< type > >, boost::mpl::size_t<7>  > ) , UP(base,10) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<floating_< type > >, boost::mpl::size_t<7>  >       ) , UP(base,11) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<signed_< type > >, boost::mpl::size_t<7>  >     ) , UP(base,12) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<arithmetic_< type > >, boost::mpl::size_t<7>  > ) , UP(base,13) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<fundamental_< type > >, boost::mpl::size_t<7>  >) , UP(base,14) );
+  // NT2_TEST_TYPE_IS( (array_<generic_<unspecified_< type > >, boost::mpl::size_t<7>  >) , UP(base,15) );
+  // NT2_TEST_TYPE_IS( (array_<unspecified_< type >, boost::mpl::size_t<7>  >           ) , UP(base,16) );
+  // NT2_TEST_TYPE_IS( (fusion_sequence_< type,boost::mpl::size_t<7> >                    ) , UP(base,17) );
+  // NT2_TEST_TYPE_IS( (unspecified_< type >                        ) , UP(base,18) );
 
-  NT2_TEST( (is_same<array_<generic_<double_< array<double,7> > >, boost::mpl::size_t<7>  >      , UP(base,8) >::value) );
-  NT2_TEST( (is_same<array_<generic_<type64_< array<double,7> > >, boost::mpl::size_t<7>  >      , UP(base,9) >::value) );
-  NT2_TEST( (is_same<array_<generic_<floating_sized_< array<double,7> > >, boost::mpl::size_t<7>  >  , UP(base,10) >::value) );
-  NT2_TEST( (is_same<array_<generic_<floating_< array<double,7> > >, boost::mpl::size_t<7>  >        , UP(base,11) >::value) );
-  NT2_TEST( (is_same<array_<generic_<signed_< array<double,7> > >, boost::mpl::size_t<7>  >      , UP(base,12) >::value) );
-  NT2_TEST( (is_same<array_<generic_<arithmetic_< array<double,7> > >, boost::mpl::size_t<7>  >  , UP(base,13) >::value) );
-  NT2_TEST( (is_same<array_<generic_<fundamental_< array<double,7> > >, boost::mpl::size_t<7>  > , UP(base,14) >::value) );
-  NT2_TEST( (is_same<array_<generic_<unspecified_< array<double,7> > >, boost::mpl::size_t<7>  > , UP(base,15) >::value) );
-  NT2_TEST( (is_same<array_<unspecified_< array<double,7> >, boost::mpl::size_t<7>  >            , UP(base,16) >::value) );
-  NT2_TEST( (is_same<fusion_sequence_< array<double,7>,boost::mpl::size_t<7> >                     , UP(base,17) >::value) );
-  NT2_TEST( (is_same<unspecified_< array<double,7> >                         , UP(base,18) >::value) );
+  NT2_TEST_TYPE_IS( (array_<scalar_<double_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<0>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<type64_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<1>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<floating_sized_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<2>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<floating_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<3>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<signed_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<4>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<arithmetic_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<5>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<fundamental_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<6>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<scalar_<unspecified_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<7>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<double_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<8>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<type64_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<9>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<floating_sized_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<10>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<floating_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<11>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<signed_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<12>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<arithmetic_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<13>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<fundamental_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<14>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<generic_<unspecified_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<15>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (array_<unspecified_<type>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<16>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<double_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<17>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<type64_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<18>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<floating_sized_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<19>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<floating_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<20>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<signed_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<21>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<arithmetic_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<22>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<fundamental_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<23>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<scalar_<unspecified_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<24>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<double_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<25>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<type64_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<26>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<floating_sized_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<27>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<floating_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<28>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<signed_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<29>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<arithmetic_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<30>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<fundamental_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<31>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<generic_<unspecified_<type>>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<32>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (homogeneous_<unspecified_<type>, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<33>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (fusion_sequence_<type, boost::mpl::size_t<7>>)
+                  , (nth_hierarchy<type,int_<34>>::type)
+                  );
+
+  NT2_TEST_TYPE_IS( (unspecified_<type>)
+                  , (nth_hierarchy<type,int_<35>>::type)
+                  );
 }
-
