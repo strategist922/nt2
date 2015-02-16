@@ -1,14 +1,14 @@
 //==============================================================================
 //         Copyright 2003 - 2012   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2012   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#define NT2_UNIT_MODULE "boost::dispatch::meta::hierarchy_of for fusion types"
-
 #include <boost/array.hpp>
+#include <boost/fusion/include/vector.hpp>
 #include <boost/fusion/adapted/array.hpp>
 
 #include <boost/dispatch/meta/fusion.hpp>
@@ -41,6 +41,22 @@ NT2_TEST_CASE_TPL(hierarchy_of_ref_cref, BOOST_SIMD_TYPES)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Test that hierarchy_of is correct for random fusion sequence
+////////////////////////////////////////////////////////////////////////////////
+NT2_TEST_CASE(hierarchy_of_fusion_vector)
+{
+  using boost::fusion::vector5;
+  using boost::is_same;
+  using namespace boost::dispatch::meta;
+
+  typedef vector5<void**,double,int*,char&,float> type;
+  typedef hierarchy_of< type >::type base;
+
+  NT2_TEST_TYPE_IS( (fusion_sequence_< type,boost::mpl::size_t<5> >), base );
+  NT2_TEST_TYPE_IS( (unspecified_< type >), UP(base,1) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Test that hierarchy_of is correct for array
 ////////////////////////////////////////////////////////////////////////////////
 NT2_TEST_CASE(hierarchy_of_array)
@@ -69,7 +85,7 @@ NT2_TEST_CASE(hierarchy_of_array)
   NT2_TEST( (is_same<array_<generic_<fundamental_< array<double,7> > >, boost::mpl::size_t<7>  > , UP(base,14) >::value) );
   NT2_TEST( (is_same<array_<generic_<unspecified_< array<double,7> > >, boost::mpl::size_t<7>  > , UP(base,15) >::value) );
   NT2_TEST( (is_same<array_<unspecified_< array<double,7> >, boost::mpl::size_t<7>  >            , UP(base,16) >::value) );
-  NT2_TEST( (is_same<fusion_sequence_< array<double,7> >                     , UP(base,17) >::value) );
+  NT2_TEST( (is_same<fusion_sequence_< array<double,7>,boost::mpl::size_t<7> >                     , UP(base,17) >::value) );
   NT2_TEST( (is_same<unspecified_< array<double,7> >                         , UP(base,18) >::value) );
 }
 

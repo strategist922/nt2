@@ -54,9 +54,9 @@ namespace boost { namespace simd { namespace ext
 
   /// INTERNAL ONLY - Fusion sequence stream with offset
   BOOST_DISPATCH_IMPLEMENT          ( stream_, tag::cpu_
-                                    , (A0)(A1)(A2)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
+                                    , (A0)(A1)(A2)(N)
+                                    , ((fusion_sequence_<A0,N>))
+                                      ((fusion_sequence_<A1,N>))
                                       (scalar_< integer_<A2> >)
                                     )
   {
@@ -65,7 +65,7 @@ namespace boost { namespace simd { namespace ext
     BOOST_FORCEINLINE result_type
     operator()(A0 const& a0, A1 const& a1, A2 a2) const
     {
-      meta::iterate < fusion::result_of::size<A1>::type::value>
+      meta::iterate <N::value>
                     ( details::storer < boost::simd::
                                         tag::stream_(A0, A1, A2)
                                       >(a0, a1, a2)
@@ -75,9 +75,9 @@ namespace boost { namespace simd { namespace ext
 
   /// INTERNAL ONLY - Fusion sequence stream without offset
   BOOST_DISPATCH_IMPLEMENT          ( stream_, tag::cpu_
-                                    , (A0)(A1)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
+                                    , (A0)(A1)(N)
+                                    , ((fusion_sequence_<A0,N>))
+                                      ((fusion_sequence_<A1,N>))
                                     )
   {
     typedef void result_type;
@@ -85,7 +85,7 @@ namespace boost { namespace simd { namespace ext
     BOOST_FORCEINLINE result_type
     operator()(A0 const& a0, A1 const& a1) const
     {
-      meta::iterate < fusion::result_of::size<A1>::type::value>
+      meta::iterate <N::value>
                     ( details::storer < boost::simd::
                                         tag::stream_(A0, A1)
                                       >(a0, a1)

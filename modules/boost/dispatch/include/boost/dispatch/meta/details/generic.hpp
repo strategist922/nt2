@@ -12,11 +12,13 @@
 #include <boost/dispatch/meta/details/hierarchy_base.hpp>
 #include <boost/dispatch/meta/scalar_of.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/mpl/size_t.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/mpl/if.hpp>
 
 namespace boost { namespace dispatch { namespace meta
 {
-  template<class T>
+  template<typename T, typename Sz>
   struct fusion_sequence_;
 
   template<class T>
@@ -25,10 +27,28 @@ namespace boost { namespace dispatch { namespace meta
     typedef generic_< typename T::parent >  parent;
   };
 
-  template<class T>
-  struct generic_< unspecified_<T> > : mpl::if_< boost::fusion::traits::is_sequence< typename meta::scalar_of<T>::type >, fusion_sequence_<T>, unspecified_<T> >::type
+  template< typename T
+          , bool IsSequence  = boost::fusion::traits
+                                    ::is_sequence<typename meta::scalar_of<T>::type>::value
+          >
+  struct maybe_sequence
   {
-    typedef typename mpl::if_< boost::fusion::traits::is_sequence< typename meta::scalar_of<T>::type >, fusion_sequence_<T>, unspecified_<T> >::type parent;
+    using base = typename meta::scalar_of<T>::type;
+    using type = fusion_sequence_ < T
+                                  , boost::mpl::size_t<boost::mpl::size<base>::value>
+                                  >;
+  };
+
+  template<typename T>
+  struct maybe_sequence<T,false>
+  {
+    using type = unspecified_<T>;
+  };
+
+  template<class T>
+  struct generic_< unspecified_<T> > : maybe_sequence<T>::type
+  {
+    using parent = typename maybe_sequence<T>::type;
   };
 } } }
 

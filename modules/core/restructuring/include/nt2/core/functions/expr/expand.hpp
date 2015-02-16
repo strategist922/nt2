@@ -18,9 +18,9 @@ namespace nt2 { namespace ext
 {
   /// INTERNAL ONLY - expand from ast + fusion sequence as size
   BOOST_DISPATCH_IMPLEMENT  ( expand_, tag::cpu_
-                            , (A0)(A1)
+                            , (A0)(A1)(N)
                             , ((ast_<A0, nt2::container::domain>))
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                             )
   {
     BOOST_DISPATCH_RETURNS(2, (A0 const& a0, A1 const& a1)
@@ -36,9 +36,9 @@ namespace nt2 { namespace ext
 
   /// INTERNAL ONLY - expand from scalar + fusion sequence as size
   BOOST_DISPATCH_IMPLEMENT  ( expand_, tag::cpu_
-                            , (A0)(A1)
+                            , (A0)(A1)(N)
                             , (scalar_<unspecified_<A0> >)
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                             )
   {
     BOOST_DISPATCH_RETURNS(2, (A0 const& a0, A1 const& a1)

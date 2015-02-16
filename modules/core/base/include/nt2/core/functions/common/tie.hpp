@@ -1,7 +1,8 @@
 #ifndef BOOST_PP_IS_ITERATING
 //==============================================================================
 //         Copyright 2003 - 2012   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2012   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -101,11 +102,11 @@ namespace nt2 { namespace ext
   // semantic of assigning a fusion sequence to a fusion sequence is assumed
   // to always be valid if assigning the first element is
   // TODO: check other elements?
-  BOOST_DISPATCH_IMPLEMENT  ( assign_, tag::cpu_
-                            , (A0)(A1)
-                            , (fusion_sequence_<A0>)
-                              (fusion_sequence_<A1>)
-                            )
+  BOOST_DISPATCH_IMPLEMENT( assign_, tag::cpu_
+                          , (A0)(A1)(N1)(N2)
+                          , ((fusion_sequence_<A0,N2>))
+                            ((fusion_sequence_<A1,N1>))
+                          )
   {
     typedef typename boost::fusion::result_of::at_c<A0, 0>::type first;
     typedef typename boost::fusion::result_of::at_c<A1, 0>::type first2;
@@ -116,12 +117,15 @@ namespace nt2 { namespace ext
   // only take the first value
   // Not allowed if the fusion sequence is actually a scalar
   BOOST_DISPATCH_IMPLEMENT  ( assign_, tag::cpu_
-                            , (A0)(A1)
+                            , (A0)(A1)(N)
                             , (generic_< unspecified_<A0> >)
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                             )
   {
-    BOOST_MPL_ASSERT_MSG( !boost::dispatch::meta::is_scalar<A1>::value, NT2_ASSIGN_SCALAR_SEQUENCE, (A0, A1) );
+    BOOST_MPL_ASSERT_MSG( !boost::dispatch::meta::is_scalar<A1>::value
+                        , NT2_ASSIGN_SCALAR_SEQUENCE
+                        , (A0, A1)
+                        );
 
     typedef typename boost::fusion::result_of::at_c<A1, 0>::type first;
     typedef typename meta::call<tag::assign_(A0&, first)>::type result_type;

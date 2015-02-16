@@ -1,6 +1,7 @@
 //==============================================================================
 //         Copyright 2003 - 2012   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2012   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -41,7 +42,7 @@ namespace nt2 { namespace ext
                             , (A0)(N0)(State)(Data)
                             , ((node_<A0, nt2::tag::tie_, N0, nt2::container::domain>))
                               (generic_< integer_<State> >)
-                              (fusion_sequence_<Data>)
+                              ((fusion_sequence_<Data,N0>))
                             )
   {
     typedef A0& result_type;
@@ -81,7 +82,7 @@ namespace nt2 { namespace ext
                             , (A0)(N0)(State)(Data)
                             , ((node_<A0, nt2::tag::tie_, N0, nt2::container::domain>))
                               (generic_< integer_<State> >)
-                              (target_< fusion_sequence_<Data> >)
+                              (target_< fusion_sequence_<Data,N0> >)
                             )
   {
     typedef typename Data::type result_type;
@@ -124,10 +125,10 @@ namespace nt2 { namespace ext
   // when storing a fusion sequence in a terminal, take first element
   //============================================================================
   BOOST_DISPATCH_IMPLEMENT  ( terminal_, tag::cpu_
-                            , (A0)(N0)(State)(Data)
+                            , (A0)(N0)(State)(Data)(N)
                             , ((node_<A0, nt2::tag::terminal_, N0, nt2::container::domain>))
                               (generic_< integer_<State> >)
-                              (fusion_sequence_<Data>)
+                              ((fusion_sequence_<Data,N>))
                             )
   {
     typedef A0& result_type;

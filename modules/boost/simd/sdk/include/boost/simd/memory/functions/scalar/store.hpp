@@ -93,20 +93,19 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// INTERNAL ONLY - Fusion sequence store with offset
-  BOOST_DISPATCH_IMPLEMENT          ( store_
-                                    , tag::cpu_
-                                    , (A0)(A1)(A2)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
-                                      (generic_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( store_, tag::cpu_
+                          , (A0)(A1)(A2)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((fusion_sequence_<A1,N>))
+                            (generic_< integer_<A2> >)
+                          )
   {
     typedef void result_type;
 
     BOOST_FORCEINLINE result_type
     operator()(A0 const& a0, A1 const& a1, A2 a2) const
     {
-      meta::iterate < fusion::result_of::size<A1>::type::value>
+      meta::iterate <N::value>
                     ( details::storer < boost::simd::
                                         tag::store_(A0, A1, A2)
                                       >(a0, a1, a2)
@@ -115,19 +114,18 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// INTERNAL ONLY - Scalar store and store are equivalent
-  BOOST_DISPATCH_IMPLEMENT          ( store_
-                                    , tag::cpu_
-                                    , (A0)(A1)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( store_, tag::cpu_
+                          , (A0)(A1)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((fusion_sequence_<A1,N>))
+                          )
   {
     typedef void result_type;
 
     BOOST_FORCEINLINE result_type
     operator()(A0 const& a0, A1 const& a1) const
     {
-      meta::iterate < fusion::result_of::size<A1>::type::value>
+      meta::iterate <N::value>
                     ( details::storer < boost::simd::
                                         tag::store_(A0, A1)
                                       >(a0, a1)
@@ -136,36 +134,32 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// Handles store( seq, seq'*)
-  BOOST_DISPATCH_IMPLEMENT_IF         ( store_
-                                      , tag::cpu_
-                                      , (A0)(A1)
-                                      , (mpl::not_< simd::meta::is_native<A0> >)
-                                      , (fusion_sequence_<A0>)
-                                        (iterator_< fusion_sequence_<A1> >)
-                                      )
+  BOOST_DISPATCH_IMPLEMENT_IF ( store_, tag::cpu_
+                              , (A0)(A1)(N)
+                              , (mpl::not_< simd::meta::is_native<A0> >)
+                              , ((fusion_sequence_<A0,N>))
+                                ((iterator_< fusion_sequence_<A1,N> >))
+                              )
   {
     typedef void result_type;
     BOOST_SIMD_FUNCTOR_CALL(2)
     {
-      static const int N = fusion::result_of::size<A0>::type::value;
-      meta::iterate<N>( details::extractor<A0,A1>(a0,a1) );
+      meta::iterate<N::value>( details::extractor<A0,A1>(a0,a1) );
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT_IF         ( store_
-                                      , tag::cpu_
-                                      , (A0)(A1)(A2)
-                                      , (mpl::not_< simd::meta::is_native<A0> >)
-                                      , (fusion_sequence_<A0>)
-                                        (iterator_< fusion_sequence_<A1> >)
-                                        (scalar_< integer_<A2> >)
-                                      )
+  BOOST_DISPATCH_IMPLEMENT_IF ( store_, tag::cpu_
+                              , (A0)(A1)(A2)(N)
+                              , (mpl::not_< simd::meta::is_native<A0> >)
+                              , ((fusion_sequence_<A0,N>))
+                                ((iterator_< fusion_sequence_<A1,N> >))
+                                (scalar_< integer_<A2> >)
+                              )
   {
     typedef void result_type;
     BOOST_SIMD_FUNCTOR_CALL(3)
     {
-      static const int N = fusion::result_of::size<A0>::type::value;
-      meta::iterate<N>( details::extractor<A0,A1,A2>(a0,a1,a2) );
+      meta::iterate<N::value>( details::extractor<A0,A1,A2>(a0,a1,a2) );
     }
   };
 } } }

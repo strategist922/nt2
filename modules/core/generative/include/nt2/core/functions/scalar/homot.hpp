@@ -17,9 +17,9 @@
 namespace nt2 { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT  ( homot_, tag::cpu_
-                            , (A0)(Seq)
+                            , (A0)(Seq)(N)
                             , (scalar_<unspecified_<A0> >)
-                              (fusion_sequence_<Seq>)
+                              ((fusion_sequence_<Seq,N>))
                             )
   {
     typedef typename boost::remove_const<Seq>::type     size_type;

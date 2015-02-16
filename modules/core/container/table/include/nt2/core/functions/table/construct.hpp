@@ -1,12 +1,12 @@
-///==============================================================================
-///         Copyright 2003 - 2012   LASMEA UMR 6602 CNRS/Univ. Clermont II
-///         Copyright 2009 - 2012   LRI    UMR 8623 CNRS/Univ Paris Sud XI
-///         Copyright 2011 - 2012   MetaScale SAS
-///
-///          Distributed under the Boost Software License, Version 1.0.
-///                 See accompanying file LICENSE.txt or copy at
-///                     http:///www.boost.org/LICENSE_1_0.txt
-///==============================================================================
+//==============================================================================
+//         Copyright 2003 - 2012   LASMEA UMR 6602 CNRS/Univ. Clermont II
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
+//
+//          Distributed under the Boost Software License, Version 1.0.
+//                 See accompanying file LICENSE.txt or copy at
+//                     http:///www.boost.org/LICENSE_1_0.txt
+//==============================================================================
 #ifndef NT2_CORE_FUNCTIONS_TABLE_CONSTRUCT_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_TABLE_CONSTRUCT_HPP_INCLUDED
 
@@ -25,13 +25,13 @@ namespace nt2 { namespace ext
   /// Construct a terminal from a size
   ///  * Perform a resize on the table's container
   BOOST_DISPATCH_IMPLEMENT  ( construct_, tag::cpu_
-                            , (A0)(A1)
+                            , (A0)(A1)(N)
                             , ((node_ < A0,nt2::tag::terminal_
                                       , boost::mpl::long_<0>
                                       , nt2::container::domain
                                       >
                               ))
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                             )
   {
     typedef typename A0::extent_type    extent_type;
@@ -53,13 +53,13 @@ namespace nt2 { namespace ext
   /// This is done even if swap sounds bad with automatic storage table.
   /// Good news are that automatic_  table usually don't require allocators ;)
   BOOST_DISPATCH_IMPLEMENT  ( construct_, tag::cpu_
-                            , (A0)(A1)(A2)
+                            , (A0)(A1)(A2)(N)
                             , ((node_ < A0,nt2::tag::terminal_
                                       , boost::mpl::long_<0>
                                       , nt2::container::domain
                                       >
                               ))
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                               (unspecified_<A2>)
                             )
   {
@@ -126,13 +126,13 @@ namespace nt2 { namespace ext
   /// INTERNAL ONLY
   /// Construct a terminal from a size and a Iterator pair
   BOOST_DISPATCH_IMPLEMENT  ( construct_, tag::cpu_
-                            , (A0)(A1)(A2)(A3)
+                            , (A0)(A1)(A2)(A3)(N)
                             , ((node_ < A0,nt2::tag::terminal_
                                       , boost::mpl::long_<0>
                                       , nt2::container::domain
                                       >
                               ))
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                               (iterator_< scalar_< unspecified_<A2> > >)
                               (iterator_< scalar_< unspecified_<A3> > >)
                             )

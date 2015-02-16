@@ -19,9 +19,9 @@
 namespace nt2 { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT  ( expand_to_, tag::cpu_
-                            , (A0)(A1)
+                            , (A0)(A1)(N)
                             , ((ast_<A0, nt2::container::domain>))
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                             )
   {
     typedef typename  boost::remove_const<A1>::type sizes_t;

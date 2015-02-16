@@ -91,12 +91,12 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// INTERNAL ONLY - Fusion sequence store with offset
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_store_, tag::cpu_
-                                    , (A0)(A1)(A2)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
-                                      (generic_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( aligned_store_, tag::cpu_
+                          , (A0)(A1)(A2)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((fusion_sequence_<A1,N>))
+                            (generic_< integer_<A2> >)
+                          )
   {
     typedef void result_type;
 
@@ -108,11 +108,11 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// INTERNAL ONLY - Fusion sequence store without offset
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_store_, tag::cpu_
-                                    , (A0)(A1)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( aligned_store_, tag::cpu_
+                          , (A0)(A1)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((fusion_sequence_<A1,N>))
+                          )
   {
     typedef void result_type;
 

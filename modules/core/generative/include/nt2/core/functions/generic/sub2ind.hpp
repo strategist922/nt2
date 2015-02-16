@@ -1,7 +1,8 @@
 #if !BOOST_PP_IS_ITERATING
 //==============================================================================
 //         Copyright 2003 - 2012   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2012   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -44,8 +45,8 @@ namespace nt2 { namespace ext
 
   /// INTERNAL ONLY - sub2ind(ettent,D1,D2)
   BOOST_DISPATCH_IMPLEMENT  ( sub2ind_, tag::cpu_
-                            , (SZ)(A1)
-                            , (fusion_sequence_<SZ>)
+                            , (SZ)(A1)(N)
+                            , ((fusion_sequence_<SZ,N>))
                               BOOST_PP_REPEAT(N,M0,generic_)
                             )
   {

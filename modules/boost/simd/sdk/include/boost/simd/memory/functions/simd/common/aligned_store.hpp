@@ -1,7 +1,7 @@
 //==============================================================================
 //         Copyright 2003 - 2011 LASMEA UMR 6602 CNRS/Univ. Clermont II
 //         Copyright 2009 - 2011 LRI    UMR 8623 CNRS/Univ Paris Sud XI
-//         Copyright 2014               MetaScale SAS
+//         Copyright 2012 - 2015 NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -186,50 +186,48 @@ namespace boost { namespace simd { namespace ext
   {
     typedef void result_type;
 
-    BOOST_FORCEINLINE
-    result_type operator()(A0 const& a0, A1 a1) const
+    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 a1) const
     {
       boost::simd::store(a0, a1);
     }
   };
 
   /// INTERNAL ONLY - SIMD Fusion sequence store
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_store_, tag::cpu_
-                                    , (A0)(A1)(A2)(X)
-                                    , ((simd_< fusion_sequence_<A0>, X >))
-                                      (fusion_sequence_<A1>)
-                                      (generic_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( aligned_store_, tag::cpu_
+                          , (A0)(A1)(A2)(X)(N)
+                          , ((simd_< fusion_sequence_<A0,N>, X >))
+                            ((fusion_sequence_<A1,N>))
+                            (generic_< integer_<A2> >)
+                          )
   {
     typedef void result_type;
 
     BOOST_FORCEINLINE
     result_type operator()(A0 const& a0, A1 const& a1, A2 const& a2) const
     {
-      static const int N = fusion::result_of::size<A1>::type::value;
-      meta::iterate<N>( details::storer< boost::simd::
-                                         tag::aligned_store_(A0, A1, A2)
-                                       >(a0, a1, a2)
-                      );
+      meta::iterate<N::value> ( details::storer < boost::simd::
+                                                  tag::aligned_store_(A0,A1,A2)
+                                                >(a0, a1, a2)
+                              );
     }
   };
+
   /// INTERNAL ONLY - SIMD Fusion sequence store
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_store_, tag::cpu_
-                                    , (A0)(A1)(X)
-                                    , ((simd_< fusion_sequence_<A0>, X >))
-                                      (fusion_sequence_<A1>)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( aligned_store_, tag::cpu_
+                          , (A0)(A1)(X)(N)
+                          , ((simd_< fusion_sequence_<A0,N>, X >))
+                            ((fusion_sequence_<A1,N>))
+                          )
   {
     typedef void result_type;
 
     BOOST_FORCEINLINE
     result_type operator()(A0 const& a0, A1 const& a1) const
     {
-      static const int N = fusion::result_of::size<A1>::type::value;
-      meta::iterate<N>( details::storer< boost::simd::
-                                         tag::aligned_store_(A0, A1)
-                                       >(a0, a1)
-                      );
+      meta::iterate<N::value> ( details::storer < boost::simd::
+                                                  tag::aligned_store_(A0, A1)
+                                                >(a0, a1)
+                              );
     }
   };
 } } }

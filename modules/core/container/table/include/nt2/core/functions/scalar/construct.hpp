@@ -1,6 +1,7 @@
 //==============================================================================
 //         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -23,9 +24,9 @@ namespace nt2 { namespace ext
   // Construct a terminal from a size and a Iterator pair
   //============================================================================
   BOOST_DISPATCH_IMPLEMENT  ( construct_, tag::cpu_
-                            , (A0)(A1)(A2)(A3)
+                            , (A0)(A1)(A2)(A3)(N1)
                             , (scalar_< unspecified_<A0> >)
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N1>))
                               (iterator_< scalar_< unspecified_<A2> > >)
                               (iterator_< scalar_< unspecified_<A3> > >)
                             )
@@ -52,9 +53,9 @@ namespace nt2 { namespace ext
   // Assign a container from a pair of iterators
   //============================================================================
   BOOST_DISPATCH_IMPLEMENT  ( construct_, tag::cpu_
-                            , (A0)(A1)(A2)(A3)
+                            , (A0)(A1)(A2)(A3)(N1)
                             , (unspecified_<A0>)
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N1>))
                               (iterator_< scalar_< unspecified_<A2> > >)
                               (iterator_< scalar_< unspecified_<A3> > >)
                             )
@@ -64,17 +65,15 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE result_type
     operator()(A0& a0, A1 const& a1, A2 const& a2, A3 const& a3) const
     {
+      boost::ignore_unused(a1);
+
       //========================================================================
       // Check we don't copy more than expected
       //========================================================================
-      std::size_t range_size = std::distance(a2,a3);
-
       BOOST_ASSERT_MSG
-      ( nt2::numel(a1) >= range_size
+      ( nt2::numel(a1) >= (std::size_t)std::distance(a2,a3)
       , "Source range is larger than destination container."
       );
-      boost::ignore_unused(a1);
-      boost::ignore_unused(range_size);
 
       a0.clear();
       a0.insert(a0.begin(), a2, a3);

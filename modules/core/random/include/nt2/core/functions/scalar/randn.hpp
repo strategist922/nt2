@@ -39,8 +39,8 @@ namespace nt2 { namespace ext
   /// INTERNAL ONLY
   /// of_size + target
   BOOST_DISPATCH_IMPLEMENT  ( randn_, tag::cpu_
-                            , (T)(A0)
-                            , (fusion_sequence_<A0>)
+                            , (T)(A0)(N)
+                            , ((fusion_sequence_<A0,N>))
                               (target_< scalar_< floating_<T> > >)
                             )
   {
@@ -61,8 +61,8 @@ namespace nt2 { namespace ext
   /// INTERNAL ONLY
   /// of_size
   BOOST_DISPATCH_IMPLEMENT  ( randn_, tag::cpu_
-                            , (A0)
-                            , (fusion_sequence_<A0>)
+                            , (A0)(N)
+                            , ((fusion_sequence_<A0,N>))
                             )
   {
     typedef typename boost::remove_const<A0>::type            size_type;

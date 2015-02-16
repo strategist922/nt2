@@ -18,13 +18,11 @@
 namespace boost { namespace simd { namespace ext
 {
   /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT          ( insert_
-                                    , tag::cpu_
-                                    , (A0)(A1)(A2)
-                                    , (scalar_< fundamental_<A0> >)
-                                      (scalar_< fundamental_<A1> >)
-                                      (scalar_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( insert_, tag::cpu_, (A0)(A1)(A2)
+                          , (scalar_< fundamental_<A0> >)
+                            (scalar_< fundamental_<A1> >)
+                            (scalar_< integer_<A2> >)
+                          )
   {
     typedef void result_type;
 
@@ -35,13 +33,11 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT          ( insert_
-                                    , tag::cpu_
-                                    , (A0)(A1)(A2)
-                                    , (fusion_sequence_<A0>)
-                                      (fusion_sequence_<A1>)
-                                      (scalar_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( insert_, tag::cpu_, (A0)(A1)(A2)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((fusion_sequence_<A1,N>))
+                            (scalar_< integer_<A2> >)
+                          )
   {
     typedef void result_type;
 

@@ -23,9 +23,9 @@ namespace boost { namespace dispatch { namespace meta
   };
 
   template<class T>
-  struct complex_< unspecified_<T> > : fusion_sequence_<T>
+  struct complex_< unspecified_<T> > : fusion_sequence_<T,boost::mpl::size_t<2>>
   {
-    typedef fusion_sequence_<T> parent;
+    typedef fusion_sequence_<T,boost::mpl::size_t<2>> parent;
   };
 
   template<class T>

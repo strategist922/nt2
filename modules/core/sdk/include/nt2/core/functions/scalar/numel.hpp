@@ -21,14 +21,14 @@
 
 namespace nt2 { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT  ( numel_, tag::cpu_
-                            , (A0), (scalar_< unspecified_<A0> >)
-                            )
+  BOOST_DISPATCH_IMPLEMENT( numel_, tag::cpu_
+                          , (A0), (scalar_< unspecified_<A0> >)
+                          )
   {
-    typedef boost::mpl::size_t<1> result_type;
-
-    BOOST_FORCEINLINE
-    result_type operator()(const A0&) const { return result_type(); }
+    BOOST_DISPATCH_RETURNS_ARGS ( 1
+                                , (A0 const& a0), (A0 const&)
+                                , boost::mpl::size_t<1>{}
+                                )
   };
 
   BOOST_DISPATCH_IMPLEMENT  ( numel_, tag::cpu_
@@ -37,15 +37,17 @@ namespace nt2 { namespace ext
                               (mpl_integral_< scalar_< unspecified_<A1> > >)
                             )
   {
-    typedef boost::mpl::size_t<1> result_type;
 
-    BOOST_FORCEINLINE
-    result_type operator()(const A0&, const A1&) const { return result_type(); }
+    BOOST_DISPATCH_RETURNS_ARGS ( 1
+                                , (A0 const& a0,A0 const& a1)
+                                , (A0 const&,A1 const&)
+                                , boost::mpl::size_t<1>{}
+                                )
   };
 
   BOOST_DISPATCH_IMPLEMENT  ( numel_, tag::cpu_
-                            , (A0)
-                            , (fusion_sequence_<A0>)
+                            , (A0)(N)
+                            , ((fusion_sequence_<A0,N>))
                             )
   {
     // multiplies functor
@@ -75,8 +77,8 @@ namespace nt2 { namespace ext
   };
 
   BOOST_DISPATCH_IMPLEMENT  ( numel_, tag::cpu_
-                            , (A0)(A1)
-                            , (fusion_sequence_<A0>)
+                            , (A0)(A1)(N)
+                            , ((fusion_sequence_<A0,N>))
                               (mpl_integral_< scalar_< unspecified_<A1> > >)
                             )
   {

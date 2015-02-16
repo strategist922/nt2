@@ -32,9 +32,9 @@ namespace nt2
     }
 
     // fusion sequence case : return s itself
-    template<typename S, typename H>
+    template<typename S, typename H, typename N>
     BOOST_FORCEINLINE S const& as_size( S const& s
-                                      , ext::fusion_sequence_<H> const&
+                                      , ext::fusion_sequence_<H,N> const&
                                       )
     {
       return s;

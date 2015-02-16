@@ -65,13 +65,12 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( insert_
-                                    , tag::cpu_
-                                    , (A0)(A1)(A2)(X)
-                                    , (fusion_sequence_<A0>)
-                                      ((simd_< fusion_sequence_<A1>, X >))
-                                      (scalar_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( insert_, tag::cpu_
+                          , (A0)(A1)(A2)(X)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((simd_< fusion_sequence_<A1,N>, X >))
+                            (scalar_< integer_<A2> >)
+                          )
   {
     struct insert_fusion
     {
@@ -97,16 +96,7 @@ namespace boost { namespace simd { namespace ext
     BOOST_FORCEINLINE result_type
     operator()(A0 const& a0, A1& a1, A2 const& a2) const
     {
-      static const bool check =   fusion::result_of::size<A0>::value
-                              ==  fusion::result_of::size<A1>::value;
-
-      BOOST_MPL_ASSERT_MSG( check
-                          , BOOST_SIMD_INSERT_FUSION_SEQUENCE_SIZE_MISMATCH
-                          , (A0&, A1&)
-                          );
-
-      static const int N = fusion::result_of::size<A0>::type::value;
-      meta::iterate<N>(insert_fusion(a0, a1, a2));
+      meta::iterate<N::value>(insert_fusion(a0, a1, a2));
     }
   };
 } } }

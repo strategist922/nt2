@@ -1,6 +1,7 @@
 //==============================================================================
 //         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -16,9 +17,9 @@
 namespace nt2 { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT  ( isexpandable_to_, tag::cpu_
-                            , (A0)(A1)
+                            , (A0)(A1)(N)
                             , ((ast_<A0, nt2::container::domain>))
-                              (fusion_sequence_<A1>)
+                              ((fusion_sequence_<A1,N>))
                             )
   {
     typedef bool result_type;

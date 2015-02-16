@@ -1,6 +1,7 @@
 //==============================================================================
 //         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -39,8 +40,8 @@ namespace nt2 { namespace ext
 
   // randi([imin imax])
   BOOST_DISPATCH_IMPLEMENT  ( randi_, tag::cpu_
-                            , (S)
-                            , (fusion_sequence_<S>)
+                            , (S)(N)
+                            , ((fusion_sequence_<S,N>))
                             )
   {
     typedef typename boost::fusion::result_of::value_at_c<S,0>::type result_type;
@@ -58,9 +59,9 @@ namespace nt2 { namespace ext
 
   // randi(imax, of_size)
   BOOST_DISPATCH_IMPLEMENT  ( randi_, tag::cpu_
-                            , (A0)(S)
+                            , (A0)(S)(N)
                             , (scalar_< integer_<A0> >)
-                              (fusion_sequence_<S>)
+                              ((fusion_sequence_<S,N>))
                             )
   {
     typedef typename  boost::proto::result_of
@@ -79,9 +80,9 @@ namespace nt2 { namespace ext
 
   // randi([imin imax], of_size)
   BOOST_DISPATCH_IMPLEMENT  ( randi_, tag::cpu_
-                            , (A0)(S)
-                            , (fusion_sequence_<A0>)
-                              (fusion_sequence_<S>)
+                            , (A0)(S)(N0)(N)
+                            , ((fusion_sequence_<A0,N0>))
+                              ((fusion_sequence_<S,N>))
                             )
   {
     typedef typename boost::fusion::result_of::value_at_c<A0,0>::type v_t;
@@ -124,9 +125,9 @@ namespace nt2 { namespace ext
                             )                                                   \
                           )                                                     \
   };                                                                            \
-  BOOST_DISPATCH_IMPLEMENT  ( randi_, tag::cpu_                       \
-                            , (S)BOOST_PP_REPEAT(n,M2,~)                        \
-                            , (fusion_sequence_<S>)                             \
+  BOOST_DISPATCH_IMPLEMENT  ( randi_, tag::cpu_                                 \
+                            , (N)(S)BOOST_PP_REPEAT(n,M2,~)                     \
+                            , ((fusion_sequence_<S,N>))                         \
                               BOOST_PP_REPEAT(n,M1,~)                           \
                             )                                                   \
   {                                                                             \

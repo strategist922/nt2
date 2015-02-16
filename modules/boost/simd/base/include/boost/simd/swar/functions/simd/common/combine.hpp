@@ -98,9 +98,9 @@ namespace boost { namespace simd { namespace ext
   // combine fusion sequence iteratively
   BOOST_DISPATCH_IMPLEMENT          ( combine_
                                     , tag::cpu_
-                                    , (A0)(X)
-                                    , ((simd_< fusion_sequence_<A0>, X>))
-                                      ((simd_< fusion_sequence_<A0>, X>))
+                                    , (A0)(N0)(X)
+                                    , ((simd_< fusion_sequence_<A0,N0>, X>))
+                                      ((simd_< fusion_sequence_<A0,N0>, X>))
                                     )
   {
     typedef typename  meta::vector_of < typename A0::value_type
@@ -131,9 +131,8 @@ namespace boost { namespace simd { namespace ext
 
     BOOST_FORCEINLINE result_type operator()(A0 const& a0, A0 const& a1) const
     {
-      static const int N = fusion::result_of::size<A0>::type::value;
       result_type that;
-      meta::iterate<N>(impl(that, a0, a1));
+      meta::iterate<N0::value>(impl(that, a0, a1));
       return that;
     }
   };

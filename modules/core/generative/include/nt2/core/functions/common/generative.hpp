@@ -1,6 +1,7 @@
 //==============================================================================
 //         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -23,53 +24,39 @@ namespace boost { namespace simd { namespace ext
   /// INTERNAL ONLY
   /// of_size + target
   BOOST_DISPATCH_IMPLEMENT_G( nt2::ext::pure_constant_<Tag>, tag::cpu_
-                            , (T)(A0)(Tag)
-                            , (fusion_sequence_<A0>)
+                            , (T)(A0)(Tag)(N)
+                            , ((fusion_sequence_<A0,N>))
                               (target_< scalar_< unspecified_<T> > >)
                             )
   {
-    typedef typename boost::remove_const<A0>::type         size_type;
     typedef nt2::meta::constant_<Tag,typename T::type>     constant_t;
     typedef nt2::meta::as_<typename constant_t::base_type> target_t;
-    typedef typename  boost::proto::result_of
-                    ::make_expr < Tag, nt2::container::domain
-                                , size_type
-                                , constant_t
-                                , target_t
-                                >::type                    result_type;
 
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, T const&) const
-    {
-      return  boost::proto
-            ::make_expr<Tag, nt2::container::domain>(a0, constant_t(), target_t());
-    }
+    BOOST_DISPATCH_RETURNS_ARGS ( 2, (A0 const& a0, T const& t)
+                                , (A0 const& a0, T const& )
+                                , boost::proto::make_expr < Tag
+                                                          , nt2::container::domain
+                                                          >
+                                                (a0, constant_t(), target_t())
+                                )
   };
 
   /// INTERNAL ONLY
   /// of_size
   BOOST_DISPATCH_IMPLEMENT_G( nt2::ext::pure_constant_<Tag>, tag::cpu_
-                            , (A0)(Tag)
-                            , (fusion_sequence_<A0>)
+                            , (A0)(Tag)(N)
+                            , ((fusion_sequence_<A0,N>))
                             )
   {
-    typedef typename boost::remove_const<A0>::type               size_type;
-    typedef nt2::meta::constant_<Tag,typename Tag::default_type> constant_t;
-    typedef nt2::meta::as_<typename constant_t::base_type>       target_t;
-    typedef typename  boost::proto::result_of
-                    ::make_expr < Tag, nt2::container::domain
-                                , size_type
-                                , constant_t
-                                , target_t
-                                >::type                          result_type;
+    typedef nt2::meta::constant_<Tag,typename T::type>     constant_t;
+    typedef nt2::meta::as_<typename constant_t::base_type> target_t;
 
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-      return  boost::proto
-            ::make_expr<Tag, nt2::container::domain> ( a0
-                                                     , constant_t()
-                                                     , target_t()
-                                                     );
-    }
+    BOOST_DISPATCH_RETURNS( 1, (A0 const& a0)
+                          , boost::proto::make_expr < Tag
+                                                    , nt2::container::domain
+                                                    >
+                                              (a0, constant_t(), target_t())
+                          )
   };
 
   #define M2(z,n,t) (BOOST_PP_CAT(A,n))

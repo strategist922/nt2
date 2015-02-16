@@ -262,56 +262,44 @@ namespace boost { namespace simd { namespace ext
   };
 
   /// INTERNAL ONLY - SIMD unaligned load for Fusion Sequence
-  BOOST_DISPATCH_IMPLEMENT          ( load_
-                                    , tag::cpu_
-                                    , (A0)(A1)(A2)(X)
-                                    , (fusion_sequence_<A0>)
-                                      ((target_ < simd_ < fusion_sequence_<A1>
-                                                        , X
-                                                        >
-                                                >
-                                      ))
-                                      (generic_< integer_<A2> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( load_, tag::cpu_
+                          , (A0)(A1)(A2)(X)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((target_<simd_<fusion_sequence_<A1,N>, X>>))
+                            (generic_< integer_<A2> >)
+                          )
   {
     typedef typename A1::type result_type;
 
     BOOST_FORCEINLINE result_type
     operator()(const A0& a0, const A1&, const A2& a2) const
     {
-      static const int N = fusion::result_of::size<A0>::type::value;
       result_type that;
-      meta::iterate<N>( details::loader< boost::simd::
-                                         tag::load_(A0, result_type, A2)
-                                       >(a0, that, a2)
-                      );
+      meta::iterate<N::value> ( details::loader < boost::simd::
+                                                  tag::load_(A0,result_type,A2)
+                                                >(a0, that, a2)
+                              );
       return that;
     }
   };
 
   /// INTERNAL ONLY - SIMD unaligned load for Fusion Sequence
-  BOOST_DISPATCH_IMPLEMENT          ( load_
-                                    , tag::cpu_
-                                    , (A0)(A2)(X)
-                                    , (fusion_sequence_<A0>)
-                                      ((target_ < simd_ < fusion_sequence_<A2>
-                                                        , X
-                                                        >
-                                                >
-                                      ))
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( load_, tag::cpu_
+                          , (A0)(A2)(X)(N)
+                          , ((fusion_sequence_<A0,N>))
+                            ((target_<simd_<fusion_sequence_<A2,N>, X>>))
+                          )
   {
     typedef typename A2::type result_type;
 
     BOOST_FORCEINLINE result_type
     operator()(const A0& a0, const A2&) const
     {
-      static const int N = fusion::result_of::size<A0>::type::value;
       result_type that;
-      meta::iterate<N>( details::loader< boost::simd::
-                                         tag::load_(A0, result_type)
-                                       >(a0, that)
-                      );
+      meta::iterate<N::value> ( details::loader < boost::simd::
+                                                  tag::load_(A0, result_type)
+                                                >(a0, that)
+                              );
       return that;
     }
   };

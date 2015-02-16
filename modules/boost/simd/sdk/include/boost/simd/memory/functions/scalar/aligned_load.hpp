@@ -245,9 +245,9 @@ namespace boost { namespace simd { namespace ext
 
   /// INTERNAL ONLY - Scalar FusionSequence load with offset
   BOOST_DISPATCH_IMPLEMENT          ( aligned_load_, tag::cpu_
-                                    , (A0)(A1)(A2)
-                                    , (fusion_sequence_<A0>)
-                                      ((target_< fusion_sequence_<A1> >))
+                                    , (A0)(N)(A1)(A2)
+                                    , ((fusion_sequence_<A0,N>))
+                                      ((target_< fusion_sequence_<A1,N> >))
                                       (generic_< integer_<A2> >)
                                     )
   {
@@ -260,9 +260,9 @@ namespace boost { namespace simd { namespace ext
 
   /// INTERNAL ONLY - Scalar FusionSequence load without offset
   BOOST_DISPATCH_IMPLEMENT          ( aligned_load_, tag::cpu_
-                                    , (A0)(A2)
-                                    , (fusion_sequence_<A0>)
-                                      ((target_< fusion_sequence_<A2> >))
+                                    , (A0)(N)(A2)
+                                    , ((fusion_sequence_<A0,N>))
+                                      ((target_<fusion_sequence_<A2,N>>))
                                     )
   {
     BOOST_DISPATCH_RETURNS_ARGS ( 2

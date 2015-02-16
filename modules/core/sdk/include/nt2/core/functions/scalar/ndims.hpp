@@ -15,30 +15,28 @@
 
 namespace nt2 { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT  ( ndims_, tag::cpu_
-                            , (A0), (scalar_< unspecified_<A0> >)
-                            )
+  BOOST_DISPATCH_IMPLEMENT(ndims_, tag::cpu_, (A0), (scalar_<unspecified_<A0>>))
   {
     typedef boost::mpl::size_t<2> result_type;
 
-    BOOST_FORCEINLINE
-    result_type operator()(const A0&) const { return result_type(); }
+    BOOST_FORCEINLINE result_type operator()(const A0&) const
+    {
+      return result_type();
+    }
   };
 
-  BOOST_DISPATCH_IMPLEMENT  ( ndims_, tag::cpu_
-                            , (A0), (fusion_sequence_<A0>)
-                            )
+  BOOST_DISPATCH_IMPLEMENT( ndims_, tag::cpu_
+                          , (A0)(N)
+                          , ((fusion_sequence_<A0,N>))
+                          )
   {
     typedef std::size_t result_type;
-
-    static bool local_match(std::size_t i) { return i != 1; }
 
     result_type operator()(A0& sz) const
     {
       // find the first non-1 from the end
-      typename A0::const_reverse_iterator
-      b = sz.rbegin(), e = sz.rend(),c;
-      c = std::find_if(b,e,local_match);
+      auto b = sz.rbegin(), e = sz.rend();
+      auto c = std::find_if(b,e,[](std::size_t i) { return i != 1; });
 
       return std::distance(c,e);
     }

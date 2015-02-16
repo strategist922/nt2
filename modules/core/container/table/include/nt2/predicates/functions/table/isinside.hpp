@@ -1,6 +1,7 @@
-  //==============================================================================
+//==============================================================================
 //         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -15,23 +16,15 @@
 namespace nt2 { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT  ( isinside_, tag::cpu_
-                            , (A0)(A1)
-                            , (fusion_sequence_<A0>)
+                            , (A0)(A1)(N)
+                            , ((fusion_sequence_<A0,N>))
                               ((ast_<A1, nt2::container::domain>))
                             )
   {
-    typedef typename meta::strip<A1>::type                          base_t;
-    typedef typename base_t::extent_type                            ext_t;
-    typedef typename  meta::call
-                      < nt2::tag::isinside_(A0&,ext_t)>::type result_type;
-
-    BOOST_FORCEINLINE
-    result_type operator()(const A0& a0,const A1& a1) const
-    {
-      return isinside(a0,a1.extent());
-    }
+    BOOST_DISPATCH_RETURNS( 2, (A0 const& a0, A1 const& a1)
+                          , isinside(a0,a1.extent())
+                          )
   };
-
 } }
 
 #endif

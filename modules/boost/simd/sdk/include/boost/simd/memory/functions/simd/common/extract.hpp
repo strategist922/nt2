@@ -65,12 +65,11 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( extract_
-                                    , tag::cpu_
-                                    , (A0)(A1)(X)
-                                    , ((simd_< fusion_sequence_<A0>, X >))
-                                      (scalar_< integer_<A1> >)
-                                    )
+  BOOST_DISPATCH_IMPLEMENT( extract_, tag::cpu_
+                          , (A0)(A1)(X)(N)
+                          , ((simd_< fusion_sequence_<A0,N>, X >))
+                            (scalar_< integer_<A1> >)
+                          )
   {
     struct extract_fusion
     {

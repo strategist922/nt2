@@ -28,7 +28,8 @@ namespace boost { namespace dispatch { namespace meta
   //==========================================================================
   /*! Fusion sequence hierarchy type                                        */
   //==========================================================================
-  template<class T> struct fusion_sequence_ : unspecified_<T>
+  template<typename T, typename Sz>
+  struct fusion_sequence_ : unspecified_<T>
   {
     typedef unspecified_<T> parent;
   };
@@ -43,9 +44,9 @@ namespace boost { namespace dispatch { namespace meta
   };
 
   template<class T, typename N>
-  struct array_<unspecified_<T>, N> : fusion_sequence_<T>
+  struct array_<unspecified_<T>, N> : fusion_sequence_<T,N>
   {
-    typedef fusion_sequence_<T> parent;
+    typedef fusion_sequence_<T,N> parent;
   };
 
   //============================================================================
@@ -90,7 +91,9 @@ namespace details
                                       >::type
                       >
   {
-    typedef meta::fusion_sequence_<Origin> type;
+    typedef meta::fusion_sequence_< Origin
+                                  , boost::mpl::size_t<boost::mpl::size<T>::value>
+                                  > type;
   };
 
   template<class T,class Origin>
@@ -104,7 +107,9 @@ namespace details
                                       >::type
                       >
   {
-    typedef meta::fusion_sequence_<Origin> type;
+    typedef meta::fusion_sequence_< Origin
+                                  , boost::mpl::size_t<boost::mpl::size<T>::value>
+                                  > type;
   };
 }
 

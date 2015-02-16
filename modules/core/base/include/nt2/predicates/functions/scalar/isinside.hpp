@@ -1,6 +1,7 @@
   //==============================================================================
 //         Copyright 2003 - 2011   LASMEA UMR 6602 CNRS/Univ. Clermont II
-//         Copyright 2009 - 2011   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2009 - 2015   LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2012 - 2015   NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -21,9 +22,9 @@
 namespace nt2 { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT  ( isinside_, tag::cpu_
-                            , (A0)(A1)
-                            , (fusion_sequence_<A0>)
-                              (fusion_sequence_<A1>)
+                            , (A0)(A1)(N0)(N1)
+                            , ((fusion_sequence_<A0,N0>))
+                              ((fusion_sequence_<A1,N1>))
                             )
   {
     typedef typename boost::fusion::result_of::at_c<A0,0>::type   at_t;
@@ -33,8 +34,7 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE
     result_type operator()(const A0& a0,const A1& a1) const
     {
-      typedef typename boost::fusion::result_of::size<A0>::type sz_t;
-      return eval(a0,a1,boost::mpl::int_<sz_t::value-1>());
+      return eval(a0,a1,boost::mpl::int_<N0::value-1>());
     }
 
     template<class N> BOOST_FORCEINLINE result_type
@@ -57,10 +57,10 @@ namespace nt2 { namespace ext
   };
 
   BOOST_DISPATCH_IMPLEMENT  ( isinside_, tag::cpu_
-                            , (A0)(A1)(A2)
-                            , (fusion_sequence_<A0>)
-                              (fusion_sequence_<A1>)
-                              (fusion_sequence_<A2>)
+                            , (A0)(A1)(A2)(N0)(N1)(N2)
+                            , ((fusion_sequence_<A0,N0>))
+                              ((fusion_sequence_<A1,N1>))
+                              ((fusion_sequence_<A2,N2>))
                             )
   {
     typedef typename boost::fusion::result_of::at_c<A0,0>::type   at_t;
@@ -70,14 +70,13 @@ namespace nt2 { namespace ext
     BOOST_FORCEINLINE
     result_type operator()(const A0& a0,const A1& a1,const A2& a2) const
     {
-      typedef typename boost::fusion::result_of::size<A0>::type sz_t;
-      return eval(a0,a1,a2,boost::mpl::int_<sz_t::value-1>());
+      return eval(a0,a1,a2,N0());
     }
 
     template<class N> BOOST_FORCEINLINE result_type
     eval(const A0& a0,const A1& a1,const A2& a2, N const&) const
     {
-      return l_and( eval(a0,a1,a2, boost::mpl::int_<N::value-1>())
+      return l_and( eval(a0,a1,a2, boost::mpl::size_t<N::value-1>())
                   , eval_at ( boost::fusion::at_c<N::value>(a0)
                             , boost::fusion::at_c<N::value>(a1)
                             , boost::fusion::at_c<N::value>(a2)
@@ -86,7 +85,7 @@ namespace nt2 { namespace ext
     }
 
     BOOST_FORCEINLINE result_type
-    eval(const A0& a0,const A1& a1,const A2& a2, boost::mpl::int_<0> const&) const
+    eval(const A0& a0,const A1& a1,const A2& a2, boost::mpl::size_t<0> const&) const
     {
       return eval_at( boost::fusion::at_c<0>(a0)
                     , boost::fusion::at_c<0>(a1)
