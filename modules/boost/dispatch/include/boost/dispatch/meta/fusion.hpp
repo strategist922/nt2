@@ -14,9 +14,11 @@
 #include <boost/dispatch/meta/hierarchy_of.hpp>
 #include <boost/dispatch/meta/property_of.hpp>
 #include <boost/dispatch/meta/primitive_of.hpp>
+#include <boost/dispatch/meta/is_homogeneous.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
 #include <boost/proto/traits.hpp>
 #include <boost/mpl/size_t.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/array.hpp>
 #include <array>
 
@@ -36,7 +38,7 @@ namespace boost { namespace dispatch { namespace meta
     typedef homogeneous_<typename T::parent, N> parent;
   };
 
-  template<class T, typename N>
+  template<typename T, typename N>
   struct homogeneous_<unspecified_<T>, N> : fusion_sequence_<T,N>
   {
     typedef fusion_sequence_<T,N> parent;
@@ -49,7 +51,7 @@ namespace boost { namespace dispatch { namespace meta
     typedef array_<typename T::parent, N> parent;
   };
 
-  template<class T, typename N>
+  template<typename T, typename N>
   struct  array_<unspecified_<T>, N>
         : homogeneous_<typename hierarchy_of<typename meta::scalar_of<T>::type,T>::type,N>
   {
@@ -57,26 +59,26 @@ namespace boost { namespace dispatch { namespace meta
   };
 
   /// INTERNAL ONLY
-  template<class T, std::size_t N>
+  template<typename T, std::size_t N>
   struct value_of< boost::array<T,N> >
   {
     typedef T type;
   };
 
   /// INTERNAL ONLY
-  template<class T, std::size_t N>
+  template<typename T, std::size_t N>
   struct value_of< std::array<T,N> >
   {
     typedef T type;
   };
 
   /// INTERNAL ONLY
-  template<class T, std::size_t N>
+  template<typename T, std::size_t N>
   struct model_of< boost::array<T, N> >
   {
     struct type
     {
-      template<class X>
+      template<typename X>
       struct apply
       {
         typedef boost::array<X, N> type;
@@ -90,7 +92,7 @@ namespace boost { namespace dispatch { namespace meta
   {
     struct type
     {
-      template<class X>
+      template<typename X>
       struct apply
       {
         typedef std::array<X, N> type;
@@ -101,16 +103,16 @@ namespace boost { namespace dispatch { namespace meta
 
 namespace details
 {
-  template<class T>
+  template<typename T>
   struct is_array : boost::mpl::false_ {};
 
-  template<class T, std::size_t N>
+  template<typename T, std::size_t N>
   struct is_array< boost::array<T, N> > : boost::mpl::true_ {};
 
-  template<class T, std::size_t N>
+  template<typename T, std::size_t N>
   struct is_array< std::array<T, N> > : boost::mpl::true_ {};
 
-  template<class T,class Origin>
+  template<typename T,typename Origin>
   struct  hierarchy_of< T
                       , Origin
                       , typename boost
@@ -121,12 +123,35 @@ namespace details
                                       >::type
                       >
   {
-    typedef meta::fusion_sequence_< Origin
-                                  , boost::mpl::size_t<boost::mpl::size<T>::value>
-                                  > type;
+    using status = typename meta::is_homogeneous<T>::type;
+    using base   = typename boost::mpl::at_c<T,0>::type;
+    using hbase  = typename meta::hierarchy_of<base,Origin>::type;
+    using size   = boost::mpl::size_t<boost::mpl::size<T>::value>;
+
+    using type = typename boost::mpl::if_ < status
+                                          , meta::homogeneous_<hbase, size>
+                                          , meta::fusion_sequence_<Origin, size>
+                                          >::type;
   };
 
-  template<class T,class Origin>
+  /// Homogeneous sequence DOES have a value_of
+  template<typename T>
+  struct value_of < T
+                  , typename boost
+                    ::enable_if_c < boost::fusion
+                                  ::traits::is_sequence<T>::value
+                                  && !is_array<T>::value
+                                  && !proto::is_expr<T>::value
+                                  >::type
+                  >
+  {
+    using status = typename meta::is_homogeneous<T>::type;
+    using base   = typename boost::mpl::at_c<T,0>::type;
+    using hbase  = typename meta::value_of<base>::type;
+    using type = typename boost::mpl::if_<status, hbase, T>::type;
+  };
+
+  template<typename T,typename Origin>
   struct   property_of< T
                       , Origin
                       , typename boost
@@ -137,16 +162,22 @@ namespace details
                                       >::type
                       >
   {
-    typedef meta::fusion_sequence_< Origin
-                                  , boost::mpl::size_t<boost::mpl::size<T>::value>
-                                  > type;
+    using status = typename meta::is_homogeneous<T>::type;
+    using base   = typename boost::mpl::at_c<T,0>::type;
+    using hbase  = typename meta::property_of<base,Origin>::type;
+    using size   = boost::mpl::size_t<boost::mpl::size<T>::value>;
+
+    using type = typename boost::mpl::if_ < status
+                                          , hbase
+                                          , meta::fusion_sequence_<Origin, size>
+                                          >::type;
   };
 }
 
 namespace meta
 {
   /// INTERNAL ONLY
-  template<class T, std::size_t N,class Origin>
+  template<typename T, std::size_t N,typename Origin>
   struct  hierarchy_of< boost::array<T,N>, Origin >
   {
     typedef array_< typename hierarchy_of<T, Origin>::type
@@ -155,7 +186,7 @@ namespace meta
   };
 
   /// INTERNAL ONLY
-  template<class T, std::size_t N,class Origin>
+  template<typename T, std::size_t N,typename Origin>
   struct  hierarchy_of< std::array<T,N>, Origin >
   {
     typedef array_< typename hierarchy_of<T, Origin>::type
