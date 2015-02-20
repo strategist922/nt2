@@ -11,9 +11,6 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/cuda/cuda.hpp>
-#include <boost/throw_exception.hpp>
-#include <boost/assert.hpp>
-#include <boost/swap.hpp>
 #include <cublas.h>
 
 namespace nt2 { namespace memory
@@ -59,7 +56,7 @@ namespace nt2 { namespace memory
     size_type max_size() const  { return size_type(~0); }
 
     /// Allocate a block of CUDA compatible memory
-    pointer allocate( size_type c, const void* = 0 ) const
+    pointer allocate( size_type c)
     {
       pointer ptr;
       CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&ptr)
@@ -70,9 +67,9 @@ namespace nt2 { namespace memory
 
 
     /// Deallocate a pointer allocated by the current cuda_allocator
-    void deallocate (pointer p, size_type = 0 ) const
+    void deallocate (pointer p )
     {
-      cudaFree(p);
+      CUDA_ERROR(cudaFree(p));
     }
   };
 

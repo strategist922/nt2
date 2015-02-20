@@ -10,14 +10,12 @@
 
 #if defined(NT2_HAS_CUDA)
 
-#include <nt2/sdk/cuda/cuda.hpp>
 #include <nt2/sdk/memory/cuda/allocator.hpp>
 #include <nt2/include/functions/copy.hpp>
-#include <boost/throw_exception.hpp>
-#include <boost/assert.hpp>
-#include <boost/swap.hpp>
-#include <cublas.h>
+#include <algorithm>
 #include <limits>
+#include <iostream>
+#include <stdexcept>
 
 namespace nt2 { namespace memory
 {
@@ -54,7 +52,6 @@ namespace nt2 { namespace memory
           :  begin_(0), end_(0)
     {
       if(!n) return;
-
       allocator_type alloc_;
 
       begin_ = alloc_.allocate(n);
@@ -107,13 +104,13 @@ namespace nt2 { namespace memory
       return *this;
     }
 
-    bool operator==(cuda_buffer const& src)
+    bool operator==(cuda_buffer const&)
     {
       return true;
     }
 
     template<typename container>
-    bool operator==(container const& src)
+    bool operator==(container const&)
     {
       return false;
     }
@@ -123,8 +120,8 @@ namespace nt2 { namespace memory
     //==========================================================================
     void swap( cuda_buffer& src )
     {
-      boost::swap(begin_          , src.begin_          );
-      boost::swap(end_            , src.end_            );
+      std::swap(begin_          , src.begin_          );
+      std::swap(end_            , src.end_            );
     }
 
     //==========================================================================
@@ -168,6 +165,21 @@ namespace nt2 { namespace memory
     inline size_type  max_size()  const
     {
       return (std::numeric_limits<size_type>::max)() / sizeof(T);
+    }
+
+    BOOST_FORCEINLINE reference operator[](size_type )
+    {
+      throw std::domain_error("unothorized");
+      static value_type x;
+      return x;
+    }
+
+    /// @overload
+    BOOST_FORCEINLINE const_reference operator[](size_type ) const
+    {
+      throw std::domain_error("unothorized");
+      static value_type x;
+      return x;
     }
 
   private:
