@@ -10,6 +10,7 @@
 #ifndef NT2_SDK_MEMORY_CONTAINER_HPP_INCLUDED
 #define NT2_SDK_MEMORY_CONTAINER_HPP_INCLUDED
 
+#include <nt2/include/functions/copy.hpp>
 #include <nt2/core/settings/size.hpp>
 #include <nt2/core/settings/index.hpp>
 #include <nt2/core/settings/option.hpp>
@@ -19,7 +20,6 @@
 #include <nt2/core/settings/specific_data.hpp>
 #include <nt2/core/settings/storage_scheme.hpp>
 #include <nt2/core/utility/of_size.hpp>
-#include <nt2/include/functions/copy.hpp>
 #include <nt2/include/functions/scalar/numel.hpp>
 #include <nt2/include/functions/scalar/ndims.hpp>
 #include <nt2/sdk/memory/adapted/container.hpp>
@@ -27,6 +27,7 @@
 #include <boost/core/ignore_unused.hpp>
 #include <nt2/sdk/meta/container_traits.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/core/ignore_unused.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/assert.hpp>
 #include <algorithm>
@@ -246,22 +247,6 @@ namespace nt2 { namespace memory
         sizes_ = other.sizes_;
         copy(other.data_,data_);
     }
-
-
-    // template<typename K1,typename T1,typename S1>
-    // void assign(nt2::memory::container_ref<K1,T1,S1> const& other)
-    // {
-    //     using CR1 = typename nt2::memory::container_ref<K1,T1,S1>;
-    //     // static_assert( std::is_same< typename std::remove_cv<Type>::type
-    //     //                            , typename CR1::value_type
-    //     //                            >::value
-    //     //               , " not same value type"
-    //     //              );
-    //   std::cout << "in assign2" << std::endl;
-
-    //     sizes_ = other.extent();
-    //     nt2::memory::copy(other,*this);
-    // }
 
     /*!
       @brief Construct a container from a dimension set
