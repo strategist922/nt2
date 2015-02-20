@@ -9,6 +9,7 @@
 #define NT2_SDK_CUDA_CUDA_HPP_INCLUDED
 
 #include <boost/dispatch/functor/forward.hpp>
+#include <boost/assert.hpp>
 
 namespace nt2 { namespace memory
 {
