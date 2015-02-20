@@ -10,11 +10,12 @@
 #ifndef NT2_CORE_FUNCTIONS_TABLE_CONSTRUCT_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_TABLE_CONSTRUCT_HPP_INCLUDED
 
+#include <nt2/include/functions/copy.hpp>
 #include <nt2/core/functions/construct.hpp>
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/sdk/memory/category.hpp>
-#include <nt2/include/functions/copy.hpp>
+#include <nt2/core/settings/locality.hpp>
 #include <boost/simd/memory/iterator_category.hpp>
 
 namespace nt2 { namespace ext
@@ -149,6 +150,31 @@ namespace nt2 { namespace ext
 
       boost::proto::value(a0).resize(a1);
       nt2::memory::copy( a2, a3, a0.data() );
+    }
+  };
+
+// terminal = terminal for multi architectural
+ BOOST_DISPATCH_IMPLEMENT_IF( construct_, tag::cpu_
+                            , (A0)(A1)
+                            , ( meta::is_device_assign<A0,A1> )
+                            , ((node_ < A0,nt2::tag::terminal_
+                                      , boost::mpl::long_<0>
+                                      , nt2::container::domain
+                                      >
+                              ))
+                               ((node_ < A1,nt2::tag::terminal_
+                                      , boost::mpl::long_<0>
+                                      , nt2::container::domain
+                                      >
+                              ))
+                            )
+  {
+    typedef void result_type;
+
+    BOOST_FORCEINLINE
+    result_type operator()(A0& a0, A1 const& a1) const
+    {
+      boost::proto::value(a0).assign(boost::proto::value(a1));
     }
   };
 

@@ -16,6 +16,8 @@
 #include <nt2/sdk/memory/container.hpp>
 #include <nt2/sdk/memory/adapted/container_ref.hpp>
 #include <nt2/sdk/meta/layout.hpp>
+#include <nt2/core/settings/locality.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <type_traits>
 
 // Disable the 'class : multiple assignment operators specified' warning
@@ -79,24 +81,6 @@ namespace nt2 { namespace container
       nt2::construct(*this,a0);
     }
 
-    template<typename S1>
-    table( nt2::container::table<T,S1> const& a0
-         , typename std::enable_if< !std::is_same< typename container_type::buffer_type
-                                                 , typename nt2::container::table<T,S1>
-                                                            ::container_type::buffer_type
-                                                  >::value
-                                  && meta::is_layout_compatible< nt2_expression
-                                                               , typename nt2::container::table<T,S1>
-                                                                          ::nt2_expression
-                                                                >::value
-
-                                  >::type* = 0
-         )
-    {
-      boost::proto::value(*this).assign(boost::proto::value(a0));
-    }
-
-
     //==========================================================================
     // table constructor from a pair of initializer.
     //==========================================================================
@@ -125,6 +109,24 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr)
     {
+      using check = boost::mpl::bool_
+                    < meta::is_device_assign<Xpr,table>::value
+                   && meta::is_container_terminal<Xpr>::value
+                    >;
+
+      return eval(xpr,check{});
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    table& eval(Xpr const& xpr, boost::mpl::true_ const&)
+    {
+      boost::proto::value(*this).assign(boost::proto::value(xpr));
+      return *this;
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    table& eval(Xpr const& xpr, boost::mpl::false_ const&)
+    {
       nt2_expression::operator=(xpr);
       return *this;
     }
@@ -132,24 +134,6 @@ namespace nt2 { namespace container
     BOOST_FORCEINLINE table& operator=(table const& xpr)
     {
       nt2_expression::operator=(xpr);
-      return *this;
-    }
-
-    template<typename S1>
-    BOOST_FORCEINLINE
-    typename std::enable_if< !std::is_same< typename container_type::buffer_type
-                                          , typename nt2::container::table<T,S1>
-                                                     ::container_type::buffer_type
-                                          >::value
-                             && meta::is_layout_compatible< nt2_expression
-                                                          , typename nt2::container::table<T,S1>
-                                                                    ::nt2_expression
-                                                          >::value
-                            , table&
-                           >::type
-    operator=(nt2::container::table<T,S1>  const& xpr)
-    {
-      boost::proto::value(*this).assign(boost::proto::value(xpr));
       return *this;
     }
 
