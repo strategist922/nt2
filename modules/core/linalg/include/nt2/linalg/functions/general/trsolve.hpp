@@ -20,6 +20,7 @@
 #include <nt2/core/container/dsl/alias.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
+#include <nt2/core/settings/locality.hpp>
 #include <nt2/sdk/memory/forward/container.hpp>
 #include <boost/dispatch/meta/terminal_of.hpp>
 #include <nt2/sdk/memory/category.hpp>
@@ -228,26 +229,38 @@ namespace nt2 { namespace ext
   {
     typedef A0& result_type;
     typedef typename A1::proto_child1::proto_child0::value_type T;
-    typedef typename meta::option<typename  A1::proto_child1::proto_child0::settings_type,nt2::tag::shape_>::type shape;
-    typedef nt2::memory::container<tag::table_, T, nt2::settings(nt2::_2D)> desired_semantic;
-    typedef nt2::memory::container<tag::table_, T, nt2::settings(nt2::_2D,shape)> desired_semantic1;
+    typedef typename meta::option<typename A1::proto_child1::proto_child0::settings_type
+                                 ,nt2::tag::shape_
+                                 >::type shape;
+
+    typedef typename meta::option<typename A1::proto_child1::proto_child0::settings_type
+                                 ,tag::locality_
+                                 ,typename  A1::proto_child1::proto_child0::kind_type
+                                  >::type  locality_in;
+
+    typedef typename meta::option<typename A0::settings_type
+                                 ,tag::locality_
+                                 ,typename A0::kind_type
+                                  >::type  locality_out;
+
+    typedef nt2::memory::container<tag::table_, T, nt2::settings(nt2::_2D,locality_in )> desired_semantic;
+    typedef nt2::memory::container<tag::table_, T, nt2::settings(nt2::_2D,shape,locality_out)> desired_semantic1;
 
     result_type operator()(A0& a0, A1& a1) const
     {
-      char side  = A1::proto_child5::proto_child0::call();
-      char diag  = A1::proto_child6::proto_child0::call();
-      char trans = A1::proto_child3::proto_child0::call();
+      char side  =  boost::proto::value(boost::proto::child_c<5>(a1)).call();
+      char diag  =  boost::proto::value(boost::proto::child_c<6>(a1)).call();
+      char trans =  boost::proto::value(boost::proto::child_c<3>(a1)).call();
       char uplo  = boost::proto::value(boost::proto::child_c<4>(a1));
       T alpha    = boost::proto::value(boost::proto::child_c<2>(a1));
 
       NT2_AS_TERMINAL_INOUT(desired_semantic1,result,boost::proto::child_c<1>(a1),a0);
-      NT2_AS_TERMINAL_IN(desired_semantic,child0,boost::proto::child_c<0>(a1));
+      NT2_AS_TERMINAL_IN(desired_semantic,in,boost::proto::child_c<0>(a1));
 
-      nt2::trsm(side, uplo, trans, diag, boost::proto::value(child0)
+      nt2::trsm(side, uplo, trans, diag, boost::proto::value(in)
                                        , boost::proto::value(result) , alpha );
 
-      // if (&a0 != &result) container::assign_swap(a0, result );
-      if (&a0 != &result) a0 = result;
+      assign_swap(a0, result);
 
       return a0;
     }

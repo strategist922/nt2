@@ -14,9 +14,11 @@
 #include <boost/dispatch/meta/terminal_of.hpp>
 #include <boost/dispatch/details/typeof.hpp>
 #include <boost/mpl/bool.hpp>
+#include <nt2/core/settings/locality.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <type_traits>
 
 namespace nt2 { namespace meta
 {
@@ -89,9 +91,14 @@ namespace nt2 { namespace container
     }
   };
 
+// Terminal INOUT should just return the input when memory is on the device
   template<class Semantic, class In, class Out>
   struct as_terminal_inout< Semantic, In, Out
-                          , typename boost::enable_if< meta::is_terminal_shared<In> >::type
+                          , typename std::enable_if<meta::is_terminal_shared<In>::value
+                                                 || std::is_same<typename Semantic::locality_t
+                                                                ,nt2::device_
+                                                                >::value
+                                                  >::type
                         >
   {
     typedef In type;
