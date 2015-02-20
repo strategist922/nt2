@@ -11,6 +11,7 @@
 
 #include <nt2/sdk/memory/adapted/container_ref.hpp>
 #include <nt2/core/settings/specific_data.hpp>
+#include <nt2/core/settings/forward/locality.hpp>
 #include <nt2/sdk/memory/forward/container.hpp>
 
 namespace nt2 { namespace memory
@@ -34,6 +35,7 @@ namespace nt2 { namespace memory
     typedef std::size_t                                          size_type;
     typedef typename meta::option<S, tag::of_size_, Kind>::type        extent_type;
     typedef typename meta::option<S, tag::storage_order_, Kind>::type  order_type;
+    typedef typename meta::option<S, tag::locality_, Kind>::type       locality_t;
 
     typedef typename specific_data< typename boost::dispatch::
                                              default_site<T>::type
