@@ -6,151 +6,37 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#include <nt2/sdk/cuda/cuda.hpp>
-#include <nt2/sdk/cuda/memory/buffer.hpp>
-#include <nt2/table.hpp>
-#include <nt2/include/functions/ones.hpp>
-#include <nt2/include/functions/size.hpp>
+#include <nt2/sdk/memory/cuda/buffer.hpp>
 
-#include <iostream>
 #include <nt2/sdk/unit/tests/ulp.hpp>
 #include <nt2/sdk/unit/module.hpp>
 #include <nt2/sdk/unit/tests/relation.hpp>
+#include <nt2/sdk/unit/tests/basic.hpp>
 
-NT2_TEST_CASE_TPL( cuda_buffer_d, (double) )
+NT2_TEST_CASE_TPL(cuda_buffer_default, NT2_REAL_TYPES)
 {
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(entry);
-  T alpha = 5.;
-  int incr =1;
+  nt2::memory::cuda_buffer<T> b;
 
-  cublasDscal( cudabuffer.size(), alpha ,cudabuffer.data(), incr);
-  cudabuffer.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer.size(), entry.size() );
+  NT2_TEST(b.empty());
+  NT2_TEST_EQUAL(b.size()     , 0u      );
+  NT2_TEST_EQUAL(b.begin()    , b.end() );
 }
 
-NT2_TEST_CASE_TPL( cuda_buffer_d_affect_htd, (double) )
+NT2_TEST_CASE_TPL(cuda_buffer_size_init, NT2_REAL_TYPES)
 {
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(10);
-  cudabuffer = entry ;
-  T alpha = 5.;
-  int incr =1;
+  nt2::memory::cuda_buffer<T> b(5);
 
-  cublasDscal( cudabuffer.size(), alpha ,cudabuffer.data(), incr);
-  cudabuffer.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer.size(), entry.size() );
-}
-
-NT2_TEST_CASE_TPL( cuda_buffer_d_affect_dtd, (double) )
-{
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result  = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(entry);
-  nt2::memory::cuda_buffer<T> cudabuffer_1;
-  cudabuffer_1 = cudabuffer ;
-  T alpha = 5.;
-  int incr =1;
-
-  cublasDscal( cudabuffer_1.size(), alpha ,cudabuffer_1.data(), incr);
-  cudabuffer_1.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer_1.size(), entry.size() );
-}
-
-NT2_TEST_CASE_TPL( cuda_buffer_d_copy, (double) )
-{
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result  = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(entry);
-  nt2::memory::cuda_buffer<T> cudabuffer_1(cudabuffer);
-  T alpha = 5.;
-  int incr =1;
-
-  cublasDscal( cudabuffer_1.size(), alpha ,cudabuffer_1.data(), incr);
-  cudabuffer_1.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer_1.size(), entry.size() );
-}
-
-NT2_TEST_CASE_TPL( cuda_buffer_f, (float) )
-{
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(entry);
-  T alpha = 5.;
-  int incr =1;
-
-  cublasSscal( cudabuffer.size(), alpha ,cudabuffer.data(), incr);
-  cudabuffer.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer.size(), entry.size() );
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 5u    );
 }
 
 
-NT2_TEST_CASE_TPL( cuda_buffer_f_copy, (float) )
+NT2_TEST_CASE_TPL(cuda_buffer_resize, NT2_REAL_TYPES)
 {
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result  = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(entry);
-  nt2::memory::cuda_buffer<T> cudabuffer_1(cudabuffer);
-  T alpha = 5.;
-  int incr =1;
+  nt2::memory::cuda_buffer<T> b(5);
+  b.resize(15);
 
-  cublasSscal( cudabuffer_1.size(), alpha ,cudabuffer_1.data(), incr);
-  cudabuffer_1.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer_1.size(), entry.size() );
+  NT2_TEST(!b.empty());
+  NT2_TEST_EQUAL(b.size()     , 15u    );
 }
 
-
-NT2_TEST_CASE_TPL( cuda_buffer_f_affect_htd, (float) )
-{
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(10);
-  cudabuffer = entry ;
-  T alpha = 5.;
-  int incr =1;
-
-  cublasSscal( cudabuffer.size(), alpha ,cudabuffer.data(), incr);
-  cudabuffer.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer.size(), entry.size() );
-}
-
-NT2_TEST_CASE_TPL( cuda_buffer_f_affect_dtd, (float) )
-{
-  nt2::table<T> entry  = nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> result  = T(5)* nt2::ones(10,1, nt2::meta::as_<T>());
-  nt2::table<T> cuda_dst(nt2::of_size(10,1));
-  nt2::memory::cuda_buffer<T> cudabuffer(entry);
-  nt2::memory::cuda_buffer<T> cudabuffer_1;
-  cudabuffer_1 = cudabuffer ;
-  T alpha = 5.;
-  int incr =1;
-
-  cublasSscal( cudabuffer_1.size(), alpha ,cudabuffer_1.data(), incr);
-  cudabuffer_1.data(cuda_dst);
-
-  NT2_TEST_EQUAL(result, cuda_dst );
-  NT2_TEST_EQUAL(cudabuffer_1.size(), entry.size() );
-}
