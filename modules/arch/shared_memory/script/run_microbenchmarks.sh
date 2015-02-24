@@ -11,8 +11,12 @@ else
   tmp="${1}/tmp"
 fi
 
-${1}/tools/is_multicore/is_multicore
-opt="-t `echo $?`"
+cmd_cores=${1}/tools/is_multicore/is_multicore
+
+if [ -f ${cmd_cores} ]; then
+ ${cmd_cores}
+ opt="-t `echo $?`"
+fi
 
 echo -e "#ifndef NT2_SDK_RUNTIME_COSTS_HPP_INCLUDED" > $tmp
 echo -e "#define NT2_SDK_RUNTIME_COSTS_HPP_INCLUDED\n" >> $tmp
