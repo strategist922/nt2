@@ -11,9 +11,12 @@ else
   tmp="${1}/tmp"
 fi
 
+${1}/tools/is_multicore/is_multicore
+opt="-t `echo $?`"
+
 echo -e "#ifndef NT2_SDK_RUNTIME_COSTS_HPP_INCLUDED" > $tmp
 echo -e "#define NT2_SDK_RUNTIME_COSTS_HPP_INCLUDED\n" >> $tmp
-opt="-t `grep --count processor /proc/cpuinfo`"
+
 for nt2_arch in "openmp" "hpx" "tbb"
 do
   for skel in "transform" "fold" "scan"
