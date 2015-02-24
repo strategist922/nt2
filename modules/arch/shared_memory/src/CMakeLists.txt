@@ -15,7 +15,7 @@ nt2_module_postconfigure(gather_includes --name shared_memory.hpp
                         )
 
 set(script_path ${NT2_SOURCE_ROOT}/modules/arch/shared_memory/script/run_microbenchmarks.sh)
-set(build_dir ${CMAKE_BINARY_DIR})
+set(build_dir ${NT2_BINARY_DIR})
 
 nt2_module_postconfigure(runtime_costs --path ${script_path} --build_dir ${build_dir})
 
