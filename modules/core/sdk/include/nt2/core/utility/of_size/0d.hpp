@@ -30,7 +30,7 @@ namespace nt2
     typedef automatic_                              storage_duration_type;
     typedef tag::of_size_                           fusion_tag;
     typedef boost::fusion::fusion_sequence_tag      tag;
-    typedef boost::mpl::vector_c< std::ptrdiff_t >  values_type;
+    typedef boost::mpl::vector_c<std::ptrdiff_t>    values_type;
     typedef std::size_t                             value_type;
     typedef std::size_t&                            reference;
     typedef std::size_t const&                      const_reference;

@@ -16,7 +16,6 @@
 #include <nt2/sdk/memory/data.hpp>
 #include <nt2/core/container/dsl/details/resize.hpp>
 #include <nt2/core/container/dsl/details/expression.hpp>
-#include <nt2/core/container/dsl/details/expression_size.hpp>
 #include <nt2/sdk/meta/container_traits.hpp>
 #include <nt2/sdk/meta/settings_of.hpp>
 #include <nt2/sdk/meta/is_scalar.hpp>
@@ -126,34 +125,25 @@ namespace nt2 { namespace container
     typedef typename size_transform<domain>::
             template result<size_transform<domain>(Expr&)>::type sizes_t;
     typedef typename meta::strip<sizes_t>::type                  extent_type;
-    friend struct expression_size<sizes_t>;
 
     typedef typename index_type::index_type                      indexes_type;
 
     //==========================================================================
     // Default constructor required by table
     //==========================================================================
-    BOOST_FORCEINLINE
-    expression() : size_(size_transform<domain>()(proto_base())) {}
+    BOOST_FORCEINLINE expression() {}
 
     //==========================================================================
     // Build an expression from a naked proto tree
     //==========================================================================
     BOOST_FORCEINLINE
-    explicit  expression(Expr const& x)
-            : proto_expr_(x)
-            , size_(size_transform<domain>()(proto_base()))
-    {}
+    explicit  expression(Expr const& x) : proto_expr_(x) {}
 
     //==========================================================================
     // Copy construct from another expression
     //==========================================================================
     BOOST_FORCEINLINE
-    expression( expression const& xpr )
-              : proto_expr_(xpr.proto_base())
-              , size_(proto_base(), xpr)
-    {
-    }
+    expression( expression const& xpr ) : proto_expr_(xpr.proto_base()) {}
 
     //==========================================================================
     // Assignment operator forces evaluation
@@ -238,7 +228,10 @@ namespace nt2 { namespace container
     //==========================================================================
     // Return current expression extent
     //==========================================================================
-    BOOST_FORCEINLINE extent_type const& extent() const { return size_.data(); }
+    BOOST_FORCEINLINE auto extent() const -> decltype(nt2::extent(*this))
+    {
+      return nt2::extent(*this);
+    }
 
     //==========================================================================
     // Return current expression extent
@@ -263,7 +256,7 @@ namespace nt2 { namespace container
                                     , boost::mpl::size_t<extent_type::static_size>
                                     , boost::mpl::size_t<0U>
                                     >::type                     dim_t;
-      return size_.data()[dim_t::value];
+      return extent()[dim_t::value];
     }
 
     //==========================================================================
@@ -362,9 +355,6 @@ namespace nt2 { namespace container
                  >
       ()(*this, sz);
     }
-
-  protected:
-    expression_size<sizes_t> size_;
   };
 } }
 

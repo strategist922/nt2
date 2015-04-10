@@ -8,6 +8,7 @@
 ##############################################################################
 
 SET( SOURCES
+    extent.cpp
     numel.cpp
     of_size.cpp
     of_size_max.cpp

@@ -28,7 +28,7 @@ namespace nt2 { namespace container
   {
     // colon_ as a sink for tie
     template<class T> colon_ const& operator=(T const&) const { return *this; }
-
+/*
     // _() as []
     boost::proto::result_of::
     make_expr< nt2::tag::empty_colon_, container::domain
@@ -41,7 +41,7 @@ namespace nt2 { namespace container
       return boost::proto::make_expr< nt2::tag::empty_colon_, container::domain >
             ( of_size_<0>(), meta::constant_<nt2::tag::unity_colon_, double>(1.), meta::as_<double>() );
     }
-
+*/
     // colon as a:b
     template<class Begin, class End>
     typename meta::call<nt2::tag::colon_(Begin,End)>::type
