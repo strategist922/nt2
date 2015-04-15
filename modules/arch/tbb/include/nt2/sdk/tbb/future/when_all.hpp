@@ -16,9 +16,7 @@
 #include <tbb/flow_graph.h>
 
 #include <nt2/sdk/shared_memory/future.hpp>
-
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
-#include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
 #include <cstdio>
 #include <initializer_list>
@@ -28,16 +26,6 @@ namespace nt2
 
   namespace details
   {
-    struct empty_functor
-    {
-      typedef int result_type;
-
-      int operator()() const
-      {
-        return 0;
-      }
-    };
-
     template <class Future, typename Node_raw, typename A>
     static void link_node(Future & f, Node_raw & c, A & a)
     {
@@ -60,8 +48,8 @@ namespace nt2
     template <typename Future>
     whenall_future static call( std::vector<Future> & lazy_values )
     {
-      details::tbb_task_wrapper< details::empty_functor, int >
-      packaged_task( (details::empty_functor()) );
+      details::tbb_task_wrapper< std::function<int()>, int >
+      packaged_task( [](){ return 0; } );
 
       whenall_future future_res( packaged_task.get_future() );
 
@@ -83,8 +71,8 @@ namespace nt2
     template< typename ... A >
     whenall_future static call( details::tbb_future<A> & ...a )
     {
-      details::tbb_task_wrapper< details::empty_functor, int >
-      packaged_task( (details::empty_functor()) );
+      details::tbb_task_wrapper< std::function<int()>, int >
+      packaged_task( [](){ return 0; } );
 
       whenall_future future_res (packaged_task.get_future());
 

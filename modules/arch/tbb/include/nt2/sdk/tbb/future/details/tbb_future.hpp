@@ -21,10 +21,8 @@
 #include <type_traits>
 #include <future>
 #include <atomic>
-#include <iostream>
 
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
-#include <nt2/sdk/tbb/future/details/empty_body.hpp>
 
 namespace nt2
 {
@@ -63,7 +61,9 @@ namespace nt2
           start_task_ =
           new tbb::flow::continue_node
           <tbb::flow::continue_msg>
-          (*getWork(), details::empty_body());
+          (* getWork()
+          , []( tbb::flow::continue_msg ){}
+          );
         }
         return (start_task_);
       }
