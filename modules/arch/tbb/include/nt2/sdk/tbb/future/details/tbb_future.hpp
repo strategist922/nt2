@@ -19,6 +19,9 @@
 #include <cstdio>
 #include <memory>
 #include <type_traits>
+#include <future>
+#include <atomic>
+#include <iostream>
 
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 #include <nt2/sdk/tbb/future/details/empty_body.hpp>
@@ -47,6 +50,7 @@ namespace nt2
         if(NULL == nt2_graph_)
         {
           nt2_graph_ = new tbb::flow::graph;
+          graph_launched_ -> clear();
         }
         return nt2_graph_;
       }
@@ -104,7 +108,13 @@ namespace nt2
           delete task_queue_;
           task_queue_ = NULL;
         }
+
+        // Allocate a new flag for next graph
+        graph_launched_ = std::make_shared< std::atomic_flag >();
+        graph_launched_ -> clear();
       }
+
+      static std::shared_ptr< std::atomic_flag > graph_launched_;
 
     private:
 
@@ -132,35 +142,58 @@ namespace nt2
     > *
     tbb_future_base::task_queue_ = NULL;
 
+    std::shared_ptr< std::atomic_flag >
+    tbb_future_base::graph_launched_( std::make_shared< std::atomic_flag >()
+                                    );
+
+
+
     template<typename result_type>
-    struct tbb_future : public tbb_future_base
+    struct tbb_future
+    : public tbb_future_base
+    , public std::future<result_type>
     {
       typedef typename tbb::flow::continue_node<
       tbb::flow::continue_msg> node_type;
 
       tbb_future()
-      : node_(NULL),res_(new result_type),ready_(new bool(false))
-      {}
-
-      bool is_ready()
+      : tbb_future_base()
+      , std::future<result_type>()
+      , node_(NULL)
+      , continued_(false)
+      , ready_( graph_launched_ )
       {
-        return *ready_;
+      }
+
+       tbb_future( std::future<result_type> && other)
+      : tbb_future_base()
+      , std::future<result_type>(
+        std::forward< std::future<result_type> >(other)
+        )
+      , node_(NULL)
+      , continued_(false)
+      , ready_( graph_launched_ )
+      {
       }
 
       void wait()
       {
-        getStart()->try_put(tbb::flow::continue_msg());
-        getWork()->wait_for_all();
-        kill_graph();
+        if( ! ready_->test_and_set(std::memory_order_acquire) )
+        {
+          getStart()->try_put(tbb::flow::continue_msg());
+          getWork()->wait_for_all();
+          kill_graph();
+        }
+
       }
 
       result_type get()
       {
-        if(!is_ready())
-        {
+        if(!continued_)
           wait();
-        }
-        return *res_;
+
+        std::future<result_type> & tmp(*this);
+        return tmp.get();
       }
 
       template<typename F>
@@ -175,39 +208,33 @@ namespace nt2
         typedef typename details::tbb_future<then_result_type>
         then_future_type;
 
-        then_future_type then_future;
+        node_type * node = node_;
+        continued_ = true;
 
-        then_future.attach_previous_future(*this);
+        details::tbb_task_wrapper<
+        F,
+        then_result_type,
+        tbb_future
+        >
+        packaged_task
+        (std::forward<F>(f)
+        ,std::promise<then_result_type>()
+        ,std::move(*this)
+        );
+
+        then_future_type then_future( packaged_task.get_future() );
 
         node_type * c
         = new node_type
-        ( *getWork(),
-          details::tbb_task_wrapper<
-          F,
-          then_future_type,
-          tbb_future
-          >
-          (std::forward<F>(f)
-            ,then_future_type(then_future)
-            ,tbb_future(*this) )
-          );
+        ( *( then_future.getWork() )
+        , std::move(packaged_task)
+        );
 
-        tbb::flow::make_edge(*node_,*c);
-
-        getTaskQueue()->push_back(c);
+        tbb::flow::make_edge(*node,*c);
+        then_future.getTaskQueue()->push_back(c);
         then_future.attach_task(c);
 
         return then_future;
-      }
-
-      template< typename previous_future>
-      void attach_previous_future(previous_future const & pfuture)
-      {
-        pfutures_.push_back(
-          std::shared_ptr<previous_future>(
-            new previous_future(pfuture)
-            )
-          );
       }
 
 
@@ -218,9 +245,8 @@ namespace nt2
 
 // own members
       node_type * node_;
-      std::vector< std::shared_ptr<void> > pfutures_;
-      std::shared_ptr<result_type> res_;
-      std::shared_ptr<bool> ready_;
+      bool continued_;
+      std::shared_ptr< std::atomic_flag > ready_;
     };
   }
 }

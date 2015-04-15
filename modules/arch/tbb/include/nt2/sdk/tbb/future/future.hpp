@@ -44,15 +44,10 @@ namespace nt2
     inline details::tbb_future<result_type>
     call(result_type && value)
     {
-      details::tbb_future<result_type> future_res;
-      future_res.res_ =
-      std::make_shared<result_type>
-      ( std::forward<result_type>(value) );
-
-      *(future_res.ready_) = true;
-
+      std::promise<result_type> promise;
+      details::tbb_future<result_type> future_res ( promise.get_future() );
+      promise.set_value(value);
       future_res.attach_task(future_res.getStart());
-
       return future_res;
     }
   };
@@ -72,16 +67,18 @@ namespace nt2
       typedef typename std::result_of< F(A...)>::type result_type;
       typedef typename details::tbb_future<result_type> async_future;
 
-      async_future future_res;
+      details::tbb_task_wrapper< F, result_type, A ... >
+      packaged_task
+      ( std::forward<F>(f)
+      , std::promise<result_type>()
+      , std::forward<A>(a)...
+      );
 
-      node_type * node =
-      new node_type( *future_res.getWork()
-        , details::tbb_task_wrapper< F, async_future, A ... >
-          ( std::forward<F>(f)
-          , async_future(future_res)
-          , std::forward<A>(a)...
-          )
-        );
+      async_future future_res( packaged_task.get_future() );
+
+      node_type * node = new node_type( *future_res.getWork()
+                                      , std::move(packaged_task)
+                                      );
 
       tbb::flow::make_edge( *(future_res.getStart()), *(node) );
 

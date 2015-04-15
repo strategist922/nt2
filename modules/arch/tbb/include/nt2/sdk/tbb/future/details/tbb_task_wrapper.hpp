@@ -25,6 +25,9 @@ namespace nt2
   namespace details
   {
 
+    template< typename T>
+    struct tbb_future;
+
     template<int ... Indices>
     struct tbb_sequence{
       template<class F, typename ... A>
@@ -44,26 +47,74 @@ namespace nt2
       typedef tbb_sequence<S...> type;
     };
 
-    template< class F, typename future_type, typename ... A>
+    template< class F, typename result_type, typename ... A>
     struct tbb_task_wrapper
     {
       typedef typename generate_tbb_sequence<sizeof...(A)>::type seq;
+      typedef typename std::promise<result_type> promise_type;
 
-      tbb_task_wrapper( F && f, future_type && future_result, A&& ... a)
+      tbb_task_wrapper( F && f , promise_type && promise, A&& ... a)
       : f_(std::forward<F>(f))
-      , future_result_(std::forward<future_type>(future_result))
+      , promise_(std::forward<promise_type>(promise))
       , a_( std::make_tuple(std::forward<A>(a) ...) )
       {}
 
+      tbb_task_wrapper( tbb_task_wrapper const & other )
+      : f_(other.f_)
+      , promise_(std::move(other.promise_))
+      , a_(other.a_)
+      {}
+
+      std::future<result_type> get_future()
+      {
+        return promise_.get_future();
+      }
+
       void operator()(const tbb::flow::continue_msg )
       {
-        *(future_result_.res_) = seq().apply(f_,a_);
-        *(future_result_.ready_) = true;
+        promise_.set_value( seq().apply(f_,a_) );
       }
 
       F f_;
-      future_type future_result_;
+      mutable promise_type promise_;
       std::tuple < A ... > a_;
+    };
+
+    // Specialization for continuation wrapper
+
+    template< class F, typename result_type, typename T>
+    struct tbb_task_wrapper<F, result_type, details::tbb_future<T> >
+    {
+      typedef typename std::promise<result_type> promise_type;
+
+      tbb_task_wrapper( F && f
+                      , promise_type && promise
+                      , details::tbb_future<T> && a
+                      )
+      : f_(std::forward<F>(f))
+      , promise_(std::forward<promise_type>(promise))
+      , a_( std::forward< details::tbb_future<T> >(a))
+      {}
+
+      tbb_task_wrapper( tbb_task_wrapper const & other )
+      : f_(other.f_)
+      , promise_( std::move(other.promise_) )
+      , a_( std::move(other.a_) )
+      {}
+
+      std::future<result_type> get_future()
+      {
+        return promise_.get_future();
+      }
+
+      void operator()(const tbb::flow::continue_msg )
+      {
+        promise_.set_value( f_(std::move(a_)) );
+      }
+
+      F f_;
+      mutable promise_type promise_;
+      mutable details::tbb_future<T> a_;
     };
   }
 }
