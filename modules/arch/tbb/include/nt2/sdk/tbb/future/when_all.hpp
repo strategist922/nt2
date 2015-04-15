@@ -61,10 +61,7 @@ namespace nt2
     whenall_future static call( std::vector<Future> & lazy_values )
     {
       details::tbb_task_wrapper< details::empty_functor, int >
-      packaged_task
-        ( (details::empty_functor()),
-          std::promise<int>()
-        );
+      packaged_task( (details::empty_functor()) );
 
       whenall_future future_res( packaged_task.get_future() );
 
@@ -87,10 +84,7 @@ namespace nt2
     whenall_future static call( details::tbb_future<A> & ...a )
     {
       details::tbb_task_wrapper< details::empty_functor, int >
-      packaged_task
-        ( (details::empty_functor()),
-          std::promise<int>()
-        );
+      packaged_task( (details::empty_functor()) );
 
       whenall_future future_res (packaged_task.get_future());
 

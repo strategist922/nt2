@@ -218,7 +218,6 @@ namespace nt2
         >
         packaged_task
         (std::forward<F>(f)
-        ,std::promise<then_result_type>()
         ,std::move(*this)
         );
 

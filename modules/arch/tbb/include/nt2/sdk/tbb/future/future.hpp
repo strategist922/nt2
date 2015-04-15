@@ -70,7 +70,6 @@ namespace nt2
       details::tbb_task_wrapper< F, result_type, A ... >
       packaged_task
       ( std::forward<F>(f)
-      , std::promise<result_type>()
       , std::forward<A>(a)...
       );
 

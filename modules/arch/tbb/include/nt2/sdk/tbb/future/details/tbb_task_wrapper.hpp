@@ -53,9 +53,8 @@ namespace nt2
       typedef typename generate_tbb_sequence<sizeof...(A)>::type seq;
       typedef typename std::promise<result_type> promise_type;
 
-      tbb_task_wrapper( F && f , promise_type && promise, A&& ... a)
+      tbb_task_wrapper( F && f , A&& ... a)
       : f_(std::forward<F>(f))
-      , promise_(std::forward<promise_type>(promise))
       , a_( std::make_tuple(std::forward<A>(a) ...) )
       {}
 
@@ -88,11 +87,9 @@ namespace nt2
       typedef typename std::promise<result_type> promise_type;
 
       tbb_task_wrapper( F && f
-                      , promise_type && promise
                       , details::tbb_future<T> && a
                       )
       : f_(std::forward<F>(f))
-      , promise_(std::forward<promise_type>(promise))
       , a_( std::forward< details::tbb_future<T> >(a))
       {}
 
