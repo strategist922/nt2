@@ -7,7 +7,6 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#if !BOOST_PP_IS_ITERATING
 #ifndef NT2_SDK_OPENMP_FUTURE_FUTURE_HPP_INCLUDED
 #define NT2_SDK_OPENMP_FUTURE_FUTURE_HPP_INCLUDED
 
@@ -16,14 +15,10 @@
 #include <omp.h>
 #include <unistd.h>
 
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/iteration/iterate.hpp>
-
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/openmp/future/details/openmp_future.hpp>
+#include <nt2/sdk/openmp/future/details/openmp_shared_future.hpp>
+#include <nt2/sdk/openmp/future/details/openmp_task_wrapper.hpp>
 
 #include <type_traits>
 
@@ -40,20 +35,29 @@ namespace nt2
     typedef typename nt2::details::openmp_future<result_type> type;
   };
 
+  template<class Site, class result_type>
+  struct make_shared_future<tag::openmp_<Site> , result_type>
+  {
+    typedef typename nt2::details::openmp_shared_future<result_type> type;
+  };
+
+
   template< class Site, class result_type>
   struct make_ready_future_impl< tag::openmp_<Site>, result_type>
   {
     inline details::openmp_future<result_type>
-    call(result_type value)
+    call(result_type && value)
     {
-      details::openmp_future<result_type> future_res;
+      std::promise<result_type> promise;
+      details::openmp_future<result_type> future_res ( promise.get_future() );
+      promise.set_value(value);
+
       bool * next( future_res.ready_.get() );
 
-      #pragma omp task \
-      firstprivate(future_res,next,value) \
+      #pragma omp task  \
+      firstprivate(next)\
       depend(out: next)
       {
-        *(future_res.res_) = value;
         *next = true;
       }
 
@@ -64,62 +68,39 @@ namespace nt2
   template<class Site>
   struct async_impl< tag::openmp_<Site> >
   {
-#define BOOST_PP_ITERATION_PARAMS_1 (3, \
-    ( 0, 10, "nt2/sdk/openmp/future/future.hpp") \
-    )
-#include BOOST_PP_ITERATE()
-};
-}
-
-#endif
-#endif
-
-#else
-
-#define N BOOST_PP_ITERATION()
-
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) A##n && a##n##_
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) A##n a##n ( std::forward<A##n> (a##n##_) );
-
-    template< typename F
-    BOOST_PP_COMMA_IF(N)
-    BOOST_PP_ENUM_PARAMS(N, typename A)
-    >
-    inline typename make_future< tag::openmp_<Site>
-                               , typename std::result_of<
-                                 F(BOOST_PP_ENUM_PARAMS(N, A))
-                                 >::type
-                               >::type
-    call(F && f
-      BOOST_PP_COMMA_IF(N)
-      BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~)
-      )
+    template< typename F , typename ... A>
+    inline details::openmp_future<
+              typename std::result_of< F(A...)>::type
+           >
+    call(F&& f, A&& ... a)
     {
-      typedef typename std::result_of<F(BOOST_PP_ENUM_PARAMS(N, A))>::type result_type;
+      typedef typename std::result_of< F(A...)>::type result_type;
+      typedef typename details::openmp_future<result_type> async_future;
 
-      details::openmp_future<result_type> future_res;
-      F f_( std::forward<F> (f) );
+      details::openmp_task_wrapper< F, result_type, A ... >
+      packaged_task
+      ( std::forward<F>(f)
+      , std::forward<A>(a)...
+      );
 
-      BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS1, ~)
+      async_future future_res( packaged_task.get_future() );
 
       bool * next( future_res.ready_.get() );
 
       #pragma omp task \
-      firstprivate(future_res,next,f_ \
-      BOOST_PP_COMMA_IF(N) \
-      BOOST_PP_ENUM_PARAMS(N, a) \
-      ) \
+      firstprivate(packaged_task,next) \
       depend(out: next)
       {
-        *(future_res.res_) = f_(BOOST_PP_ENUM_PARAMS(N, a));
+        packaged_task();
         *next = true;
       }
 
       return future_res;
     }
 
-#undef NT2_FUTURE_FORWARD_ARGS
-#undef NT2_FUTURE_FORWARD_ARGS1
-#undef N
+  };
+}
 
+
+#endif
 #endif

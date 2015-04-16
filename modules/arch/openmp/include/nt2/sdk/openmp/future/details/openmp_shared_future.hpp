@@ -7,8 +7,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_OPENMP_FUTURE_DETAILS_OPENMP_FUTURE_HPP_INCLUDED
-#define NT2_SDK_OPENMP_FUTURE_DETAILS_OPENMP_FUTURE_HPP_INCLUDED
+#ifndef NT2_SDK_OPENMP_FUTURE_DETAILS_OPENMP_SHARED_FUTURE_HPP_INCLUDED
+#define NT2_SDK_OPENMP_FUTURE_DETAILS_OPENMP_SHARED_FUTURE_HPP_INCLUDED
 
 #if defined(_OPENMP) && _OPENMP >= 201307 /* OpenMP 4.0 */
 
@@ -29,10 +29,10 @@ namespace nt2
   namespace details
   {
     template<typename result_type>
-    struct openmp_future
-    : public std::future<result_type>
+    struct openmp_shared_future
+    : public std::shared_future<result_type>
     {
-      openmp_future() : ready_(new bool(false))
+      openmp_shared_future() : ready_(new bool(false))
       {}
 
       bool is_ready() const
@@ -64,12 +64,11 @@ namespace nt2
         then_result_type;
 
         bool * prev( ready_.get() );
-
 // Remove warning because the variable is used in the omp pragma
         boost::ignore_unused(prev);
 
         details::openmp_task_wrapper<F,then_result_type,openmp_future>
-        packaged_task(std::forward<F>(f),std::move(*this));
+        packaged_task(std::forward<F>(f),openmp_future(*this));
 
         then_future_type then_future( packaged_task.get_future() );
 

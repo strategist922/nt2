@@ -23,6 +23,7 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/openmp/future/details/openmp_future.hpp>
+#include <nt2/sdk/openmp/future/details/openmp_task_wrapper.hpp>
 
 #include <vector>
 
@@ -32,29 +33,38 @@ namespace nt2
   struct when_all_impl< tag::openmp_<Site> >
   {
     template <typename Future>
-    details::openmp_future<int>
+    details::openmp_future< std::vector<Future> >
     call( std::vector<Future> && lazy_values )
     {
-      typedef typename details::openmp_future<int> future;
+      typedef typename std::vector<Future> whenall_vector;
+      typedef typename details::openmp_future< whenall_vector >
+      whenall_future;
 
       std::size_t size( lazy_values.size() );
 
-      future future_res;
+      details::openmp_task_wrapper<
+        std::function< whenall_vector() >
+      , whenall_vector
+      >
+      packaged_task( [&](){ return lazy_values; } );
+
+      details::openmp_future<int> future_res
+      (packaged_task.get_future());
+
       bool * next( future_res.ready_.get() );
       bool * deps[size];
 
       for (std::size_t i=0; i<size; i++)
       {
-        future_res.attach_previous_future(lazy_values[i]);
         deps[i] = lazy_values[i].ready_.get();
       }
 
       #pragma omp task \
-      firstprivate(future_res, next, deps) \
+      firstprivate(packaged_task, next, deps) \
       depend( in : deps[0:size] ) \
       depend( out : next )
       {
-        *(future_res.res_) = 1;
+        packaged_task();
         *next = true;
       }
 
@@ -79,38 +89,59 @@ namespace nt2
 
 #define POINT(a,b) a.b
 
-#define NT2_FUTURE_FORWARD_ARGS(z,n,t) details::openmp_future<A##n> const & a##n
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) bool * r##n = POINT(a##n,ready_).get();
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) future_res.attach_previous_future( a##n );
-#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) boost::ignore_unused(r##n);
+#define NT2_FUTURE_FORWARD_ARGS0(z,n,t) details::openmp_shared_future<A##n>
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) details::openmp_future<A##n> const & a##n
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) POINT(a##n,share())
+#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) bool * r##n = POINT(a##n,ready_).get();
+#define NT2_FUTURE_FORWARD_ARGS4(z,n,t) boost::ignore_unused(r##n);
 
     template< BOOST_PP_ENUM_PARAMS(N, typename A) >
-    details::openmp_future<int> call( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS, ~) )
+    typename details::openmp_future<
+    std::tuple< BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS0, ~) >
+    >
+    call( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS1, ~) )
     {
-      details::openmp_future<int> future_res;
+      typedef typename std::tuple< BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS0, ~) >
+      whenall_tuple;
+
+      typedef typename details::openmp_future< whenall_tuple >
+      whenall_future;
+
+      details::openmp_task_wrapper<
+        std::function<whenall_tuple()>
+      , whenall_tuple
+      >
+      packaged_task( [&]()
+                     { return std::make_tuple<
+                          BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS0, ~)
+                          >
+                       ( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) );
+                     }
+                   );
+
+      whenall_future future_res (packaged_task.get_future());
 
       bool * next( future_res.ready_.get() );
 
-      BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS1, ~)
-      BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS2, ~)
       BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS3, ~)
-
+      BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
       #pragma omp task \
-      firstprivate(future_res, next, BOOST_PP_ENUM_PARAMS(N,r) ) \
+      firstprivate(packaged_task, next, BOOST_PP_ENUM_PARAMS(N,r) ) \
       depend( in : BOOST_PP_ENUM_PARAMS(N,r) ) \
       depend( out : next )
       {
-        *(future_res.res_) = 1;
+        packaged_task();
         *next = true;
       }
 
       return future_res;
     }
 
-#undef NT2_FUTURE_FORWARD_ARGS
+#undef NT2_FUTURE_FORWARD_ARGS0
 #undef NT2_FUTURE_FORWARD_ARGS1
 #undef NT2_FUTURE_FORWARD_ARGS2
 #undef NT2_FUTURE_FORWARD_ARGS3
+#undef NT2_FUTURE_FORWARD_ARGS4
 #undef POINT
 #undef N
 
