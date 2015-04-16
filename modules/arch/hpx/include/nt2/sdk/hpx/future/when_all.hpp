@@ -13,7 +13,6 @@
 #if defined(NT2_USE_HPX)
 
 #include <nt2/sdk/shared_memory/future.hpp>
-#include <nt2/sdk/hpx/future/details/when_all_result.hpp>
 #include <hpx/lcos/when_all.hpp>
 
 #include <utility>
@@ -25,15 +24,18 @@ namespace nt2
   struct when_all_impl< tag::hpx_<Site> >
   {
     template< typename ... A >
-    inline typename when_all_result < tag::hpx_<Site>, A ... >::type
-    call(A && ... a)
+    inline auto call(A && ... a)
+    -> decltype( hpx::when_all(std::forward<A>(a)...) )
     {
       return hpx::when_all(std::forward<A>(a)...);
     }
 
     template <typename Future>
-    inline typename when_all_vec_result< tag::hpx_<Site>, Future>::type
-    call( std::vector<Future> && lazy_values )
+    inline auto call( std::vector<Future> && lazy_values )
+    -> decltype( hpx::when_all(
+                   std::forward< std::vector<Future> > ( lazy_values )
+                   )
+               )
     {
       return hpx::when_all(
         std::forward< std::vector<Future> > ( lazy_values )

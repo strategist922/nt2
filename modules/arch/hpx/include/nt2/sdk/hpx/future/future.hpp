@@ -30,14 +30,20 @@ namespace nt2
     template<class Site, class result_type>
     struct make_future<tag::hpx_<Site> , result_type>
     {
+        typedef typename hpx::lcos::future<result_type> type;
+    };
+
+    template<class Site, class result_type>
+    struct make_shared_future<tag::hpx_<Site> , result_type>
+    {
         typedef typename hpx::lcos::shared_future<result_type> type;
     };
 
     template< class Site, class result_type>
     struct make_ready_future_impl< tag::hpx_<Site>, result_type>
     {
-        inline hpx::lcos::shared_future<result_type>
-        call(result_type && value)
+        inline auto call(result_type && value)
+        -> decltype( hpx::make_ready_future(value) )
         {
             return  hpx::make_ready_future(value);
         }
@@ -47,10 +53,11 @@ namespace nt2
     struct async_impl< tag::hpx_<Site> >
     {
         template< typename F, typename ... A >
-        inline typename make_future< tag::hpx_<Site>
-                                   , typename std::result_of< F(A...) >::type
-                                   >::type
-        call(F && f, A && ... a)
+        inline auto call(F && f, A && ... a)
+        -> decltype (   hpx::async( std::forward<F>(f)
+                                  , std::forward<A>(a) ...
+                                  )
+                    )
         {
             return hpx::async( std::forward<F>(f)
                              , std::forward<A>(a) ...
