@@ -23,6 +23,7 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
+#include <nt2/sdk/tbb/future/details/tbb_shared_future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
 
 namespace nt2
@@ -36,6 +37,12 @@ namespace nt2
   struct make_future<tag::tbb_<Site> , result_type>
   {
     typedef details::tbb_future<result_type> type;
+  };
+
+  template<class Site, class result_type>
+  struct make_shared_future<tag::tbb_<Site> , result_type>
+  {
+    typedef details::tbb_shared_future<result_type> type;
   };
 
   template< class Site, class result_type>
@@ -59,9 +66,9 @@ namespace nt2
     tbb::flow::continue_node<tbb::flow::continue_msg> node_type;
 
     template< typename F , typename ... A>
-    inline typename make_future< tag::tbb_<Site>
-                               , typename std::result_of< F(A...)>::type
-                               >::type
+    inline details::tbb_future<
+              typename std::result_of< F(A...)>::type
+           >
     call(F&& f, A&& ... a)
     {
       typedef typename std::result_of< F(A...)>::type result_type;

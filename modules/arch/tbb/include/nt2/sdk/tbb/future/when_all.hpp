@@ -17,6 +17,7 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_future.hpp>
+#include <nt2/sdk/tbb/future/details/tbb_shared_future.hpp>
 
 #include <cstdio>
 #include <initializer_list>
@@ -42,14 +43,19 @@ namespace nt2
     typedef typename tbb::flow::continue_node<
     tbb::flow::continue_msg> node_type;
 
-    typedef typename details::tbb_future<int>
-    whenall_future;
-
     template <typename Future>
-    whenall_future static call( std::vector<Future> & lazy_values )
+    details::tbb_future< std::vector<Future> >
+    static call( std::vector<Future> & lazy_values )
     {
-      details::tbb_task_wrapper< std::function<int()>, int >
-      packaged_task( [](){ return 0; } );
+      typedef typename std::vector<Future> whenall_vector;
+      typedef typename details::tbb_future< whenall_vector >
+      whenall_future;
+
+      details::tbb_task_wrapper<
+        std::function< whenall_vector() >
+      , whenall_vector
+      >
+      packaged_task( [&](){ return lazy_values; } );
 
       whenall_future future_res( packaged_task.get_future() );
 
@@ -69,10 +75,28 @@ namespace nt2
     }
 
     template< typename ... A >
-    whenall_future static call( details::tbb_future<A> & ...a )
+    typename details::tbb_future<
+    std::tuple< details::tbb_shared_future<A> ... >
+    >
+    static call( details::tbb_future<A> & ...a )
     {
-      details::tbb_task_wrapper< std::function<int()>, int >
-      packaged_task( [](){ return 0; } );
+      typedef typename std::tuple< details::tbb_shared_future<A> ... >
+      whenall_tuple;
+
+      typedef typename details::tbb_future< whenall_tuple >
+      whenall_future;
+
+      details::tbb_task_wrapper<
+        std::function<whenall_tuple()>
+      , whenall_tuple
+      >
+      packaged_task( [&]()
+                     { return std::make_tuple<
+                          details::tbb_shared_future<A> ...
+                          >
+                       ( a.share()... );
+                     }
+                   );
 
       whenall_future future_res (packaged_task.get_future());
 

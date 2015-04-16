@@ -7,8 +7,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_TBB_FUTURE_DETAILS_TBB_FUTURE_HPP_INCLUDED
-#define NT2_SDK_TBB_FUTURE_DETAILS_TBB_FUTURE_HPP_INCLUDED
+#ifndef NT2_SDK_TBB_FUTURE_DETAILS_TBB_SHARED_FUTURE_HPP_INCLUDED
+#define NT2_SDK_TBB_FUTURE_DETAILS_TBB_SHARED_FUTURE_HPP_INCLUDED
 
 #if defined(NT2_USE_TBB)
 
@@ -22,8 +22,8 @@
 #include <future>
 #include <atomic>
 
-#include <nt2/sdk/tbb/future/details/tbb_future_base.hpp>
 #include <nt2/sdk/tbb/future/details/tbb_task_wrapper.hpp>
+#include <nt2/sdk/tbb/future/details/tbb_future.hpp>
 
 namespace nt2
 {
@@ -35,26 +35,26 @@ namespace nt2
   namespace details
   {
     template<typename result_type>
-    struct tbb_future
+    struct tbb_shared_future
     : public tbb_future_base
-    , public std::future<result_type>
+    , public std::shared_future<result_type>
     {
       typedef typename tbb::flow::continue_node<
       tbb::flow::continue_msg> node_type;
 
-      tbb_future()
+      tbb_shared_future()
       : tbb_future_base()
-      , std::future<result_type>()
+      , std::shared_future<result_type>()
       , node_(NULL)
       , continued_(false)
       , ready_( graph_launched_ )
       {
       }
 
-       tbb_future( std::future<result_type> && other)
+       tbb_shared_future( std::shared_future<result_type> && other)
       : tbb_future_base()
-      , std::future<result_type>(
-        std::forward< std::future<result_type> >(other)
+      , std::shared_future<result_type>(
+        std::forward< std::shared_future<result_type> >(other)
         )
       , node_(NULL)
       , continued_(false)
@@ -78,20 +78,20 @@ namespace nt2
         if(!continued_)
           wait();
 
-        std::future<result_type> & tmp(*this);
+        std::shared_future<result_type> & tmp(*this);
         return tmp.get();
       }
 
       template<typename F>
       details::tbb_future<
-      typename std::result_of<F(tbb_future)>::type
+      typename std::result_of<F(tbb_shared_future)>::type
       >
       then(F&& f)
       {
-        typedef typename std::result_of<F(tbb_future)>::type
+        typedef typename std::result_of<F(tbb_shared_future)>::type
         then_result_type;
 
-        typedef typename details::tbb_future<then_result_type>
+        typedef typename details::tbb_shared_future<then_result_type>
         then_future_type;
 
         node_type * node = node_;
@@ -100,11 +100,11 @@ namespace nt2
         details::tbb_task_wrapper<
         F,
         then_result_type,
-        tbb_future
+        tbb_shared_future
         >
         packaged_task
         (std::forward<F>(f)
-        ,std::move(*this)
+        ,tbb_shared_future(*this)
         );
 
         then_future_type then_future( packaged_task.get_future() );

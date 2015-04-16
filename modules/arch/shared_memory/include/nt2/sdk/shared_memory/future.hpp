@@ -13,11 +13,16 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+#include <future>
+#include <tuple>
 
 namespace nt2
 {
     template<class Arch, class result_type>
     struct make_future;
+
+    template<class Arch, class result_type>
+    struct make_shared_future;
 
     template<class Arch>
     struct async_impl;
@@ -26,8 +31,10 @@ namespace nt2
     struct make_ready_future_impl;
 
     template< typename Arch, typename result_type>
-    inline typename make_future< Arch,result_type>::type
-    make_ready_future(result_type value)
+    inline auto make_ready_future(result_type value)
+    -> decltype( make_ready_future_impl<Arch,result_type>()
+                .call(std::move(value))
+               )
     {
        return make_ready_future_impl<Arch,result_type>()
               .call(std::move(value) );
@@ -36,39 +43,19 @@ namespace nt2
     template<class Arch>
     struct when_all_impl;
 
-    template<class Arch, typename ... A>
-    struct when_all_result
+    template< typename Arch,typename ... A>
+    inline auto when_all(A && ... a)
+    -> decltype( when_all_impl<Arch>().call( std::forward<A>(a)... ) )
     {
-      typedef typename make_future<Arch,int>::type type;
-    };
-
-    template<class Arch, class Future>
-    struct when_all_vec_result
-    {
-      typedef typename make_future<Arch,int>::type type;
-    };
-
-    template < typename Arch, typename Future>
-    inline typename when_all_vec_result<Arch,Future>::type
-    when_all( std::vector<Future> && lazy_values )
-    {
-        return when_all_impl<Arch>().call(
-          std::forward< std::vector<Future> > (lazy_values)
-          );
-    }
-
-    template< typename Arch,typename ... A >
-    inline typename when_all_result<Arch,A...>::type
-    when_all(A && ... a)
-    {
-      return when_all_impl<Arch>().call(a ...);
+      return when_all_impl<Arch>().call( std::forward<A>(a)... );
     }
 
     template< typename Arch,typename F, typename ... A >
-    inline typename make_future<  Arch,
-                                  typename std::result_of< F(A ...) >::type
-                               >::type
-    async( F && f, A && ... a)
+    inline auto async( F && f, A && ... a)
+    -> decltype( async_impl<Arch>().call( std::forward<F>(f)
+                                        , std::forward<A>(a)...
+                                        )
+               )
     {
         return async_impl<Arch>().call( std::forward<F>(f)
                                       , std::forward<A>(a)...
