@@ -18,6 +18,8 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
+#include <nt2/sdk/openmp/future/details/openmp_future.hpp>
+#include <nt2/sdk/openmp/future/details/openmp_task_wrapper.hpp>
 
 namespace nt2
 {
@@ -33,6 +35,13 @@ namespace nt2
     : public std::shared_future<result_type>
     {
       openmp_shared_future() : ready_(new bool(false))
+      {}
+
+      openmp_shared_future( std::shared_future<result_type> && other)
+      : std::shared_future<result_type>(
+        std::forward< std::shared_future<result_type> >(other)
+        )
+      , ready_( new bool(false) )
       {}
 
       bool is_ready() const
@@ -57,18 +66,21 @@ namespace nt2
       }
 
       template<typename F>
-      openmp_future<typename std::result_of<F(openmp_future)>::type>
+      openmp_future<typename std::result_of<F(openmp_shared_future)>::type>
       then(F && f)
       {
-        typedef typename std::result_of<F(openmp_future)>::type
+        typedef typename std::result_of<F(openmp_shared_future)>::type
         then_result_type;
+
+        typedef typename details::openmp_future< then_result_type >
+        then_future_type;
 
         bool * prev( ready_.get() );
 // Remove warning because the variable is used in the omp pragma
         boost::ignore_unused(prev);
 
-        details::openmp_task_wrapper<F,then_result_type,openmp_future>
-        packaged_task(std::forward<F>(f),openmp_future(*this));
+        details::openmp_task_wrapper<F,then_result_type,openmp_shared_future>
+        packaged_task(std::forward<F>(f),openmp_shared_future(*this));
 
         then_future_type then_future( packaged_task.get_future() );
 

@@ -18,6 +18,7 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
+#include <nt2/sdk/openmp/future/details/openmp_task_wrapper.hpp>
 
 namespace nt2
 {
@@ -33,6 +34,13 @@ namespace nt2
     : public std::future<result_type>
     {
       openmp_future() : ready_(new bool(false))
+      {}
+
+      openmp_future( std::future<result_type> && other)
+      : std::future<result_type>(
+        std::forward< std::future<result_type> >(other)
+        )
+      , ready_( new bool(false) )
       {}
 
       bool is_ready() const
@@ -62,6 +70,9 @@ namespace nt2
       {
         typedef typename std::result_of<F(openmp_future)>::type
         then_result_type;
+
+        typedef typename details::openmp_future< then_result_type >
+        then_future_type;
 
         bool * prev( ready_.get() );
 

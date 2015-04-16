@@ -48,8 +48,7 @@ namespace nt2
       >
       packaged_task( [&](){ return lazy_values; } );
 
-      details::openmp_future<int> future_res
-      (packaged_task.get_future());
+      whenall_future future_res(packaged_task.get_future());
 
       bool * next( future_res.ready_.get() );
       bool * deps[size];
@@ -90,7 +89,7 @@ namespace nt2
 #define POINT(a,b) a.b
 
 #define NT2_FUTURE_FORWARD_ARGS0(z,n,t) details::openmp_shared_future<A##n>
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) details::openmp_future<A##n> const & a##n
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) details::openmp_future<A##n> & a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) POINT(a##n,share())
 #define NT2_FUTURE_FORWARD_ARGS3(z,n,t) bool * r##n = POINT(a##n,ready_).get();
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) boost::ignore_unused(r##n);
