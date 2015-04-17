@@ -23,6 +23,7 @@
 
 #include <nt2/sdk/shared_memory/future.hpp>
 #include <nt2/sdk/openmp/future/details/openmp_future.hpp>
+#include <nt2/sdk/openmp/future/details/openmp_shared_future.hpp>
 #include <nt2/sdk/openmp/future/details/openmp_task_wrapper.hpp>
 
 #include <vector>
@@ -32,11 +33,11 @@ namespace nt2
   template<class Site>
   struct when_all_impl< tag::openmp_<Site> >
   {
-    template <typename Future>
-    details::openmp_future< std::vector<Future> >
-    call( std::vector<Future> && lazy_values )
+    template <typename T>
+    details::openmp_future< std::vector< openmp_shared_future<T> > >
+    call( std::vector< openmp_future<T> > & lazy_values )
     {
-      typedef typename std::vector<Future> whenall_vector;
+      typedef typename std::vector< openmp_shared_future<T> > whenall_vector;
       typedef typename details::openmp_future< whenall_vector >
       whenall_future;
 
@@ -46,7 +47,18 @@ namespace nt2
         std::function< whenall_vector() >
       , whenall_vector
       >
-      packaged_task( [&](){ return lazy_values; } );
+      packaged_task(
+        [&](){
+          whenall_vector returned_lazy_values ( lazy_values.size() );
+
+          for(std::size_t i=0; i< lazy_values.size(); i++)
+          {
+            returned_lazy_values[i] = lazy_values[i].share();
+          }
+
+          return returned_lazy_values;
+        }
+      );
 
       whenall_future future_res(packaged_task.get_future());
 

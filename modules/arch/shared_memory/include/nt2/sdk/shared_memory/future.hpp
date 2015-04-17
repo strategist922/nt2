@@ -91,17 +91,30 @@ namespace nt2
             );
         }
 
-        template <typename Future>
-        inline details::nt2_future< std::vector<Future> >
-        call( std::vector<Future> && lazy_values )
+        template <typename T>
+        details::nt2_future< std::vector< details::nt2_shared_future<T> > >
+        call( std::vector< details::nt2_future<T> > & lazy_values )
         {
+          typedef typename std::vector< details::nt2_shared_future<T> >
+          whenall_vector;
+          typedef typename details::nt2_future< whenall_vector >
+          whenall_future;
+
+          whenall_vector returned_lazy_values ( lazy_values.size() );
+
+          for(std::size_t i=0; i< lazy_values.size(); i++)
+          {
+            returned_lazy_values[i] = lazy_values[i].share();
+          }
+
           return  std::async(
-            [lazy_values](){
-              for (std::size_t i=0; i<lazy_values.size(); i++)
+            [& returned_lazy_values]() -> whenall_vector
+            {
+              for (std::size_t i=0; i<returned_lazy_values.size(); i++)
               {
-                  lazy_values[i].wait();
+                  returned_lazy_values[i].wait();
               }
-              return lazy_values;
+              return returned_lazy_values;
             }
           );
         }

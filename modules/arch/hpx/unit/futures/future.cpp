@@ -16,6 +16,7 @@
 #include <nt2/sdk/unit/tests/relation.hpp>
 #include <nt2/sdk/unit/tests/type_expr.hpp>
 #include <nt2/sdk/unit/tests/exceptions.hpp>
+#include <vector>
 
 
 namespace nt2
@@ -140,4 +141,12 @@ NT2_TEST_CASE( when_all_future )
 
   NT2_TEST_EQUAL(value2,50) ;
 
+  std::vector<future> f10(3);
+  f10[0] = nt2::make_ready_future<Arch,int>(12);
+  f10[1] = nt2::make_ready_future<Arch,int>(24);
+  f10[2] = nt2::make_ready_future<Arch,int>(48);
+  future f11 = nt2::when_all<Arch>(f10).then(p4());
+  int value3 = f11.get();
+
+  NT2_TEST_EQUAL(value3,50) ;
 }
