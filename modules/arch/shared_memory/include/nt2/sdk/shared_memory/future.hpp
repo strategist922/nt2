@@ -97,8 +97,6 @@ namespace nt2
         {
           typedef typename std::vector< details::nt2_shared_future<T> >
           whenall_vector;
-          typedef typename details::nt2_future< whenall_vector >
-          whenall_future;
 
           whenall_vector returned_lazy_values ( lazy_values.size() );
 

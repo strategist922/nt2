@@ -34,10 +34,13 @@ namespace nt2
   struct when_all_impl< tag::openmp_<Site> >
   {
     template <typename T>
-    details::openmp_future< std::vector< openmp_shared_future<T> > >
-    call( std::vector< openmp_future<T> > & lazy_values )
+    details::openmp_future< std::vector< details::openmp_shared_future<T> > >
+    call( std::vector< details::openmp_future<T> > & lazy_values )
     {
-      typedef typename std::vector< openmp_shared_future<T> > whenall_vector;
+      typedef typename std::vector<
+         details::openmp_shared_future<T>
+      > whenall_vector;
+
       typedef typename details::openmp_future< whenall_vector >
       whenall_future;
 
@@ -69,6 +72,8 @@ namespace nt2
       {
         deps[i] = lazy_values[i].ready_.get();
       }
+
+      static_cast<void>(deps);
 
       #pragma omp task \
       firstprivate(packaged_task, next, deps) \
