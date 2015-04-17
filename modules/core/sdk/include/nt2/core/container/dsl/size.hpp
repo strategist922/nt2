@@ -9,9 +9,7 @@
 #ifndef NT2_CORE_CONTAINER_DSL_SIZE_HPP_INCLUDED
 #define NT2_CORE_CONTAINER_DSL_SIZE_HPP_INCLUDED
 
-#include <nt2/core/container/dsl/details/trait_transform.hpp>
 #include <nt2/include/functions/extent.hpp>
-#include <boost/proto/traits.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -32,14 +30,4 @@ namespace nt2 { namespace ext
   template<class Tag, class Domain, int Arity, class Expr> struct size_of;
 } }
 
-namespace nt2 { namespace container
-{
-  template<class Domain>
-  struct size_transform : details::trait_transform< ext::size_of, Domain >
-  {};
-} }
-
-#include <nt2/core/container/dsl/details/size/elementwise.hpp>
-
 #endif
-

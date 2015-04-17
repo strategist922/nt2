@@ -13,13 +13,12 @@ namespace nt2
 {
   namespace result_of
   {
-    template< class Indexer, class Base, class Size
-            , std::size_t I, std::size_t N
-            >
+    template<class Indexer, std::size_t I, std::size_t N>
     struct fix_index
     {
       typedef Indexer const& type;
 
+      template<class Base, class Size>
       static BOOST_FORCEINLINE type
       call(Indexer const& i , Base const&, Size const&)
       {
@@ -30,10 +29,10 @@ namespace nt2
 
   template<std::size_t I, std::size_t N,class Indexer, class Base, class Size>
   BOOST_FORCEINLINE
-  typename result_of::fix_index<Indexer,Base,Size,I,N>::type
+  typename result_of::fix_index<Indexer,I,N>::type
   fix_index(Indexer const& i, Base const& b, Size const& s)
   {
-    return result_of::fix_index<Indexer,Base,Size,I,N>::call(i,b,s);
+    return result_of::fix_index<Indexer,I,N>::call(i,b,s);
   }
 
 }

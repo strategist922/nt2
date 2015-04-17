@@ -104,13 +104,12 @@ namespace nt2
   //============================================================================
   namespace result_of
   {
-    template< bool B, class Base, class Size
-            , std::size_t I, std::size_t N
-            >
-    struct fix_index<container::extremum<B>,Base,Size,I,N>
+    template< bool B, std::size_t I, std::size_t N>
+    struct fix_index<container::extremum<B>,I,N>
     {
       typedef std::ptrdiff_t type;
 
+      template< class Base, class Size>
       static BOOST_FORCEINLINE type
       call(container::extremum<B> const& i , Base const&, Size const& s)
       {
@@ -120,12 +119,13 @@ namespace nt2
       }
     };
 
-    template< bool B, class Base, class Size, std::size_t N>
-    struct fix_index<container::extremum<B>,Base,Size,N,N>
+    template< bool B, std::size_t N>
+    struct fix_index<container::extremum<B>,N,N>
     {
       typedef std::ptrdiff_t              type;
       typedef typename make_size<N>::type size_type;
 
+      template< class Base, class Size>
       static BOOST_FORCEINLINE type
       call(container::extremum<B> const& i , Base const&, Size const& s)
       {

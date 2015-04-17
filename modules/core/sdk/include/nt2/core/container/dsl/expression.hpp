@@ -35,7 +35,9 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
+#include <iostream>
 #include <nt2/sdk/parameters.hpp>
+#include <nt2/sdk/meta/type_id.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -122,10 +124,6 @@ namespace nt2 { namespace container
     //==========================================================================
     // Compute storage type for size
     //==========================================================================
-    typedef typename size_transform<domain>::
-            template result<size_transform<domain>(Expr&)>::type sizes_t;
-    typedef typename meta::strip<sizes_t>::type                  extent_type;
-
     typedef typename index_type::index_type                      indexes_type;
 
     //==========================================================================
@@ -183,14 +181,12 @@ namespace nt2 { namespace container
     //==========================================================================
     // Expression indexing
     //==========================================================================
-    #define M2(z,n,t)                                                     \
-    fix_index<BOOST_PP_INC(n),t>( a##n, indexes_type(), this->extent() )  \
+    #define M2(z,n,t)                                                         \
+    fix_index<BOOST_PP_INC(n),t>( a##n, indexes_type(), nt2::extent(*this) )  \
     /**/
 
     #define M1(z,n,t)                                             \
-    typename result_of::fix_index < A##n,indexes_type,extent_type \
-                                  , BOOST_PP_INC(n),t             \
-                                  >::type                         \
+    typename result_of::fix_index<A##n, BOOST_PP_INC(n),t>::type  \
     /**/
 
     #define M0(z,n,t)                                                 \
@@ -228,17 +224,9 @@ namespace nt2 { namespace container
     //==========================================================================
     // Return current expression extent
     //==========================================================================
-    BOOST_FORCEINLINE auto extent() const -> decltype(nt2::extent(*this))
-    {
-      return nt2::extent(*this);
-    }
-
-    //==========================================================================
-    // Return current expression extent
-    //==========================================================================
     BOOST_FORCEINLINE std::size_t size() const
     {
-      return nt2::numel(extent());
+      return nt2::numel(nt2::extent(*this));
     }
 
     //==========================================================================

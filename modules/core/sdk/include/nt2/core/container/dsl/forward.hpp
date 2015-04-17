@@ -28,7 +28,6 @@ namespace nt2 { namespace container
   struct colon_;
 
   template<class Domain>  struct generator_transform;
-  template<class Domain>  struct size_transform;
 
   struct domain;
 
