@@ -15,20 +15,97 @@
 #include <vector>
 #include <future>
 #include <tuple>
+#include <nt2/sdk/shared_memory/details/nt2_future.hpp>
+#include <nt2/sdk/shared_memory/details/nt2_shared_future.hpp>
+#include <nt2/sdk/shared_memory/details/wait_tuple_of_futures.hpp>
 
 namespace nt2
 {
-    template<class Arch, class result_type>
-    struct make_future;
 
+    // Default definition of future if no backend found
     template<class Arch, class result_type>
-    struct make_shared_future;
+    struct make_future
+    {
+        typedef typename details::nt2_future<result_type> type;
+    };
 
+    // Default definition of shared_future if no backend found
+    template<class Arch, class result_type>
+    struct make_shared_future
+    {
+        typedef typename std::shared_future<result_type> type;
+    };
+
+    // Default implementation of async if no backend found
     template<class Arch>
-    struct async_impl;
+    struct async_impl
+    {
+        template< typename F, typename ... A >
+        inline details::nt2_future<
+                 typename std::result_of< F(A...)>::type
+               >
+        call(F && f, A && ... a)
+        {
+            return std::async( std::forward<F>(f)
+                             , std::forward<A>(a) ...
+                             );
+        }
+    };
 
+    // Default implementation of make_ready_future if no backend found
     template<class Arch, typename result_type>
-    struct make_ready_future_impl;
+    struct make_ready_future_impl
+    {
+        inline details::nt2_future<result_type> call(result_type && value)
+        {
+          std::promise<result_type> promise;
+          details::nt2_future<result_type> future_res ( promise.get_future() );
+          promise.set_value(value);
+          return future_res;
+        }
+    };
+
+    // Default implementation of when_all if no backend found
+    template<class Arch>
+    struct when_all_impl
+    {
+        template< typename ... A >
+        inline details::nt2_future<
+            std::tuple< details::nt2_shared_future<A> ... >
+            >
+        call(details::nt2_future<A> & ...a )
+        {
+          typedef std::tuple< details::nt2_shared_future<A> ... >
+          when_all_tuple;
+
+          return  std::async(
+            [&](){  when_all_tuple res = std::make_tuple<
+                                         details::nt2_shared_future<A> ...
+                                         >( a.share() ... );
+
+                    details::wait_tuple_of_futures< sizeof...(A) >()
+                    .call(res);
+
+                    return res;
+                 }
+            );
+        }
+
+        template <typename Future>
+        inline details::nt2_future< std::vector<Future> >
+        call( std::vector<Future> && lazy_values )
+        {
+          return  std::async(
+            [lazy_values](){
+              for (std::size_t i=0; i<lazy_values.size(); i++)
+              {
+                  lazy_values[i].wait();
+              }
+              return lazy_values;
+            }
+          );
+        }
+    };
 
     template< typename Arch, typename result_type>
     inline auto make_ready_future(result_type value)
@@ -40,8 +117,7 @@ namespace nt2
               .call(std::move(value) );
     }
 
-    template<class Arch>
-    struct when_all_impl;
+
 
     template< typename Arch,typename ... A>
     inline auto when_all(A && ... a)
