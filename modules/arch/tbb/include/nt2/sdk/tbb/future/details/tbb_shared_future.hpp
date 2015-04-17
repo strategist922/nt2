@@ -91,7 +91,7 @@ namespace nt2
         typedef typename std::result_of<F(tbb_shared_future)>::type
         then_result_type;
 
-        typedef typename details::tbb_shared_future<then_result_type>
+        typedef typename details::tbb_future<then_result_type>
         then_future_type;
 
         node_type * node = node_;
