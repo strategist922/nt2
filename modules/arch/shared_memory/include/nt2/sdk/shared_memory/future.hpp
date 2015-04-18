@@ -33,7 +33,7 @@ namespace nt2
     template<class Arch, class result_type>
     struct make_shared_future
     {
-        typedef typename std::shared_future<result_type> type;
+        typedef typename details::nt2_shared_future<result_type> type;
     };
 
     // Default implementation of async if no backend found
@@ -56,7 +56,8 @@ namespace nt2
     template<class Arch, typename result_type>
     struct make_ready_future_impl
     {
-        inline details::nt2_future<result_type> call(result_type && value)
+        inline details::nt2_future<result_type>
+        call(result_type && value)
         {
           std::promise<result_type> promise;
           details::nt2_future<result_type> future_res ( promise.get_future() );
@@ -76,18 +77,24 @@ namespace nt2
         call(details::nt2_future<A> & ...a )
         {
           typedef std::tuple< details::nt2_shared_future<A> ... >
-          when_all_tuple;
+          whenall_tuple;
 
-          return  std::async(
-            [&](){  when_all_tuple res = std::make_tuple<
+          typedef typename details::nt2_future< whenall_tuple >
+          whenall_future;
+
+          whenall_tuple res = std::make_tuple<
                                          details::nt2_shared_future<A> ...
                                          >( a.share() ... );
 
-                    details::wait_tuple_of_futures< sizeof...(A) >()
-                    .call(res);
+          return  std::async(
+              []( whenall_tuple && res_ ) -> whenall_tuple
+              {
+                details::wait_tuple_of_futures< sizeof...(A) >()
+                .call(res_);
 
-                    return res;
-                 }
+                return res_;
+              }
+              , std::move(res)
             );
         }
 
@@ -106,14 +113,16 @@ namespace nt2
           }
 
           return  std::async(
-            [& returned_lazy_values]() -> whenall_vector
+            []( whenall_vector && returned_lazy_values_ )
+            -> whenall_vector
             {
-              for (std::size_t i=0; i<returned_lazy_values.size(); i++)
+              for (std::size_t i=0; i<returned_lazy_values_.size(); i++)
               {
-                  returned_lazy_values[i].wait();
+                  returned_lazy_values_[i].wait();
               }
-              return returned_lazy_values;
+              return returned_lazy_values_;
             }
+            , std::move(returned_lazy_values)
           );
         }
     };

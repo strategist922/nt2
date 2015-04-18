@@ -37,12 +37,13 @@ namespace nt2
       >
       then(F&& f)
       {
-        auto packaged_task = [this,f]()
-                              {
-                                return f( std::move(*this) );
-                              };
-
-        return std::async(packaged_task);
+        return std::async( []( F && f_, nt2_future && previous )
+                           {
+                              return f_( std::move(previous) );
+                           }
+                           , std::forward<F>(f)
+                           , std::move(*this)
+                          );
       }
 
     };
