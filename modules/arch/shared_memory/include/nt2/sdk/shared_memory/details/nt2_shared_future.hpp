@@ -14,6 +14,7 @@
 #include <future>
 
 #include <nt2/sdk/shared_memory/details/nt2_future.hpp>
+#include <nt2/sdk/shared_memory/details/nt2_launch_policy.hpp>
 
 namespace nt2
 {
@@ -39,12 +40,13 @@ namespace nt2
       >
       then(F&& f)
       {
-        return std::async( [](F&& f_, nt2_shared_future && previous)
+        return std::async( nt2::launch::policy
+                          ,[](F&& f_, nt2_shared_future && previous)
                            {
                               return f_( std::move(previous) );
                            }
-                           , std::forward<F>(f)
-                           , shared_future(*this)
+                          , std::forward<F>(f)
+                          , shared_future(*this)
                          );
       }
     };

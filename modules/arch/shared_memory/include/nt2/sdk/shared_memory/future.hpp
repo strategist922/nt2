@@ -18,10 +18,10 @@
 #include <nt2/sdk/shared_memory/details/nt2_future.hpp>
 #include <nt2/sdk/shared_memory/details/nt2_shared_future.hpp>
 #include <nt2/sdk/shared_memory/details/wait_tuple_of_futures.hpp>
+#include <nt2/sdk/shared_memory/details/nt2_launch_policy.hpp>
 
 namespace nt2
 {
-
     // Default definition of future if no backend found
     template<class Arch, class result_type>
     struct make_future
@@ -46,7 +46,8 @@ namespace nt2
                >
         call(F && f, A && ... a)
         {
-            return std::async( std::forward<F>(f)
+            return std::async( nt2::launch::policy
+                             , std::forward<F>(f)
                              , std::forward<A>(a) ...
                              );
         }
@@ -87,13 +88,14 @@ namespace nt2
                                          >( a.share() ... );
 
           return  std::async(
-              []( whenall_tuple && res_ ) -> whenall_tuple
-              {
-                details::wait_tuple_of_futures< sizeof...(A) >()
-                .call(res_);
+              nt2::launch::policy
+              ,[]( whenall_tuple && res_ ) -> whenall_tuple
+               {
+                 details::wait_tuple_of_futures< sizeof...(A) >()
+                 .call(res_);
 
-                return res_;
-              }
+                 return res_;
+               }
               , std::move(res)
             );
         }
@@ -113,7 +115,8 @@ namespace nt2
           }
 
           return  std::async(
-            []( whenall_vector && returned_lazy_values_ )
+            nt2::launch::policy
+           ,[]( whenall_vector && returned_lazy_values_ )
             -> whenall_vector
             {
               for (std::size_t i=0; i<returned_lazy_values_.size(); i++)
@@ -122,7 +125,7 @@ namespace nt2
               }
               return returned_lazy_values_;
             }
-            , std::move(returned_lazy_values)
+           , std::move(returned_lazy_values)
           );
         }
     };
