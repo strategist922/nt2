@@ -51,18 +51,17 @@ namespace nt2
       {
       }
 
-       tbb_shared_future( std::shared_future<result_type> && other)
-      : tbb_future_base()
-      , std::shared_future<result_type>(
-        std::forward< std::shared_future<result_type> >(other)
+      tbb_shared_future( details::tbb_future<result_type> && other)
+      : std::shared_future<result_type>(
+         other.share()
         )
       , node_(other.node_)
       , continued_(other.continued_)
-      , ready_( graph_launched_ )
+      , ready_( other.ready_ )
       {
       }
 
-      tbb_shared_future( details::tbb_future<result_type> && other)
+      tbb_shared_future( details::tbb_future<result_type> & other)
       : std::shared_future<result_type>(
          other.share()
         )

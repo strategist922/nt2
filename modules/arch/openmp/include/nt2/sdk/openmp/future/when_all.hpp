@@ -33,9 +33,9 @@ namespace nt2
   template<class Site>
   struct when_all_impl< tag::openmp_<Site> >
   {
-    template <typename T>
+    template <typename T, template<typename> class Future >
     details::openmp_future< std::vector< details::openmp_shared_future<T> > >
-    call( std::vector< details::openmp_future<T> > & lazy_values )
+    call( std::vector< Future<T> > & lazy_values )
     {
       typedef typename std::vector<
          details::openmp_shared_future<T>
@@ -47,7 +47,7 @@ namespace nt2
       whenall_vector result ( lazy_values.size() );
 
       for(std::size_t i=0; i<lazy_values.size(); i++)
-        result[i] = std::move(lazy_values[i]);
+        result[i] = lazy_values[i];
 
       details::openmp_task_wrapper<
         std::function< whenall_vector(whenall_vector) >
@@ -106,12 +106,14 @@ namespace nt2
 #define POINT(a,b) a.b
 
 #define NT2_FUTURE_FORWARD_ARGS0(z,n,t) details::openmp_shared_future<A##n>
-#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) details::openmp_future<A##n> & a##n
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) std::move(a##n)
+#define NT2_FUTURE_FORWARD_ARGS1(z,n,t) Future<A##n> & a##n
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) details::openmp_shared_future<A##n>(a##n)
 #define NT2_FUTURE_FORWARD_ARGS3(z,n,t) bool * r##n = POINT(a##n,ready_).get();
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) boost::ignore_unused(r##n);
 
-    template< BOOST_PP_ENUM_PARAMS(N, typename A) >
+    template< BOOST_PP_ENUM_PARAMS(N, typename A)
+            , template<typename> class Future
+            >
     typename details::openmp_future<
     std::tuple< BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS0, ~) >
     >

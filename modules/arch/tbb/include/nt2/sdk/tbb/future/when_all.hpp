@@ -44,9 +44,9 @@ namespace nt2
     typedef typename tbb::flow::continue_node<
     tbb::flow::continue_msg> node_type;
 
-    template <typename T>
+    template <typename T, template<typename> class Future >
     details::tbb_future< std::vector< details::tbb_shared_future<T> > >
-    static call( std::vector< details::tbb_future<T> > & lazy_values )
+    static call( std::vector< Future<T> > & lazy_values )
     {
       typedef typename std::vector<
                          details::tbb_shared_future<T>
@@ -57,8 +57,8 @@ namespace nt2
 
       whenall_vector result ( lazy_values.size() );
 
-      for(std::size_t i=0; i<lazy_values.size(); i++)
-        result[i] = std::move(lazy_values[i]);
+      for(std::size_t i=0; i< lazy_values.size(); i++)
+      result[i] = lazy_values[i];
 
       details::tbb_task_wrapper<
         std::function< whenall_vector(whenall_vector) >
@@ -89,11 +89,11 @@ namespace nt2
       return future_res;
     }
 
-    template< typename ... A >
+    template< typename ... A , template<typename> class Future >
     typename details::tbb_future<
     std::tuple< details::tbb_shared_future<A> ... >
     >
-    static call( details::tbb_future<A> & ...a )
+    static call( Future<A> & ...a )
     {
       typedef typename std::tuple< details::tbb_shared_future<A> ... >
       whenall_tuple;
@@ -105,8 +105,7 @@ namespace nt2
         = std::make_tuple<
                           details::tbb_shared_future<A> ...
                           >
-                       ( std::move(a) ... );
-
+                       ( details::tbb_shared_future<A>(a) ... );
 
       details::tbb_task_wrapper<
         std::function<whenall_tuple(whenall_tuple)>

@@ -71,11 +71,11 @@ namespace nt2
     template<class Arch>
     struct when_all_impl
     {
-        template< typename ... A >
+        template< typename ... A, template<typename> class Future>
         inline details::nt2_future<
             std::tuple< details::nt2_shared_future<A> ... >
             >
-        call(details::nt2_future<A> & ...a )
+        call(Future<A> & ...a )
         {
           typedef std::tuple< details::nt2_shared_future<A> ... >
           whenall_tuple;
@@ -84,8 +84,8 @@ namespace nt2
           whenall_future;
 
           whenall_tuple res = std::make_tuple<
-                                         details::nt2_shared_future<A> ...
-                                         >( std::move(a) ... );
+                                details::nt2_shared_future<A> ...
+                                >( details::nt2_shared_future<A>(a) ... );
 
           return  std::async(
               nt2::launch::policy
@@ -100,9 +100,9 @@ namespace nt2
             );
         }
 
-        template <typename T>
+        template <typename T, template<typename> class Future>
         details::nt2_future< std::vector< details::nt2_shared_future<T> > >
-        call( std::vector< details::nt2_future<T> > & lazy_values )
+        call( std::vector< Future<T> > & lazy_values )
         {
           typedef typename std::vector< details::nt2_shared_future<T> >
           whenall_vector;
@@ -111,7 +111,7 @@ namespace nt2
 
           for(std::size_t i=0; i< lazy_values.size(); i++)
           {
-            returned_lazy_values[i] = std::move(lazy_values[i]);
+            returned_lazy_values[i] = lazy_values[i];
           }
 
           return  std::async(
