@@ -80,9 +80,6 @@ namespace nt2
           typedef std::tuple< details::nt2_shared_future<A> ... >
           whenall_tuple;
 
-          typedef typename details::nt2_future< whenall_tuple >
-          whenall_future;
-
           whenall_tuple res = std::make_tuple<
                                 details::nt2_shared_future<A> ...
                                 >( details::nt2_shared_future<A>(a) ... );

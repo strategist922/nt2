@@ -71,7 +71,7 @@ namespace nt2
           wait();
         }
 
-        std::future<result_type> & tmp(*this);
+        std::shared_future<result_type> & tmp(*this);
         return tmp.get();
       }
 

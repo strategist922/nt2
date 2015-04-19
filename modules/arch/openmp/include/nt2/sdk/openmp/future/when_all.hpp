@@ -44,9 +44,11 @@ namespace nt2
       typedef typename details::openmp_future< whenall_vector >
       whenall_future;
 
-      whenall_vector result ( lazy_values.size() );
+      std::size_t size (lazy_values.size() );
 
-      for(std::size_t i=0; i<lazy_values.size(); i++)
+      whenall_vector result (size);
+
+      for(std::size_t i=0; i<size; i++)
         result[i] = lazy_values[i];
 
       details::openmp_task_wrapper<
@@ -60,8 +62,6 @@ namespace nt2
           }
         , std::move(result)
         );
-
-      );
 
       whenall_future future_res(packaged_task.get_future());
 
