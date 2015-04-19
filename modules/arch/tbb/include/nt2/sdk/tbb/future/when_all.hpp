@@ -55,22 +55,22 @@ namespace nt2
       typedef typename details::tbb_future< whenall_vector >
       whenall_future;
 
+      whenall_vector result ( lazy_values.size() );
+
+      for(std::size_t i=0; i<lazy_values.size(); i++)
+        result[i] = std::move(lazy_values[i]);
+
       details::tbb_task_wrapper<
-        std::function< whenall_vector() >
+        std::function< whenall_vector(whenall_vector) >
+      , whenall_vector
       , whenall_vector
       >
       packaged_task(
-        [&](){
-          whenall_vector returned_lazy_values ( lazy_values.size() );
-
-          for(std::size_t i=0; i< lazy_values.size(); i++)
-          {
-            returned_lazy_values[i] = lazy_values[i].share();
+        []( whenall_vector result_ ){
+             return result_;
           }
-
-          return returned_lazy_values;
-        }
-      );
+        , std::move(result)
+        );
 
       whenall_future future_res( packaged_task.get_future() );
 
@@ -101,16 +101,22 @@ namespace nt2
       typedef typename details::tbb_future< whenall_tuple >
       whenall_future;
 
-      details::tbb_task_wrapper<
-        std::function<whenall_tuple()>
-      , whenall_tuple
-      >
-      packaged_task( [&]()
-                     { return std::make_tuple<
+      whenall_tuple result
+        = std::make_tuple<
                           details::tbb_shared_future<A> ...
                           >
-                       ( a.share()... );
+                       ( std::move(a) ... );
+
+
+      details::tbb_task_wrapper<
+        std::function<whenall_tuple(whenall_tuple)>
+      , whenall_tuple
+      , whenall_tuple
+      >
+      packaged_task( [](whenall_tuple result_)
+                     { return result_;
                      }
+                   , std::move(result)
                    );
 
       whenall_future future_res (packaged_task.get_future());

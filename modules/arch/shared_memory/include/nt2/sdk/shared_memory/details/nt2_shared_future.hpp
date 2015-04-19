@@ -34,6 +34,10 @@ namespace nt2
         )
       {}
 
+       nt2_shared_future( details::nt2_future<result_type> && other)
+      : std::shared_future<result_type>(other.share())
+      {}
+
       template<typename F>
       details::nt2_future<
       typename std::result_of<F(nt2_shared_future)>::type

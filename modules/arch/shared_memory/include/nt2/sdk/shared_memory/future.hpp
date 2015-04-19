@@ -85,7 +85,7 @@ namespace nt2
 
           whenall_tuple res = std::make_tuple<
                                          details::nt2_shared_future<A> ...
-                                         >( a.share() ... );
+                                         >( std::move(a) ... );
 
           return  std::async(
               nt2::launch::policy
@@ -111,7 +111,7 @@ namespace nt2
 
           for(std::size_t i=0; i< lazy_values.size(); i++)
           {
-            returned_lazy_values[i] = lazy_values[i].share();
+            returned_lazy_values[i] = std::move(lazy_values[i]);
           }
 
           return  std::async(

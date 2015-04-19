@@ -44,6 +44,11 @@ namespace nt2
       , ready_( new bool(false) )
       {}
 
+      openmp_shared_future( details::openmp_future<result_type> && other)
+      : std::shared_future<result_type>( other.share() )
+      , ready_( other.ready_ )
+      {}
+
       bool is_ready() const
       {
         return *ready_;

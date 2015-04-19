@@ -44,23 +44,23 @@ namespace nt2
       typedef typename details::openmp_future< whenall_vector >
       whenall_future;
 
-      std::size_t size( lazy_values.size() );
+      whenall_vector result ( lazy_values.size() );
+
+      for(std::size_t i=0; i<lazy_values.size(); i++)
+        result[i] = std::move(lazy_values[i]);
 
       details::openmp_task_wrapper<
-        std::function< whenall_vector() >
+        std::function< whenall_vector(whenall_vector) >
+      , whenall_vector
       , whenall_vector
       >
       packaged_task(
-        [&](){
-          whenall_vector returned_lazy_values ( lazy_values.size() );
-
-          for(std::size_t i=0; i< lazy_values.size(); i++)
-          {
-            returned_lazy_values[i] = lazy_values[i].share();
+        []( whenall_vector result_ ){
+             return result_;
           }
+        , std::move(result)
+        );
 
-          return returned_lazy_values;
-        }
       );
 
       whenall_future future_res(packaged_task.get_future());
@@ -107,7 +107,7 @@ namespace nt2
 
 #define NT2_FUTURE_FORWARD_ARGS0(z,n,t) details::openmp_shared_future<A##n>
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) details::openmp_future<A##n> & a##n
-#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) POINT(a##n,share())
+#define NT2_FUTURE_FORWARD_ARGS2(z,n,t) std::move(a##n)
 #define NT2_FUTURE_FORWARD_ARGS3(z,n,t) bool * r##n = POINT(a##n,ready_).get();
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) boost::ignore_unused(r##n);
 
@@ -123,16 +123,21 @@ namespace nt2
       typedef typename details::openmp_future< whenall_tuple >
       whenall_future;
 
-      details::openmp_task_wrapper<
-        std::function<whenall_tuple()>
-      , whenall_tuple
-      >
-      packaged_task( [&]()
-                     { return std::make_tuple<
+      whenall_tuple result
+        = std::make_tuple<
                           BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS0, ~)
                           >
                        ( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) );
+
+      details::openmp_task_wrapper<
+        std::function<whenall_tuple(whenall_tuple)>
+      , whenall_tuple
+      , whenall_tuple
+      >
+      packaged_task( [](whenall_tuple result_)
+                     { return result_;
                      }
+                   , std::move(result)
                    );
 
       whenall_future future_res (packaged_task.get_future());
