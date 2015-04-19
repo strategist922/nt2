@@ -9,19 +9,20 @@
 #ifndef NT2_CORE_CONTAINER_DSL_DETAILS_GENERATOR_HPP_INCLUDED
 #define NT2_CORE_CONTAINER_DSL_DETAILS_GENERATOR_HPP_INCLUDED
 
+#include <nt2/sdk/memory/forward/container.hpp>
 #include <nt2/core/container/dsl/forward.hpp>
-#include <nt2/core/container/dsl/size.hpp>
+#include <nt2/core/container/dsl/value_type.hpp>
 //#include <nt2/core/container/dsl/shape_of.hpp>
 //#include <nt2/core/container/dsl/index_of.hpp>
-#include <nt2/core/container/dsl/value_type.hpp>
 #include <nt2/core/container/dsl/kind_of.hpp>
-#include <nt2/sdk/memory/forward/container.hpp>
+#include <nt2/core/functions/extent.hpp>
+#include <nt2/core/utility/of_size.hpp>
 
-#include <nt2/sdk/meta/strip.hpp>
 #include <boost/dispatch/meta/transfer_qualifiers.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
+#include <type_traits>
 
 namespace nt2 { namespace details
 {
@@ -51,32 +52,24 @@ namespace nt2 { namespace details
   //==========================================================================
   template<class Tag, class Domain, int Arity, class Expr> struct generator
   {
-    typedef typename ext::value_type<Tag, Domain, Arity, Expr>::type  value_type;
-    typedef typename ext::size_of<Tag,Domain,Arity,Expr>::result_type extent_type;
-    typedef typename meta::strip<extent_type>::type                   size_type;
-    typedef typename meta::kind_of<Expr>::type                        kind_type;
+    using value_t = ext::value_type<Tag, Domain, Arity, Expr>;
 
     typedef typename boost::mpl::
-    eval_if < boost::is_same< size_type, _0D >
-            , ext::value_type<Tag, Domain, Arity, Expr>
+    eval_if < boost::is_same< typename std::decay<nt2::extent_t<Expr>>::type, _0D >
+            , value_t
             , boost::dispatch::meta::
               transfer_qualifiers
-                    < memory::container < kind_type
-                                        , typename meta::strip<value_type>::type
-                                        , nt2::settings(size_type)
+                    < memory::container < typename meta::kind_of<Expr>::type
+                                        , typename std::decay<typename value_t::type>::type
+                                        , nt2::settings()
                                         >
-                    , value_type
+                    , typename value_t::type
                     >
             >::type                                               type;
 
-    typedef container::expression< typename boost::
-                        remove_const<Expr>::type
-                      , type>                                     result_type;
+    using result_type = container::expression< typename boost::remove_const<Expr>::type,type>;
 
-    BOOST_FORCEINLINE result_type operator()(Expr& e) const
-    {
-      return result_type(e);
-    }
+    BOOST_FORCEINLINE result_type operator()(Expr& e) const { return result_type(e); }
   };
 } }
 

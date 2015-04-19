@@ -53,6 +53,9 @@ namespace nt2
     @return The extent of a0
   **/
   NT2_FUNCTION_IMPLEMENTATION(nt2::tag::extent_, extent, 1)
+
+  template<typename Expr>
+  using extent_t = decltype(nt2::extent(std::declval<Expr>()));
 }
 
 #endif
