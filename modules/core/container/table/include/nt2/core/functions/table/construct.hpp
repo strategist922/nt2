@@ -14,6 +14,7 @@
 #include <nt2/core/functions/construct.hpp>
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/include/functions/numel.hpp>
+#include <nt2/include/functions/extent.hpp>
 #include <nt2/sdk/memory/category.hpp>
 #include <nt2/core/settings/locality.hpp>
 #include <boost/simd/memory/iterator_category.hpp>
@@ -35,7 +36,7 @@ namespace nt2 { namespace ext
                               (fusion_sequence_<A1>)
                             )
   {
-    typedef typename A0::extent_type    extent_type;
+    typedef extent_t<A0>    extent_type;
     typedef typename A0::container_type container_type;
     typedef void                        result_type;
 

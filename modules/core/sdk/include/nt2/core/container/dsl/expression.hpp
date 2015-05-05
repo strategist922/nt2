@@ -241,10 +241,10 @@ namespace nt2 { namespace container
     {
       typedef typename boost::mpl
                             ::apply < storage_order_type
-                                    , boost::mpl::size_t<extent_type::static_size>
+                                    , boost::mpl::size_t<extent_t<Expr>::static_size>
                                     , boost::mpl::size_t<0U>
                                     >::type                     dim_t;
-      return extent()[dim_t::value];
+      return nt2::extent(*this)[dim_t::value];
     }
 
     //==========================================================================
