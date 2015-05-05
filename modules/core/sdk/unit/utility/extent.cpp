@@ -122,23 +122,33 @@ NT2_TEST_CASE( binary_elementwise_extent )
 
   NT2_TEST_EQUAL( extent(1.f+t0), of_size(0)  );
   NT2_TEST_EXPR_TYPE( extent(1.f+t0), _ , nt2::_4D );
+
   NT2_TEST_EQUAL( extent(t0-1.f), of_size(0)  );
   NT2_TEST_EXPR_TYPE( extent(t0-1.f), _ , nt2::_4D );
+
   NT2_TEST_EQUAL( extent(t0*t0), of_size(0)   );
   NT2_TEST_EXPR_TYPE( extent(t0*t0), _ , nt2::_4D );
 
   NT2_TEST_EQUAL( extent(1.f+t1), of_size(2,1,1,1)  );
   NT2_TEST_EQUAL( extent(t1-1.f), of_size(2,1,1,1)  );
+
   NT2_TEST_EQUAL( extent(1.f+s1), of_size(2,1,1,1)  );
   NT2_TEST_EXPR_TYPE( extent(1.f+s1), _ , (nt2::of_size_<2,1>) );
 
   NT2_TEST_EQUAL( extent(s1-1.f), of_size(2,1,1,1)  );
-  NT2_TEST_EQUAL( extent(t1+t1), of_size(2,1,1,1)   );
-  NT2_TEST_EQUAL( extent(t1+s1), of_size(2,1,1,1)   );
-  NT2_TEST_EQUAL( extent(s1+s1), of_size(2,1,1,1)   );
-  NT2_TEST_EQUAL( extent(s1+t1), of_size(2,1,1,1)   );
+  NT2_TEST_EXPR_TYPE( extent(s1-1.f), _ , (nt2::of_size_<2,1>) );
 
-  NT2_TEST_EQUAL( extent(1.f+t1), of_size(2,1,1,1)  );
+  NT2_TEST_EQUAL( extent(t1+t1), of_size(2,1,1,1)   );
+
+  NT2_TEST_EQUAL( extent(t1+s1), of_size(2,1,1,1)   );
+  NT2_TEST_EXPR_TYPE( extent(t1+s1), _ , (nt2::of_size_<2,1>) );
+
+  NT2_TEST_EQUAL( extent(s1+s1), of_size(2,1,1,1)   );
+  NT2_TEST_EXPR_TYPE( extent(s1+s1), _ , (nt2::of_size_<2,1>) );
+
+  NT2_TEST_EQUAL( extent(s1+t1), of_size(2,1,1,1)   );
+  NT2_TEST_EXPR_TYPE( extent(s1+t1), _ , (nt2::of_size_<2,1>) );
+
   NT2_TEST_EQUAL( extent(1.f+t2), of_size(2,3,1,1)  );
   NT2_TEST_EQUAL( extent(1.f+t3), of_size(2,3,4,1)  );
   NT2_TEST_EQUAL( extent(1.f+t4), of_size(2,3,4,5)  );
