@@ -17,21 +17,13 @@ struct type_infos
              , std::string const& settings_ =  ""
             )
            : value_type(value_type_), container(container_)
-           // , settings(settings_)
-           {
-            parse_settings(settings_,settings);
-            // settings[""] = settings_;
-           }
+            , settings(settings_)
+           {}
 
-  void parse_settings(std::string const& settings_, std::map<std::string,std::string> & settings)
-  {
-    if(settings_ == "nt2::settings ()") {settings[""] = "" ; }
-    else { settings[settings_] = settings_; }
-  }
 
   std::string value_type;
   bool container;
-  std::map<std::string,std::string> settings;
+  std::string settings;
 };
 
 struct expression
@@ -106,14 +98,7 @@ struct pretty_printer
     indent();
     os << "container: "; (*this)(t.container); os << ",\n";
     indent();
-    os << "settings: {\n";
-    indentation++;
-    for(std::map<std::string, std::string>::const_iterator it = t.settings.begin(); it != t.settings.end(); ++it)
-    {
-      indent();
-      (*this)(it->first); os << ": "; (*this)(it->second); os << ",\n";
-    }
-    indentation--;
+    os << "settings: "; (*this)(t.settings) ; os << ",\n";
     indent();
     os << "}\n";
     indentation--;
