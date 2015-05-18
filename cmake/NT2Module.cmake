@@ -879,6 +879,10 @@ macro(nt2_module_tool_setup tool)
     # workaround in case tool has already been built in source -- restore CMakeCache
     execute_process(COMMAND ${CMAKE_COMMAND} -E rename ${NT2_TOOL_${tool}_ROOT}/CMakeCache.txt.tmp ${NT2_TOOL_${tool}_ROOT}/CMakeCache.txt ERROR_QUIET)
 
+    if(${tool} STREQUAL "external_kernel" AND ${tool_configure} MATCHES 1)
+        # do not try to build external kernel
+    else()
+
     if(tool_configure)
       message("${tool_configure_out}")
       message(FATAL_ERROR "[nt2] configuring tool ${tool} failed")
@@ -901,6 +905,8 @@ macro(nt2_module_tool_setup tool)
                DESTINATION ${NT2_INSTALL_SHARE_DIR}/tools/${tool}
                COMPONENT tools
              )
+    endif()
+
     endif()
 
   endif()
