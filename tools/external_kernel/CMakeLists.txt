@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
-find_package(Boost QUIET 1.57.0 COMPONENTS system)
+find_package(Boost 1.57.0 COMPONENTS system)
 
-if(NOT ${BOOST_FOUND})
+if(NOT ${Boost_FOUND})
 message("-- [nt2.tool.external_kernel]  warning : dependencies not met, skipping")
 else()
 
