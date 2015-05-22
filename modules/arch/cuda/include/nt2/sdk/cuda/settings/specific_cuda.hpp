@@ -46,9 +46,6 @@ namespace nt2{ namespace details
           for(std::size_t i =0; i < nstreams ; ++i)
           {
             CUDA_ERROR(cudaMallocHost( (void**)&host_pinned[i] , sizeof_
-                                // , cudaHostAllocWriteCombined
-                                    // , cudaHostAllocMapped
-                                    // , cudaHostAllocPortable
                                 ));
 
             CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
@@ -76,14 +73,7 @@ namespace nt2{ namespace details
       template<class Container>
       void copy_host(Container & c, std::size_t streamid, std::size_t sizeb, int blockid)
       {
-        // std::cout << "size of block : " << size << std::endl;
-        // std::cout << "size to transfer : " << sizeb << std::endl;
         std::memcpy(c.data() + blockid * size, host_pinned[streamid] , sizeb*sizeof(T) );
-
-        // for(std::size_t i = 0 ; i < 10 ; ++i)
-        // {
-        //   std::cout << *(c.data() + blockid * size + i) << std::endl;
-        // }
       }
 
       ~cu_buffers()
@@ -170,26 +160,15 @@ namespace nt2{ namespace details
 
         if(block_stream_dth[blockid] == false )
         {
-          // cudaEvent_t event;
-
           CUDA_ERROR(cudaMemcpyAsync( buffers.get_host(streamid)
                           , buffers.get_device(streamid)
                           , sizeb * sizeof(T)
                           , cudaMemcpyDeviceToHost
                           , stream
                     ));
-          // cudaEventCreate(&event);
-          // CUDA_ERROR(cudaEventRecord(event, stream));
-          //  CUDA_ERROR(cudaStreamWaitEvent(stream, event, 0));
-          // cudaStreamSynchronize(stream);
-
-          // buffers.copy_host(out, streamid, sizeb , blockid);
-           // cudaEventDestroy(event);
-
+                    
           block_stream_dth[blockid] = true;
-
         }
-
       }
 
       inline T* data(std::size_t i)
@@ -205,120 +184,6 @@ namespace nt2{ namespace details
       }
 
     };
-
-
-    // template<typename Arch, typename T>
-    // struct specific_cuda
-    // {
-    //   using btype = boost::dynamic_bitset<>;
-    //   bool allocated ;
-    //   btype block_stream_htd;
-    //   btype block_stream_dth;
-    //   std::vector<T*> cu_pointer;
-    //   std::size_t size;
-
-    //   inline void synchronize() {}
-
-    //   specific_cuda() : allocated(false),block_stream_htd{0},block_stream_dth{0},
-    //                   cu_pointer{0} , size(0)
-    //   {}
-
-    //   inline void reset()
-    //   {
-    //     for(auto & ptr : cu_pointer)
-    //     {
-    //       cudaFree(ptr);
-    //     }
-    //     allocated = false;
-    //       for(std::size_t i = 0; i< block_stream_htd.size() ;++i)
-    //       {
-    //         block_stream_htd[i] = false;
-    //         block_stream_dth[i] = false;
-    //       }
-    //     size = 0;
-    //   }
-
-    //   ~specific_cuda()
-    //   {
-    //     if (allocated == true)
-    //     {
-    //       reset();
-    //     }
-    //   }
-
-    //   inline void allocate(std::size_t blocksize_ , std::size_t nstreams, std::size_t s)
-    //   {
-    //     if (!allocated)
-    //     {
-    //       size = blocksize_ ;
-    //       std::size_t num = s / blocksize_ +1 ;
-    //       block_stream_htd.resize(num);
-    //       block_stream_dth.resize(num);
-
-    //       // for(std::size_t i = 0; i< num ;++i)
-    //       // {
-    //       //   block_stream_htd[i] = false;
-    //       //   block_stream_dth[i] = false;
-    //       // }
-    //       std::vector<T*> dummy(nstreams);
-    //       for(auto & ptr : dummy)
-    //       {
-    //         cudaMalloc((void**)&ptr , size*sizeof(T) );
-    //       }
-    //       allocated = true;
-    //       cu_pointer = std::move(dummy);
-    //     }
-    //   }
-
-    //   template<class Out, class Stream>
-    //   inline void transfer_dth( Out & out , int blockid, Stream stream  ,std::size_t streamid
-    //                           , std::size_t leftover = 0)
-    //   {
-    //     std::size_t sizeb = size;
-    //     if(leftover !=0) sizeb = leftover ;
-
-    //     if(block_stream_dth[blockid] == false )
-    //     {
-    //       CUDA_ERROR(cudaMemcpyAsync( out.data() + blockid * sizeb
-    //                       , cu_pointer[streamid]
-    //                       , sizeb * sizeof(T)
-    //                       , cudaMemcpyDeviceToHost
-    //                       , stream
-    //                                       ));
-    //       block_stream_dth[blockid] = true;
-
-    //     }
-
-    //   }
-
-    //   template<class In, class Stream>
-    //   inline void transfer_htd( In & in, int blockid, Stream stream ,std::size_t streamid
-    //                           , std::size_t leftover = 0)
-    //   {
-    //     std::size_t sizeb = size;
-    //     if(leftover !=0) sizeb = leftover ;
-
-    //     if( block_stream_htd[blockid] == false )
-    //     {
-    //     CUDA_ERROR(cudaMemcpyAsync( cu_pointer[streamid]
-    //                               , in.data() + blockid * sizeb
-    //                               , sizeb* sizeof(T)
-    //                               , cudaMemcpyHostToDevice
-    //                               , stream
-    //               ));
-    //     block_stream_htd[blockid] = true;
-
-    //     }
-    //   }
-
-    //   inline T* data(std::size_t i)
-    //   {
-    //     return cu_pointer[i];
-    //   }
-    // };
-
-
-
 
   }
 }
