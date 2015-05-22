@@ -169,16 +169,16 @@ namespace nt2 { namespace memory
 
     BOOST_FORCEINLINE reference operator[](size_type )
     {
-      throw std::domain_error("unothorized");
-      static value_type x;
+      static value_type x = 0;
+      static_assert( x == 0 , "operator[] not available for cuda buffers");
       return x;
     }
 
     /// @overload
     BOOST_FORCEINLINE const_reference operator[](size_type ) const
     {
-      throw std::domain_error("unothorized");
-      static value_type x;
+      static value_type x = 0 ;
+      static_assert( x == 0 , "operator[] not available for cuda buffers");
       return x;
     }
 
