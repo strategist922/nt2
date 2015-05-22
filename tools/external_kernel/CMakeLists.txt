@@ -7,7 +7,6 @@ message("-- [nt2.tool.external_kernel]  warning : dependencies not met, skipping
 else()
 
 set(NT2_DIR ${CMAKE_SOURCE_DIR}/../../cmake)
-find_package(NT2)
 
 list( APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
