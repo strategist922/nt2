@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_BITWISE_FUNCTIONS_SIMD_SSE_SSE_BITWISE_NOTAND_HPP_INCLUDED
 #define BOOST_SIMD_BITWISE_FUNCTIONS_SIMD_SSE_SSE_BITWISE_NOTAND_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/bitwise/functions/bitwise_notand.hpp>
 #include <boost/simd/sdk/meta/cardinal_of.hpp>

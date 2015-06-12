@@ -9,7 +9,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_OPERATOR_FUNCTIONS_SIMD_SSE_SSE_IS_LESS_HPP_INCLUDED
 #define BOOST_SIMD_OPERATOR_FUNCTIONS_SIMD_SSE_SSE_IS_LESS_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/operator/functions/is_less.hpp>
 #include <boost/simd/swar/functions/details/shuffle.hpp>

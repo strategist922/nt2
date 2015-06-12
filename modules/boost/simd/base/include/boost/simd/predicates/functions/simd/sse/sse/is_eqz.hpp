@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_PREDICATES_FUNCTIONS_SIMD_SSE_SSE_IS_EQZ_HPP_INCLUDED
 #define BOOST_SIMD_PREDICATES_FUNCTIONS_SIMD_SSE_SSE_IS_EQZ_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 #include <boost/simd/predicates/functions/is_eqz.hpp>
 #include <boost/simd/include/functions/simd/is_equal.hpp>
 #include <boost/simd/include/constants/zero.hpp>

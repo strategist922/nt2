@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_SWAR_FUNCTIONS_SIMD_SSE_SSE_LOOKUP_HPP_INCLUDED
 #define BOOST_SIMD_SWAR_FUNCTIONS_SIMD_SSE_SSE_LOOKUP_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 #include <boost/simd/swar/functions/lookup.hpp>
 #include <boost/dispatch/meta/as_floating.hpp>
 #include <boost/simd/sdk/meta/size.hpp>

@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_IEEE_FUNCTIONS_SIMD_SSE_SSE_ILOGB_HPP_INCLUDED
 #define BOOST_SIMD_IEEE_FUNCTIONS_SIMD_SSE_SSE_ILOGB_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/ieee/functions/ilogb.hpp>
 #include <boost/simd/include/functions/simd/tofloat.hpp>
