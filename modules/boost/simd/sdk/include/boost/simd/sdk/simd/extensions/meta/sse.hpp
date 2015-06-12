@@ -31,12 +31,12 @@ namespace boost { namespace simd
 ////////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace simd { namespace meta
 {
+  #if defined(BOOST_SIMD_HAS_SSE_SUPPORT)
+
   //////////////////////////////////////////////////////////////////////////////
   // For a given type and extension, check if it's a SIMD register type
   //////////////////////////////////////////////////////////////////////////////
   template<> struct is_simd_specific<__m128 , tag::sse_> : boost::mpl::true_ {};
-  template<> struct is_simd_specific<__m128d, tag::sse_> : boost::mpl::true_ {};
-  template<> struct is_simd_specific<__m128i, tag::sse_> : boost::mpl::true_ {};
 
   //////////////////////////////////////////////////////////////////////////////
   // For a given type and extension, return the associated SIMD register type
@@ -47,6 +47,21 @@ namespace boost { namespace simd { namespace meta
     typedef __m128 type;
   };
 
+  #endif
+
+  #if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
+
+  // TODO: sse_ -> sse2_
+
+  //////////////////////////////////////////////////////////////////////////////
+  // For a given type and extension, check if it's a SIMD register type
+  //////////////////////////////////////////////////////////////////////////////
+  template<> struct is_simd_specific<__m128d, tag::sse_> : boost::mpl::true_ {};
+  template<> struct is_simd_specific<__m128i, tag::sse_> : boost::mpl::true_ {};
+
+  //////////////////////////////////////////////////////////////////////////////
+  // For a given type and extension, return the associated SIMD register type
+  //////////////////////////////////////////////////////////////////////////////
   template<>
   struct as_simd<double, tag::sse_>
   {
@@ -59,11 +74,14 @@ namespace boost { namespace simd { namespace meta
     typedef __m128i type;
   };
 
+  #endif
+
   template<class T>
   struct as_simd<logical<T>, tag::sse_>
     : as_simd<T, tag::sse_>
   {
   };
+
 } } }
 
 #endif
