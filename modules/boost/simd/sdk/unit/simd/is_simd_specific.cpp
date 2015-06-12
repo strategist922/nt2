@@ -16,10 +16,23 @@ NT2_TEST_CASE(simd_specific)
   using boost::simd::meta::is_simd_specific;
 
   #if defined(BOOST_SIMD_SSE_FAMILY)
+
+  # if defined(BOOST_SIMD_HAS_SSE_SUPPORT)
   NT2_TEST( (is_simd_specific<__m128,boost::simd::tag::sse_>::value) );
-  NT2_TEST( (is_simd_specific<__m128d,boost::simd::tag::sse_>::value) );
-  NT2_TEST( (is_simd_specific<__m128i,boost::simd::tag::sse_>::value) );
-  #endif
+  # endif
+
+  # if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
+  NT2_TEST( (is_simd_specific<__m128d,boost::simd::tag::sse2_>::value) );
+  NT2_TEST( (is_simd_specific<__m128i,boost::simd::tag::sse2_>::value) );
+  # endif
+
+  # if defined(BOOST_SIMD_HAS_AVX_SUPPORT)
+  NT2_TEST( (is_simd_specific<__m256,boost::simd::tag::avx_>::value) );
+  NT2_TEST( (is_simd_specific<__m256i,boost::simd::tag::avx_>::value) );
+  NT2_TEST( (is_simd_specific<__m256d,boost::simd::tag::avx_>::value) );
+  # endif
+
+  #endif // BOOST_SIMD_SSE_FAMILY
 
   #if defined(BOOST_SIMD_VMX_FAMILY)
   NT2_TEST( (is_simd_specific<__vector float,boost::simd::tag::vmx_>::value) );
