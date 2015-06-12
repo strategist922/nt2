@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef BOOST_SIMD_SWAR_FUNCTIONS_SIMD_SSE_SSE2_DETAILS_PATTERNS_HPP_INCLUDED
-#define BOOST_SIMD_SWAR_FUNCTIONS_SIMD_SSE_SSE2_DETAILS_PATTERNS_HPP_INCLUDED
+#ifndef BOOST_SIMD_SWAR_FUNCTIONS_SIMD_SSE_SSE_DETAILS_PATTERNS_HPP_INCLUDED
+#define BOOST_SIMD_SWAR_FUNCTIONS_SIMD_SSE_SSE_DETAILS_PATTERNS_HPP_INCLUDED
 
 #include <boost/simd/swar/functions/details/shuffle.hpp>
 #include <boost/simd/swar/functions/details/default_matcher.hpp>

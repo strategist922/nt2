@@ -6,8 +6,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef BOOST_SIMD_IEEE_FUNCTIONS_SIMD_SSE_SSE2_ILOGB_HPP_INCLUDED
-#define BOOST_SIMD_IEEE_FUNCTIONS_SIMD_SSE_SSE2_ILOGB_HPP_INCLUDED
+#ifndef BOOST_SIMD_IEEE_FUNCTIONS_SIMD_SSE_SSE_ILOGB_HPP_INCLUDED
+#define BOOST_SIMD_IEEE_FUNCTIONS_SIMD_SSE_SSE_ILOGB_HPP_INCLUDED
 #ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
 
 #include <boost/simd/ieee/functions/ilogb.hpp>

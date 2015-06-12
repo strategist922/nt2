@@ -5,8 +5,8 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef BOOST_SIMD_BITWISE_FUNCTIONS_SIMD_SIMD_AVX_SWAPBYTES_HPP_INCLUDED
-#define BOOST_SIMD_BITWISE_FUNCTIONS_SIMD_SIMD_AVX_SWAPBYTES_HPP_INCLUDED
+#ifndef BOOST_SIMD_BITWISE_FUNCTIONS_SIMD_SSE_AVX_SWAPBYTES_HPP_INCLUDED
+#define BOOST_SIMD_BITWISE_FUNCTIONS_SIMD_SSE_AVX_SWAPBYTES_HPP_INCLUDED
 
 #include <boost/simd/bitwise/functions/swapbytes.hpp>
 #include <boost/dispatch/meta/scalar_of.hpp>
