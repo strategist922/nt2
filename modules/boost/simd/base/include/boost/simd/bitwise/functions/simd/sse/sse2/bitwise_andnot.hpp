@@ -44,17 +44,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT         ( bitwise_andnot_, boost::simd::tag::sse2_, (A0)
-                            , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                              ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                            )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_andnot_ps(a1, a0);
-    }
-  };
 } } }
 
 #endif
