@@ -32,20 +32,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( repeat_upper_half_
                                    , boost::simd::tag::sse2_
                                    , (A0)
-                                   , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128 a0) const
-    {
-      return _mm_movehl_ps(a0,a0);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( repeat_upper_half_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)
                                    , ((simd_<ints32_<A0>,boost::simd::tag::sse_>))
                                    )
   {

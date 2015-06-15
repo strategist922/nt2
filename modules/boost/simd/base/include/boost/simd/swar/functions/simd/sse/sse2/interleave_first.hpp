@@ -17,21 +17,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( interleave_first_
                                    , boost::simd::tag::sse2_
                                    , (A0)(A1)
-                                   , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<single_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128 const a0, __m128 const a1) const
-    {
-      return _mm_unpacklo_ps(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_first_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
                                      ((simd_<double_<A1>,boost::simd::tag::sse_>))
                                    )

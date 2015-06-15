@@ -21,23 +21,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT          ( reverse_
                                     , boost::simd::tag::sse2_
                                     , (A0)
-                                    , ((simd_ < single_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return _mm_shuffle_ps(a0,a0, _MM_SHUFFLE(0,1,2,3));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( reverse_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
                                     , ((simd_ < double_<A0>
                                               , boost::simd::tag::sse_
                                               >

@@ -15,23 +15,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  //============================================================================
-  // Implementation when type A0 is double
-  //============================================================================
-  BOOST_DISPATCH_IMPLEMENT          ( group_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename dispatch::meta::downgrade<A0>::type result_type;
 
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_movelh_ps(_mm_cvtpd_ps(a0), _mm_cvtpd_ps(a1));
-    }
-  };
 } } }
 
 #endif

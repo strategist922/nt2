@@ -21,9 +21,9 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( sort_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
-                                    , ((simd_ < type32_<A0>
+                                    , ((simd_ < single_<A0>
                                               , boost::simd::tag::sse_
                                               >
                                       ))
@@ -53,23 +53,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( sort_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < type64_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-      // Better latency
-      A0 p0 = shuffle<1,0>(a0);
-      return shuffle<0,2>(min(a0,p0),max(a0,p0));
-    }
-  };
 } } }
 
 #endif

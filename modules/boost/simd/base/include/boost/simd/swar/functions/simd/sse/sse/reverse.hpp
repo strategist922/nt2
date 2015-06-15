@@ -19,7 +19,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( reverse_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
                                     , ((simd_ < single_<A0>
                                               , boost::simd::tag::sse_
@@ -35,76 +35,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( reverse_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < double_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return _mm_shuffle_pd(a0, a0, _MM_SHUFFLE2(0,1));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( reverse_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < ints32_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return _mm_shuffle_epi32(a0, _MM_SHUFFLE(0,1,2,3));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( reverse_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < ints64_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      typedef typename dispatch::meta::as_floating<A0>::type f_t;
-      return  simd::bitwise_cast<A0>(reverse( simd::bitwise_cast<f_t>(a0)));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( reverse_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < ints16_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      A0  that = _mm_shuffle_epi32  (a0  , _MM_SHUFFLE(0,1,2,3));
-          that = _mm_shufflelo_epi16(that, _MM_SHUFFLE(2,3,0,1));
-
-      return _mm_shufflehi_epi16(that, _MM_SHUFFLE(2,3,0,1));
-    }
-  };
 } } }
 
 #endif

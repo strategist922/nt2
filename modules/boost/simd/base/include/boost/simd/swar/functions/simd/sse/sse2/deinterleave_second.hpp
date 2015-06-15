@@ -18,21 +18,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( deinterleave_second_
                                    , boost::simd::tag::sse2_
                                    , (A0)
-                                   , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A0 const& a1) const
-    {
-      return details::shuffle<1, 3, 1, 3>(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( deinterleave_second_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)
                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
                                      ((simd_<double_<A0>,boost::simd::tag::sse_>))
                                    )
@@ -94,6 +79,7 @@ namespace boost { namespace simd { namespace ext
       return _mm_unpackhi_epi64( a0, a1 );
     }
   };
+
 } } }
 
 #endif

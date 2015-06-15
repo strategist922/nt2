@@ -15,7 +15,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
-                                   , boost::simd::tag::sse2_
+                                   , boost::simd::tag::sse_
                                    , (A0)(A1)
                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                      ((simd_<single_<A1>,boost::simd::tag::sse_>))
@@ -29,81 +29,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<double_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128d const a0, __m128d const a1) const
-    {
-      return _mm_unpackhi_pd(a0,a1);
-    }
-  };
-
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<type8_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type8_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128i const a0, __m128i const a1) const
-    {
-      return _mm_unpackhi_epi8(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<type16_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type16_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128i const a0, __m128i const a1) const
-    {
-      return _mm_unpackhi_epi16(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<type32_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type32_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128i const a0, __m128i const a1) const
-    {
-      return _mm_unpackhi_epi32(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<type64_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type64_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const& a1) const
-    {
-      return _mm_unpackhi_epi64(a0,a1);
-    }
-  };
 } } }
 
 #endif

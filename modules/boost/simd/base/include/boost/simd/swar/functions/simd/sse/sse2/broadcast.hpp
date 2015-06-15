@@ -37,27 +37,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT          ( broadcast_
                                     , boost::simd::tag::sse2_
                                     , (A0)(A1)
-                                    , ((simd_ < single_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                      (mpl_integral_< scalar_< integer_<A1> > >)
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return _mm_shuffle_ps ( a0, a0, _MM_SHUFFLE ( A1::value, A1::value
-                                                  , A1::value, A1::value
-                                                  )
-                            );
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( broadcast_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
                                     , ((simd_ < ints32_<A0>
                                               , boost::simd::tag::sse_
                                               >

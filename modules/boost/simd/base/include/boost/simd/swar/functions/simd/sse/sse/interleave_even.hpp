@@ -16,7 +16,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT         ( interleave_even_
-                                   , boost::simd::tag::sse2_
+                                   , boost::simd::tag::sse_
                                    , (A0)(A1)
                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                      ((simd_<single_<A1>,boost::simd::tag::sse_>))
@@ -32,52 +32,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_even_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<double_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128d const a0, __m128d const a1) const
-    {
-      return _mm_unpacklo_pd(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_even_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<type32_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type32_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128i const a0, __m128i const a1) const
-    {
-      return _mm_unpacklo_epi32 ( details::shuffle<0, 2, 0, 2>(a0,a0)
-                                , details::shuffle<0, 2, 0, 2>(a1,a1)
-                                );
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         ( interleave_even_
-                                   , boost::simd::tag::sse2_
-                                   , (A0)(A1)
-                                   , ((simd_<type64_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type64_<A1>,boost::simd::tag::sse_>))
-                                   )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const& a1) const
-    {
-      return _mm_unpacklo_epi64(a0, a1);
-    }
-  };
 } } }
 
 #endif
