@@ -15,30 +15,6 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT         ( is_ord_, boost::simd::tag::sse2_, (A0)
-                            , ((simd_<arithmetic_<A0>,boost::simd::tag::sse_>))
-                              ((simd_<arithmetic_<A0>,boost::simd::tag::sse_>))
-                            )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-    inline result_type operator()(const A0&, const A0&)const
-    {
-      return boost::simd::True<result_type>();
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT         (is_ord_, boost::simd::tag::sse2_, (A0)
-                            , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                              ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                            )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-    BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmpord_pd(a0,a1);
-    }
-  };
-
   BOOST_DISPATCH_IMPLEMENT         (is_ord_, boost::simd::tag::sse2_, (A0)
                             , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                               ((simd_<single_<A0>,boost::simd::tag::sse_>))
@@ -50,6 +26,7 @@ namespace boost { namespace simd { namespace ext
       return _mm_cmpord_ps(a0,a1);
     }
   };
+
 } } }
 
 #endif
