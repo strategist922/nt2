@@ -15,6 +15,18 @@
 
 namespace boost { namespace simd { namespace details
 {
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
+  template< unsigned int lower_i0, unsigned int lower_i1
+          , unsigned int upper_i0, unsigned int upper_i1>
+  BOOST_FORCEINLINE
+  __m128 shuffle(__m128 const lower, __m128 const upper)
+  {
+    return _mm_shuffle_ps( lower, upper
+                         , _MM_SHUFFLE(upper_i1, upper_i0, lower_i1, lower_i0)
+                         );
+  }
+#endif
+
 #ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
   template< unsigned int lower_i0, unsigned int lower_i1
           , unsigned int upper_i0, unsigned int upper_i1>
@@ -26,16 +38,6 @@ namespace boost { namespace simd { namespace details
                     , _MM_SHUFFLE(upper_i1, upper_i0, lower_i1, lower_i0)
                     )
     );
-  }
-
-  template< unsigned int lower_i0, unsigned int lower_i1
-          , unsigned int upper_i0, unsigned int upper_i1>
-  BOOST_FORCEINLINE
-  __m128 shuffle(__m128 const lower, __m128 const upper)
-  {
-    return _mm_shuffle_ps( lower, upper
-                         , _MM_SHUFFLE(upper_i1, upper_i0, lower_i1, lower_i0)
-                         );
   }
 
   template<unsigned int lower_i0, unsigned int upper_i0>
