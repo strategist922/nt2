@@ -74,22 +74,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  //============================================================================
-  // Implementation when type A0 is float
-  //============================================================================
-  BOOST_DISPATCH_IMPLEMENT          ( nbtrue_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef float result_type;
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      int r = _mm_movemask_ps(genmask(a0));
-      return float((r&1)+((r>>1)&1)+((r>>2)&1)+(r>>3));
-    }
-  };
 } } }
 
 #endif

@@ -74,24 +74,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  //============================================================================
-  // Implementation when type A0 is float
-  //============================================================================
-  BOOST_DISPATCH_IMPLEMENT          ( inbtrue_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef std::size_t                                     result_type;
-    typedef typename meta::make_dependent<int32_t,A0>::type type;
-
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      type r = _mm_movemask_ps(genmask(a0));
-      return  (r&1)+((r>>1)&1)+((r>>2)&1)+(r>>3);
-    }
-  };
 } } }
 
 #endif

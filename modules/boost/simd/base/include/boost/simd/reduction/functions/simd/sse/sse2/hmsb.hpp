@@ -37,23 +37,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT          ( hmsb_
                                     , boost::simd::tag::sse2_
                                     , (A0)
-                                    , ((simd_ < type32_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef std::size_t result_type;
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-      typedef typename dispatch::meta::as_floating<A0>::type type;
-      return _mm_movemask_ps(bitwise_cast<type>(a0));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( hmsb_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
                                     , ((simd_ < type64_<A0>
                                               , boost::simd::tag::sse_
                                               >

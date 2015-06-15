@@ -19,66 +19,10 @@
 namespace boost { namespace simd { namespace ext
 {
   //============================================================================
-  // Implementation when type A0 is arithmetic_
-  //============================================================================
-  BOOST_DISPATCH_IMPLEMENT          ( nbtrue_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<arithmetic_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::scalar_of<A0>::type                     result_type;
-    typedef typename meta::make_dependent<boost::simd::int8_t,A0>::type   base;
-    typedef simd::native<base,boost::simd::tag::sse_>                   i8type;
-
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      i8type tmp = bitwise_cast<i8type>(genmask(a0));
-      return  result_type(boost::simd::popcnt(_mm_movemask_epi8(tmp))
-                          * boost::simd::meta::cardinal_of<A0>::value >> 4);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( nbtrue_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<logical_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::scalar_of<A0>::type                     result_type;
-    typedef typename meta::make_dependent<boost::simd::int8_t,A0>::type   base;
-    typedef simd::native<base,boost::simd::tag::sse_>                   i8type;
-
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      i8type tmp = bitwise_cast<i8type>(genmask(a0));
-      return  result_type(boost::simd::popcnt(_mm_movemask_epi8(tmp))
-                          * boost::simd::meta::cardinal_of<A0>::value >> 4);
-    }
-  };
-
-  //============================================================================
-  // Implementation when type A0 is double
-  //============================================================================
-  BOOST_DISPATCH_IMPLEMENT          ( nbtrue_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef double result_type;
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      int r = _mm_movemask_pd(genmask(a0));
-      return double((r&1)+(r>>1));
-    }
-  };
-
-  //============================================================================
   // Implementation when type A0 is float
   //============================================================================
   BOOST_DISPATCH_IMPLEMENT          ( nbtrue_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
                                     , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                     )
@@ -90,6 +34,7 @@ namespace boost { namespace simd { namespace ext
       return float((r&1)+((r>>1)&1)+((r>>2)&1)+(r>>3));
     }
   };
+
 } } }
 
 #endif
