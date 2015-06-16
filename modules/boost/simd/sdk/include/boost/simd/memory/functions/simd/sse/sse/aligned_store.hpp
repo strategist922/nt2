@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_ALIGNED_STORE_HPP_INCLUDED
 #define BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_ALIGNED_STORE_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/memory/functions/aligned_store.hpp>
 #include <boost/simd/memory/functions/details/check_ptr.hpp>

@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_MEMORY_FUNCTIONS_SCALAR_SSE_STREAM_HPP_INCLUDED
 #define BOOST_SIMD_MEMORY_FUNCTIONS_SCALAR_SSE_STREAM_HPP_INCLUDED
-#if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
+#if defined(BOOST_SIMD_HAS_SSE_SUPPORT)
 
 #include <boost/simd/memory/functions/stream.hpp>
 #include <boost/simd/sdk/functor/preprocessor/dispatch.hpp>

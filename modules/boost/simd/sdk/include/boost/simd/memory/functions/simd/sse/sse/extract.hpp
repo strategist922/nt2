@@ -9,7 +9,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_EXTRACT_HPP_INCLUDED
 #define BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_EXTRACT_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/memory/functions/extract.hpp>
 #include <boost/simd/sdk/meta/scalar_of.hpp>

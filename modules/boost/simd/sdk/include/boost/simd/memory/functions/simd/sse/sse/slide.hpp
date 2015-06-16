@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_SLIDE_HPP_INCLUDED
 #define BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_SLIDE_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/memory/functions/slide.hpp>
 #include <boost/simd/include/functions/bitwise_cast.hpp>

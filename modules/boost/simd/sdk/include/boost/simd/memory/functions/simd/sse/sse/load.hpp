@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_LOAD_HPP_INCLUDED
 #define BOOST_SIMD_MEMORY_FUNCTIONS_SIMD_SSE_SSE_LOAD_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/memory/functions/load.hpp>
 #include <boost/simd/meta/is_pointing_to.hpp>
