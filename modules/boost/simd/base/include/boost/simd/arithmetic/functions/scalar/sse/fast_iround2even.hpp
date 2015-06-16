@@ -9,7 +9,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_ARITHMETIC_FUNCTIONS_SCALAR_SSE_FAST_IROUND2EVEN_HPP_INCLUDED
 #define BOOST_SIMD_ARITHMETIC_FUNCTIONS_SCALAR_SSE_FAST_IROUND2EVEN_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/arithmetic/functions/fast_iround2even.hpp>
 #include <boost/dispatch/meta/as_integer.hpp>
@@ -17,7 +17,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( fast_iround2even_, boost::simd::tag::sse2_
+  BOOST_DISPATCH_IMPLEMENT          ( fast_iround2even_, boost::simd::tag::sse_
                                     , (A0)
                                     , (scalar_<single_<A0> >)
                                     )

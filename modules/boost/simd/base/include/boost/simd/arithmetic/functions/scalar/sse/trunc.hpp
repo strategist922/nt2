@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_ARITHMETIC_FUNCTIONS_SCALAR_SSE_TRUNC_HPP_INCLUDED
 #define BOOST_SIMD_ARITHMETIC_FUNCTIONS_SCALAR_SSE_TRUNC_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/arithmetic/functions/trunc.hpp>
 #include <boost/simd/include/functions/scalar/abs.hpp>

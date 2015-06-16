@@ -8,7 +8,7 @@
 //==============================================================================
 #ifndef BOOST_SIMD_ARITHMETIC_FUNCTIONS_SCALAR_SSE_RAW_REC_HPP_INCLUDED
 #define BOOST_SIMD_ARITHMETIC_FUNCTIONS_SCALAR_SSE_RAW_REC_HPP_INCLUDED
-#if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
+#if defined(BOOST_SIMD_HAS_SSE_SUPPORT)
 
 #include <boost/simd/arithmetic/functions/raw_rec.hpp>
 #include <boost/simd/sdk/config.hpp>
