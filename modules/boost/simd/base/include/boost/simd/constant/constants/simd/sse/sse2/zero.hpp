@@ -17,18 +17,6 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( Zero, boost::simd::tag::sse2_, (A0)
-                                    , ((target_< simd_< single_<A0>, boost::simd::tag::sse_> >))
-                                    )
-  {
-    typedef typename A0::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const&) const
-    {
-      return _mm_setzero_ps();
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( Zero, boost::simd::tag::sse2_, (A0)
                                     , ((target_< simd_< double_<A0>, boost::simd::tag::sse_> >))
                                     )
   {
