@@ -19,24 +19,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( fast_toint_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_< double_<A0>
-                                             , boost::simd::tag::sse_
-                                             >
-                                       ))
-                                    )
-  {
-    typedef typename dispatch::meta::as_integer<A0>::type result_type;
-    typedef typename dispatch::meta::downgrade<result_type>::type int_type;
 
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      const int_type out = _mm_cvttpd_epi32(a0);
-      return boost::simd::split_low(out);
-    }
-  };
 } } }
 
 #endif

@@ -57,18 +57,6 @@ namespace boost { namespace simd { namespace ext
 
   BOOST_DISPATCH_IMPLEMENT          ( sqrt_, boost::simd::tag::sse2_
                                     , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return _mm_sqrt_ps(a0);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( sqrt_, boost::simd::tag::sse2_
-                                    , (A0)
                                     , ((simd_<int_<A0>,boost::simd::tag::sse_>))
                                     )
   {

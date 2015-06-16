@@ -23,24 +23,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( max_, boost::simd::tag::sse2_, (A0)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-#if !defined(BOOST_SIMD_NO_NANS) && defined(BOOST_SIMD_COMPILER_GCC)
-      // workaround for GCC bug #57057
-      return if_else(is_unord(a0, a1), a1, A0(_mm_max_pd(a0, a1)));
-#else
-      return _mm_max_pd(a0,a1);
-#endif
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( max_, boost::simd::tag::sse2_, (A0)
+  BOOST_DISPATCH_IMPLEMENT          ( max_, boost::simd::tag::sse_, (A0)
                                     , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                       ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                     )
@@ -57,29 +40,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( max_, boost::simd::tag::sse2_, (A0)
-                                    , ((simd_<int16_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<int16_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_max_epi16(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( max_, boost::simd::tag::sse2_, (A0)
-                                    , ((simd_<uint8_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<uint8_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_max_epu8(a0,a1);
-    }
-  };
 } } }
 
 #endif

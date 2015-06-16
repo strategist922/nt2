@@ -31,60 +31,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( muls_, boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<uint32_<A0>, boost::simd::tag::sse_>))
-                                      ((simd_<uint32_<A0>, boost::simd::tag::sse_>))
-                                    )
-  {
 
-    typedef A0 result_type;
-    BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      typedef typename meta::scalar_of<A0>::type stype;
-      typedef typename dispatch::meta::upgrade<A0>::type utype;
-
-      utype res0, res1;
-      split_multiplies(a0, a1, res0, res1);
-
-      return group(res0, res1)
-           | genmask( group( shrai(res0, sizeof(stype)*CHAR_BIT)
-                           , shrai(res1, sizeof(stype)*CHAR_BIT)
-                           )
-                    );
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( muls_, boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<int32_<A0>, boost::simd::tag::sse_>))
-                                      ((simd_<int32_<A0>, boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      typedef typename meta::scalar_of<A0>::type stype;
-      typedef typename dispatch::meta::as_unsigned<A0>::type untype;
-      typedef typename dispatch::meta::upgrade<A0>::type utype;
-
-      utype res0, res1;
-      split_multiplies(a0, a1, res0, res1);
-
-      untype res2 = shrai(bitwise_cast<untype>(a0 ^ a1), sizeof(stype)*CHAR_BIT-1)
-                  + static_cast<typename meta::scalar_of<untype>::type>(Valmax<stype>());
-
-      A0 hi = group( shrai(res0, sizeof(stype)*CHAR_BIT)
-                   , shrai(res1, sizeof(stype)*CHAR_BIT)
-                   );
-      A0 lo = group(res0, res1);
-
-      return if_else( hi != shrai(lo, sizeof(stype)*CHAR_BIT-1)
-                    , bitwise_cast<A0>(res2)
-                    , lo
-                    );
-    }
-  };
 } } }
 
 #endif

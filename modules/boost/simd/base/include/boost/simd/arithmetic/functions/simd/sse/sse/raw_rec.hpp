@@ -16,7 +16,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( raw_rec_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
                                     , ((simd_< single_<A0>
                                             , boost::simd::tag::sse_

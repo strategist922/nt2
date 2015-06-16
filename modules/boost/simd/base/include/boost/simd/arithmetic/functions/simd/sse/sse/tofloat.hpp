@@ -23,70 +23,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( tofloat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<int32_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename dispatch::meta::as_floating<A0>::type result_type;
 
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return _mm_cvtepi32_ps(a0);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( tofloat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<uint64_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename dispatch::meta::as_floating<A0>::type  result_type;
-    typedef typename meta::scalar_of<result_type>::type     stype;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return boost::simd::make<result_type> ( static_cast<stype>(a0[0])
-                                            , static_cast<stype>(a0[1])
-                                            );
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( tofloat_
-                                    , boost::simd::tag::sse2_ , (A0)
-                                    , ((simd_<uint32_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename dispatch::meta::as_floating<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      typedef typename dispatch::meta::as_integer<A0, signed>::type  si_type;
-      si_type a00 = bitwise_cast<si_type>(a0);
-      si_type a01 = bitwise_notand(Signmask<si_type>(), a0);
-      result_type inc = if_else_zero(is_ltz(a00), Twoto31<result_type>());
-      return tofloat(a01)+inc;
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( tofloat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<int64_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename dispatch::meta::as_floating<A0>::type        result_type;
-    typedef typename meta::scalar_of<result_type>::type           sftype;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return boost::simd::make<result_type> ( static_cast<sftype>(a0[0])
-                                            , static_cast<sftype>(a0[1])
-                                            );
-    }
-  };
 } } }
 
 #endif

@@ -16,16 +16,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( toint_, boost::simd::tag::sse2_ , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename dispatch::meta::as_integer<A0>::type result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return _mm_cvttps_epi32(a0);
-    }
-  };
+
 } } }
 
 #endif

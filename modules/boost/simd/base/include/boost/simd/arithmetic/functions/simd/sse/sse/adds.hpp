@@ -16,57 +16,6 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( adds_, boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<uint8_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<uint8_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_adds_epu8(a0, a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( adds_, boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<int8_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<int8_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_adds_epi8(a0, a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( adds_, boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<uint16_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<uint16_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_adds_epu16(a0, a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( adds_, boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<int16_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<int16_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_adds_epi16(a0, a1);
-    }
-  };
 
 } } }
 

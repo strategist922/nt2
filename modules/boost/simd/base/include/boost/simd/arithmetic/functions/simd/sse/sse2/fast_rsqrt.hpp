@@ -19,25 +19,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( fast_rsqrt_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < single_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef A0 result_type;
 
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-      result_type nr  = _mm_rsqrt_ps( a0 );
-                  nr *= 0.5f * (3.f - a0 * sqr(nr));
-
-      return nr;
-    }
-  };
 } } }
 
 #endif
