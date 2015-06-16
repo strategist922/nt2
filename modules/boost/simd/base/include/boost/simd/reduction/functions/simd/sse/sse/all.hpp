@@ -16,18 +16,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT         (all_, boost::simd::tag::sse2_,
-                              (A0),
-                              ((simd_<type16_<A0>,boost::simd::tag::sse_>))
-                            )
-  {
-    typedef typename meta::scalar_of<A0>::type sA0;
-    typedef typename meta::as_logical<sA0>::type result_type;
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      return result_type(_mm_movemask_epi8(genmask(a0)) == 0xFFFF);
-    }
-  };
+
 } } }
 
 #endif
