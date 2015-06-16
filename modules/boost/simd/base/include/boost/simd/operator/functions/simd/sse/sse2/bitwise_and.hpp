@@ -43,19 +43,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( bitwise_and_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A0 const& a1) const
-    {
-      return _mm_and_ps(a0,a1);
-    }
-  };
 } } }
 
 #endif

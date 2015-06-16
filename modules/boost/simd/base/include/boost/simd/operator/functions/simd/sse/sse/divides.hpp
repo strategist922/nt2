@@ -21,28 +21,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( divides_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      A0 const that = _mm_div_pd(a0,a1);
-#if defined(BOOST_SIMD_COMPILER_GCC) && BOOST_SIMD_GCC_VERSION < 40603
-      // workaround for GCC bug #50396 fixed in 4.6.3
-      return if_nan_else(logical_and(is_eqz(a0), is_eqz(a1)), that);
-#else
-      return that;
-#endif
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( divides_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
                                     , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                       ((simd_<single_<A0>,boost::simd::tag::sse_>))
@@ -61,6 +40,7 @@ namespace boost { namespace simd { namespace ext
 #endif
     }
   };
+
 } } }
 
 #endif

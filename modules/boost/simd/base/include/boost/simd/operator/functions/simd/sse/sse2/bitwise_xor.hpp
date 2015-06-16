@@ -45,20 +45,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( bitwise_xor_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<single_<A1>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(2)
-    {
-      return _mm_xor_ps(a0,a1);
-    }
-  };
 } } }
 
 #endif

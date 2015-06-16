@@ -31,20 +31,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( is_not_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmpneq_ps(a0,a1);
-    }
-  };
 } } }
 
 #endif

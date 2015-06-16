@@ -16,22 +16,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( plus_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_add_pd(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( plus_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
                                     , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                       ((simd_<single_<A0>,boost::simd::tag::sse_>))
@@ -45,65 +30,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( plus_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints8_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints8_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_add_epi8(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( plus_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints16_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints16_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_add_epi16(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( plus_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints32_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints32_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_add_epi32(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( plus_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints64_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints64_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_add_epi64(a0,a1);
-    }
-  };
 } } }
 
 #endif

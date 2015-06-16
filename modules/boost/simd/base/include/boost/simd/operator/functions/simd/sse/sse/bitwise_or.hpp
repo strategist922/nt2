@@ -16,37 +16,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( bitwise_or_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , ((simd_<integer_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<integer_<A1>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(2)
-    {
-      return _mm_or_si128(a0, a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( bitwise_or_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<double_<A1>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef A0 result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(2)
-    {
-      return _mm_or_pd(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( bitwise_or_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)(A1)
                                     , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                       ((simd_<single_<A1>,boost::simd::tag::sse_>))
@@ -59,6 +29,7 @@ namespace boost { namespace simd { namespace ext
       return _mm_or_ps(a0,a1);
     }
   };
+
 } } }
 
 #endif

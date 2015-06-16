@@ -23,22 +23,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( is_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<double_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmpeq_pd(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( is_equal_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)
                                     , ((simd_<single_<A0>,boost::simd::tag::sse_>))
                                       ((simd_<single_<A0>,boost::simd::tag::sse_>))
@@ -52,69 +37,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( is_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints8_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints8_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmpeq_epi8(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( is_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints16_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints16_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmpeq_epi16(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( is_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints32_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints32_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmpeq_epi32(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( is_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<ints64_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<ints64_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      typedef typename dispatch::meta::downgrade<A0, unsigned>::type  type;
-      type tmp      = bitwise_cast<type>(a0 - a1);
-      tmp           = bitwise_cast<type>(boost::simd::eq(tmp,Zero<type>()));
-      type shuffled = details::shuffle<1,0,3,2>(tmp);
-      return bitwise_cast<result_type>(tmp & shuffled);
-    }
-  };
 } } }
 
 #endif

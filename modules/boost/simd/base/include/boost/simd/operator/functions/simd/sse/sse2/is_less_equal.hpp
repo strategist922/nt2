@@ -36,21 +36,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT          ( is_less_equal_
                                     , boost::simd::tag::sse2_
                                     , (A0)
-                                    , ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                      ((simd_<single_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(2)
-    {
-      return _mm_cmple_ps(a0,a1);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( is_less_equal_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
                                     , ((simd_<integer_<A0>,boost::simd::tag::sse_>))
                                       ((simd_<integer_<A0>,boost::simd::tag::sse_>))
                                     )
@@ -62,6 +47,7 @@ namespace boost { namespace simd { namespace ext
       return boost::simd::logical_not(boost::simd::gt(a0,a1));
     }
   };
+
 } } }
 
 #endif
