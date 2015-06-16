@@ -19,29 +19,9 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  /// INTERNAL ONLY - SSE double SIMD store without offset
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_store_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , ((simd_ < double_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                      (iterator_< scalar_< double_<A1> > >)
-                                    )
-  {
-    typedef void result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128d a0, A1 a1) const
-    {
-      BOOST_SIMD_DETAILS_CHECK_PTR(a1, sizeof(__m128d));
-      _mm_store_pd(a1,a0);
-    }
-  };
-
   /// INTERNAL ONLY - SSE single SIMD store without offset
   BOOST_DISPATCH_IMPLEMENT          ( aligned_store_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)(A1)
                                     , ((simd_ < single_<A0>
                                               , boost::simd::tag::sse_
@@ -59,31 +39,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  /// INTERNAL ONLY - SSE integral SIMD store without offset
-  BOOST_DISPATCH_IMPLEMENT_IF         ( aligned_store_
-                                      , boost::simd::tag::sse2_
-                                      , (A0)(A1)
-                                      , ( simd::meta::is_pointing_to
-                                          < A1
-                                          , typename  dispatch::meta
-                                                    ::scalar_of<A0>::type
-                                          >
-                                        )
-                                      , ((simd_ < integer_<A0>
-                                                , boost::simd::tag::sse_
-                                                >
-                                        ))
-                                        (iterator_< scalar_< integer_<A1> > >)
-                                      )
-  {
-    typedef void result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128i a0, A1 a1) const
-    {
-      BOOST_SIMD_DETAILS_CHECK_PTR(a1, sizeof(__m128i));
-      _mm_store_si128(reinterpret_cast<__m128i*>(a1), a0);
-    }
-  };
 } } }
 
 #endif

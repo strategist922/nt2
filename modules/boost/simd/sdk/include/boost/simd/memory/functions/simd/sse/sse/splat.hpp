@@ -17,26 +17,7 @@
 namespace boost { namespace simd { namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , (scalar_< fundamental_<A0> >)
-                                      ((target_ < simd_ < double_<A1>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                      )
-  {
-    typedef typename A1::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return _mm_set1_pd(double(a0));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)(A1)
                                     , (scalar_< fundamental_<A0> >)
                                       ((target_ < simd_ < single_<A1>
@@ -54,86 +35,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , (scalar_< fundamental_<A0> >)
-                                      ((target_ < simd_ < ints8_<A1>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A1::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return _mm_set1_epi8(a0);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , (scalar_< fundamental_<A0> >)
-                                      ((target_ < simd_ < ints16_<A1>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A1::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return _mm_set1_epi16(a0);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , (scalar_< fundamental_<A0> >)
-                                      ((target_ < simd_ < ints32_<A1>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A1::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return _mm_set1_epi32(a0);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , (scalar_< fundamental_<A0> >)
-                                      ((target_ < simd_ < ints64_<A1>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A1::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-#ifdef BOOST_SIMD_ARCH_X86_64
-      result_type that = _mm_set1_epi64x(a0);
-#else
-      result_type that = make<result_type>(a0, a0);
-#endif
-      return that;
-    }
-  };
 } } }
 
 #endif

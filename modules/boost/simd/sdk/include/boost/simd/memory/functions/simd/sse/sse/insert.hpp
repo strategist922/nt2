@@ -15,20 +15,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( insert_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)(A2)
-                                    , (scalar_< integer_<A0> >)
-                                      ((simd_< ints16_<A1>, boost::simd::tag::sse_ >))
-                                      (mpl_integral_< scalar_< integer_<A2> > >)
-                                    )
-  {
-    typedef void result_type;
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1& a1, A2) const
-    {
-      a1 = _mm_insert_epi16(a1, a0, A2::value);
-    }
-  };
+
 } } }
 
 #endif

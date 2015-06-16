@@ -39,25 +39,6 @@ namespace boost { namespace simd { namespace ext
                                     , boost::simd::tag::sse2_
                                     , (A0)(A1)
                                     , (scalar_< fundamental_<A0> >)
-                                      ((target_ < simd_ < single_<A1>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A1::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const&) const
-    {
-      return _mm_set1_ps(float(a0));
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( splat_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , (scalar_< fundamental_<A0> >)
                                       ((target_ < simd_ < ints8_<A1>
                                                         , boost::simd::tag::sse_
                                                         >

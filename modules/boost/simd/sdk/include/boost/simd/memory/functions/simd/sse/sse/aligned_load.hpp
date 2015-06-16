@@ -27,30 +27,9 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  /// INTERNAL ONLY - Load register of SIMD double without offset
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_load_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A2)
-                                    , (iterator_< scalar_< double_<A0> > >)
-                                      ((target_ < simd_ < double_<A2>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A2::type result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 a0, const A2&) const
-    {
-      BOOST_SIMD_DETAILS_CHECK_PTR(a0, sizeof(result_type));
-      return _mm_load_pd(a0);
-    }
-  };
-
   /// INTERNAL ONLY - Load register of SIMD float
   BOOST_DISPATCH_IMPLEMENT          ( aligned_load_
-                                    , boost::simd::tag::sse2_
+                                    , boost::simd::tag::sse_
                                     , (A0)(A2)
                                     , (iterator_< scalar_< single_<A0> > >)
                                       ((target_ < simd_ < single_<A2>
@@ -70,85 +49,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  /// INTERNAL ONLY - Load register of SIMD integers without offset
-  BOOST_DISPATCH_IMPLEMENT_IF         ( aligned_load_
-                                      , boost::simd::tag::sse2_
-                                      , (A0)(A2)
-                                      , ( simd::meta::is_pointing_to
-                                          < A0
-                                          , typename A2::type::value_type
-                                          >
-                                        )
-                                      , (iterator_< scalar_< integer_<A0> > >)
-                                        ((target_ < simd_
-                                                    < integer_<A2>
-                                                    , boost::simd::tag::sse_
-                                                    >
-                                                >
-                                        ))
-                                      )
-  {
-    typedef typename A2::type result_type;
-
-    BOOST_FORCEINLINE
-    result_type operator()(A0 a0, const A2&) const
-    {
-      BOOST_SIMD_DETAILS_CHECK_PTR(a0, sizeof(result_type));
-      return _mm_load_si128(reinterpret_cast<__m128i const*>(a0));
-    }
-  };
-
-  /// INTERNAL ONLY - Load with Misalignment without offset
-  BOOST_DISPATCH_IMPLEMENT_IF         ( aligned_load_
-                                      , boost::simd::tag::sse2_
-                                      , (A0)(A2)(A3)
-                                      , ( boost::is_same
-                                          < typename boost::pointee<A0>::type
-                                          , typename A2::type::value_type
-                                          >
-                                        )
-                                      , (iterator_< scalar_< arithmetic_<A0> > >)
-                                        ((target_ < simd_
-                                                    < arithmetic_<A2>
-                                                    , boost::simd::tag::sse_
-                                                    >
-                                                  >
-                                        ))
-                                        (mpl_integral_< scalar_< integer_<A3> > >)
-                                      )
-  {
-    typedef typename A2::type result_type;
-
-    typedef typename A3::value_type align_t;
-    static const std::size_t cardinal = meta::cardinal_of<result_type>::value;
-    static const align_t unalignment  = A3::value % cardinal;
-
-    BOOST_FORCEINLINE result_type
-    operator()(A0 a0, A2 const&, A3 const& a3) const
-    {
-      BOOST_SIMD_DETAILS_CHECK_PTR(a0-A3::value, sizeof(result_type));
-      return eval( a0, a3, boost::mpl::bool_<!unalignment>() );
-    }
-
-    // Periodic case - Just load as normal
-    BOOST_FORCEINLINE result_type
-    eval( A0 a0, A3 const&, boost::mpl::true_ const&) const
-    {
-      return boost::simd::aligned_load<result_type>(a0);
-    }
-
-    // Non-periodic case
-    BOOST_FORCEINLINE result_type
-    eval(A0 a0, A3 const&, boost::mpl::false_ const&) const
-    {
-      // Load aligned sources
-      result_type a  = aligned_load<result_type>(a0-unalignment);
-      result_type b  = aligned_load<result_type>( a0-unalignment
-                                                , std::size_t(cardinal)
-                                                );
-      return slide<unalignment>(a,b);
-    }
-  };
 } } }
 
 #ifdef BOOST_MSVC

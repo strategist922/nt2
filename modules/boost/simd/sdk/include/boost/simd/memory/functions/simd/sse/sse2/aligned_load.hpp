@@ -48,28 +48,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  /// INTERNAL ONLY - Load register of SIMD float
-  BOOST_DISPATCH_IMPLEMENT          ( aligned_load_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A2)
-                                    , (iterator_< scalar_< single_<A0> > >)
-                                      ((target_ < simd_ < single_<A2>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    typedef typename A2::type result_type;
-
-    BOOST_FORCEINLINE
-    result_type operator()(A0 a0, const A2&) const
-    {
-      BOOST_SIMD_DETAILS_CHECK_PTR(a0, sizeof(result_type));
-      return _mm_load_ps(a0);
-    }
-  };
-
   /// INTERNAL ONLY - Load register of SIMD integers without offset
   BOOST_DISPATCH_IMPLEMENT_IF         ( aligned_load_
                                       , boost::simd::tag::sse2_

@@ -38,25 +38,6 @@ namespace boost { namespace simd { namespace ext
     }
   };
 
-  /// INTERNAL ONLY - single SIMD store without offset
-  BOOST_DISPATCH_IMPLEMENT          ( store_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)(A1)
-                                    , ((simd_ < single_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                      (iterator_< scalar_< single_<A1> > >)
-                                    )
-  {
-    typedef void result_type;
-
-    BOOST_FORCEINLINE result_type operator()(__m128 a0, A1 a1) const
-    {
-      _mm_storeu_ps(a1,a0);
-    }
-  };
-
   /// INTERNAL ONLY - integers SIMD store without offset
   BOOST_DISPATCH_IMPLEMENT_IF         ( store_
                                       , boost::simd::tag::sse2_

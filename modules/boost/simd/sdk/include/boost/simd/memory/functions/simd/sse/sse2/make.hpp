@@ -56,19 +56,6 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT          ( make_
                                     , boost::simd::tag::sse2_
                                     , (A0)
-                                    , ((target_ < simd_ < single_<A0>
-                                                        , boost::simd::tag::sse_
-                                                        >
-                                                >
-                                      ))
-                                    )
-  {
-    BOOST_SIMD_MAKE_BODY(4) { return _mm_setr_ps(a0, a1, a2, a3); }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( make_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
                                     , ((target_ < simd_ < ints32_<A0>
                                                         , boost::simd::tag::sse_
                                                         >
