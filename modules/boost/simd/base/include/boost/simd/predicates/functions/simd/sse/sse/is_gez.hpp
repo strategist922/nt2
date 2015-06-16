@@ -16,20 +16,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT         ( is_gez_, boost::simd::tag::sse2_,(A0)
-                            , ((simd_<int64_<A0>,boost::simd::tag::sse_>))
-                            )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      typedef typename dispatch::meta::as_integer<A0, signed>::type itype;
-      typedef typename dispatch::meta::downgrade<itype>::type type;
-      const type tmp1 = bitwise_cast<type>(is_gez(bitwise_cast<type>(a0)));
-      const type tmp = details::shuffle<1,1,3,3>(tmp1);
-      return bitwise_cast<result_type>(tmp);
-    }
-  };
+
 } } }
 
 #endif

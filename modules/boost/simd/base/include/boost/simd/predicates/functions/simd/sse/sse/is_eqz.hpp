@@ -19,26 +19,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( is_eqz_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_ < int64_<A0>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type result_type;
 
-    BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      typedef typename dispatch::meta::downgrade<A0>::type          base;
-
-      const base tmp1 = boost::simd::bitwise_cast<base>(is_eqz(boost::simd::bitwise_cast<base>(a0)));
-      const base tmp2 = details::shuffle<1,0,3,2>(tmp1);
-      return boost::simd::bitwise_cast<result_type>(b_and(tmp1, tmp2));
-    }
-  };
 } } }
 
 #endif

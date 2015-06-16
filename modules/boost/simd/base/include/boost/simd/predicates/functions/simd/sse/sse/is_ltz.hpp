@@ -17,25 +17,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( is_ltz_
-                                    , boost::simd::tag::sse2_
-                                    , (A0)
-                                    , ((simd_<int64_<A0>,boost::simd::tag::sse_>))
-                                    )
-  {
-    typedef typename meta::as_logical<A0>::type                     result_type;
 
-    BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
-    {
-      typedef typename boost::dispatch::meta::downgrade<A0>::type  i32type;
-
-      i32type that = _mm_shuffle_epi32( is_ltz(bitwise_cast<i32type>(a0))
-                                      , _MM_SHUFFLE(3,3,1,1)
-                                      );
-
-      return  bitwise_cast<result_type>(that);
-    }
-  };
 } } }
 
 #endif
