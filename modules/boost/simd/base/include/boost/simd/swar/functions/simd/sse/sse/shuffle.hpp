@@ -19,58 +19,7 @@
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( shuffle_
-                                    , boost::simd::tag::sse2_
-                                    , (T)(P)
-                                    , ((simd_ < arithmetic_<T>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                      (target_< unspecified_<P> >)
-                                    )
-  {
-    typedef T  result_type;
 
-    BOOST_FORCEINLINE result_type operator()(T const& a0,P const&) const
-    {
-      typename P::type p;
-
-      return details::shuffler< sse2_matcher
-                              , sse2_permutation<meta::cardinal_of<T>::value>
-                              , meta::cardinal_of<T>::value
-                              , 8
-                              >::process(a0,p);
-    }
-  };
-
-  BOOST_DISPATCH_IMPLEMENT          ( shuffle_
-                                    , boost::simd::tag::sse2_
-                                    , (T)(P)
-                                    , ((simd_ < arithmetic_<T>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                      ((simd_ < arithmetic_<T>
-                                              , boost::simd::tag::sse_
-                                              >
-                                      ))
-                                      (target_< unspecified_<P> >)
-                                    )
-  {
-    typedef T  result_type;
-
-    BOOST_FORCEINLINE
-    result_type operator()(T const& a0,T const& a1, P const&) const
-    {
-      typename P::type p;
-
-      return details::shuffler< sse2_matcher
-                              , sse2_permutation<meta::cardinal_of<T>::value>
-                              , meta::cardinal_of<T>::value
-                              , 8
-                              >::process(a0,a1,p);
-    }
-  };
 } } }
 
 #endif
