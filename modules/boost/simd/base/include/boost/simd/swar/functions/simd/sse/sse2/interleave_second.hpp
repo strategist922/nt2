@@ -33,8 +33,8 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
                                    , boost::simd::tag::sse2_
                                    , (A0)(A1)
-                                   , ((simd_<type8_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type8_<A1>,boost::simd::tag::sse_>))
+                                   , ((simd_<ints8_<A0>,boost::simd::tag::sse_>))
+                                     ((simd_<ints8_<A1>,boost::simd::tag::sse_>))
                                    )
   {
     typedef A0 result_type;
@@ -48,8 +48,8 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
                                    , boost::simd::tag::sse2_
                                    , (A0)(A1)
-                                   , ((simd_<type16_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type16_<A1>,boost::simd::tag::sse_>))
+                                   , ((simd_<ints16_<A0>,boost::simd::tag::sse_>))
+                                     ((simd_<ints16_<A1>,boost::simd::tag::sse_>))
                                    )
   {
     typedef A0 result_type;
@@ -63,8 +63,8 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
                                    , boost::simd::tag::sse2_
                                    , (A0)(A1)
-                                   , ((simd_<type32_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type32_<A1>,boost::simd::tag::sse_>))
+                                   , ((simd_<ints32_<A0>,boost::simd::tag::sse_>))
+                                     ((simd_<ints32_<A1>,boost::simd::tag::sse_>))
                                    )
   {
     typedef A0 result_type;
@@ -78,8 +78,8 @@ namespace boost { namespace simd { namespace ext
   BOOST_DISPATCH_IMPLEMENT         ( interleave_second_
                                    , boost::simd::tag::sse2_
                                    , (A0)(A1)
-                                   , ((simd_<type64_<A0>,boost::simd::tag::sse_>))
-                                     ((simd_<type64_<A1>,boost::simd::tag::sse_>))
+                                   , ((simd_<ints64_<A0>,boost::simd::tag::sse_>))
+                                     ((simd_<ints64_<A1>,boost::simd::tag::sse_>))
                                    )
   {
     typedef A0 result_type;
