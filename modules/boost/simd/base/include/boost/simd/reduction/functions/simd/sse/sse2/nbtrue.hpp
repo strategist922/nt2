@@ -19,12 +19,12 @@
 namespace boost { namespace simd { namespace ext
 {
   //============================================================================
-  // Implementation when type A0 is arithmetic_
+  // Implementation when type A0 is int_
   //============================================================================
   BOOST_DISPATCH_IMPLEMENT          ( nbtrue_
                                     , boost::simd::tag::sse2_
                                     , (A0)
-                                    , ((simd_<arithmetic_<A0>,boost::simd::tag::sse_>))
+                                    , ((simd_<int_<A0>,boost::simd::tag::sse_>))
                                     )
   {
     typedef typename meta::scalar_of<A0>::type                     result_type;
