@@ -52,7 +52,7 @@
 #define BOOST_SIMD_SIMD_GROUPABLE_TYPES
 #define BOOST_SIMD_SIMD_SPLITABLE_TYPES
 
-#include <emmintrin.h>
+#include <xmmintrin.h>
 
 #include <boost/simd/sdk/simd/extensions/meta/sse.hpp>
 
