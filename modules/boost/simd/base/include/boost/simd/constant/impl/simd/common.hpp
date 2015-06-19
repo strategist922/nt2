@@ -66,12 +66,10 @@ namespace boost { namespace simd { namespace ext
     {
       typedef typename dispatch::meta::
                        as_integer<scalar_type>::type              pattern_type;
-      typedef boost::simd::native<pattern_type,X>                 tmp_type;
 
-      return  bitwise_cast<result_type>
-              ( boost::simd::
-                splat<tmp_type>( pattern_type(mpl_type::value) )
-              );
+      return boost::simd
+                  ::splat<result_type>( bitwise_cast<scalar_type>(pattern_type(mpl_type::value)) );
+
     }
   };
 } } }
