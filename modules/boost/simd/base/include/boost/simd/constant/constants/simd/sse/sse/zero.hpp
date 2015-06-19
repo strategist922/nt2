@@ -9,14 +9,14 @@
 //==============================================================================
 #ifndef BOOST_SIMD_CONSTANT_CONSTANTS_SIMD_SSE_SSE_ZERO_HPP_INCLUDED
 #define BOOST_SIMD_CONSTANT_CONSTANTS_SIMD_SSE_SSE_ZERO_HPP_INCLUDED
-#ifdef BOOST_SIMD_HAS_SSE2_SUPPORT
+#ifdef BOOST_SIMD_HAS_SSE_SUPPORT
 
 #include <boost/simd/constant/constants/zero.hpp>
 #include <boost/dispatch/attributes.hpp>
 
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT          ( Zero, boost::simd::tag::sse2_, (A0)
+  BOOST_DISPATCH_IMPLEMENT          ( Zero, boost::simd::tag::sse_, (A0)
                                     , ((target_< simd_< single_<A0>, boost::simd::tag::sse_> >))
                                     )
   {
@@ -27,7 +27,6 @@ namespace boost { namespace simd { namespace ext
       return _mm_setzero_ps();
     }
   };
-
 } } }
 
 #endif
