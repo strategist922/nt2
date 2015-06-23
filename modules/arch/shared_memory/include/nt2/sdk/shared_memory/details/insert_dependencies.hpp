@@ -16,9 +16,9 @@ namespace nt2 { namespace details {
 
     template<typename FutureVector, typename Specifics>
     inline void insert_dependencies( FutureVector & out,
+                                     Specifics & in,
                                      std::pair<std::size_t,std::size_t> begin,    // Indexes of the element in left up corner of Out tile
                                      std::pair<std::size_t,std::size_t> chunk,    // height/width of Out tile
-                                     Specifics & in
                                     )
     {
 

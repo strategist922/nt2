@@ -21,6 +21,21 @@
 
 namespace nt2 { namespace details
 {
+    struct set_callingcards : boost::proto::callable
+    {
+      typedef int result_type;
+
+      template <class Container,class ProtoData>
+      inline int operator()(Container & in, ProtoData &) const
+      {
+        // Leave the "calling card" of out
+        in.specifics().calling_cards_.insert( &(data.specifics_) );
+        return 0;
+      }
+
+    };
+
+
     struct synchronize_futures : boost::proto::callable
     {
       typedef int result_type;
@@ -48,12 +63,9 @@ namespace nt2 { namespace details
         if (!futures_in.empty())
         {
           details::insert_dependencies(
-            data.futures_, data.begin_, data.chunk_,in.specifics()
+            data.futures_, in.specifics(), data.begin_, data.chunk_,
             );
         }
-
-        // Leave the "calling card" of out
-        in.specifics().calling_cards_.insert( &(data.specifics_) );
 
         return 0;
       }
@@ -110,6 +122,7 @@ namespace nt2 { namespace details
     >
     {};
 
+    typedef aggregate_nodes<set_callingcards> set_cards;
     typedef aggregate_nodes<get_futures> aggregate_futures;
     typedef aggregate_nodes<get_specifics> aggregate_specifics;
     typedef aggregate_nodes<synchronize_futures> aggregate_and_synchronize;

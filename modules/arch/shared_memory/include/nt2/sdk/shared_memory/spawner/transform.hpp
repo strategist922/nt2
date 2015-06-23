@@ -118,8 +118,10 @@ namespace nt2
                          i != s.calling_cards_.end();
                          ++i)
                      {
-                        details::insert_dependencies( data_in.futures_, begin , chunk, **i );
+                        details::insert_dependencies( data_in.futures_, **i  begin , chunk);
                      }
+
+
 
                      aggregate_f(w.in_,0,data_in);
 
@@ -145,6 +147,10 @@ namespace nt2
                      }
                  }
              }
+
+             int dummy;
+             s.calling_cards_.clear();
+             details::set_cards()(w.out_, 0, dummy);
 
              #ifndef BOOST_NO_EXCEPTIONS
              }
