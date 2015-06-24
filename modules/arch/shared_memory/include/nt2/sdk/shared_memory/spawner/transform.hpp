@@ -143,8 +143,9 @@ namespace nt2
                  }
              }
 
-             // delete calling_cards of output
+             // reset calling_cards of output
              s.calling_cards_.clear();
+             s.insert(&s);
 
              // Update calling_cards of inputs
              details::set_cards()(w.in_, 0, ps);
