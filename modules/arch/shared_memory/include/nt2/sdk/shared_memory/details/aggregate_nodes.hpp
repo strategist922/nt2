@@ -26,30 +26,16 @@ namespace nt2 { namespace details
       typedef int result_type;
 
       template <class Container,class ProtoData>
-      inline int operator()(Container & in, ProtoData &) const
+      inline int operator()(Container & in, ProtoData & data) const
       {
         // Leave the "calling card" of out
-        in.specifics().calling_cards_.insert( &(data.specifics_) );
+        in.specifics().calling_cards_.insert( data );
         return 0;
       }
 
     };
 
-
-    struct synchronize_futures : boost::proto::callable
-    {
-      typedef int result_type;
-
-      template <class Container,class ProtoData>
-      inline int operator()(Container & in, ProtoData &) const
-      {
-        in.specifics().synchronize();
-        return 0;
-      }
-
-    };
-
-    struct get_futures : boost::proto::callable
+    struct get_callingcards : boost::proto::callable
     {
       typedef int result_type;
 
@@ -58,14 +44,8 @@ namespace nt2 { namespace details
       {
         typedef typename ProtoData::FutureVector FutureVector;
 
-        FutureVector & futures_in = in.specifics().futures_;
-
-        if (!futures_in.empty())
-        {
-          details::insert_dependencies(
-            data.futures_, in.specifics(), data.begin_, data.chunk_,
-            );
-        }
+        // get reference of in
+        data.insert( &in.specifics() );
 
         return 0;
       }
@@ -82,6 +62,19 @@ namespace nt2 { namespace details
             data = &in.specifics();
             return 0;
         }
+    };
+
+    struct synchronize_futures : boost::proto::callable
+    {
+      typedef int result_type;
+
+      template <class Container,class ProtoData>
+      inline int operator()(Container & in, ProtoData &) const
+      {
+        in.specifics().synchronize();
+        return 0;
+      }
+
     };
 
     template<class F>
@@ -123,7 +116,8 @@ namespace nt2 { namespace details
     {};
 
     typedef aggregate_nodes<set_callingcards> set_cards;
-    typedef aggregate_nodes<get_futures> aggregate_futures;
+    typedef aggregate_nodes<get_callingcards> get_cards;
+
     typedef aggregate_nodes<get_specifics> aggregate_specifics;
     typedef aggregate_nodes<synchronize_futures> aggregate_and_synchronize;
 

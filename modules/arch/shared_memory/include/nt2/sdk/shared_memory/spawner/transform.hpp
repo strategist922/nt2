@@ -50,11 +50,13 @@ namespace nt2
              typedef typename
              details::container_has_futures<Arch>::call_it call_it;
 
+        // Find a reference of specifics of out
              details::container_has_futures<Arch> * ps;
              details::aggregate_specifics()(w.out_, 0, ps);
              details::container_has_futures<Arch> & s = * ps;
 
-             details::aggregate_futures aggregate_f;
+        // aggregate dependencies
+             details::get_cards()(w.out_, 0, s.calling_cards_);
 
         // 2D parameters of In table
              std::size_t height = w.bound_;
@@ -110,23 +112,16 @@ namespace nt2
                      std::pair<std::size_t,std::size_t> begin (m,n);
                      std::pair<std::size_t,std::size_t> chunk (chunk_m,chunk_n);
 
-                     details::proto_data_with_futures< future
-                      ,details::container_has_futures<Arch>
-                      > data_in ( begin, chunk, s );
+                    std::vector<future> deps;
 
                     for(call_it i = s.calling_cards_.begin();
                          i != s.calling_cards_.end();
                          ++i)
                      {
-                        details::insert_dependencies( data_in.futures_, **i  begin , chunk);
+                        details::insert_dependencies( deps, **i  begin , chunk);
                      }
 
-
-
-                     aggregate_f(w.in_,0,data_in);
-
-
-                     switch( data_in.futures_.size() )
+                     switch( deps.size() )
                      {
                      case 0:
                        s.tile(mm,nn) = nt2::async<Arch>(Worker(w), begin, chunk);
@@ -148,9 +143,11 @@ namespace nt2
                  }
              }
 
-             int dummy;
+             // delete calling_cards of output
              s.calling_cards_.clear();
-             details::set_cards()(w.out_, 0, dummy);
+
+             // Update calling_cards of inputs
+             details::set_cards()(w.in_, 0, ps);
 
              #ifndef BOOST_NO_EXCEPTIONS
              }
