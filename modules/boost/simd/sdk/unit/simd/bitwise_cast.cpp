@@ -44,7 +44,7 @@ NT2_TEST_CASE_TPL(floating, BOOST_SIMD_SIMD_REAL_TYPES )
   typedef typename boost::simd::meta::as_logical<T>::type  lT;
   typedef typename boost::simd::meta::as_logical<vT>::type  lvT;
   typedef typename boost::dispatch::meta::as_integer<T, unsigned>::type T1;
-  typedef native<T1,BOOST_SIMD_DEFAULT_EXTENSION>   vT1;
+  typedef typename boost::simd::meta::vector_of<T1, vT::static_size>::type vT1;
   typedef typename boost::simd::meta::as_logical<T1>::type  lT1;
   typedef typename boost::simd::meta::as_logical<vT1>::type  lvT1;
   {

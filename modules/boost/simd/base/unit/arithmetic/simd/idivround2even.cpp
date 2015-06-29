@@ -36,7 +36,7 @@ NT2_TEST_CASE_TPL ( idivround2even_real__2_0,  BOOST_SIMD_SIMD_REAL_TYPES)
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
   typedef native<T,ext_t>                  vT;
   typedef typename boost::dispatch::meta::as_integer<T>::type iT;
-  typedef native<iT,ext_t>                                   ivT;
+  typedef typename boost::simd::meta::vector_of<iT, vT::static_size>::type ivT;
   typedef typename boost::dispatch::meta::call<idivround2even_(vT,vT)>::type r_t;
   typedef ivT wished_r_t;
 
@@ -59,7 +59,7 @@ NT2_TEST_CASE_TPL ( idivround2even_unsigned_int__2_0,  BOOST_SIMD_SIMD_UNSIGNED_
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
   typedef native<T,ext_t>                  vT;
   typedef typename boost::dispatch::meta::as_integer<T>::type iT;
-  typedef native<iT,ext_t>                                   ivT;
+  typedef typename boost::simd::meta::vector_of<iT, vT::static_size>::type ivT;
   typedef typename boost::dispatch::meta::call<idivround2even_(vT,vT)>::type r_t;
   typedef ivT wished_r_t;
 
@@ -79,7 +79,7 @@ NT2_TEST_CASE_TPL ( idivround2even_signed_int__2_0,  BOOST_SIMD_SIMD_INTEGRAL_SI
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
   typedef native<T,ext_t>                  vT;
   typedef typename boost::dispatch::meta::as_integer<T>::type iT;
-  typedef native<iT,ext_t>                                   ivT;
+  typedef typename boost::simd::meta::vector_of<iT, vT::static_size>::type ivT;
   typedef typename boost::dispatch::meta::call<idivround2even_(vT,vT)>::type r_t;
   typedef ivT wished_r_t;
 

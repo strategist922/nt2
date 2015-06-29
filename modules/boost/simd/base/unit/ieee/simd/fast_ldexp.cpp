@@ -31,7 +31,7 @@ NT2_TEST_CASE_TPL ( fast_ldexp_real__2_0,  BOOST_SIMD_SIMD_REAL_TYPES)
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
   typedef native<T,ext_t>                                     vT;
   typedef typename boost::dispatch::meta::as_integer<T>::type iT;
-  typedef native<iT,ext_t>                                    ivT;
+  typedef typename boost::simd::meta::vector_of<iT, vT::static_size>::type ivT;
 
   for(unsigned int i = 0; i < cardinal_of<vT>::value; ++i)
     {

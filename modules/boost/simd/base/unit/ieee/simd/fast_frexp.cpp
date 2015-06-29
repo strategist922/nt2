@@ -27,7 +27,7 @@ NT2_TEST_CASE_TPL( fast_frexp, BOOST_SIMD_SIMD_REAL_TYPES)
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
   typedef native<T,ext_t>                  vT;
   typedef typename boost::dispatch::meta::as_integer<T>::type iT;
-  typedef native<iT,ext_t>                       ivT;
+  typedef typename boost::simd::meta::vector_of<iT, vT::static_size>::type ivT;
 
   NT2_TEST_TYPE_IS( (typename boost::dispatch::meta::call<fast_frexp_(vT)>::type)
                   , (std::pair<vT,ivT>)
