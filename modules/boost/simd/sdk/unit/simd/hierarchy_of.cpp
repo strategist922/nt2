@@ -117,11 +117,41 @@ NT2_TEST_CASE(pack_category)
   typedef boost::simd::tag::terminal_    tag_;
   typedef boost::mpl::long_<0>           arity_;
 
-  #if defined(BOOST_SIMD_SSE_FAMILY)
+  #if defined(BOOST_SIMD_HAS_SSE_SUPPORT)
+  {
+    pack<float> p;
+    NT2_TEST_EXPR_TYPE( p, hierarchy_
+                      , ( expr_< simd_< single_< pack<float> >, ext_t >
+                               , tag_, arity_
+                               >
+                        )
+                      );
+  }
+  #endif
+
+  #if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
   {
     pack<double> p;
     NT2_TEST_EXPR_TYPE( p, hierarchy_
                       , ( expr_< simd_< double_< pack<double> >, ext_t >
+                               , tag_, arity_
+                               >
+                        )
+                      );
+  }
+  {
+    pack<boost::simd::uint32_t> p;
+    NT2_TEST_EXPR_TYPE( p, hierarchy_
+                      , ( expr_< simd_< uint32_< pack<boost::simd::uint32_t> >, ext_t >
+                               , tag_, arity_
+                               >
+                        )
+                      );
+  }
+  {
+    pack<boost::simd::int32_t> p;
+    NT2_TEST_EXPR_TYPE( p, hierarchy_
+                      , ( expr_< simd_< int32_< pack<boost::simd::int32_t> >, ext_t >
                                , tag_, arity_
                                >
                         )
@@ -147,33 +177,6 @@ NT2_TEST_CASE(pack_category)
   }
   #endif
 
-  {
-    pack<float> p;
-    NT2_TEST_EXPR_TYPE( p, hierarchy_
-                      , ( expr_< simd_< single_< pack<float> >, ext_t >
-                               , tag_, arity_
-                               >
-                        )
-                      );
-  }
-  {
-    pack<boost::simd::uint32_t> p;
-    NT2_TEST_EXPR_TYPE( p, hierarchy_
-                      , ( expr_< simd_< uint32_< pack<boost::simd::uint32_t> >, ext_t >
-                               , tag_, arity_
-                               >
-                        )
-                      );
-  }
-  {
-    pack<boost::simd::int32_t> p;
-    NT2_TEST_EXPR_TYPE( p, hierarchy_
-                      , ( expr_< simd_< int32_< pack<boost::simd::int32_t> >, ext_t >
-                               , tag_, arity_
-                               >
-                        )
-                      );
-  }
   #ifndef BOOST_SIMD_HAS_MIC_SUPPORT
   {
     pack<boost::simd::uint16_t> p;
