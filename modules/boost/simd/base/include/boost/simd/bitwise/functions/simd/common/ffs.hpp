@@ -37,8 +37,9 @@ namespace boost { namespace simd { namespace ext
     {
       typedef typename dispatch::meta::as_integer<A0,unsigned>::type rtype;
       typedef typename A0::extension_type ext;
-      typedef simd::native<typename simd::meta::biggest_integer<ext>::type, ext> ltype;
-      typedef typename boost::dispatch::meta::scalar_of<ltype>::type sltype;
+      typedef typename simd::meta::biggest_integer<ext>::type stype;
+      typedef typename meta::vector_of<stype, sizeof(A0)/sizeof(stype)>::type ltype; // TODO wrap this properly
+      typedef stype sltype;
       rtype v = firstbitset(a0);
       return b_and(genmask(v), b_or(b_or((-( genmask(b_and(v, boost::simd::integral_constant<ltype,sltype(0xAAAAAAAAAAAAAAAAull)>()))))
                                         ,  shli(-( genmask(b_and(v, boost::simd::integral_constant<ltype,sltype(0xCCCCCCCCCCCCCCCCull)>()))), 1))
@@ -73,8 +74,9 @@ namespace boost { namespace simd { namespace ext
     {
       typedef typename dispatch::meta::as_integer<A0,unsigned>::type rtype;
       typedef typename A0::extension_type ext;
-      typedef simd::native<typename simd::meta::biggest_integer<ext>::type, ext> ltype;
-      typedef typename boost::dispatch::meta::scalar_of<ltype>::type sltype;
+      typedef typename simd::meta::biggest_integer<ext>::type stype;
+      typedef typename meta::vector_of<stype, sizeof(A0)/sizeof(stype)>::type ltype; // TODO wrap this properly
+      typedef stype sltype;
       rtype v = firstbitset(a0);
       return  b_and(genmask(v), b_or(b_or(b_or((-( genmask(b_and(v, boost::simd::integral_constant<ltype,sltype(0xAAAAAAAAAAAAAAAAull)>()))))
                                               ,  shli(-( genmask(b_and(v, boost::simd::integral_constant<ltype,sltype(0xCCCCCCCCCCCCCCCCull)>()))), 1))
@@ -95,8 +97,9 @@ namespace boost { namespace simd { namespace ext
     {
       typedef typename dispatch::meta::as_integer<A0,unsigned>::type rtype;
       typedef typename A0::extension_type ext;
-      typedef simd::native<typename simd::meta::biggest_integer<ext>::type, ext> ltype;
-      typedef typename boost::dispatch::meta::scalar_of<ltype>::type sltype;
+      typedef typename simd::meta::biggest_integer<ext>::type stype;
+      typedef typename meta::vector_of<stype, sizeof(A0)/sizeof(stype)>::type ltype; // TODO wrap this properly
+      typedef stype sltype;
       rtype v = firstbitset(a0);
       return  b_and(genmask(v), b_or(b_or(b_or(b_or((-( genmask(b_and(v, boost::simd::integral_constant<ltype,sltype(0xAAAAAAAAAAAAAAAAull)>()))))
                                                    ,  shli(-( genmask(b_and(v, boost::simd::integral_constant<ltype,sltype(0xCCCCCCCCCCCCCCCCull)>()))), 1))
