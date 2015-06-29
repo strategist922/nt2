@@ -47,7 +47,7 @@ NT2_TEST_CASE_TPL ( ldexp_real,  BOOST_SIMD_SIMD_REAL_TYPES)
   typedef BOOST_SIMD_DEFAULT_EXTENSION                     ext_t;
   typedef native<T,ext_t>                                     vT;
   typedef typename boost::dispatch::meta::as_integer<T>::type iT;
-  typedef native<iT,ext_t>                                   ivT;
+  typedef typename boost::simd::meta::vector_of<iT, vT::static_size>::type ivT;
   typedef typename boost::dispatch::meta::call<ldexp_(vT,ivT)>::type r_t;
 
 #ifndef BOOST_SIMD_NO_INVALIDS
