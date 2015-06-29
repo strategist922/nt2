@@ -74,6 +74,15 @@ NT2_TEST_CASE_TPL(floating, BOOST_SIMD_SIMD_REAL_TYPES )
 
 NT2_TEST_CASE_TPL(integer, BOOST_SIMD_SIMD_INTEGRAL_TYPES )
 {
+  /* Because `U` is defined, this won't compile for SSE1 since
+   * native of `uint{8,32}_t` does not exist.
+   *
+   * Even if BOOST_SIMD_SIMD_INTEGRAL_TYPES is empty, this won't compile.
+   *
+   * To fix that, we just let the implementation empty.
+   * */
+#if !defined(BOOST_SIMD_SSE)
+
   using boost::simd::native;
   using boost::simd::splat;
   using boost::simd::bitwise_cast;
@@ -84,8 +93,8 @@ NT2_TEST_CASE_TPL(integer, BOOST_SIMD_SIMD_INTEGRAL_TYPES )
   typedef uint32_t U;
 #endif
 
-typedef native<T,BOOST_SIMD_DEFAULT_EXTENSION> vT;
-typedef native<U,BOOST_SIMD_DEFAULT_EXTENSION> vU;
+  typedef native<T,BOOST_SIMD_DEFAULT_EXTENSION> vT;
+  typedef native<U,BOOST_SIMD_DEFAULT_EXTENSION> vU;
 
   vT  x = boost::simd::One<vT>();
   vU y = bitwise_cast<vU>(x);
@@ -103,4 +112,5 @@ typedef native<U,BOOST_SIMD_DEFAULT_EXTENSION> vU;
   }
 
   NT2_TEST_EQUAL(y, ref);
+#endif
 }
