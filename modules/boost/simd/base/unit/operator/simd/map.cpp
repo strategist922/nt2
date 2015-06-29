@@ -90,7 +90,8 @@ struct logical_f
   }
 };
 
-NT2_TEST_CASE_TPL ( map_logical, (float)(boost::simd::int32_t)(boost::simd::uint32_t) )
+// Was: NT2_TEST_CASE_TPL ( map_logical, (float)(boost::simd::int32_t)(boost::simd::uint32_t) )
+NT2_TEST_CASE_TPL ( map_logical, BOOST_SIMD_SIMD_REAL_TYPES BOOST_SIMD_SIMD_INTEGRAL_TYPES  )
 {
   using boost::simd::logical;
   using boost::simd::native;
