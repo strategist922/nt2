@@ -25,6 +25,23 @@
 #include <nt2/sdk/unit/module.hpp>
 #include <nt2/sdk/unit/tests/relation.hpp>
 
+
+NT2_TEST_CASE_TPL ( muls_real, BOOST_SIMD_SIMD_REAL_TYPES )
+{
+  using boost::simd::muls;
+  using boost::simd::tag::muls_;
+  using boost::simd::native;
+  typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
+  typedef native<T,ext_t>                  vT;
+
+  // specific values tests
+  NT2_TEST_EQUAL(muls(boost::simd::Mone<vT>(), boost::simd::Mone<vT>()), boost::simd::One<vT>());
+  NT2_TEST_EQUAL(muls(boost::simd::One<vT>(), boost::simd::One<vT>()), boost::simd::One<vT>());
+  NT2_TEST_EQUAL(muls(boost::simd::Zero<vT>(), boost::simd::Zero<vT>()), boost::simd::Zero<vT>());
+  // TODO: Add more tests
+
+} // end of test for muls_real
+
 NT2_TEST_CASE_TPL ( muls_signed_int,  BOOST_SIMD_SIMD_INTEGRAL_SIGNED_TYPES)
 {
   using boost::simd::muls;
@@ -60,6 +77,7 @@ NT2_TEST_CASE_TPL ( muls_unsigned_int,  BOOST_SIMD_SIMD_UNSIGNED_TYPES)
   NT2_TEST_EQUAL(muls(boost::simd::Zero<vT>(), boost::simd::Zero<vT>()), boost::simd::Zero<r_t>());
 } // end of test for unsigned_int_
 
+#if !defined(BOOST_SIMD_SSE)
 NT2_TEST_CASE(muls_special)
 {
   using boost::simd::muls;
@@ -88,3 +106,4 @@ NT2_TEST_CASE(muls_special)
   NT2_TEST_EQUAL(muls(a, b), c);
 #endif
 }
+#endif
