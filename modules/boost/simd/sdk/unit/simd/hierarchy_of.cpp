@@ -40,7 +40,15 @@ NT2_TEST_CASE(simd_category)
 
   typedef BOOST_SIMD_DEFAULT_EXTENSION                ext_t;
 
-  #if defined(BOOST_SIMD_SSE_FAMILY)
+  #if defined(BOOST_SIMD_HAS_SSE_SUPPORT)
+  {
+    native<float, ext_t> p;
+    NT2_TEST_EXPR_TYPE( p, hierarchy_
+                      , ( simd_< single_< native<float, ext_t> >, ext_t > )
+                      );
+  }
+  #endif
+  #if defined(BOOST_SIMD_HAS_SSE2_SUPPORT)
   {
     native<double, ext_t> p;
     NT2_TEST_EXPR_TYPE( p, hierarchy_
@@ -61,12 +69,7 @@ NT2_TEST_CASE(simd_category)
   }
   #endif
 
-  {
-    native<float, ext_t> p;
-    NT2_TEST_EXPR_TYPE( p, hierarchy_
-                      , ( simd_< single_< native<float, ext_t> >, ext_t > )
-                      );
-  }
+  #if !defined(BOOST_SIMD_SSE)
   {
     native<boost::simd::uint32_t, ext_t> p;
     NT2_TEST_EXPR_TYPE( p, hierarchy_
@@ -79,7 +82,9 @@ NT2_TEST_CASE(simd_category)
                       , ( simd_< int32_< native<boost::simd::int32_t, ext_t> >, ext_t > )
                       );
   }
-  #ifndef BOOST_SIMD_HAS_MIC_SUPPORT
+  #endif
+
+  #if !defined(BOOST_SIMD_HAS_MIC_SUPPORT) && !defined(BOOST_SIMD_SSE)
   {
     native<boost::simd::uint16_t, ext_t> p;
     NT2_TEST_EXPR_TYPE( p, hierarchy_
@@ -177,7 +182,7 @@ NT2_TEST_CASE(pack_category)
   }
   #endif
 
-  #ifndef BOOST_SIMD_HAS_MIC_SUPPORT
+  #if !defined(BOOST_SIMD_HAS_MIC_SUPPORT) && !defined(BOOST_SIMD_SSE)
   {
     pack<boost::simd::uint16_t> p;
     NT2_TEST_EXPR_TYPE( p, hierarchy_
