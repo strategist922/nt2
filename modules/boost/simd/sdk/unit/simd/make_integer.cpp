@@ -8,12 +8,13 @@
 //==============================================================================
 #define NT2_UNIT_MODULE "boost::simd::meta::make_integer SIMD"
 
-#include <boost/simd/sdk/simd/native.hpp>
 #include <boost/simd/sdk/simd/pack.hpp>
+#include <boost/simd/sdk/simd/meta/vector_of.hpp>
+#include <boost/simd/sdk/simd/meta/native_cardinal.hpp>
 #include <boost/dispatch/meta/make_integer.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <nt2/sdk/unit/tests/basic.hpp>
+#include <nt2/sdk/unit/tests/type_expr.hpp>
 #include <nt2/sdk/unit/module.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,20 +22,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 NT2_TEST_CASE_TPL(make_uinteger_simd_native, BOOST_SIMD_SIMD_TYPES)
 {
-  using boost::simd::native;
+  using boost::simd::meta::vector_of;
+  using boost::simd::meta::native_cardinal;
   using boost::dispatch::meta::make_integer;
-  using boost::is_same;
-  using boost::mpl::_;
 
-  typedef BOOST_SIMD_DEFAULT_EXTENSION                ext_t;
-  typedef native<typename make_integer<sizeof(T),unsigned>::type,ext_t> dst_t;
+  typedef typename vector_of< typename make_integer<sizeof(T),unsigned>::type
+                            , native_cardinal<T>::value
+                            >::type                               dst_t;
   typedef typename boost::dispatch::meta::factory_of<dst_t>::type fact_t;
 
-  NT2_TEST( (is_same< typename make_integer<sizeof(T),unsigned, fact_t>::type
-                    , dst_t
-                    >::value
-            )
-          );
+  NT2_TEST_TYPE_IS( (typename make_integer<sizeof(T),unsigned, fact_t>::type)
+                  , dst_t
+                  );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,20 +41,18 @@ NT2_TEST_CASE_TPL(make_uinteger_simd_native, BOOST_SIMD_SIMD_TYPES)
 ////////////////////////////////////////////////////////////////////////////////
 NT2_TEST_CASE_TPL(make_integer_simd_native, BOOST_SIMD_SIMD_TYPES)
 {
-  using boost::simd::native;
+  using boost::simd::meta::vector_of;
+  using boost::simd::meta::native_cardinal;
   using boost::dispatch::meta::make_integer;
-  using boost::is_same;
-  using boost::mpl::_;
 
-  typedef BOOST_SIMD_DEFAULT_EXTENSION                ext_t;
-  typedef native<typename make_integer<sizeof(T),signed>::type,ext_t> dst_t;
+  typedef typename vector_of< typename make_integer<sizeof(T),signed>::type
+                            , native_cardinal<T>::value
+                            >::type                               dst_t;
   typedef typename boost::dispatch::meta::factory_of<dst_t>::type fact_t;
 
-  NT2_TEST( (is_same< typename make_integer<sizeof(T),signed, fact_t>::type
-                    , dst_t
-                    >::value
-            )
-          );
+  NT2_TEST_TYPE_IS( (typename make_integer<sizeof(T),signed, fact_t>::type)
+                  , dst_t
+                  );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,11 +68,9 @@ NT2_TEST_CASE_TPL(make_uinteger_simd_pack, BOOST_SIMD_SIMD_TYPES)
   typedef pack<typename make_integer<sizeof(T),unsigned>::type>    dst_t;
   typedef typename boost::dispatch::meta::factory_of<dst_t>::type fact_t;
 
-  NT2_TEST( (is_same< typename make_integer<sizeof(T),unsigned, fact_t>::type
-                    , dst_t
-                    >::value
-            )
-          );
+  NT2_TEST_TYPE_IS( (typename make_integer<sizeof(T),unsigned, fact_t>::type)
+                  , dst_t
+                  );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,9 +86,7 @@ NT2_TEST_CASE_TPL(make_integer_simd_pack, BOOST_SIMD_SIMD_TYPES)
   typedef pack<typename make_integer<sizeof(T),signed>::type> dst_t;
   typedef typename boost::dispatch::meta::factory_of<dst_t>::type fact_t;
 
-  NT2_TEST( (is_same< typename make_integer<sizeof(T),signed, fact_t>::type
-                    , dst_t
-                    >::value
-            )
-          );
+  NT2_TEST_TYPE_IS( (typename make_integer<sizeof(T),signed, fact_t>::type)
+                  , dst_t
+                  );
 }
