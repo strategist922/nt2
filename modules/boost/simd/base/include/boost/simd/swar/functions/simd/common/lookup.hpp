@@ -21,10 +21,15 @@
 /////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace simd { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT         ( lookup_, tag::cpu_
-                            , (A0)(A1)(X)
-                            , ((simd_<arithmetic_<A0>,X>))((simd_<integer_<A1>,X>))
-                            )
+  BOOST_DISPATCH_IMPLEMENT_IF  ( lookup_, tag::cpu_
+                               , (A0)(A1)(X)(Y)
+                               , (boost::mpl::equal_to
+                                        < meta::cardinal_of<A0>
+                                        , meta::cardinal_of<A1>
+                                        >)
+                               , ((simd_<arithmetic_<A0>,X>))
+                                 ((simd_<integer_<A1>,Y>))
+                               )
   {
 
     typedef A0 result_type;
