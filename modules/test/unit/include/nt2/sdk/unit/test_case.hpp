@@ -20,6 +20,8 @@
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
+#include <boost/preprocessor/control/if.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/punctuation/remove_parens.hpp>
 #include <nt2/sdk/unit/details/base_case.hpp>
 
@@ -39,9 +41,15 @@
   of the preprocessor sequence that satisfy the given predicate.
 **/
 #define NT2_TEST_SEQ_MPL_FILTER(seq, cond)                                     \
-(boost::mpl::filter_view< boost::mpl::vector<BOOST_PP_SEQ_ENUM(seq)>           \
-            , BOOST_PP_REMOVE_PARENS(cond)                                    \
-            >::type                                                            \
+(boost::mpl::filter_view< boost::mpl::vector<                                  \
+                            BOOST_PP_IF                                        \
+                                ( BOOST_PP_SEQ_SIZE(seq)                       \
+                                , BOOST_PP_SEQ_ENUM(seq)                       \
+                                , BOOST_PP_EMPTY()                             \
+                                )                                              \
+                            >                                                  \
+                        , BOOST_PP_REMOVE_PARENS(cond)                         \
+                        >::type                                                \
 )                                                                              \
 /**/
 
