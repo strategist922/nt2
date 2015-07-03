@@ -32,6 +32,7 @@
 
 #define NT2_TEST_ALIGNED_STORE(r, data, elem) BOOST_PP_CAT(nt2_test_run_, data)<T, elem>::call();
 
+#if !defined(BOOST_SIMD_SSE) // TODO: SSE1
 template<class T, class U>
 struct nt2_test_run_aligned_store_scatter
 {
@@ -202,3 +203,4 @@ NT2_TEST_CASE_TPL(store_scatter_pack, BOOST_SIMD_SIMD_TYPES )
 {
   BOOST_PP_SEQ_FOR_EACH(NT2_TEST_ALIGNED_STORE, aligned_store_scatter_pack, BOOST_SIMD_TYPES)
 }
+#endif

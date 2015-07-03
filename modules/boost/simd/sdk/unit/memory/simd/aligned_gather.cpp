@@ -37,6 +37,7 @@
 
 #define NT2_TEST_ALIGNED_LOAD(r, data, elem) BOOST_PP_CAT(nt2_test_run_, data)<T, elem>::call();
 
+#if !defined(BOOST_SIMD_SSE) // TODO: SSE1
 template<class T, class U, bool masked=false, bool zero=false>
 struct nt2_test_run_aligned_load_gather
 {
@@ -121,3 +122,4 @@ NT2_TEST_CASE_TPL( load_gather, BOOST_SIMD_SIMD_TYPES)
 {
   BOOST_PP_SEQ_FOR_EACH(NT2_TEST_ALIGNED_LOAD, aligned_load_gather, BOOST_SIMD_TYPES)
 }
+#endif
