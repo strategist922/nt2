@@ -144,6 +144,8 @@ NT2_TEST_CASE_TPL ( groups_groupsable__4_1,  (int32_t))
   using boost::simd::tag::groups_;
   using boost::simd::load;
   using boost::simd::native;
+  using boost::simd::meta::vector_of;
+  using boost::simd::meta::native_cardinal;
   using boost::simd::meta::cardinal_of;
   using boost::simd::Two;
   using boost::simd::Valmax;
@@ -153,7 +155,7 @@ NT2_TEST_CASE_TPL ( groups_groupsable__4_1,  (int32_t))
   using boost::simd::Inf;
   using boost::simd::Minf;
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
-  typedef native<T,ext_t>                        n_t;
+  typedef typename vector_of<T, native_cardinal<T>::value>::type  n_t;
   typedef n_t                                     vT;
 
   // specific values tests
