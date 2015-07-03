@@ -119,13 +119,14 @@ NT2_TEST_CASE_TPL ( group_groupable__3_1,  BOOST_SIMD_SIMD_GROUPABLE_TYPES)
   }
 } // end of test for groupable_
 
-#if !defined(BOOST_SIMD_SSE)
 NT2_TEST_CASE_TPL ( group_groupable__4_1,  (int32_t))
 {
   using boost::simd::group;
   using boost::simd::tag::group_;
   using boost::simd::native;
   using boost::simd::meta::cardinal_of;
+  using boost::simd::meta::vector_of;
+  using boost::simd::meta::native_cardinal;
   using boost::simd::Two;
   using boost::simd::Valmax;
   using boost::simd::Valmin;
@@ -134,7 +135,7 @@ NT2_TEST_CASE_TPL ( group_groupable__4_1,  (int32_t))
   using boost::simd::Inf;
   using boost::simd::Minf;
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
-  typedef native<T,ext_t>                        n_t;
+  typedef typename vector_of<T, native_cardinal<T>::value>::type n_t;
   typedef n_t                                     vT;
 
   // specific values tests
@@ -150,4 +151,3 @@ NT2_TEST_CASE_TPL ( group_groupable__4_1,  (int32_t))
                   );
   }
 } // end of test for groupable_
-#endif
