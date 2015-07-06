@@ -29,18 +29,21 @@ using boost::simd::tag::ldexp_;
 //////////////////////////////////////////////////////////////////////////////
 #define RS(T,V1,V2) (T, (V1) ,(V2))
 
+using boost::simd::meta::native_cardinal;
+using boost::simd::meta::vector_of;
+
 namespace n1 {
   typedef float T;
   typedef boost::dispatch::meta::as_integer<T>::type iT;
-  typedef boost::simd::meta::vector_of<T, BOOST_SIMD_BYTES/sizeof(T)>::type vT;
-  typedef boost::simd::native<iT,ext_t> viT;
+  typedef vector_of<T, native_cardinal<T>::value>::type vT;
+  typedef vector_of<iT, native_cardinal<T>::value>::type viT;
   NT2_TIMING(ldexp_,(RS(vT,T(-10),T(10)))(RS(viT,iT(-10),iT(10))))
 }
 namespace n2 {
   typedef double T;
   typedef boost::dispatch::meta::as_integer<T>::type iT;
-  typedef boost::simd::meta::vector_of<T, BOOST_SIMD_BYTES/sizeof(T)>::type vT;
-  typedef boost::simd::native<iT,ext_t> viT;
+  typedef vector_of<T, native_cardinal<T>::value>::type vT;
+  typedef vector_of<iT, native_cardinal<T>::value>::type viT;
   NT2_TIMING(ldexp_,(RS(vT,T(-10),T(10)))(RS(viT,iT(-10),iT(10))))
 }
 
