@@ -13,7 +13,11 @@
 #include <nt2/include/functions/zeros.hpp>
 #include <nt2/sdk/shared_memory/worker.hpp>
 #include <nt2/sdk/shared_memory/details/delay.hpp>
+
 #include <nt2/sdk/timing/now.hpp>
+#include <nt2/sdk/timing/cycle_timer.hpp>
+#include <nt2/sdk/timing/details/cycles.hpp>
+
 #include <nt2/sdk/shared_memory/thread_utility.hpp>
 #include <cstdio>
 
@@ -56,32 +60,36 @@ namespace nt2
           return result;
       };
 
-      void setdelaylength(double delaytime) // in seconds
+      nt2::cycles_t setdelaylength(double delaytime) // in seconds
       {
           std::size_t reps = 1000;
           double lapsedtime = 0.0;
+          nt2::cycles_t elapsed;
           double starttime;
 
-          delaylength = 0;
-          nt2::details::delay(delaylength, value_[0]);
+          delaylength_ = 0;
+          nt2::details::delay(delaylength_, value_[0]);
 
           while (lapsedtime < delaytime)
           {
-            delaylength = delaylength * 1.1 + 1;
+            delaylength_ = delaylength_ * 1.1 + 1;
             starttime = nt2::now();
+            {
+              nt2::time::cycle_timer timer(elapsed, false);
 
-            for (std::size_t i = 0; i < reps; i++)
-              nt2::details::delay(delaylength,value_[0]);
-
+              for (std::size_t i = 0; i < reps; i++)
+                nt2::details::delay(delaylength_,value_[0]);
+            }
             lapsedtime = (nt2::now() - starttime) / (double) reps;
           }
+          return elapsed / (double) reps;
       }
 
       Out & out_;
       In & in_;
       std::plus<float> bop_;
       nt2::functor< nt2::tag::Zero > neutral_;
-      std::size_t delaylength;
+      std::size_t delaylength_;
       std::vector<float> value_;
 
   private:
