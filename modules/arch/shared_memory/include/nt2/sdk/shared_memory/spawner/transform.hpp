@@ -56,7 +56,7 @@ namespace nt2
              details::container_has_futures<Arch> & s = * ps;
 
         // aggregate dependencies
-             details::get_cards()(w.out_, 0, s.calling_cards_);
+             details::get_cards()(w.in_, 0, s.calling_cards_);
 
         // 2D parameters of In table
              std::size_t height = w.bound_;
