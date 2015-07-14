@@ -31,8 +31,7 @@ struct shared_memory_scan
   shared_memory_scan(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
-    nt2::set_num_threads(n);
-    w_.setdelaylength(0.1e-6);
+    offset_ = w_.setdelaylength(0.1e-6) * n_ / nt2::get_num_threads();
   }
 
   float operator()() {
@@ -44,7 +43,7 @@ struct shared_memory_scan
     return os << "(" << p.n_ << ")";
   }
 
-  std::size_t size() const { return 1; }
+  nt2::cycles_t offset() const { return offset_; }
 
   private:
 
@@ -60,15 +59,14 @@ struct shared_memory_scan
              ,nt2::table<double>
              ,nt2::table<double>
              > w_;
+  nt2::cycles_t offset_;
 };
 
 
 NT2_REGISTER_BENCHMARK( shared_memory_scan )
 {
-  std::size_t max_threads = nt2::get_num_threads();
-
   run_during_with< shared_memory_scan >( 1.
-                                , fixed_<std::size_t>(max_threads)
+                                , fixed_<std::size_t>(10)
                                 , cycles_per_element<stats::median_>()
                                 );
 }
