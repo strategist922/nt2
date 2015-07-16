@@ -11,14 +11,17 @@
 
 #include <cstddef>
 
+void foo(){}
+
 namespace nt2 { namespace details
 {
 
-  inline void delay(std::size_t delaylength, float & a)
+  inline void delay(std::size_t delaylength, float &)
   {
     for (std::size_t i = 0; i < delaylength; i++)
-    a += i;
-
+    {
+       foo();
+    }
   }
 
 } }

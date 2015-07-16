@@ -34,7 +34,7 @@ namespace nt2
    template <typename Site>
    struct set_num_threads_impl< nt2::tag::hpx_<Site> >
    {
-     inline void call(int n) const
+     inline void call(int) const
      {
         printf("HPX cannot set the number of OS-threads online\n");
      }
