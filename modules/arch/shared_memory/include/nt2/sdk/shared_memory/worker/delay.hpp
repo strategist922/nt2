@@ -41,14 +41,14 @@ namespace nt2
       // Transform call operator
       void operator()(std::size_t rank, std::size_t)
       {
-        nt2::details::delay(delaylength,value_[rank]);
+        nt2::details::delay(delaylength_,value_[rank]);
       };
 
       // Fold call operator
       float operator()(float out, std::size_t rank, std::size_t)
       {
           float result = value_[rank] + out;
-          nt2::details::delay(delaylength, result);
+          nt2::details::delay(delaylength_, result);
           return result;
       };
 
@@ -56,7 +56,7 @@ namespace nt2
       float operator()(float out, std::size_t rank, std::size_t, bool)
       {
           float result = value_[rank] + out;
-          nt2::details::delay(delaylength, result);
+          nt2::details::delay(delaylength_, result);
           return result;
       };
 
