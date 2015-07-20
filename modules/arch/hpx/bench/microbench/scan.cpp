@@ -48,7 +48,7 @@ struct shared_memory_scan
 
   private:
 
-  nt2::table<double> out_, in_;
+  nt2::table<float> out_, in_;
   std::size_t n_;
   nt2::spawner< nt2::tag::scan_
               , boost::dispatch::default_site<void>::type
@@ -66,12 +66,8 @@ struct shared_memory_scan
 
 NT2_REGISTER_BENCHMARK( shared_memory_scan )
 {
-  // run_during_with< shared_memory_scan >( 1.
-  //                               , arithmetic(10,500,10)
-  //                               , absolute_cycles<stats::median_>()
-  //                               );
-  shared_memory_scan test(30);
-  printf("Initialisation success.\n");
-  test();
-  printf("Computation success.\n");
+  run_during_with< shared_memory_scan >( 1.
+                                , arithmetic(10,500,10)
+                                , absolute_cycles<stats::median_>()
+                                );
 }
