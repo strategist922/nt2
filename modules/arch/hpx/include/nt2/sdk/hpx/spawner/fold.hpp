@@ -43,7 +43,7 @@ namespace nt2
         :w_(w)
         {}
 
-        Future operator()(std::size_t begin, std::size_t size, std::size_t  grain)
+        Future operator()(std::size_t begin, std::size_t size, std::size_t grain)
         {
            if (size == grain)
            {

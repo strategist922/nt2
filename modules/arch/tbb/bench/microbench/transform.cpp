@@ -20,6 +20,8 @@
 #include <boost/mpl/integral_c.hpp>
 
 #include <nt2/table.hpp>
+#include <cstdio>
+
 
 
 using namespace nt2::bench;
@@ -34,11 +36,27 @@ struct shared_memory_transform
   shared_memory_transform(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
-    offset_ = w_.setdelaylength(0.1e-6) * n_ / nt2::get_num_threads();
+    offset_ = w_.setdelaylength(1e-6) * n_ / nt2::get_num_threads() ;
+    printf("Useful Time: %e cycles\n",(double)offset_);
+    printf("Number of threads: %u\n",nt2::get_num_threads());
   }
 
   void operator()() {
-     s_(w_, 0, n_, 1);
+
+      s_(w_, 0, n_, 1);
+
+   // tbb::parallel_for( tbb::blocked_range<std::size_t>(0,n_,1),
+   //                    [this](tbb::blocked_range<std::size_t> const&)
+   //                    {
+   //                      printf("my delaylength = %lu\n",w_.delaylength_);
+   //                      w_(0,0);
+   //                    }
+   //                  );
+
+    // for(std::size_t i=0;i<n_;i++)
+    // {
+    //   w_(0,0);
+    // }
    }
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_transform const& p)
@@ -68,7 +86,7 @@ struct shared_memory_transform
 
 NT2_REGISTER_BENCHMARK( shared_memory_transform )
 {
-  run_during_with< shared_memory_transform >( 1.
+  run_during_with< shared_memory_transform >( 10.
                                   , fixed_<std::size_t>(10)
                                   , absolute_cycles<stats::median_>()
                                   );

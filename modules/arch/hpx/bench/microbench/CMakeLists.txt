@@ -13,4 +13,6 @@ SET( SOURCES
   scan.cpp
    )
 
+link_libraries(foo)
+
 nt2_module_add_tests(arch.hpx.microbench.bench ${SOURCES})

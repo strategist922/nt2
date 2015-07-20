@@ -94,6 +94,8 @@ foreach(lib PROGRAM_OPTIONS THREAD SYSTEM SERIALIZATION FILESYSTEM)
   endif()
 endforeach()
 
+message(STATUS "${NT2_ARCH.HPX_DEPENDENCIES_LIBRARIES}")
+
 set( NT2_ARCH.HPX_DEPENDENCIES_EXTRA
      arch.shared_memory
      boost.dispatch

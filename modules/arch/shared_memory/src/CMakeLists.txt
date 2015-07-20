@@ -24,3 +24,5 @@ add_custom_target(run_microbenchmarks
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                   COMMENT "Update microbenchmarks"
                   )
+
+add_library(foo STATIC foo.cpp)

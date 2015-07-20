@@ -35,29 +35,28 @@ namespace nt2
   struct worker<tag::delay_,void,void,Out,In>
   {
       worker(Out & out, In & in)
-      :out_(out),in_(in),value_(100,0.)
+      :out_(out),in_(in)
       {}
 
       // Transform call operator
-      void operator()(std::size_t rank, std::size_t)
+      void operator()(std::size_t, std::size_t)
       {
-        nt2::details::delay(delaylength_,value_[rank]);
+        nt2::details::delay(delaylength_);
       };
 
       // Fold call operator
-      float operator()(float out, std::size_t rank, std::size_t)
+      float operator()(float out, std::size_t, std::size_t)
       {
-          float result = value_[rank] + out;
-          nt2::details::delay(delaylength_, result);
-          return result;
+          nt2::details::delay(delaylength_);
+          return out;
       };
 
       // Scan call operator
-      float operator()(float out, std::size_t rank, std::size_t, bool)
+      float operator()(float out, std::size_t begin, std::size_t size, bool)
       {
-          float result = value_[rank] + out;
-          nt2::details::delay(delaylength_, result);
-          return result;
+          printf("Worker %lu, Grain %lu\n", begin,size);
+          nt2::details::delay(delaylength_);
+          return out;
       };
 
       nt2::cycles_t setdelaylength(double delaytime) // in seconds
@@ -67,8 +66,8 @@ namespace nt2
           nt2::cycles_t elapsed;
           double starttime;
 
-          delaylength_ = 0;
-          nt2::details::delay(delaylength_, value_[0]);
+          delaylength_ = 0.;
+          nt2::details::delay(delaylength_);
 
           while (lapsedtime < delaytime)
           {
@@ -78,11 +77,11 @@ namespace nt2
               nt2::time::cycle_timer timer(elapsed, false);
 
               for (std::size_t i = 0; i < reps; i++)
-                nt2::details::delay(delaylength_,value_[0]);
+                nt2::details::delay(delaylength_);
             }
             lapsedtime = (nt2::now() - starttime) / (double) reps;
           }
-          return elapsed / (double) reps;
+          return elapsed / (nt2::cycles_t) reps;
       }
 
       Out & out_;
@@ -90,7 +89,6 @@ namespace nt2
       std::plus<float> bop_;
       nt2::functor< nt2::tag::Zero > neutral_;
       std::size_t delaylength_;
-      std::vector<float> value_;
 
   private:
       worker& operator=(worker const&);
