@@ -12,7 +12,7 @@
 
 #include <nt2/sdk/bench/benchmark.hpp>
 #include <nt2/sdk/bench/metric/absolute_cycles.hpp>
-#include <nt2/sdk/bench/setup/fixed.hpp>
+#include <nt2/sdk/bench/setup/arithmetic.hpp>
 #include <nt2/sdk/bench/protocol/max_duration.hpp>
 #include <nt2/sdk/bench/stats/median.hpp>
 
@@ -31,10 +31,10 @@ struct shared_memory_scan
   shared_memory_scan(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
-    offset_ = w_.setdelaylength(0.1e-6) * n_ / nt2::get_num_threads();
+    offset_ = w_.setdelaylength(1e-6) * n_ / nt2::get_num_threads();
   }
 
-  float operator()() {
+  double operator()() {
      return s_(w_, 0, n_, 1);
    }
 
@@ -57,8 +57,8 @@ struct shared_memory_scan
   nt2::worker< nt2::tag::delay_
              ,void
              ,void
-             ,nt2::table<double>
-             ,nt2::table<double>
+             ,nt2::table<float>
+             ,nt2::table<float>
              > w_;
   nt2::cycles_t offset_;
 };
@@ -66,8 +66,12 @@ struct shared_memory_scan
 
 NT2_REGISTER_BENCHMARK( shared_memory_scan )
 {
-  run_during_with< shared_memory_scan >( 1.
-                                , fixed_<std::size_t>(10)
-                                , absolute_cycles<stats::median_>()
-                                );
+  // run_during_with< shared_memory_scan >( 1.
+  //                               , arithmetic(10,500,10)
+  //                               , absolute_cycles<stats::median_>()
+  //                               );
+  shared_memory_scan test(30);
+  printf("Initialisation success.\n");
+  test();
+  printf("Computation success.\n");
 }

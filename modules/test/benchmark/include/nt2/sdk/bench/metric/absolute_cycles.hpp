@@ -42,8 +42,8 @@ namespace nt2 { namespace bench
     {
       double freq = args("frequency",-1);
 
-      double m  = (freq == -1) ? Stat::evaluate(c) - e.offset()
-      : (Stat::evaluate(t) * freq)/(1e6) - e.offset();
+      double m  = (freq == -1) ? Stat::evaluate(c) - (double)e.offset()
+      : (Stat::evaluate(t) * freq)/(1e6) - (double)e.offset();
 
       details::measures_map[details::identify_result(name,e,*this)] = m;
       return m;
@@ -52,7 +52,7 @@ namespace nt2 { namespace bench
     /// @brief Metric display
     inline std::string unit() const
     {
-      return "cpe" + Stat::unit();
+      return "cycles" + Stat::unit();
     }
   };
 } }

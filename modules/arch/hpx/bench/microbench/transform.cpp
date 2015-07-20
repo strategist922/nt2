@@ -12,16 +12,16 @@
 
 #include <nt2/sdk/bench/benchmark.hpp>
 #include <nt2/sdk/bench/metric/absolute_cycles.hpp>
-#include <nt2/sdk/bench/setup/fixed.hpp>
+#include <nt2/sdk/bench/setup/arithmetic.hpp>
 #include <nt2/sdk/bench/setup/combination.hpp>
 #include <nt2/sdk/bench/protocol/max_duration.hpp>
 #include <nt2/sdk/bench/stats/median.hpp>
 
-#include <nt2/sdk/timing/details/cycles.hpp>
-
 #include <boost/mpl/integral_c.hpp>
 
 #include <nt2/table.hpp>
+#include <cstdio>
+
 
 
 using namespace nt2::bench;
@@ -36,11 +36,12 @@ struct shared_memory_transform
   shared_memory_transform(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
-    offset_ = w_.setdelaylength(0.1e-6) * n_ / nt2::get_num_threads();
+    offset_ = w_.setdelaylength(1e-6) * n_ / nt2::get_num_threads() ;
   }
 
   void operator()() {
-     s_(w_, 0, n_, 1);
+
+      s_(w_, 0, n_, 1);
    }
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_transform const& p)
@@ -71,7 +72,7 @@ struct shared_memory_transform
 NT2_REGISTER_BENCHMARK( shared_memory_transform )
 {
   run_during_with< shared_memory_transform >( 1.
-                                  , fixed_<std::size_t>(10)
+                                  , arithmetic(10,500,10)
                                   , absolute_cycles<stats::median_>()
                                   );
 }

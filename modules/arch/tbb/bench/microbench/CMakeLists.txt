@@ -11,6 +11,11 @@ SET( SOURCES
   transform.cpp
   fold.cpp
   scan.cpp
-   )
+)
+
+link_libraries(foo)
 
 nt2_module_add_tests(arch.tbb.microbench.bench ${SOURCES})
+
+
+

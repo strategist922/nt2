@@ -37,7 +37,7 @@ namespace nt2
         :w_(w)
         {}
 
-        void operator()(nt2::blocked_range<std::size_t> const& r) const
+        void operator()(tbb::blocked_range<std::size_t> const& r) const
         {
             w_(r.begin(),r.size());
         };
@@ -70,7 +70,7 @@ namespace nt2
       #endif
              details::Tbb_Transformer<Worker> tbb_w ( w );
 
-             tbb::parallel_for( nt2::blocked_range<std::size_t>(begin,begin+size,grain),
+             tbb::parallel_for( tbb::blocked_range<std::size_t>(begin,begin+size,grain),
                                 tbb_w
                               );
 
