@@ -52,7 +52,6 @@ namespace nt2
 
            if (size == grain)
            {
-             result_type result = ;
              return hpx::make_ready_future( w_(summary,end-size,size,false) );
            }
 
