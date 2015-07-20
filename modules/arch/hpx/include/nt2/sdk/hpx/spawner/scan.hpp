@@ -42,20 +42,19 @@ namespace nt2
         typedef typename hpx::util::tuple< Future , Future  > Two_Futures;
         typedef typename std::vector< hpx::lcos::future<result_type> > FutureVector;
 
-        Hpx_Scaner(Worker & w, FutureVector & barrier, std::size_t begin = 0, std::size_t size = 0 )
+        Hpx_Scaner(Worker & w, FutureVector & barrier, std::size_t begin = 0, std::size_t size = 0)
         :w_(w),barrier_(barrier),begin_(begin),size_(size)
         {}
 
         Future operator()(std::size_t end, std::size_t size, std::size_t grain)
         {
            result_type summary = w_.neutral_(nt2::meta::as_<result_type>());
+           std::size_t middle = end - grain;
 
            if (size == grain)
            {
-             return hpx::make_ready_future( w_(summary,end-size,size,false) );
+             return hpx::make_ready_future(w_(summary,middle,grain,false));
            }
-
-           std::size_t middle = end - grain;
 
            hpx::lcos::future<result_type> other_out
              = hpx::async(w_,summary,middle,grain,true);
@@ -63,15 +62,16 @@ namespace nt2
            hpx::lcos::future<result_type> my_out
              = (*this)(middle, size - grain, grain);
 
-           return hpx::when_all(my_out,other_out).then( Hpx_Scaner(w_,barrier_,middle,grain) );
+           return hpx::when_all(my_out,other_out)
+           .then( Hpx_Scaner(w_,barrier_,middle,grain) );
         };
 
         template < typename T >
         result_type operator()(T deps) const
         {
             Two_Futures two_results = deps.get();
-            result_type result1 = ( hpx::util::get<0>(two_results) ).get();
-            result_type result2 = ( hpx::util::get<1>(two_results) ).get();
+            result_type result1 = (hpx::util::get<0>(two_results)).get();
+            result_type result2 = (hpx::util::get<1>(two_results)).get();
 
             barrier_.push_back( hpx::async(w_, result1, begin_, size_, false) );
 

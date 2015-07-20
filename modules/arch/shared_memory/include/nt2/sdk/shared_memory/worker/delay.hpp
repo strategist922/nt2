@@ -31,8 +31,15 @@ namespace nt2
   }
 
   // Transform Worker
-  template<class Out, class In>
-  struct worker<tag::delay_,void,void,Out,In>
+  template<class Out, class In, class Neutral, class Bop>
+  struct worker<tag::delay_
+               , void
+               , void
+               , Out
+               , In
+               , Neutral
+               , Bop
+               >
   {
       worker(Out & out, In & in)
       :out_(out),in_(in)
@@ -52,7 +59,7 @@ namespace nt2
       };
 
       // Scan call operator
-      float operator()(float out, std::size_t begin, std::size_t size, bool)
+      float operator()(float out, std::size_t, std::size_t, bool)
       {
           nt2::details::delay(delaylength_);
           return out;
@@ -85,8 +92,8 @@ namespace nt2
 
       Out & out_;
       In & in_;
-      std::plus<float> bop_;
-      nt2::functor< nt2::tag::Zero > neutral_;
+      Bop bop_;
+      Neutral neutral_;
       std::size_t delaylength_;
 
   private:
