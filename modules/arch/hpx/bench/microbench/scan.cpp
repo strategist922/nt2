@@ -18,7 +18,6 @@
 
 #include <nt2/table.hpp>
 
-
 using namespace nt2::bench;
 using boost::dispatch::default_site;
 using nt2::table;
@@ -34,8 +33,11 @@ struct shared_memory_scan
     offset_ = w_.setdelaylength(1e-6) * n_ / nt2::get_num_threads();
   }
 
-  double operator()() {
-     return s_(w_, 0, n_, 1);
+  float operator()() {
+
+
+
+     return s_(w_, 0ul, n_, 1ul);
    }
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_scan const& p)
@@ -59,6 +61,8 @@ struct shared_memory_scan
              ,void
              ,nt2::table<float>
              ,nt2::table<float>
+             ,nt2::functor< nt2::tag::Zero >
+             ,std::plus<float>
              > w_;
   nt2::cycles_t offset_;
 };

@@ -12,12 +12,11 @@
 
 #include <nt2/sdk/bench/benchmark.hpp>
 #include <nt2/sdk/bench/metric/absolute_cycles.hpp>
-#include <nt2/sdk/bench/setup/fixed.hpp>
+#include <nt2/sdk/bench/setup/arithmetic.hpp>
 #include <nt2/sdk/bench/protocol/max_duration.hpp>
 #include <nt2/sdk/bench/stats/median.hpp>
 
 #include <nt2/table.hpp>
-
 
 using namespace nt2::bench;
 using boost::dispatch::default_site;
@@ -31,7 +30,7 @@ struct shared_memory_fold
   shared_memory_fold(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
-    offset_ = w_.setdelaylength(0.1e-6) * n_ / nt2::get_num_threads();
+    offset_ = w_.setdelaylength(1e-6) * n_ / nt2::get_num_threads();
   }
 
   float operator()() {
@@ -48,7 +47,7 @@ struct shared_memory_fold
 
   private:
 
-  nt2::table<double> out_, in_;
+  nt2::table<float> out_, in_;
   std::size_t n_;
   nt2::spawner< nt2::tag::fold_
               , boost::dispatch::default_site<void>::type
@@ -57,8 +56,10 @@ struct shared_memory_fold
   nt2::worker< nt2::tag::delay_
              ,void
              ,void
-             ,nt2::table<double>
-             ,nt2::table<double>
+             ,nt2::table<float>
+             ,nt2::table<float>
+             ,nt2::functor< nt2::tag::Zero >
+             ,std::plus<float>
              > w_;
   nt2::cycles_t offset_;
 };
@@ -67,7 +68,7 @@ struct shared_memory_fold
 NT2_REGISTER_BENCHMARK( shared_memory_fold )
 {
   run_during_with< shared_memory_fold >( 1.
-                                  , fixed_<std::size_t>(10)
+                                  , arithmetic(10,500,10)
                                   , absolute_cycles<stats::median_>()
                                   );
 }

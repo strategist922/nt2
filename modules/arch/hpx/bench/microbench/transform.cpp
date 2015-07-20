@@ -54,7 +54,7 @@ struct shared_memory_transform
 
   private:
 
-  nt2::table<double> out_, in_;
+  nt2::table<float> out_, in_;
   std::size_t n_;
   nt2::spawner< nt2::tag::transform_
               , boost::dispatch::default_site<void>::type
@@ -62,8 +62,10 @@ struct shared_memory_transform
   nt2::worker< nt2::tag::delay_
              ,void
              ,void
-             ,nt2::table<double>
-             ,nt2::table<double>
+             ,nt2::table<float>
+             ,nt2::table<float>
+             ,nt2::functor< nt2::tag::Zero >
+             ,std::plus<float>
              > w_;
   nt2::cycles_t offset_;
 };
