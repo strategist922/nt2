@@ -48,8 +48,11 @@ namespace nt2
 
         Future operator()(std::size_t end, std::size_t size, std::size_t grain)
         {
+           result_type summary = w_.neutral_(nt2::meta::as_<result_type>());
+
            if (size == grain)
            {
+             result_type result = ;
              return hpx::make_ready_future( w_(summary,end-size,size,false) );
            }
 

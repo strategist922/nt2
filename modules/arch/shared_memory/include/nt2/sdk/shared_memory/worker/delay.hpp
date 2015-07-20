@@ -54,7 +54,6 @@ namespace nt2
       // Scan call operator
       float operator()(float out, std::size_t begin, std::size_t size, bool)
       {
-          printf("Worker %lu, Grain %lu\n", begin,size);
           nt2::details::delay(delaylength_);
           return out;
       };
