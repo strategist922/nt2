@@ -25,22 +25,32 @@ namespace nt2
     : public std::shared_future<result_type>
     {
       nt2_shared_future()
-      : std::shared_future<result_type>()
+      : raw_future_()
       {}
 
        nt2_shared_future( std::shared_future<result_type> && other)
-      : std::shared_future<result_type>(
+      : raw_future_(
         std::forward< std::shared_future<result_type> >(other)
         )
       {}
 
-       nt2_shared_future( details::nt2_future<result_type> && other)
-      : std::shared_future<result_type>(other.share())
+      nt2_shared_future( details::nt2_future<result_type> && other)
+      : raw_future_(other.share_raw())
       {}
 
       nt2_shared_future( details::nt2_future<result_type> & other)
-      : std::shared_future<result_type>(other.share())
+      : raw_future_(other.share_raw())
       {}
+
+      void wait()
+      {
+        raw_future_.wait();
+      }
+
+      result_type get()
+      {
+        return raw_future_.get();
+      }
 
       template<typename F>
       details::nt2_future<
@@ -54,9 +64,12 @@ namespace nt2
                               return f_( std::move(previous) );
                            }
                           , std::forward<F>(f)
-                          , shared_future(*this)
+                          , nt2_shared_future(*this)
                          );
       }
+
+    private:
+      std::shared_future<result_type> raw_future_;
     };
   }
 }

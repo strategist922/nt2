@@ -23,14 +23,29 @@ namespace nt2
     : public std::future<result_type>
     {
       nt2_future()
-      : std::future<result_type>()
+      : raw_future_()
       {}
 
       nt2_future( std::future<result_type> && other)
-      : std::future<result_type>(
+      : raw_future_(
         std::forward< std::future<result_type> >(other)
         )
       {}
+
+      std::shared_future<result_type> share_raw()
+      {
+        return raw_future_.share();
+      }
+
+      void wait()
+      {
+        raw_future_.wait();
+      }
+
+      result_type get()
+      {
+        return raw_future_.get();
+      }
 
       template<typename F>
       details::nt2_future<
@@ -48,6 +63,8 @@ namespace nt2
                           );
       }
 
+    private:
+      std::future<result_type> raw_future_;
     };
   }
 }
