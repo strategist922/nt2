@@ -30,7 +30,7 @@ struct shared_memory_fold
   shared_memory_fold(std::size_t n)
   :  n_(n),w_(out_,in_)
   {
-    offset_ = w_.setdelaylength(1e-6) * n_ / nt2::get_num_threads();
+    offset_ = w_.setdelaylength(1e-3) * n_ / nt2::get_num_threads();
   }
 
   float operator()() {
