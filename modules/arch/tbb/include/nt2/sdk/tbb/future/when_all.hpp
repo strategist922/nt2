@@ -28,13 +28,12 @@ namespace nt2
 
   namespace details
   {
-    template <class Future, typename Node_raw, typename A>
-    static void link_node(Future & f, Node_raw & c, A & a)
+    template <typename Node_raw, typename A>
+    static void link_node(Node_raw & c, A & a)
     {
       tbb::flow::make_edge( *(a.node_)
                           , *c
                           );
-      f.attach_previous_future( a );
     }
   }
 
@@ -127,12 +126,13 @@ namespace nt2
       future_res.attach_task(c);
 
       // Some trick to call link_node multiple times
-      return (void)std::initializer_list<int>
-      { ( static_cast<void>( details::link_node(future_res, c, a) )
+      (void)std::initializer_list<int>
+      { ( static_cast<void>( details::link_node(c, a) )
         , 0
         )...
-      }
-      , future_res;
+      };
+
+      return future_res;
     }
   };
 }
