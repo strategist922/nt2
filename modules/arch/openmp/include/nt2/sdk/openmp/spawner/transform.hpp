@@ -47,7 +47,7 @@ namespace nt2
       #pragma omp parallel
       {
         // Dispatch group of blocks over each threads
-        #pragma omp for schedule(static)
+        #pragma omp for schedule(dynamic,1)
         for(std::ptrdiff_t n=0;n<nblocks;++n)
         {
 #ifndef BOOST_NO_EXCEPTIONS
