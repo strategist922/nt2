@@ -32,9 +32,10 @@ namespace nt2
   {
     template<typename result_type>
     struct openmp_shared_future
-    : public std::shared_future<result_type>
     {
-      openmp_shared_future() : ready_(new bool(false))
+      openmp_shared_future()
+      : ready_(new bool(false))
+      , raw_future_()
       {}
 
       openmp_shared_future( std::shared_future<result_type> && other)
@@ -42,16 +43,19 @@ namespace nt2
         std::forward< std::shared_future<result_type> >(other)
         )
       , ready_( new bool(false) )
+      , raw_future_(
+        std::forward< std::shared_future<result_type> >(other)
+        )
       {}
 
       openmp_shared_future( details::openmp_future<result_type> && other)
-      : std::shared_future<result_type>( other.share() )
-      , ready_( other.ready_ )
+      : ready_( other.ready_ )
+      , raw_future_( other.share_raw() )
       {}
 
       openmp_shared_future( details::openmp_future<result_type> & other)
-      : std::shared_future<result_type>( other.share() )
-      , ready_( other.ready_ )
+      : ready_( other.ready_ )
+      , raw_future_( other.share_raw() )
       {}
 
       bool is_ready() const
@@ -71,8 +75,7 @@ namespace nt2
           wait();
         }
 
-        std::shared_future<result_type> & tmp(*this);
-        return tmp.get();
+        return raw_future_.get();
       }
 
       template<typename F>
@@ -110,6 +113,8 @@ namespace nt2
 
       std::shared_ptr<bool> ready_;
 
+    private:
+      std::shared_future<result_type> raw_future_;
     };
   }
 }

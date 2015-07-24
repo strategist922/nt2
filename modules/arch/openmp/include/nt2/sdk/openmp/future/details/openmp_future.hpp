@@ -31,16 +31,15 @@ namespace nt2
   {
     template<typename result_type>
     struct openmp_future
-    : public std::future<result_type>
     {
       openmp_future() : ready_(new bool(false))
       {}
 
       openmp_future( std::future<result_type> && other)
-      : std::future<result_type>(
+      : ready_( new bool(false) )
+      , raw_future_(
         std::forward< std::future<result_type> >(other)
         )
-      , ready_( new bool(false) )
       {}
 
       bool is_ready() const
@@ -57,11 +56,10 @@ namespace nt2
       {
         if(!is_ready())
         {
-          wait();
+          raw_future_.wait();
         }
 
-        std::future<result_type> & tmp(*this);
-        return tmp.get();
+        return raw_future_.get();
       }
 
       template<typename F>
@@ -100,6 +98,8 @@ namespace nt2
 
       std::shared_ptr<bool> ready_;
 
+    private:
+      std::future<result_type> raw_future_;
     };
   }
 }
