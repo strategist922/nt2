@@ -37,28 +37,27 @@ namespace nt2
     template<typename result_type>
     struct tbb_future
     : public tbb_future_base
-    , public std::future<result_type>
     {
       typedef typename tbb::flow::continue_node<
       tbb::flow::continue_msg> node_type;
 
       tbb_future()
       : tbb_future_base()
-      , std::future<result_type>()
       , node_(NULL)
       , continued_(false)
       , ready_( graph_launched_ )
+      , raw_future_()
       {
       }
 
        tbb_future( std::future<result_type> && other)
       : tbb_future_base()
-      , std::future<result_type>(
-        std::forward< std::future<result_type> >(other)
-        )
       , node_(NULL)
       , continued_(false)
       , ready_( graph_launched_ )
+      , raw_future_(
+        std::forward< std::future<result_type> >(other)
+        )
       {
       }
 
@@ -78,8 +77,17 @@ namespace nt2
         if(!continued_)
           wait();
 
-        std::future<result_type> & tmp(*this);
-        return tmp.get();
+        return raw_future_.get();
+      }
+
+      tbb_future share()
+      {
+        return tbb_future( raw_future_.share() );
+      }
+
+      std::shared_future<result_type> share_raw()
+      {
+        return raw_future_.share();
       }
 
       template<typename F>
@@ -132,6 +140,9 @@ namespace nt2
       node_type * node_;
       bool continued_;
       std::shared_ptr< std::atomic_flag > ready_;
+
+    private:
+      std::future<result_type> raw_future_;
     };
   }
 }
