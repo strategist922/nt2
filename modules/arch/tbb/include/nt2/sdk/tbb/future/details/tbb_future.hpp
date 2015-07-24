@@ -80,11 +80,6 @@ namespace nt2
         return raw_future_.get();
       }
 
-      tbb_future share()
-      {
-        return tbb_future( raw_future_.share() );
-      }
-
       std::shared_future<result_type> share_raw()
       {
         return raw_future_.share();

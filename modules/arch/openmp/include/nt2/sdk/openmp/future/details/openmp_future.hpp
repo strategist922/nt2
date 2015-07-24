@@ -62,6 +62,11 @@ namespace nt2
         return raw_future_.get();
       }
 
+      std::shared_future<result_type> share_raw()
+      {
+        return raw_future_.share();
+      }
+
       template<typename F>
       openmp_future<typename std::result_of<F(openmp_future)>::type>
       then(F && f)
