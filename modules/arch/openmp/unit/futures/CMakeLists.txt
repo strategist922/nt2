@@ -9,6 +9,7 @@
 
 SET( SOURCES
   future.cpp
+  shared_future.cpp
 # List of test files for toolbox core.settings
    )
 
