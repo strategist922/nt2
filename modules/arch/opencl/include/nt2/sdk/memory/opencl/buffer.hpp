@@ -1,11 +1,15 @@
-#ifndef NT2_SDK_COPENCL_BUFFER_HPP_INCLUDED
-#define NT2_SDK_COPENCL_BUFFER_HPP_INCLUDED
+#ifndef NT2_SDK_MEMORY_OPENCL_BUFFER_HPP_INCLUDED
+#define NT2_SDK_MEMORY_OPENCL_BUFFER_HPP_INCLUDED
 
 #include <boost/compute/core.hpp>
 #include <boost/compute/container/vector.hpp>
 #include <boost/compute/buffer.hpp>
 #include <nt2/sdk/memory/container.hpp>
-#include <nt2/include/functions/resize.hpp>
+#include <nt2/include/functions/of_size.hpp>
+
+// allocator types - will be useful when implementing pinned memory
+//#include <boost/compute/allocator/buffer_allocator.hpp>
+//#include <boost/compute/allocator/pinned_allocator.hpp>
 
 //#include <nt2/include/functions/copy.hpp>
 

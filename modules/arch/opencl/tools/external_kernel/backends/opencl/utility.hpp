@@ -83,6 +83,36 @@ void is_on_device(Expr const& e, std::vector<std::size_t> & locality)
   else locality.push_back(0);
 }
 
+template<class Expr>
+void get_rhs_ops(int & t_ind, Expr const& rhs
+            , std::vector<std::vector<std::string> >& accumulator
+            )
+{
+  boost::format exp = boost::format("");
+  exp = boost::format("%1% %2%(") % rhs.type.value_type % rhs.operation;
+  std::vector<std::string> tmpAccu;
+  tmpAccu.push_back(std::string(""));
+  tmpAccu.push_back(rhs.operation);
+  tmpAccu.push_back(rhs.type.value_type);
+
+  for (std::size_t i = 0 ; i < rhs.children.size() ; ++i )
+  {
+    exp = boost::format("%1% %2% arg%3%,") % exp % rhs.children[i].type.value_type % to_string(i);
+    std::string indx = "t" + to_string(t_ind);
+    tmpAccu.push_back(rhs.children[i].type.value_type);
+
+    if( !( is_terminal(rhs.children[i].operation) ) )
+      get_rhs_ops(t_ind, rhs.children[i], accumulator);
+  }
+  std::string test = exp.str();
+  test.pop_back();
+  test = test + " )";
+
+//  tmpAccu.push_back(test);
+  tmpAccu[0] = test;
+  accumulator.push_back(tmpAccu);
+}
+
 template<class Expr,class Format>
 void get_rhs( int & t_ind, Expr const& rhs,Format & rhs_expr, Format & params
             , std::string & params_call , std::vector<std::size_t> & locality)
@@ -174,76 +204,76 @@ void add_map_includes(Expr const& rhs , Map & m, std::string const& s)
 }
 
 
-std::set<std::string> cuda_fun_headers()
+std::set<std::string> opencl_fun_headers()
 {
   std::set<std::string> s;
-  s.insert("sqrt");
-  s.insert("rsqrt");
+
+// TODO: add boost::compute headers
+// Currently only has opnecl built-ins
+  s.insert("acos");
+  s.insert("acosh");
+  s.insert("acospi");
+  s.insert("asin");
+  s.insert("asinh");
+  s.insert("asinpi");
+  s.insert("atan");
+  s.insert("atan2");
+  s.insert("atanh");
+  s.insert("atanpi");
+  s.insert("atan2pi");
   s.insert("cbrt");
-  s.insert("rcbrt");
-  s.insert("hypot");
+  s.insert("ceil");
+  s.insert("copysign");
+  s.insert("cos");
+  s.insert("cosh");
+  s.insert("cospi");
+  s.insert("erfc");
+  s.insert("erf");
   s.insert("exp");
   s.insert("exp2");
   s.insert("exp10");
   s.insert("expm1");
+  s.insert("fabs");
+  s.insert("fdim");
+  s.insert("floor");
+  s.insert("fma");
+  s.insert("fmax");
+  s.insert("fmin");
+  s.insert("fmod");
+  s.insert("fract");
+  s.insert("frexp");
+  s.insert("hypot");
+  s.insert("ilogb");
+  s.insert("ldexp");
+  s.insert("lgamma");
+  s.insert("lgamma_r");
   s.insert("log");
   s.insert("log2");
   s.insert("log10");
   s.insert("log1p");
-  s.insert("sin");
-  s.insert("cos");
-  s.insert("tan");
-  s.insert("sincos");
-  s.insert("sinpi");
-  s.insert("cospi");
-  s.insert("sincospi");
-  s.insert("asin");
-  s.insert("acos");
-  s.insert("atan");
-  s.insert("atan2");
-  s.insert("sinh");
-  s.insert("cosh");
-  s.insert("tanh");
-  s.insert("asinh");
-  s.insert("acosh");
-  s.insert("atanh");
-  s.insert("pow");
-  s.insert("erf");
-  s.insert("erfc");
-  s.insert("erfinv");
-  s.insert("erfcinv");
-  s.insert("erfcx");
-  s.insert("normcdf");
-  s.insert("normcdfinv");
-  s.insert("lgamma");
-  s.insert("tgamma");
-  s.insert("fma");
-  s.insert("frexp");
-  s.insert("ldexp");
-  s.insert("scalbn");
   s.insert("logb");
-  s.insert("ilogb");
-  s.insert("j0");
-  s.insert("j1");
-  s.insert("jn");
-  s.insert("y0");
-  s.insert("y1");
-  s.insert("yn");
-  s.insert("fmod");
+  s.insert("mad");
+  s.insert("modf");
+  s.insert("nan");
+  s.insert("nextafter");
+  s.insert("pow");
+  s.insert("pown");
+  s.insert("powr");
   s.insert("remainder");
   s.insert("remquo");
-  s.insert("mod");
-  s.insert("fdim");
-  s.insert("trunc");
-  s.insert("round");
   s.insert("rint");
-  s.insert("nearbyint");
-  s.insert("ceil");
-  s.insert("floor");
-  s.insert("lrint");
-  s.insert("lround");
-  s.insert("llrint");
-  s.insert("llround");
+  s.insert("rootn");
+  s.insert("round");
+  s.insert("rsqrt");
+  s.insert("sin");
+  s.insert("sincos");
+  s.insert("sinh");
+  s.insert("sinpi");
+  s.insert("sqrt");
+  s.insert("tan");
+  s.insert("tanh");
+  s.insert("tanpi");
+  s.insert("tgamma");
 
   return s;
 }

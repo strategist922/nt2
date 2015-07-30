@@ -18,6 +18,7 @@
 #include <set>
 #include <utility>
 #include <boost/format.hpp>
+#include <regex>
 #include "utility.hpp"
 
 template<class Expr>
@@ -68,6 +69,8 @@ void rhs_params(Expr const& rhs, std::vector<std::string> & params_call, std::si
 
 extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol const& symbol)
 {
+std::cout << "USING OPENCL GENERATOR\n";
+
   std::string filename_output = std::string(filename) + "/generated.cpp";
   std::string filename_output_cu = std::string(filename) + "/generated_cl.cl";
   std::vector<tagged_expression> v = symbol.arguments ;
@@ -82,10 +85,11 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   // define available functions for the back-end
   std::set<std::string> include_headers;
 
+  //TODO: define opencl function headers
   if(symbol.target == "opencl")
-    include_headers = cuda_fun_headers();
+    include_headers = opencl_fun_headers();
 
-  std::cout << "---------------kernel-----------------" << std::endl;
+  std::cout << "--------------kernel-----------------\n";
   std::cout << symbol.kernel << std::endl;
   std::cout << symbol.target << std::endl;
 
@@ -128,6 +132,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   // keep the number of params for lhs
   int lhs_size = indx;
+  std::vector<std::vector<std::string> > fn_signatures;
 
   // recognize tie node to parse multiple expression separately
   if(rhs.operation == "tie")
@@ -137,6 +142,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     {
       rhs_expr[i] = boost::format("%1%(") % rhs.children[i].operation ;
       get_rhs(indx,rhs.children[i], rhs_expr[i] , params , params_call, locality);
+      get_rhs_ops(indx,rhs.children[i], fn_signatures);
       rhs_expr[i] = boost::format("%1%);") % rhs_expr[i] ;
       add_map_includes(rhs.children[i], map_includes , symbol.target );
     }
@@ -165,9 +171,20 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     rhs_expr.resize(1);
     rhs_expr[0] = boost::format("%1%(") % op_rhs ;
     get_rhs(indx,rhs, rhs_expr[0] , params , params_call, locality);
+    get_rhs_ops(indx,rhs, fn_signatures);
     rhs_expr[0] = boost::format("%1%);") % rhs_expr[0] ;
     add_map_includes(rhs, map_includes , symbol.target );
   }
+
+//  std::cout << "*****************************************\n";
+//  std::cout << "fn_signatures = \n";
+//  for(std::size_t i = 0 ; i < fn_signatures.size() ; ++i ) {
+//    std::cout << fn_signatures[i][0] << "\n";
+//    for(std::size_t j = 1 ; j < fn_signatures[i].size() ; ++j )
+//      std::cout << fn_signatures[i][j] << "\t";
+//    std::cout << "\n";
+//  }
+//  std::cout << "*****************************************\n";
 
   // parameter call for the right-hand side
   for(std::size_t i = 0 ; i < indx - lhs_size ; ++i )
@@ -193,7 +210,8 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
                                                      % rhs_expr[i] % "\n";
     }
   }
-  else core_expr = boost::format ("%1% = %2%%3%") % lhs_expr[0] % rhs_expr[0] % "\n";
+  else core_expr = boost::format ("%1% = %2%") % lhs_expr[0] % rhs_expr[0] ;
+
 
   typedef std::map<std::string,std::string> mtype;
   typedef std::set<std::string> stype;
@@ -218,13 +236,13 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   std::vector<std::string>  test_dummy(locality.size());
   std::size_t rhs_params_indx = 0;
-   rhs_params(rhs,test_dummy,rhs_params_indx,locality.size()-lhs_size,0);
+  rhs_params(rhs,test_dummy,rhs_params_indx,locality.size()-lhs_size,0);
 
-    for(std::size_t i =0 ; i < test_dummy.size() ; ++i)
-    {
+  for(std::size_t i =0 ; i < test_dummy.size() ; ++i)
+  {
      boost::replace_all(test_dummy[i], "()" , "(a1)");
-    }
-   std::cout << "---------------rhs params-----------------" << std::endl;
+  }
+  std::cout << "---------------rhs params-----------------" << std::endl;
   for(std::size_t i = 0; i < test_dummy.size() ; ++i)
   {
     std::cout << test_dummy[i] << std::endl;
@@ -233,13 +251,14 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 //-----------------------write generated.cu file---------------------------//
   std::string kernl_indx ;
 
-// opencl directly has index
+  if ( symbol.target == "opencl" )
     kernl_indx = "get_global_id(0)";
-//  if(symbol.target == "cuda")
-//    kernl_indx = "blockIdx.x*blockDim.x+threadIdx.x";
 
-  boost::format expr ("__global__ void %1%%2% (%3%)\n{\n int %4% = %5%;\n%6%}\n");
-  expr = expr % op_rhs % to_string(indx) % params % rank % kernl_indx % core_expr;
+  std::string fn_sig = op_rhs + to_string(indx);
+
+//  boost::format expr ("__kernel void %1%%2% (%3%)\n{\n int %4% = %5%;\n%6%}\n");
+  boost::format expr ("void %1% (%2%)\n{\n int %3% = %4%;\n%5%\n}\n");
+  expr = expr % fn_sig % params % rank % kernl_indx % core_expr;
 
   boost::format cu_expr = boost::format("%1%\n %2%") % includes % expr ;
 
@@ -251,42 +270,119 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   boost::replace_all(params_cukernel ,"   " , " " );
   boost::replace_all(params_cukernel ,"  " , " " );
 
-  std::string kernel_wrapper = op_rhs + to_string(indx) + "_wrapper";
+  std::string kernel_wrapper = fn_sig + "_wrapper";
 
-// TODO: Is this a declaration or function call? Needs modification, but extent unknown
+
+// generate kernel
+  boost::format str_expr("");
+  str_expr = boost::format("%1%std::string %2% ()\n{\n")
+            % str_expr % fn_sig;
+  str_expr = boost::format("%1%  std::string res(\"\");\n")
+            % str_expr;
+
+ // Add auxiliary function definitions
+  for ( std::size_t i = 0 ; i < fn_signatures.size() ; ++i ) {
+      stype::const_iterator it_set = include_headers.find(fn_signatures[i][1]);
+      if( it_set == include_headers.end() ) {
+        str_expr = boost::format("%1%  res += std::string(\"%2%\");\n")
+                  % str_expr % fn_signatures[i][0];
+        str_expr = boost::format("%1%  res += nt2::opencl::%2%() + std::string(\"\\n\");\n")
+                  % str_expr % fn_signatures[i][1];
+      }
+  }
+
+  str_expr = boost::format("%1%  res += std::string(\"__kernel void %2% (%3%)\\n{\\n\");\n")
+            % str_expr % fn_sig % params_wrapper;
+  str_expr = boost::format("%1%  res += std::string(\"  int %2% = %3%\\n\");\n")
+            % str_expr % rank % kernl_indx;
+  str_expr = boost::format("%1%  res += std::string(\"  %2%\\n\");\n")
+            % str_expr % core_expr;
+  str_expr = boost::format("%1%  res += std::string(\"}\\n\");\n")
+            % str_expr;
+  str_expr = boost::format("%1%\n  return res;\n}\n")
+            % str_expr;
+
+  std::cout << "***********************************\n"
+            << "output = \n";
+  std::cout << fn_sig << "\n";
+  std::cout << str_expr
+            << "***********************************\n";
+
+  std::string cl_params_wrapper = params_wrapper;
+  std::regex compute_v_wrap1("\\s[a-zA-Z0-9]*\\*\\s");
+  std::regex compute_v_wrap2("\\*");
+  cl_params_wrapper = std::regex_replace(cl_params_wrapper, compute_v_wrap1, " compute::vector<$&> & ");
+  cl_params_wrapper = std::regex_replace(cl_params_wrapper, compute_v_wrap2, "");
+
+//TODO: insert kernel build/call to replace current form
   cu_expr = boost::format("%1%\n%2%%3%%4%")
-  % cu_expr
-  % ("void " + kernel_wrapper + "(")
-  % params_wrapper
-  % (", dim3 dimGrid, dim3 blockDim, cudaStream_t stream = 0)\n{\n"
-    + op_rhs + to_string(indx) + "<<<dimGrid,blockDim,0,stream>>>" + "(" + params_cukernel + ");\n}\n"
-    ) ;
+           % cu_expr
+           % ("void " + kernel_wrapper + "(")
+           % cl_params_wrapper
+           % ", dim3 dimGrid, dim3 blockDim, cudaStream_t stream = 0)\n{\n"
+//    + op_rhs + to_string(indx) + "(" + params_cukernel + ");
+     ;
+
+// TODO: doesn't yet account for possibility of multiple contexts(devices)
+  cu_expr = boost::format("%1%%2%%3%%4%%5%%6%")
+    % cu_expr
+    % "  compute::program program = \n"
+    % "    compute::program::create_with_source("
+    % (fn_sig + "()")
+    % ", device[0]);\n"
+    % "  program.build();\n"
+  ;
+
+  cu_expr = boost::format("%1%%2%%3%%4%")
+    % cu_expr
+    % "  compute::kernel kernel(program, "
+    % fn_sig
+    % ");\n"
+  ;
+
+cl_params_wrapper = std::regex_replace(cl_params_wrapper, only_args, "$&");
+
+for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
+  cu_expr = boost::format("%1%%2%%3%%4%%5%")
+    % cu_expr
+    % "kernel.set_arg("
+    % (i-2)
+    % " , "
+    % boost::proto::value(....).specifics().data()
+    % ");\n"
+  ;
+}
+
+  cu_expr = boost::format("%1%%2%")
+    % cu_expr
+    % "\n}\n";
+
 
   {
     std::ofstream output_cu(filename_output_cu.c_str(), std::ios::app);
     output_cu << cu_expr ;
   }
 
-
 //--------------------------------streaming-----------------------------------//
 
   std::string stream_cu = "";
 
- stream_cu =
-  stream_cu
-  + "std::size_t size = numel(boost::proto::child_c<0>(a1));\n"
-  + "std::size_t blockSize = std::min(std::size_t(256),size);\n"
-  + "std::size_t nStreams = std::min(std::size_t(4),size/blockSize);\n"
-  + "std::size_t leftover = size % blockSize ;\n"
-  + "std::size_t n = size / blockSize;\n"
-  + "dim3 dimGrid  = blockSize;\n"
-  + "dim3 blockDim = 1;\n"
-  + "cudaStream_t stream[nStreams];\n"
-  + "\n\n"
+  stream_cu =
+    stream_cu
+    + "std::size_t size = numel(boost::proto::child_c<0>(a1));\n"
+    + "std::size_t blockSize = std::min(std::size_t(256),size);\n"
+    + "std::size_t nStreams = std::min(std::size_t(4),size/blockSize);\n"
+    + "std::size_t leftover = size % blockSize ;\n"
+    + "std::size_t n = size / blockSize;\n"
+    + "std::size_t dimGrid  = blockSize;\n"
+    + "std::size_t blockDim = 1;\n"
+//    + "cudaStream_t stream[nStreams];\n"
+    + "\n\n"
   ;
 
   // Allocate device memory -- generated -- TODO : add informations to allocate
   // on is it an lhs ?
+// compute::vectors are already on device, aren't they?
   for(std::size_t i = 0; i<locality.size() ; ++i )
   {
     if(i < lhs_size )
@@ -322,67 +418,46 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     }
   }
 
+  stream_cu =
+    stream_cu
+    + "std::vector<compute::device> device = compute::system::devices();\n"
+  ;
+
 // TODO: Replace stream management with command queue management
   stream_cu =
     stream_cu
-   + "\nfor(std::size_t i=0; i < nStreams ; ++i)\n"
-   + "{\n"
-   + "   cudaStreamCreate(&stream[i]);\n"
-   + "}\n\n"
-   + "for(std::size_t i = 0; i < n ; ++i)\n"
-   + "{\n"
-   + "   std::size_t j = i % nStreams;\n"
-   +
-   + "   //------------ transfers host to device ------------//\n\n"
+     + "\ncompute::command_queue stream[nStreams];\n\n"
+//   + "for(std::size_t i = 0; i < n ; ++i)\n"
+//   + "{\n"
+//   + "   std::size_t j = i % nStreams;\n"
+//   + "}\n"
    ;
 
-  // Host -> device -- generated
-  for(std::size_t k = 0 ; k < locality.size() ; k++)
-  {
-    std::string k_s = to_string(k);
-    if(locality[k] == 0 )
-    {
-      if( k < lhs_size)
-      {
-        if(lhs.operation =="tie")
-        {
-        stream_cu =
-                  stream_cu
-                  +"   boost::proto::value(boost::proto::child_c<"
-                  +k_s
-                  +">(a0)).specifics().transfer_htd(boost::proto::child_c<"
-                  +k_s
-                  +">(a0), i, stream["
-                  +"j"
-                  +"] , j );\n"
-                  ;
-        }
-        else
-        {
-        stream_cu =
-                  stream_cu
-                  +"   boost::proto::value(a0).specifics().transfer_htd(a0, i, stream["
-                  +"j"
-                  +"], j );\n"
-                  ;
-        }
-      }
-      else
-      {
-        std::string num = to_string(k-lhs_size);
-        stream_cu += "   boost::proto::value("
-                  + test_dummy[k-lhs_size]
-                  +").specifics().transfer_htd("
-                  + test_dummy[k-lhs_size]
-                  +", i, stream["
-                  +"j"
-                  +"], j );\n";
-      }
-    }
-  }
+  stream_cu =
+    stream_cu
+    + "   //------------ transfers host to device ------------//\n\n"
+  ;
+
+
+  // Detect all devides
+//TODO: Move this before queue creation, make queue creation depend on devices
+  std::string detect_device =
+      "  std::vector<compute::device> devices;\n";
+  detect_device = detect_device
+    + "  for ( compute::device dev : compute::system::devices() )\n"
+    + "    devices.push_back(dev);\n"
+  ;
+
+
+  // insert framework required to actually call kernel
+  std::string kernel;
+  kernel =
+// TODO: actually handled above, just need to reorganize
+    ""
+  ;
 
   // write kernel --generated  -- add shift to data access if locality == 1
-  std::string kernel = "      "+kernel_wrapper + "(" ;
+  kernel = "    "+kernel_wrapper + "(" ;
   for(std::size_t k = 0 ; k < locality.size() ; k++)
   {
     std::string k_s = to_string(k);
@@ -392,15 +467,15 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       {
         if(lhs.operation =="tie")
         {
-          kernel += " boost::proto::child_c<"+k_s+">(a0),";
+          kernel += " boost::proto::child_c<"+k_s+">(a0),\n    ";
         }
         else
         {
-          kernel += " a0,";
+          kernel += " a0,\n    ";
         }
       }
        else
-        kernel += test_dummy[k-lhs_size]+",";
+        kernel += test_dummy[k-lhs_size]+",\n    ";
     }
 
     else if(locality[k] == 1)
@@ -409,15 +484,15 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       {
         if(lhs.operation =="tie")
         {
-          kernel += " boost::proto::child_c<"+k_s+">(a0).data(),";
+          kernel += " boost::proto::child_c<"+k_s+">(a0).data(),\n    ";
         }
         else
         {
-          kernel += " a0.data(),";
+          kernel += " a0.data(),\n    ";
         }
       }
        else
-        kernel += test_dummy[k-lhs_size]+".data(),";
+        kernel += test_dummy[k-lhs_size]+".data(),\n    ";
     }
     else
     {
@@ -425,176 +500,93 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       {
         if(lhs.operation =="tie")
         {
-          kernel += " boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),";
+          kernel += " boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n    ";
         }
         else
         {
-          kernel += " boost::proto::value(a0).specifics().data(j),";
+          kernel += " boost::proto::value(a0).specifics().data(j),\n    ";
         }
       }
       else
-        kernel += " boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),";
+        kernel += " boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n    ";
     }
   }
   kernel.erase(kernel.size()-1);
   kernel +=",dimGrid,blockDim,stream[j]);\n";
 
   stream_cu =
-      stream_cu
-      + "\n      //------------------ kernel call -------------------//\n\n"
-      + kernel
-      + "\n      //------------ transfers device to host ------------//\n\n"
-      ;
+    stream_cu
+    + "\n      //------------------ kernel call -------------------//\n\n"
+    + kernel
+    + "\n      //------------ transfers device to host ------------//\n\n"
+    ;
 
-  // Device -> Host -- generated -- only for lhs
-  for(std::size_t k = 0 ; k < lhs_size ; k++)
-  {
-   std::string k_s = to_string(k);
-   if(locality[k] == 0)
-    {
-        if (lhs.operation =="tie")
-        {
-          stream_cu =
-          stream_cu
-          +"   boost::proto::value(boost::proto::child_c<"
-          +k_s
-          +">(a0)).specifics().transfer_dth(boost::proto::child_c<"
-          +k_s
-          +">(a0), i,stream[j], j);\n}\n";
-        }
-        else
-        {
-          stream_cu =
-          stream_cu
-          +"   boost::proto::value(a0).specifics().transfer_dth(a0, i, stream[j], j );\n"
-          // +"}\n"
-          ;
-        }
-    }
-  }
-
-// LAST iteration if blocksize not multiple of data size --TODO write a function for each part
-stream_cu += "\nif(leftover != 0)\n{\n   std::size_t j = n % nStreams;\n   dimGrid = leftover;\n\n   //------------ transfers host to device ------------//\n\n";
-
-  // Host -> device -- generated
-  for(std::size_t k = 0 ; k < locality.size() ; k++)
-  {
-    std::string k_s = to_string(k);
-    if(locality[k] == 0 )
-    {
-      if( k < lhs_size)
-      {
-        if(lhs.operation =="tie")
-        {
-        stream_cu =
-                  stream_cu
-                  +"   boost::proto::value(boost::proto::child_c<"
-                  +k_s
-                  +">(a0)).specifics().transfer_htd(boost::proto::child_c<"
-                  +k_s
-                  +">(a0), n, stream[j], j, leftover"
-                  +");\n"
-                  ;
-        }
-        else
-        {
-        stream_cu =
-                  stream_cu
-                  +"   boost::proto::value(a0).specifics().transfer_htd(a0, n, stream[j], j ,leftover);\n"
-                  ;
-        }
-      }
-      else
-      {
-        std::string num = to_string(k-lhs_size);
-        stream_cu += "   boost::proto::value("
-                  +test_dummy[k-lhs_size]
-                  +").specifics().transfer_htd("
-                  +test_dummy[k-lhs_size]
-                  +", n,stream[j], j , leftover );\n";
-      }
-    }
-  }
 
   stream_cu =
-      stream_cu
-      + "\n      //------------------ kernel call -------------------//\n\n"
-      + kernel
-      + "\n      //------------ transfers device to host ------------//\n\n"
-      ;
+    stream_cu
+    + "\n      //------------------ kernel call -------------------//\n\n"
+    + kernel
+    + "\n      //------------ transfers device to host ------------//\n\n"
+    ;
 
-  // Device -> Host -- generated -- only for lhs
-  for(std::size_t k = 0 ; k < lhs_size ; k++)
-  {
-   std::string k_s = to_string(k);
-   if(locality[k] == 0)
-    {
-        if (lhs.operation =="tie")
-        {
-          stream_cu =
-          stream_cu
-          +"   boost::proto::value(boost::proto::child_c<"
-          +k_s
-          +">(a0)).specifics().transfer_dth(boost::proto::child_c<"
-          +k_s
-          +">(a0), n, stream[j], j , leftover );\n";
-        }
-        else
-        {
-          stream_cu =
-          stream_cu
-          +"   boost::proto::value(a0).specifics().transfer_dth(a0, n, stream[j], j, leftover );\n"
+//  // Device -> Host -- generated -- only for lhs
 
-          ;
-        }
-    }
-  }
-
-stream_cu =
-  stream_cu
-  + "}\n\nfor(std::size_t i=0; i < nStreams ; ++i)\n"
-  + "{\n"
-  + "   cudaStreamDestroy(stream[i]);\n"
-  + "}\n\n"
-  ;
+// TODO: Did you need to destroy the queues? I can't remember right now
+//stream_cu =
+//  stream_cu
+//  + "\nfor(std::size_t i=0; i < nStreams ; ++i)\n"
+//  + "{\n"
+//  + "   cudaStreamDestroy(stream[i]);\n"
+//  + "}\n\n"
+//  ;
 
 //-----------------------write generated.cpp file---------------------------//
 
- std::string kernel_trans = "void " + kernel_wrapper + "(" + params_wrapper
-   + ", dim3 dimGrid, dim3 blockDim, cudaStream_t stream = 0);\n\n";
+  std::string kernel_trans =
+    "void "
+    + kernel_wrapper
+    + "("
+    + params_wrapper
+    + ", dim3 dimGrid, dim3 blockDim, cudaStream_t stream = 0);\n\n"
+  ;
 
   std::string header_inc = "";
   header_inc =
-  header_inc
-  + "#include <nt2/sdk/external_kernel/external_kernel.hpp>\n"
-  + "#include <nt2/sdk/"+symbol.target+"/"+symbol.target+".hpp>\n"
-  + "#include <nt2/core/functions/transform.hpp>\n"
-  + "#include <nt2/include/functions/height.hpp>\n"
-  + "#include <nt2/include/functions/width.hpp>\n"
-  + "#include <nt2/include/functions/numel.hpp>\n"
-  + "#include <cuda.h>\n"
+    header_inc
+    + "#include <nt2/sdk/external_kernel/external_kernel.hpp>\n"
+    + "#include <nt2/sdk/"+symbol.target+"/"+symbol.target+".hpp>\n"
+    + "#include <nt2/core/functions/transform.hpp>\n"
+    + "#include <nt2/include/functions/height.hpp>\n"
+    + "#include <nt2/include/functions/width.hpp>\n"
+    + "#include <nt2/include/functions/numel.hpp>\n"
+    + "#include <CL/cl.h>\n"
+    + "#include <boost/compute/core.hpp>\n"
+    + "#include <boost/compute/container/vector.hpp>\n"
   ;
 
   if(rhs.operation == "tie" ) header_inc += "#include <nt2/include/functions/tie.hpp>\n";
 
   header_inc=
-  header_inc
-  + "\n\n"
-  + kernel_trans
-  + "using boost::proto::child_c;\n\n"
+    header_inc
+    + "\n\n"
+    + kernel_trans
+    + "using boost::proto::child_c;\n"
+    + "namespace compute = boost::compute;\n"
+    + "\n"
   ;
 
   std::string transform_expr =
-  header_inc
-  + "namespace nt2 {\n\n"
-  + "template<> template <>\n"
-  + "void nt2::external_kernel<"
-  + "nt2::tag::" + symbol.kernel + "_, "
-  + "nt2::tag::" + symbol.target + "_" + symbol.archi_tag + " >::call<"
-  + symbol.arguments[0].raw + ", "
-  + symbol.arguments[1].raw + "> ("
+    header_inc
+    + "namespace nt2 {\n\n"
+    + "template<> template <>\n"
+    + "void nt2::external_kernel<"
+    + "nt2::tag::" + symbol.kernel + "_, "
+    + "nt2::tag::" + symbol.target + "_" + symbol.archi_tag + " >::call<"
+    + symbol.arguments[0].raw + ", "
+    + symbol.arguments[1].raw + "> ("
     + symbol.arguments[0].raw + "& a0, "
-    + symbol.arguments[1].raw + "& a1)\n{\n";
+    + symbol.arguments[1].raw + "& a1)\n{\n"
+  ;
 
 
   std::string dimGrid = "int dimGrid = 1;\n";
@@ -603,12 +595,14 @@ stream_cu =
 
   transform_expr  =
     transform_expr
-  + stream_cu
-  // + dimGrid
-  // + blockDim
-  // + op_rhs + to_string(indx) + "_wrapper" + "(" + params_call_raw
-  // + ", dimGrid, blockDim" + ");\n"
-  + "}\n}\n";
+    + stream_cu
+//   + dimGrid
+//   + blockDim
+//   + op_rhs + to_string(indx) + "_wrapper" + "(" + params_call_raw
+//   + ", dimGrid, blockDim" + ");\n"
+    + "} // kernel\n"
+    + "} // namespace nt2\n"
+  ;
 
   {
     std::ofstream output(filename_output.c_str(), std::ios::app);
