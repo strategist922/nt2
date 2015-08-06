@@ -69,10 +69,10 @@ void rhs_params(Expr const& rhs, std::vector<std::string> & params_call, std::si
 
 extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol const& symbol)
 {
-std::cout << "USING OPENCL GENERATOR\n";
+  std::cout << "USING OPENCL GENERATOR\n";
 
   std::string filename_output = std::string(filename) + "/generated.cpp";
-  std::string filename_output_cu = std::string(filename) + "/generated_cl.cl";
+  std::string filename_output_cu = std::string(filename) + "/generated_cl.cpp";
   std::vector<tagged_expression> v = symbol.arguments ;
 
   boost::format params = boost::format("");
@@ -231,8 +231,12 @@ std::cout << "USING OPENCL GENERATOR\n";
   }
 
 // TODO: possibly replace with boost::compute includes
-  if(symbol.target == "opencl")
+  if(symbol.target == "opencl") {
     includes += "#include <CL/cl.h>\n";
+    includes += "#include <boost/compute/container/vector.hpp>\n";
+    includes += "#include <string>\n";
+    includes += "\nnamespace compute = boost::compute;\n\n";
+  }
 
   std::vector<std::string>  test_dummy(locality.size());
   std::size_t rhs_params_indx = 0;
@@ -242,11 +246,11 @@ std::cout << "USING OPENCL GENERATOR\n";
   {
      boost::replace_all(test_dummy[i], "()" , "(a1)");
   }
-  std::cout << "---------------rhs params-----------------" << std::endl;
-  for(std::size_t i = 0; i < test_dummy.size() ; ++i)
-  {
-    std::cout << test_dummy[i] << std::endl;
-  }
+//  std::cout << "---------------rhs params-----------------" << std::endl;
+//  for(std::size_t i = 0; i < test_dummy.size() ; ++i)
+//  {
+//    std::cout << test_dummy[i] << std::endl;
+//  }
 
 //-----------------------write generated.cu file---------------------------//
   std::string kernl_indx ;
@@ -256,11 +260,7 @@ std::cout << "USING OPENCL GENERATOR\n";
 
   std::string fn_sig = op_rhs + to_string(indx);
 
-//  boost::format expr ("__kernel void %1%%2% (%3%)\n{\n int %4% = %5%;\n%6%}\n");
-  boost::format expr ("void %1% (%2%)\n{\n int %3% = %4%;\n%5%\n}\n");
-  expr = expr % fn_sig % params % rank % kernl_indx % core_expr;
-
-  boost::format cu_expr = boost::format("%1%\n %2%") % includes % expr ;
+  boost::format cu_expr;
 
   std::string params_wrapper = boost::replace_all_copy(params.str() , "__restrict" , "" );
   std::string params_cukernel = boost::replace_all_copy(params_wrapper ,value_type , "" );
@@ -282,13 +282,13 @@ std::cout << "USING OPENCL GENERATOR\n";
 
  // Add auxiliary function definitions
   for ( std::size_t i = 0 ; i < fn_signatures.size() ; ++i ) {
-      stype::const_iterator it_set = include_headers.find(fn_signatures[i][1]);
-      if( it_set == include_headers.end() ) {
-        str_expr = boost::format("%1%  res += std::string(\"%2%\");\n")
-                  % str_expr % fn_signatures[i][0];
-        str_expr = boost::format("%1%  res += nt2::opencl::%2%() + std::string(\"\\n\");\n")
-                  % str_expr % fn_signatures[i][1];
-      }
+    stype::const_iterator it_set = include_headers.find(fn_signatures[i][1]);
+    if( it_set == include_headers.end() ) {
+      str_expr = boost::format("%1%  res += std::string(\"inline %2%\");\n")
+                % str_expr % fn_signatures[i][0];
+      str_expr = boost::format("%1%  res += nt2::opencl::%2%() + std::string(\"\\n\");\n")
+                % str_expr % fn_signatures[i][1];
+    }
   }
 
   str_expr = boost::format("%1%  res += std::string(\"__kernel void %2% (%3%)\\n{\\n\");\n")
@@ -302,11 +302,11 @@ std::cout << "USING OPENCL GENERATOR\n";
   str_expr = boost::format("%1%\n  return res;\n}\n")
             % str_expr;
 
-  std::cout << "***********************************\n"
-            << "output = \n";
-  std::cout << fn_sig << "\n";
-  std::cout << str_expr
-            << "***********************************\n";
+//  std::cout << "***********************************\n"
+//            << "output = \n";
+//  std::cout << fn_sig << "\n";
+//  std::cout << str_expr
+//            << "***********************************\n";
 
   std::string cl_params_wrapper = params_wrapper;
   std::regex compute_v_wrap1("\\s[a-zA-Z0-9]*\\*\\s");
@@ -315,47 +315,87 @@ std::cout << "USING OPENCL GENERATOR\n";
   cl_params_wrapper = std::regex_replace(cl_params_wrapper, compute_v_wrap2, "");
 
 //TODO: insert kernel build/call to replace current form
-  cu_expr = boost::format("%1%\n%2%%3%%4%")
-           % cu_expr
-           % ("void " + kernel_wrapper + "(")
-           % cl_params_wrapper
-           % ", dim3 dimGrid, dim3 blockDim, cudaStream_t stream = 0)\n{\n"
-//    + op_rhs + to_string(indx) + "(" + params_cukernel + ");
-     ;
+  boost::format kernel_wrapper_fn;
+  std::string kernel_wrapper_decl;
+  kernel_wrapper_decl =
+    + "void "
+    + kernel_wrapper
+    + "("
+    + cl_params_wrapper
+    + ", std::size_t dimGrid, std::size_t blockDim, "
+    + "std::size_t gridNum, std::size_t blockNum, "
+    + "compute::command_queue & queue)"
+  ;
+
+  kernel_wrapper_fn = boost::format("%1%%2%\n{\n")
+    % kernel_wrapper_fn
+    % kernel_wrapper_decl
+  ;
 
 // TODO: doesn't yet account for possibility of multiple contexts(devices)
-  cu_expr = boost::format("%1%%2%%3%%4%%5%%6%")
-    % cu_expr
+  kernel_wrapper_fn = boost::format("%1%%2%%3%%4%%5%%6%")
+    % kernel_wrapper_fn
     % "  compute::program program = \n"
     % "    compute::program::create_with_source("
     % (fn_sig + "()")
-    % ", device[0]);\n"
-    % "  program.build();\n"
+    % ", queue.get_context());\n"
+    % "  program.build();\n\n"
   ;
 
-  cu_expr = boost::format("%1%%2%%3%%4%")
-    % cu_expr
-    % "  compute::kernel kernel(program, "
+  kernel_wrapper_fn = boost::format("%1%%2%%3%%4%")
+    % kernel_wrapper_fn
+    % "  compute::kernel kernel(program, \""
     % fn_sig
-    % ");\n"
+    % "\");\n"
   ;
 
-cl_params_wrapper = std::regex_replace(cl_params_wrapper, only_args, "$&");
+//cl_params_wrapper = std::regex_replace(cl_params_wrapper, only_args, "$&");
+  std::regex extract_vars("\\s[a-zA-Z0-9]*\\*\\s* (t[0-9]*)");
+  std::smatch cl_fn_vars;
+//  std::regex_search(params_wrapper, cl_fn_vars, extract_vars);
+  std::sregex_iterator cl_it(params_wrapper.begin(), params_wrapper.end(), extract_vars);
+  std::sregex_iterator regex_end;
 
-for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
-  cu_expr = boost::format("%1%%2%%3%%4%%5%")
-    % cu_expr
-    % "kernel.set_arg("
-    % (i-2)
-    % " , "
-    % boost::proto::value(....).specifics().data()
-    % ");\n"
-  ;
+{
+  int i = 0;
+  for ( auto it = cl_it ; it != regex_end ; ++it ) {
+    kernel_wrapper_fn = boost::format("%1%%2%%3%%4%%5%%6%")
+      % kernel_wrapper_fn
+      % "  kernel.set_arg("
+      % i
+      % " , "
+      % std::regex_replace( (*it).str(), extract_vars, "$1" )
+      % ");\n"
+    ;
+    ++i;
+  }
 }
 
-  cu_expr = boost::format("%1%%2%")
-    % cu_expr
-    % "\n}\n";
+// TODO: Probably replace this with function inputs
+  kernel_wrapper_fn = boost::format("%1%\n%2%%3%%4%%5%")
+    % kernel_wrapper_fn
+    % "  size_t dim = 1;\n"
+    % "  size_t offset[] = { (dimGrid * gridNum) + (blockDim * blockNum) };\n"
+    % "  size_t global_size[] = { dimGrid };\n"
+    % "  size_t local_size[] = { blockDim };\n"
+  ;
+
+//TODO: If dim is limited to 1, you can simplify the enqueue call
+  kernel_wrapper_fn = boost::format("%1%%2%")
+    % kernel_wrapper_fn
+    % "  queue.enqueue_nd_range_kernel(kernel, dim, offset, global_size, local_size);\n"
+  ;
+
+  kernel_wrapper_fn = boost::format("%1%%2%")
+    % kernel_wrapper_fn
+    % "\n}\n"
+  ;
+
+  cu_expr = boost::format("%1%\n%2%%3%")
+    % includes
+    % str_expr
+    % kernel_wrapper_fn
+  ;
 
 
   {
@@ -369,67 +409,76 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
 
   stream_cu =
     stream_cu
-    + "std::size_t size = numel(boost::proto::child_c<0>(a1));\n"
-    + "std::size_t blockSize = std::min(std::size_t(256),size);\n"
-    + "std::size_t nStreams = std::min(std::size_t(4),size/blockSize);\n"
-    + "std::size_t leftover = size % blockSize ;\n"
-    + "std::size_t n = size / blockSize;\n"
-    + "std::size_t dimGrid  = blockSize;\n"
-    + "std::size_t blockDim = 1;\n"
-//    + "cudaStream_t stream[nStreams];\n"
+    + "  std::size_t size = numel(boost::proto::child_c<0>(a1));\n"
+    + "  std::size_t blockSize = std::min(std::size_t(256),size);\n"
+    + "  std::size_t nQueues = std::min(std::size_t(4),size/blockSize);\n"
+    + "  std::size_t leftover = size % blockSize ;\n"
+    + "  std::size_t n = size / blockSize;\n"
+//TODO: Check if you can make this change to n. If so, it simplifies the kernel loop
+    + "//  std::size_t n = (size + blockSize - 1) / blockSize;\n"
+    + "  std::size_t dimGrid  = blockSize;\n"
+    + "  std::size_t blockDim = 1;\n"
+    + "  compute::command_queue queues[nQueues];\n\n"
     + "\n\n"
   ;
+
+//  stream_cu =
+//    stream_cu
+//for ( std::size_t i = 0 ; i < nStreams ; ++i ) {
+//  queues[i] = command::queue(compute::context(devices[i]), devices[i]);
+//}
+//    + "cudaStream_t stream[nQueues];\n"
+//   + "  stream[j] = compute::command_queue(devices[i]);
 
   // Allocate device memory -- generated -- TODO : add informations to allocate
   // on is it an lhs ?
 // compute::vectors are already on device, aren't they?
-  for(std::size_t i = 0; i<locality.size() ; ++i )
-  {
-    if(i < lhs_size )
-    {
-      if(locality[i] == 0)
-      {
-        if(lhs.operation =="tie")
-        {
-        stream_cu =
-          stream_cu
-          + "boost::proto::value(boost::proto::child_c<"
-          +to_string(i)
-          +">(a0)).specifics().allocate(blockSize,nStreams,size);\n";
-        }
-        else
-        {
-          stream_cu =
-          stream_cu
-          + "boost::proto::value(a0).specifics().allocate(blockSize,nStreams,size,true);\n";
-        }
-      }
-    }
-    else
-    {
-      if(locality[i] == 0)
-      {
-        stream_cu=
-          stream_cu
-          +"boost::proto::value("
-          +test_dummy[i-lhs_size]
-          +").specifics().allocate(blockSize,nStreams,size);\n";
-      }
-    }
-  }
+//  for(std::size_t i = 0; i<locality.size() ; ++i )
+//  {
+//    if(i < lhs_size )
+//    {
+//      if(locality[i] == 0)
+//      {
+//        if(lhs.operation =="tie")
+//        {
+//        stream_cu =
+//          stream_cu
+//          + "boost::proto::value(boost::proto::child_c<"
+//          +to_string(i)
+//          +">(a0)).specifics().allocate(blockSize,nQueues,size);\n";
+//        }
+//        else
+//        {
+//          stream_cu =
+//          stream_cu
+//          + "boost::proto::value(a0).specifics().allocate(blockSize,nQueues,size,true);\n";
+//        }
+//      }
+//    }
+//    else
+//    {
+//      if(locality[i] == 0)
+//      {
+//        stream_cu=
+//          stream_cu
+//          +"boost::proto::value("
+//          +test_dummy[i-lhs_size]
+//          +").specifics().allocate(blockSize,nQueues,size);\n";
+//      }
+//    }
+//  }
 
-  stream_cu =
-    stream_cu
-    + "std::vector<compute::device> device = compute::system::devices();\n"
-  ;
+//  stream_cu =
+//    stream_cu
+//    + "std::vector<compute::device> devices = compute::system::devices();\n"
+//  ;
 
 // TODO: Replace stream management with command queue management
   stream_cu =
     stream_cu
-     + "\ncompute::command_queue stream[nStreams];\n\n"
 //   + "for(std::size_t i = 0; i < n ; ++i)\n"
 //   + "{\n"
-//   + "   std::size_t j = i % nStreams;\n"
+//   + "  std::size_t j = i % nQueues;\n"
 //   + "}\n"
    ;
 
@@ -442,22 +491,49 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
   // Detect all devides
 //TODO: Move this before queue creation, make queue creation depend on devices
   std::string detect_device =
-      "  std::vector<compute::device> devices;\n";
-  detect_device = detect_device
-    + "  for ( compute::device dev : compute::system::devices() )\n"
-    + "    devices.push_back(dev);\n"
+    "  std::vector<compute::device> devices;\n"
   ;
 
+  detect_device =
+    detect_device
+    + "  for ( compute::device dev : compute::system::devices() )\n"
+    + "    devices.push_back(dev);\n"
+    + "\n"
+  ;
 
-  // insert framework required to actually call kernel
-  std::string kernel;
+  detect_device =
+    detect_device
+    + "// TODO: take advantage of multiple devices\n"
+    + "  std::vector<compute::context> contexts;\n"
+    + "  contexts.resize(devices.size());\n"
+    + "  for ( std::size_t i = 0 ; i < devices.size() ; ++i )\n"
+    + "    contexts[i] = compute::context(devices[i]);\n"
+  ;
+
+  detect_device =
+    detect_device
+    + "  for ( std::size_t i = 0 ; i < nQueues ; ++i )\n"
+    + "    queues[i] = compute::command_queue(contexts[0], devices[0]);\n"
+  ;
+
+  stream_cu =
+    stream_cu
+    + detect_device
+  ;
+
+//TODO: Check to make sure it's ok to call the kernel normally on the leftover
+//        block. I'm 90% sure you don't segfault when going past allocated
+//        memory on a GPU, but I can't find documenation to confirm...
+  std::string kernel = "";
   kernel =
-// TODO: actually handled above, just need to reorganize
-    ""
+   kernel
+    + "  std::size_t spill = ( leftover != 0 ) ? ( 1 : 0 );\n"
+    + "  for ( std::size_t i = 0 ; i < n + spill ; ++i ) {\n"
+    + "    std::size_t j = i % nQueues;\n\n"
   ;
 
   // write kernel --generated  -- add shift to data access if locality == 1
-  kernel = "    "+kernel_wrapper + "(" ;
+  std::string call_kernel = "    "+kernel_wrapper + "(\n" ;
   for(std::size_t k = 0 ; k < locality.size() ; k++)
   {
     std::string k_s = to_string(k);
@@ -467,15 +543,15 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
       {
         if(lhs.operation =="tie")
         {
-          kernel += " boost::proto::child_c<"+k_s+">(a0),\n    ";
+          call_kernel += "      boost::proto::child_c<"+k_s+">(a0),\n";
         }
         else
         {
-          kernel += " a0,\n    ";
+          call_kernel += "      a0,\n";
         }
       }
        else
-        kernel += test_dummy[k-lhs_size]+",\n    ";
+        call_kernel += test_dummy[k-lhs_size]+",\n";
     }
 
     else if(locality[k] == 1)
@@ -484,15 +560,15 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
       {
         if(lhs.operation =="tie")
         {
-          kernel += " boost::proto::child_c<"+k_s+">(a0).data(),\n    ";
+          call_kernel += "      boost::proto::child_c<"+k_s+">(a0).data(),\n";
         }
         else
         {
-          kernel += " a0.data(),\n    ";
+          call_kernel += "      a0.data(),\n";
         }
       }
        else
-        kernel += test_dummy[k-lhs_size]+".data(),\n    ";
+        call_kernel += test_dummy[k-lhs_size]+".data(),\n";
     }
     else
     {
@@ -500,19 +576,26 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
       {
         if(lhs.operation =="tie")
         {
-          kernel += " boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n    ";
+//          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n";
+          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).data(j),\n";
         }
         else
         {
-          kernel += " boost::proto::value(a0).specifics().data(j),\n    ";
+//          call_kernel += "      boost::proto::value(a0).specifics().data(j),\n";
+          call_kernel += "      boost::proto::value(a0).data(j),\n";
         }
       }
       else
-        kernel += " boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n    ";
+//        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n";
+        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").data(j),\n";
     }
   }
-  kernel.erase(kernel.size()-1);
-  kernel +=",dimGrid,blockDim,stream[j]);\n";
+
+  call_kernel += "      dimGrid, blockDim, 0, i, queues[j]\n";
+  call_kernel += "    );\n";
+
+  kernel += call_kernel;
+  kernel += "  }// for i in n\n";
 
   stream_cu =
     stream_cu
@@ -520,34 +603,20 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
     + kernel
     + "\n      //------------ transfers device to host ------------//\n\n"
     ;
-
-
-  stream_cu =
-    stream_cu
-    + "\n      //------------------ kernel call -------------------//\n\n"
-    + kernel
-    + "\n      //------------ transfers device to host ------------//\n\n"
-    ;
-
-//  // Device -> Host -- generated -- only for lhs
-
-// TODO: Did you need to destroy the queues? I can't remember right now
-//stream_cu =
-//  stream_cu
-//  + "\nfor(std::size_t i=0; i < nStreams ; ++i)\n"
-//  + "{\n"
-//  + "   cudaStreamDestroy(stream[i]);\n"
-//  + "}\n\n"
-//  ;
 
 //-----------------------write generated.cpp file---------------------------//
 
   std::string kernel_trans =
-    "void "
-    + kernel_wrapper
-    + "("
-    + params_wrapper
-    + ", dim3 dimGrid, dim3 blockDim, cudaStream_t stream = 0);\n\n"
+    kernel_wrapper_decl
+    + ";\n\n"
+//    "void "
+//    + kernel_wrapper
+//    + "("
+//    + params_wrapper
+////    + ", std::size_t dimGrid, std::size_t blockDim, compute::command_queue & queue);\n\n"
+//    + ", std::size_t dimGrid, std::size_t blockDim, "
+//    + "std::size_t gridNum, std::size_t blockNum, "
+//    + "compute::command_queue & queue);\n\n"
   ;
 
   std::string header_inc = "";
@@ -564,14 +633,15 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
     + "#include <boost/compute/container/vector.hpp>\n"
   ;
 
-  if(rhs.operation == "tie" ) header_inc += "#include <nt2/include/functions/tie.hpp>\n";
+  if(rhs.operation == "tie" )
+    header_inc += "#include <nt2/include/functions/tie.hpp>\n";
 
   header_inc=
     header_inc
-    + "\n\n"
-    + kernel_trans
+    + "\n"
     + "using boost::proto::child_c;\n"
-    + "namespace compute = boost::compute;\n"
+    + "namespace compute = boost::compute;\n\n"
+    + kernel_trans
     + "\n"
   ;
 
@@ -589,17 +659,11 @@ for ( std::size_t i = 2 ; i < fn_signatures.size() ; ++i ) {
   ;
 
 
-  std::string dimGrid = "int dimGrid = 1;\n";
-  std::string blockDim = "int blockDim = 128;\n";
   std::string params_call_raw = boost::replace_all_copy(params_call ,")" , ").data()" );
 
   transform_expr  =
     transform_expr
     + stream_cu
-//   + dimGrid
-//   + blockDim
-//   + op_rhs + to_string(indx) + "_wrapper" + "(" + params_call_raw
-//   + ", dimGrid, blockDim" + ");\n"
     + "} // kernel\n"
     + "} // namespace nt2\n"
   ;
