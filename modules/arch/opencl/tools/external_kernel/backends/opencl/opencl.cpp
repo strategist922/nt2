@@ -527,7 +527,9 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   std::string kernel = "";
   kernel =
    kernel
-    + "  std::size_t spill = ( leftover != 0 ) ? ( 1 : 0 );\n"
+    + "  std::size_t spill;\n"
+    + "if ( leftover != 0 ) spill = 1;\n"
+    + "else spill = 0;\n"
     + "  for ( std::size_t i = 0 ; i < n + spill ; ++i ) {\n"
     + "    std::size_t j = i % nQueues;\n\n"
   ;
@@ -577,17 +579,17 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
         if(lhs.operation =="tie")
         {
 //          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n";
-          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).data(j),\n";
+          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).data(),\n";
         }
         else
         {
 //          call_kernel += "      boost::proto::value(a0).specifics().data(j),\n";
-          call_kernel += "      boost::proto::value(a0).data(j),\n";
+          call_kernel += "      boost::proto::value(a0).data(),\n";
         }
       }
       else
 //        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n";
-        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").data(j),\n";
+        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").data(),\n";
     }
   }
 
