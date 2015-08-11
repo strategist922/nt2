@@ -29,7 +29,7 @@ class opencl_buffer
   typedef compute::detail::buffer_value<T> reference;
   typedef const compute::detail::buffer_value<T> const_reference;
   typedef typename compute::vector<T> pointer;
-  typedef typename compute::vector<T> const_pointer;
+  typedef typename compute::vector<T> const const_pointer;
   typedef compute::buffer_iterator<T> iterator;
   typedef compute::buffer_iterator<T> const_iterator;
   typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -103,7 +103,7 @@ class opencl_buffer
    BOOST_FORCEINLINE reference operator[](size_type )
   {
     static value_type x = 0;
-    static_assert( x == 0 , "operator[] not available for cuda buffers");
+    static_assert( x == 0 , "operator[] not available for opencl buffers");
     return x;
   }
 
@@ -111,7 +111,7 @@ class opencl_buffer
   BOOST_FORCEINLINE const_reference operator[](size_type ) const
   {
     static value_type x = 0 ;
-    static_assert( x == 0 , "operator[] not available for cuda buffers");
+    static_assert( x == 0 , "operator[] not available for opencl buffers");
     return x;
   }
 
@@ -123,7 +123,12 @@ class opencl_buffer
   }
 
   // TODO: Does anyone else need data or iterators? if not, don't bother
-  compute::vector<T> & data()
+  const_pointer & data() const
+  {
+    return _vec;
+  }
+
+  pointer & data()
   {
     return _vec;
   }
