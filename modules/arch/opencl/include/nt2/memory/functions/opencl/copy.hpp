@@ -23,7 +23,7 @@ void copy(const opencl_buffer<T> & from, Container & into)
   if ( into.size() != from.size() )
     into.resize(from.size());
 
-  compute::copy(from._vec.begin(), from._vec.end(), into.data());
+  compute::copy(from._vec.begin(), from._vec.end(), into.begin());
 }
 
 template<typename Container, class T>
@@ -43,7 +43,7 @@ void copy(const opencl_buffer<T> & from, opencl_buffer<T> & into)
   if ( into.size() != from.size() )
     into.resize(from.size());
 
-  compute::copy(from.vec.begin(), from._vec.end(), into._vec.begin());
+  compute::copy(from._vec.begin(), from._vec.end(), into._vec.begin());
 }
 
 }} // end namespaces

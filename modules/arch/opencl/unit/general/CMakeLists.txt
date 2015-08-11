@@ -9,6 +9,9 @@
 
 SET( SOURCES
     opencl_buffer.cpp
+    transform.cpp
+#    generated_cl.cpp
+#    generated.cpp
    )
 
 nt2_module_add_tests(arch.opencl.general.unit ${SOURCES})
