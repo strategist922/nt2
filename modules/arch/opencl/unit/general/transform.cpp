@@ -9,9 +9,9 @@
 
 #include <nt2/table.hpp>
 
-#include <nt2/include/functions/zeros.hpp>
-#include <nt2/include/functions/ones.hpp>
-#include <nt2/include/functions/size.hpp>
+//#include <nt2/include/functions/zeros.hpp>
+//#include <nt2/include/functions/ones.hpp>
+//#include <nt2/include/functions/size.hpp>
 
 #include <nt2/sdk/unit/tests/ulp.hpp>
 #include <nt2/sdk/unit/tests/relation.hpp>
@@ -20,16 +20,8 @@
 
 #include <nt2/sdk/meta/type_id.hpp>
 
-
-
-#include <nt2/table.hpp>
-#include <nt2/include/functions/ones.hpp>
-#include <nt2/include/functions/zeros.hpp>
-#include <nt2/include/functions/plus.hpp>
 // #include <nt2/include/functions/tie.hpp>
 #include <nt2/core/functions/transform.hpp>
-#include <nt2/include/functions/tic.hpp>
-#include <nt2/include/functions/toc.hpp>
 #include <nt2/include/functions/is_equal.hpp>
 
 #include <nt2/sdk/unit/module.hpp>
@@ -37,16 +29,12 @@
 #include <nt2/sdk/unit/tests/basic.hpp>
 
 #include <nt2/include/functions/log.hpp>
-#include <nt2/include/functions/sqr.hpp>
 #include <nt2/include/functions/divides.hpp>
-#include <nt2/include/functions/multiplies.hpp>
-#include <nt2/include/functions/unary_minus.hpp>
 #include <nt2/include/functions/minus.hpp>
 #include <nt2/include/functions/plus.hpp>
-#include <nt2/include/constants/half.hpp>
 
 #include <time.h>
-//#include "generated.cpp"
+#include "generated.cpp"
 
 namespace compute = boost::compute;
 
@@ -88,6 +76,7 @@ NT2_TEST_CASE_TPL( direct_transform, (float) )
 
 // out = 
    nt2::log(Sa/Xa) + Xa;
+//nt2::log(Sa);
 
 // NT2_TEST_EQUAL(T(0), T(0));
  NT2_TEST_EQUAL(1, 1);

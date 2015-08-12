@@ -20,22 +20,22 @@
 namespace compute = boost::compute;
 
 
-NT2_TEST_CASE_TPL( opencl_buffer_swap, (double) )
-{
-  nt2::table<T> A_init = nt2::ones(10,1,nt2::meta::as_<T>());
-  nt2::table<T> B_init = nt2::zeros(10,1,nt2::meta::as_<T>());
-
-  nt2::table<T,nt2::device_> cl_A, cl_B;
-  cl_A = A_init;
-  cl_B = B_init;
-
-  nt2::table<T> A_final, B_final;
-  A_final = cl_B;
-  B_final = cl_A;
-
-  NT2_TEST_EQUAL(A_final,B_init);
-  NT2_TEST_EQUAL(1,1);
-}
+//NT2_TEST_CASE_TPL( opencl_buffer_swap, (double) )
+//{
+//  nt2::table<T> A_init = nt2::ones(10,1,nt2::meta::as_<T>());
+//  nt2::table<T> B_init = nt2::zeros(10,1,nt2::meta::as_<T>());
+//
+//  nt2::table<T,nt2::device_> cl_A, cl_B;
+//  cl_A = A_init;
+//  cl_B = B_init;
+//
+//  nt2::table<T> A_final, B_final;
+//  A_final = cl_B;
+//  B_final = cl_A;
+//
+//  NT2_TEST_EQUAL(A_final,B_init);
+//  NT2_TEST_EQUAL(1,1);
+//}
 
 
 NT2_TEST_CASE_TPL(opencl_buffer_default, NT2_REAL_TYPES)
