@@ -12,7 +12,7 @@
 
 #include <boost/simd/dsl/functions/evaluate.hpp>
 #include <boost/simd/include/functions/run.hpp>
-
+#include <boost/dispatch/meta/identity.hpp>
 #include <boost/simd/sdk/functor/hierarchy.hpp>
 #include <boost/simd/sdk/functor/preprocessor/call.hpp>
 
@@ -31,6 +31,13 @@ namespace boost { namespace simd { namespace ext
       return boost::simd::run(a0);
     }
   };
+
+  // evaluate on scalar is identity
+  BOOST_DISPATCH_REGISTER_TO( evaluate_, tag::cpu_
+                            , (A0)
+                            , ((scalar_<unspecified_<A0>>))
+                            , boost::dispatch::identity
+                            );
 } } }
 
 #endif
