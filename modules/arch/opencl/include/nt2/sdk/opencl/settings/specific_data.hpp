@@ -24,7 +24,7 @@ namespace nt2{
   template<typename Site, typename T>
   struct specific_data< tag::opencl_<Site>,T >
   {
-    using type = typename details::specific_opencl<tag::opencl_<Site>,T >;
+    using type = details::specific_opencl<tag::opencl_<Site>,T >;
   };
 
 }

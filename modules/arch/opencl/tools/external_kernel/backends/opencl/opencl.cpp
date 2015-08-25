@@ -235,7 +235,8 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     includes += "#include <CL/cl.h>\n";
     includes += "#include <boost/compute/container/vector.hpp>\n";
     includes += "#include <string>\n";
-    includes += "\nnamespace compute = boost::compute;\n\n";
+    includes += "\n";
+    includes += "namespace compute = boost::compute;\n\n";
   }
 
   std::vector<std::string>  test_dummy(locality.size());
@@ -432,41 +433,50 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   // Allocate device memory -- generated -- TODO : add informations to allocate
   // on is it an lhs ?
-// compute::vectors are already on device, aren't they?
-//  for(std::size_t i = 0; i<locality.size() ; ++i )
-//  {
-//    if(i < lhs_size )
-//    {
-//      if(locality[i] == 0)
-//      {
-//        if(lhs.operation =="tie")
-//        {
-//        stream_cu =
-//          stream_cu
-//          + "boost::proto::value(boost::proto::child_c<"
-//          +to_string(i)
-//          +">(a0)).specifics().allocate(blockSize,nQueues,size);\n";
-//        }
-//        else
-//        {
-//          stream_cu =
-//          stream_cu
-//          + "boost::proto::value(a0).specifics().allocate(blockSize,nQueues,size,true);\n";
-//        }
-//      }
-//    }
-//    else
-//    {
-//      if(locality[i] == 0)
-//      {
-//        stream_cu=
-//          stream_cu
-//          +"boost::proto::value("
-//          +test_dummy[i-lhs_size]
-//          +").specifics().allocate(blockSize,nQueues,size);\n";
-//      }
-//    }
-//  }
+  // compute::vectors are already on device, aren't they?
+
+  stream_cu =
+    stream_cu
+    + "//------------ allocate necessary device memory ------------//\n"
+  ;
+  for(std::size_t i = 0; i<locality.size() ; ++i )
+  {
+    if(i < lhs_size )
+    {
+      if(locality[i] == 0)
+      {
+        if(lhs.operation =="tie")
+        {
+        stream_cu =
+          stream_cu
+          + "  boost::proto::value(boost::proto::child_c<"
+          +to_string(i)
+          +">(a0)).specifics().allocate(blockSize,nQueues,size);\n";
+        }
+        else
+        {
+          stream_cu =
+          stream_cu
+          + "  boost::proto::value(a0).specifics().allocate(blockSize,nQueues,size,true);\n";
+        }
+      }
+    }
+    else
+    {
+      if(locality[i] == 0)
+      {
+        stream_cu=
+          stream_cu
+          +"  boost::proto::value("
+          +test_dummy[i-lhs_size]
+          +").specifics().allocate(blockSize,nQueues,size);\n";
+      }
+    }
+  }
+  stream_cu =
+    stream_cu
+    + "\n"
+  ;
 
 //  stream_cu =
 //    stream_cu
@@ -481,11 +491,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 //   + "  std::size_t j = i % nQueues;\n"
 //   + "}\n"
    ;
-
-  stream_cu =
-    stream_cu
-    + "   //------------ transfers host to device ------------//\n\n"
-  ;
 
 
   // Detect all devides
@@ -519,7 +524,60 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   stream_cu =
     stream_cu
     + detect_device
+    + "\n"
   ;
+
+  stream_cu =
+    stream_cu
+    + "   //------------ transfers host to device ------------//\n"
+  ;
+
+
+// Transfer from CPU to GPU if necessary
+  for(std::size_t k = 0 ; k < locality.size() ; k++)
+  {
+    std::string k_s = to_string(k);
+    if(locality[k] == 0 )
+    {
+      if( k < lhs_size)
+      {
+        if(lhs.operation =="tie")
+        {
+        stream_cu =
+                  stream_cu
+                  +"   boost::proto::value(boost::proto::child_c<"
+                  +k_s
+                  +">(a0)).specifics().transfer_htd(boost::proto::child_c<"
+                  +k_s
+                  +">(a0), i, stream["
+                  +"j"
+                  +"] , j );\n"
+                  ;
+        }
+        else
+        {
+        stream_cu =
+                  stream_cu
+                  +"   boost::proto::value(a0).specifics().transfer_htd(a0, i, stream["
+                  +"j"
+                  +"], j );\n"
+                  ;
+        }
+      }
+      else
+      {
+        std::string num = to_string(k-lhs_size);
+        stream_cu += "   boost::proto::value("
+                  + test_dummy[k-lhs_size]
+                  +").specifics().transfer_htd("
+                  + test_dummy[k-lhs_size]
+                  +", i, stream["
+                  +"j"
+                  +"], j );\n";
+      }
+    }
+  }
+
 
 //TODO: Check to make sure it's ok to call the kernel normally on the leftover
 //        block. I'm 90% sure you don't segfault when going past allocated
@@ -528,8 +586,8 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   kernel =
    kernel
     + "  std::size_t spill;\n"
-    + "if ( leftover != 0 ) spill = 1;\n"
-    + "else spill = 0;\n"
+    + "  if ( leftover != 0 ) spill = 1;\n"
+    + "  else spill = 0;\n"
     + "  for ( std::size_t i = 0 ; i < n + spill ; ++i ) {\n"
     + "    std::size_t j = i % nQueues;\n\n"
   ;
@@ -553,7 +611,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
         }
       }
        else
-        call_kernel += test_dummy[k-lhs_size]+",\n";
+        call_kernel += "      " + test_dummy[k-lhs_size] + ",\n";
     }
 
     else if(locality[k] == 1)
@@ -570,7 +628,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
         }
       }
        else
-        call_kernel += test_dummy[k-lhs_size]+".data(),\n";
+        call_kernel += "      " + test_dummy[k-lhs_size] + ".data(),\n";
     }
     else
     {
@@ -578,18 +636,18 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       {
         if(lhs.operation =="tie")
         {
-//          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n";
-          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).data(),\n";
+          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n";
+//          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).data(),\n";
         }
         else
         {
-//          call_kernel += "      boost::proto::value(a0).specifics().data(j),\n";
-          call_kernel += "      boost::proto::value(a0).data(),\n";
+          call_kernel += "      boost::proto::value(a0).specifics().data(j),\n";
+//          call_kernel += "      boost::proto::value(a0).data(),\n";
         }
       }
       else
-//        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n";
-        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").data(),\n";
+        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n";
+//        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").data(),\n";
     }
   }
 
@@ -603,8 +661,43 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     stream_cu
     + "\n      //------------------ kernel call -------------------//\n\n"
     + kernel
+  ;
+
+
+  // Device -> Host -- generated -- only for lhs
+  std::string dth_kernel = "";
+  for(std::size_t k = 0 ; k < lhs_size ; k++)
+  {
+   std::string k_s = to_string(k);
+   if(locality[k] == 0)
+    {
+        if (lhs.operation =="tie")
+        {
+          dth_kernel =
+            dth_kernel
+            + "   boost::proto::value(boost::proto::child_c<"
+            + k_s
+            + ">(a0)).specifics().transfer_dth(boost::proto::child_c<"
+            + k_s
+            + ">(a0), n, stream[j], j , leftover );\n"
+          ;
+        }
+        else
+        {
+          dth_kernel =
+            dth_kernel
+            + "   boost::proto::value(a0).specifics().transfer_dth(a0, n, stream[j], j, leftover );\n"
+          ;
+        }
+    }
+  }
+
+  stream_cu =
+    stream_cu
     + "\n      //------------ transfers device to host ------------//\n\n"
-    ;
+    + dth_kernel
+    + "\n"
+  ;
 
 //-----------------------write generated.cpp file---------------------------//
 
@@ -672,7 +765,9 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   {
     std::ofstream output(filename_output.c_str(), std::ios::app);
-    output << transform_expr ;
+    output << cu_expr
+           << "\n\n//-----------------------------------------------\n\n"
+           << transform_expr ;
   }
 
 //----------------------------------------------------------------------------//
