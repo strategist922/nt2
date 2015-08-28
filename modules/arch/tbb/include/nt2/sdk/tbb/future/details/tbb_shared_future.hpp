@@ -66,6 +66,11 @@ namespace nt2
       {
       }
 
+      tbb_shared_future( tbb_shared_future && other) = default;
+      tbb_shared_future & operator = ( tbb_shared_future && other ) = default;
+      tbb_shared_future( tbb_shared_future const & other) = default;
+      tbb_shared_future & operator = ( tbb_shared_future const & other ) = default;
+
       void wait()
       {
         if( ! ready_->test_and_set(std::memory_order_acquire) )

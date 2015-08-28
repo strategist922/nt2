@@ -58,6 +58,11 @@ namespace nt2
       , raw_future_( other.share_raw() )
       {}
 
+      openmp_shared_future( openmp_shared_future && other) = default;
+      openmp_shared_future & operator = ( openmp_shared_future && other ) = default;
+      openmp_shared_future( openmp_shared_future const & other) = default;
+      openmp_shared_future & operator = ( openmp_shared_future const & other ) = default;
+
       bool is_ready() const
       {
         return *ready_;

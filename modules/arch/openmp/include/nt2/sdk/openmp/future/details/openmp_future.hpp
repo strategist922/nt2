@@ -42,6 +42,9 @@ namespace nt2
         )
       {}
 
+      openmp_future(openmp_future && other) = default;
+      openmp_future & operator = ( openmp_future && other ) = default;
+
       bool is_ready() const
       {
         return *ready_;

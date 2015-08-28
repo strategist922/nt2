@@ -42,6 +42,11 @@ namespace nt2
       : raw_future_(other.share_raw())
       {}
 
+      nt2_shared_future( nt2_shared_future && other) = default;
+      nt2_shared_future & operator = ( nt2_shared_future && other ) = default;
+      nt2_shared_future( nt2_shared_future const & other) = default;
+      nt2_shared_future & operator = ( nt2_shared_future const & other ) = default;
+
       void wait()
       {
         raw_future_.wait();

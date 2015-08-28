@@ -61,6 +61,9 @@ namespace nt2
       {
       }
 
+      tbb_future( tbb_future && other) = default;
+      tbb_future & operator = ( tbb_future && other ) = default;
+
       void wait()
       {
         if( ! ready_->test_and_set(std::memory_order_acquire) )

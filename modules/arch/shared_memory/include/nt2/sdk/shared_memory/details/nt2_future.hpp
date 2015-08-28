@@ -32,6 +32,9 @@ namespace nt2
         )
       {}
 
+      nt2_future( nt2_future && other) = default;
+      nt2_future & operator = ( nt2_future && other ) = default;
+
       std::shared_future<result_type> share_raw()
       {
         return raw_future_.share();
