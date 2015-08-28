@@ -19,14 +19,6 @@
 #include <iostream>
 #include <vector>
 
-namespace nt2
-{
-    namespace tag
-    {
-        template<class T> struct openmp_;
-    }
-}
-
 typedef typename boost::dispatch::default_site<void>::type Arch;
 typedef typename nt2::make_future< Arch,int >::type future;
 
