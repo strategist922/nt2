@@ -226,17 +226,31 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       // The function does not exist in compute::vector so add NT2 versions
       if( it_set == include_headers.end() )
         includes += it->second;
+      else {
+//TODO: Is this fully safe with an installed version of nt2?
+//      Currently needed to have the correct tags for all functions
+        includes =
+          includes
+          + "#include <nt2/include/functions/"
+          + it->first
+          + ".hpp>\n"
+        ;
+      }
     }
     core_expr = boost::format("%1%") % temp_expr;
   }
 
 // TODO: possibly replace with boost::compute includes
   if(symbol.target == "opencl") {
-    includes += "#include <CL/cl.h>\n";
-    includes += "#include <boost/compute/container/vector.hpp>\n";
-    includes += "#include <string>\n";
-    includes += "\n";
-    includes += "namespace compute = boost::compute;\n\n";
+    includes =
+      includes
+      + "#include <CL/cl.h>\n"
+      + "#include <boost/compute/container/vector.hpp>\n"
+      + "#include <string>\n"
+      + "\n"
+      + "namespace compute = boost::compute;\n"
+      + "\n"
+    ;
   }
 
   std::vector<std::string>  test_dummy(locality.size());
@@ -292,9 +306,13 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     }
   }
 
+  std::regex compute_v_wrap0("(const)*\\s[a-zA-Z0-9]*\\*\\s");
+  std::string krnl_params = params_wrapper;
+  krnl_params = std::regex_replace(krnl_params, compute_v_wrap0, " __global $& ");
+
   str_expr = boost::format("%1%  res += std::string(\"__kernel void %2% (%3%)\\n{\\n\");\n")
-            % str_expr % fn_sig % params_wrapper;
-  str_expr = boost::format("%1%  res += std::string(\"  int %2% = %3%\\n\");\n")
+            % str_expr % fn_sig % krnl_params;
+  str_expr = boost::format("%1%  res += std::string(\"  int %2% = %3%;\\n\");\n")
             % str_expr % rank % kernl_indx;
   str_expr = boost::format("%1%  res += std::string(\"  %2%\\n\");\n")
             % str_expr % core_expr;
@@ -338,7 +356,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     % kernel_wrapper_fn
     % "  compute::program program = \n"
     % "    compute::program::create_with_source("
-    % (fn_sig + "()")
+    % (fn_sig + "().c_str()")
     % ", queue.get_context());\n"
     % "  program.build();\n\n"
   ;
@@ -419,8 +437,11 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     + "//  std::size_t n = (size + blockSize - 1) / blockSize;\n"
     + "  std::size_t dimGrid  = blockSize;\n"
     + "  std::size_t blockDim = 1;\n"
-    + "  compute::command_queue queues[nQueues];\n\n"
-    + "\n\n"
+    + "  compute::command_queue *queues = new compute::command_queue[nQueues];\n\n"
+    + "  std::size_t spill;\n"
+    + "  if ( leftover != 0 ) spill = 1;\n"
+    + "  else spill = 0;\n"
+    + "\n"
   ;
 
 //  stream_cu =
@@ -434,49 +455,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   // Allocate device memory -- generated -- TODO : add informations to allocate
   // on is it an lhs ?
   // compute::vectors are already on device, aren't they?
-
-  stream_cu =
-    stream_cu
-    + "//------------ allocate necessary device memory ------------//\n"
-  ;
-  for(std::size_t i = 0; i<locality.size() ; ++i )
-  {
-    if(i < lhs_size )
-    {
-      if(locality[i] == 0)
-      {
-        if(lhs.operation =="tie")
-        {
-        stream_cu =
-          stream_cu
-          + "  boost::proto::value(boost::proto::child_c<"
-          +to_string(i)
-          +">(a0)).specifics().allocate(blockSize,nQueues,size);\n";
-        }
-        else
-        {
-          stream_cu =
-          stream_cu
-          + "  boost::proto::value(a0).specifics().allocate(blockSize,nQueues,size,true);\n";
-        }
-      }
-    }
-    else
-    {
-      if(locality[i] == 0)
-      {
-        stream_cu=
-          stream_cu
-          +"  boost::proto::value("
-          +test_dummy[i-lhs_size]
-          +").specifics().allocate(blockSize,nQueues,size);\n";
-      }
-    }
-  }
-  stream_cu =
-    stream_cu
-    + "\n"
-  ;
 
 //  stream_cu =
 //    stream_cu
@@ -529,9 +507,63 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   stream_cu =
     stream_cu
+    + "//------------ allocate necessary device memory ------------//\n"
+  ;
+
+  for(std::size_t i = 0; i<locality.size() ; ++i )
+  {
+    if(i < lhs_size )
+    {
+      if(locality[i] == 0)
+      {
+        if(lhs.operation =="tie")
+        {
+          stream_cu =
+            stream_cu
+            +  "  boost::proto::value(boost::proto::child_c<"
+            + to_string(i)
+            + ">(a0)).specifics().allocate(blockSize,nQueues,size,queues);\n"
+          ;
+        }
+        else
+        {
+          stream_cu =
+            stream_cu
+            + "  boost::proto::value(a0).specifics().allocate(blockSize,nQueues,size,queues);\n"
+          ;
+        }
+      }
+    }
+    else
+    {
+      if(locality[i] == 0)
+      {
+        stream_cu=
+          stream_cu
+          + "  boost::proto::value("
+          + test_dummy[i-lhs_size]
+          + ").specifics().allocate(blockSize,nQueues,size,queues);\n"
+        ;
+      }
+    }
+  }
+  stream_cu =
+    stream_cu
+    + "\n"
+  ;
+
+  stream_cu =
+    stream_cu
     + "   //------------ transfers host to device ------------//\n"
   ;
 
+  stream_cu =
+    stream_cu
+    + "  for ( std::size_t i = 0 ; i < n + spill ; ++i ) {\n"
+    + "    std::size_t j = i % nQueues;\n"
+    + "    std::size_t extra = 0;\n"
+    + "    if ( i == n ) extra = leftover;\n"
+  ;
 
 // Transfer from CPU to GPU if necessary
   for(std::size_t k = 0 ; k < locality.size() ; k++)
@@ -543,53 +575,59 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       {
         if(lhs.operation =="tie")
         {
-        stream_cu =
-                  stream_cu
-                  +"   boost::proto::value(boost::proto::child_c<"
-                  +k_s
-                  +">(a0)).specifics().transfer_htd(boost::proto::child_c<"
-                  +k_s
-                  +">(a0), i, stream["
-                  +"j"
-                  +"] , j );\n"
-                  ;
+          stream_cu =
+            stream_cu
+            + "    boost::proto::value(boost::proto::child_c<"
+            + k_s
+            + ">(a0)).specifics().transfer_htd(boost::proto::child_c<"
+            + k_s
+            + ">(a0), i, queues["
+            + "j"
+            + "] , j );\n"
+          ;
         }
         else
         {
-        stream_cu =
-                  stream_cu
-                  +"   boost::proto::value(a0).specifics().transfer_htd(a0, i, stream["
-                  +"j"
-                  +"], j );\n"
-                  ;
+          stream_cu =
+            stream_cu
+            + "    boost::proto::value(a0).specifics().transfer_htd(a0, i, queues["
+            + "j"
+            + "], j );\n"
+          ;
         }
       }
       else
       {
         std::string num = to_string(k-lhs_size);
-        stream_cu += "   boost::proto::value("
-                  + test_dummy[k-lhs_size]
-                  +").specifics().transfer_htd("
-                  + test_dummy[k-lhs_size]
-                  +", i, stream["
-                  +"j"
-                  +"], j );\n";
+        stream_cu =
+          stream_cu
+          +  "    boost::proto::value("
+          +  test_dummy[k-lhs_size]
+          + ").specifics().transfer_htd("
+          +  test_dummy[k-lhs_size]
+          + ", i, queues["
+          + "j"
+          + "], j );\n"
+        ;
       }
     }
   }
+  stream_cu =
+    stream_cu
+    + "  }\n"
+    + "\n"
+  ;
 
 
 //TODO: Check to make sure it's ok to call the kernel normally on the leftover
 //        block. I'm 90% sure you don't segfault when going past allocated
 //        memory on a GPU, but I can't find documenation to confirm...
   std::string kernel = "";
+
   kernel =
-   kernel
-    + "  std::size_t spill;\n"
-    + "  if ( leftover != 0 ) spill = 1;\n"
-    + "  else spill = 0;\n"
+    kernel
     + "  for ( std::size_t i = 0 ; i < n + spill ; ++i ) {\n"
-    + "    std::size_t j = i % nQueues;\n\n"
+    + "    std::size_t j = i % nQueues;\n"
   ;
 
   // write kernel --generated  -- add shift to data access if locality == 1
@@ -666,6 +704,14 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   // Device -> Host -- generated -- only for lhs
   std::string dth_kernel = "";
+  dth_kernel =
+    dth_kernel
+    + "  for ( std::size_t i = 0 ; i < n + spill ; ++i ) {\n"
+    + "    std::size_t j = i % nQueues;\n"
+    + "    std::size_t extra = 0;\n"
+    + "    if ( i == n ) extra = leftover;\n"
+  ;
+
   for(std::size_t k = 0 ; k < lhs_size ; k++)
   {
    std::string k_s = to_string(k);
@@ -675,28 +721,32 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
         {
           dth_kernel =
             dth_kernel
-            + "   boost::proto::value(boost::proto::child_c<"
+            + "    boost::proto::value(boost::proto::child_c<"
             + k_s
             + ">(a0)).specifics().transfer_dth(boost::proto::child_c<"
             + k_s
-            + ">(a0), n, stream[j], j , leftover );\n"
+            + ">(a0), n, queues[j], j , leftover );\n"
           ;
         }
         else
         {
           dth_kernel =
             dth_kernel
-            + "   boost::proto::value(a0).specifics().transfer_dth(a0, n, stream[j], j, leftover );\n"
+            + "    boost::proto::value(a0).specifics().transfer_dth(a0, n, queues[j], j, leftover );\n"
           ;
         }
     }
   }
+  dth_kernel += "}\n";
 
   stream_cu =
     stream_cu
     + "\n      //------------ transfers device to host ------------//\n\n"
     + dth_kernel
     + "\n"
+    + "\n"
+    + "delete queues;\n"
+    + "\n\n"
   ;
 
 //-----------------------write generated.cpp file---------------------------//
@@ -726,6 +776,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     + "#include <CL/cl.h>\n"
     + "#include <boost/compute/core.hpp>\n"
     + "#include <boost/compute/container/vector.hpp>\n"
+    + "#include <nt2/sdk/opencl/settings/specific_data.hpp>\n"
   ;
 
   if(rhs.operation == "tie" )

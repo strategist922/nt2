@@ -15,13 +15,16 @@
 #include <cstring>
 #include <iostream>
 
+#include <boost/compute/container/vector.hpp>
+#include <boost/compute/allocator/pinned_allocator.hpp>
+
 namespace nt2{ namespace details
   {
   namespace compute = boost::compute;
     template<typename T>
     struct cl_buffers
     {
-      std::vector<compute::vector<T*, compute::pinned_allocator<int> > > host_pinned;
+      std::vector<compute::vector<T, compute::pinned_allocator<T> > > host_pinned;
       std::vector<compute::vector<T> > device;
       std::size_t size;
 
@@ -32,85 +35,113 @@ namespace nt2{ namespace details
         allocate(size,nstreams);
       }
 
-      void allocate(std::size_t size_,std::size_t nstreams)
+      void allocate(std::size_t size_,std::size_t nstreams, compute::command_queue *queues)
       {
         size = size_;
         if(size != device.size())
         {
-          std::size_t sizeof_ = size*sizeof(T);
-          host_pinned.resize(nstreams);
-          device.resize(nstreams);
+//          host_pinned.resize(nstreams);
+//          device.resize(nstreams);
+          host_pinned.clear();
+          device.clear();
+          for ( std::size_t i = 0 ; i < nstreams ; ++i ) {
+//            host_pinned[i].resize(size_, queues[i]);
+//            device[i].resize(size_, queues[i]);
+            device.push_back(compute::vector<T>(size_, queues[i].get_context()));
+//            host_pinned.push_back( compute::vector<T, compute::pinned_allocator<T> >(size_, queues[i].get_context()) );
+//compute::vector<T, compute::pinned_allocator<T> > test(size_, queues[i].get_context());
+//host_pinned.push_back(test);
+          }
         }
       }
 
-//      T* get_host(std::size_t indx)
-//      {
-//        return host_pinned[indx];
-//      }
+      compute::vector<T> & get_host(std::size_t indx)
+      {
+        return host_pinned[indx];
+      }
 
-      T* get_device(std::size_t indx)
+      compute::vector<T> & get_device(std::size_t indx)
       {
         return device[indx];
       }
 
-template<class Container>
-void copy_dev2host(Container & c, std::size_t streamid, std::size_t sizeb, int blockid)
-{
-  compute::copy( device[streamid].begin()
-               , device[streamid].end()
-               , c.data().begin() + blockid*size
-               );
-}
+      template<class Container>
+      void copy_dev2host(Container & c, std::size_t streamid, std::size_t sizeb
+                        , int blockid
+                        , compute::command_queue queue)
+      {
+        queue.enqueue_read_buffer(
+                                  device[streamid].get_buffer()
+                                 , blockid * sizeb
+                                 , sizeb// * sizeof(T)
+                                 , c.data()
+                                 );
+      }
 
-//TODO: Confirm that you want to use sizeb and not sizeb*sizeof(T)
-template<class Container>
-void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb, int blockid)
-{
-  compute::copy( c.data().begin() + blockid*size
-               , c.data().begin() + blockid*size + sizeb
-               , device[streamid].begin()
-               );
-}
+      //TODO: Confirm that you want to use sizeb and not sizeb*sizeof(T)
+      template<class Container>
+      void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb
+                        , int blockid
+                        , compute::command_queue queue)
+      {
+        device[streamid].resize(sizeb);
+        queue.enqueue_write_buffer(
+                                  device[streamid].get_buffer()
+                                 , blockid * sizeb
+                                 , sizeb// * sizeof(T)
+                                 , c.data()
+                                 );
+      }
 
-//      template<class Container>
-//      void copy_hostpinned(Container & c,std::size_t streamid, std::size_t sizeb, int blockid)
-//      {
-//        std::memcpy(host_pinned[streamid], c.data() + blockid * size , sizeb*sizeof(T) );
-//      }
+      template<class Container>
+      void copy_hostpinned(Container & c,std::size_t streamid, std::size_t sizeb
+                          , int blockid
+                          , compute::command_queue queue)
+      {
+        host_pinned[streamid].resize(sizeb, queue);
+        compute::copy( c.data() + blockid * size
+                     , c.data() + blockid * size + sizeb*sizeof(T)
+                     , host_pinned[streamid].begin()
+                     );
+      }
 
 
-//      template<class Container>
-//      void copy_host(Container & c, std::size_t streamid, std::size_t sizeb, int blockid)
-//      {
-//        std::memcpy(c.data() + blockid * size, host_pinned[streamid] , sizeb*sizeof(T) );
-//      }
+      template<class Container>
+      void copy_host(Container & c, std::size_t streamid, std::size_t sizeb
+                    , int blockid
+                    , compute::command_queue queue)
+      {
+        compute::copy( host_pinned[streamid].begin()
+                     , host_pinned[streamid].begin() + sizeb*sizeof(T)
+                     , c.data() + blockid * size
+                     );
+      }
 
       ~cl_buffers()
       {
-//        for(std::size_t i = 0 ; i < device.size() ; ++i )
-//        {
-//          CUDA_ERROR(cudaFreeHost(host_pinned[i]));
-//          CUDA_ERROR(cudaFree(device[i]));
-//        }
       }
 
-    };
+    };// end class cl_buffers
 
     template<typename Arch, typename T>
     struct specific_opencl
     {
       using btype = boost::dynamic_bitset<>;
+      std::size_t blocksize;
+      bool allocated;
       btype block_stream_dth;
       btype block_stream_htd;
       cl_buffers<T> buffers;
-      std::size_t blocksize;
-      bool allocated ;
 
       inline void synchronize() {}
 
-      specific_opencl() : block_stream_dth(1), block_stream_htd(1) ,
-                      buffers{} , blocksize(0) , allocated(false)
-      {}
+      specific_opencl() : block_stream_dth(1),
+                      block_stream_htd(1) ,
+                      buffers{} ,
+                      blocksize(0) ,
+                      allocated(false)
+      {
+      }
 
       ~specific_opencl()
       {
@@ -124,8 +155,7 @@ void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb, int b
 
       }
 
-      inline void allocate() {}
-      inline void allocate(std::size_t blocksize_ , std::size_t nstreams, std::size_t s)
+      inline void allocate(std::size_t blocksize_ , std::size_t nstreams, std::size_t s, compute::command_queue *queues)
       {
         if (!allocated)
         {
@@ -133,7 +163,7 @@ void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb, int b
           std::size_t num = s / blocksize_  ;
           block_stream_dth.resize(num);
           block_stream_htd.resize(num);
-          buffers.allocate(blocksize, nstreams);
+          buffers.allocate(blocksize, nstreams, queues);
           allocated = true;
         }
       }
@@ -141,7 +171,7 @@ void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb, int b
 // In -> nt2::table<device>
 // Stream -> CmdQueue
 // Set -> std::set<const float*>
-      template<class In, class Stream, class Set>
+      template<class In, class Stream/*, class Set*/>
       inline void transfer_htd( In & in, int blockid, Stream & stream ,std::size_t streamid
 //                              , Set & addr
                               , std::size_t leftover = 0)
@@ -154,16 +184,8 @@ void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb, int b
         if( block_stream_htd[blockid] == false
 //            && (it_set == addr.end() )
           ) {
+          buffers.copy_host2dev(in, streamid, sizeb, blockid, stream);
           block_stream_htd[blockid] = true;
-          buffers.copy_host2dev(in, streamid, sizeb , blockid);
-
-//          CUDA_ERROR(cudaMemcpyAsync( buffers.get_device(streamid)
-//                                    , buffers.get_host(streamid)
-//                                    , sizeb* sizeof(T)
-//                                    , cudaMemcpyHostToDevice
-//                                    , stream
-//                    ));
-
         }
       }
 
@@ -176,28 +198,21 @@ void copy_host2dev(Container & c, std::size_t streamid, std::size_t sizeb, int b
 
         if(block_stream_dth[blockid] == false )
         {
-          buffers.copy_dev2host(in, streamid, sizeb, blockid);
-//          CUDA_ERROR(cudaMemcpyAsync( buffers.get_host(streamid)
-//                          , buffers.get_device(streamid)
-//                          , sizeb * sizeof(T)
-//                          , cudaMemcpyDeviceToHost
-//                          , stream
-//                    ));
-
+          buffers.copy_dev2host(out, streamid, sizeb, blockid, stream);
           block_stream_dth[blockid] = true;
         }
       }
 
-      inline T* data(std::size_t i)
+      inline compute::vector<T> & data(std::size_t i)
       {
         return buffers.get_device(i);
       }
 
       template<typename Container>
       inline void copy_host(Container & c, std::size_t streamid,  std::size_t sizeb
-                           ,  std::size_t blockid )
+                           ,  std::size_t blockid, compute::command_queue queue )
       {
-        buffers.copy_host(c, streamid, sizeb , blockid);;
+        buffers.copy_host(c, streamid, sizeb , blockid, queue);;
       }
 
     };

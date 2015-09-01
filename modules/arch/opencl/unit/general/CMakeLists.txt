@@ -7,11 +7,16 @@
 ###                     http://www.boost.org/LICENSE_1_0.txt
 ##############################################################################
 
+#add_library(generatedopencl OBJECT generated.cpp)
+
 SET( SOURCES
     opencl_buffer.cpp
+    specific_opencl.cpp
     transform.cpp
 #    generated_cl.cpp
 #    generated.cpp
    )
 
 nt2_module_add_tests(arch.opencl.general.unit ${SOURCES})
+add_library(generatedcl OBJECT generated.cpp)
+#target_link_libraries(arch.opencl.general.unit.transform generatedopencl)
