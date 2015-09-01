@@ -11,8 +11,6 @@
 //#include <boost/compute/allocator/buffer_allocator.hpp>
 //#include <boost/compute/allocator/pinned_allocator.hpp>
 
-//#include <nt2/include/functions/copy.hpp>
-
 namespace nt2 { namespace memory {
 
 namespace compute = boost::compute;
@@ -26,10 +24,10 @@ class opencl_buffer
   typedef Alloc allocator_type;
   typedef typename allocator_type::size_type size_type;
   typedef typename allocator_type::difference_type difference_type;
-  typedef compute::detail::buffer_value<T> reference;
-  typedef const compute::detail::buffer_value<T> const_reference;
-  typedef typename compute::vector<T> pointer;
-  typedef typename compute::vector<T> const const_pointer;
+  typedef T& reference;
+  typedef const T& const_reference;
+  typedef compute::vector<T> pointer;
+  typedef compute::vector<T> const const_pointer;
   typedef compute::buffer_iterator<T> iterator;
   typedef compute::buffer_iterator<T> const_iterator;
   typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -75,7 +73,7 @@ class opencl_buffer
   //==========================================================================
   opencl_buffer& operator=(const opencl_buffer & eq)
   {
-    this->_vec = eq.data();
+    this->data() = eq.data();
     return *this;
   }
 
@@ -100,7 +98,7 @@ class opencl_buffer
   //==========================================================================
   // Forbid direct accessors
   //==========================================================================
-   BOOST_FORCEINLINE reference operator[](size_type )
+  BOOST_FORCEINLINE reference operator[](size_type )
   {
     static value_type x = 0;
     static_assert( x == 0 , "operator[] not available for opencl buffers");
@@ -131,24 +129,6 @@ class opencl_buffer
   pointer & data()
   {
     return _vec;
-  }
-
-  void data(std::vector<T> & copy_into) const
-  {
-    if(!this->size()) return;
-    if ( copy_into.size() != this->size() ) copy_into.resize(this->size());
-
-    compute::copy(_vec.begin(), _vec.end(), copy_into.data());
-
-  }
-
-  template<typename Container>
-  void data(Container & copy_into) const
-  {
-    if(!this->size()) return;
-    if ( copy_into.size() != this->size() ) copy_into.resize(nt2::of_size(this->size(),1));
-
-    compute::copy(_vec.begin(), _vec.end(), copy_into.data());
   }
 
   size_t size() const
