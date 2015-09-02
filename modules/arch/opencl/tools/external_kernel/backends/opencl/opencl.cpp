@@ -745,7 +745,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     + dth_kernel
     + "\n"
     + "\n"
-    + "delete queues;\n"
+    + "delete [] queues;\n"
     + "\n\n"
   ;
 
