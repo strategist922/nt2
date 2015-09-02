@@ -93,6 +93,19 @@ namespace nt2{ namespace details
                                  );
       }
 
+//      void copy_host2dev(compute::vector<T> & c, std::size_t streamid, std::size_t sizeb
+//                        , int blockid
+//                        , compute::command_queue queue)
+//      {
+//        device[streamid].resize(sizeb);
+//        queue.enqueue_write_buffer(
+//                                  device[streamid].get_buffer()
+//                                 , blockid * sizeb
+//                                 , sizeb// * sizeof(T)
+//                                 , c.data().get_buffer()
+//                                 );
+//      }
+//
       template<class Container>
       void copy_hostpinned(Container & c,std::size_t streamid, std::size_t sizeb
                           , int blockid

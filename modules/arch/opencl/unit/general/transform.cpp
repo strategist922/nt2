@@ -40,14 +40,16 @@ NT2_TEST_CASE_TPL( direct_transform, (float) )
   std::cout << nt2::type_id<current_default_site>() << "\n";
 
  nt2::table<T> out(of_size(x,y));
- nt2::table<T> Sa(of_size(x,y)), Xa(of_size(x,y));
+ nt2::table<T> in(of_size(x,y));
+ nt2::table<T, nt2::device_> Sa(of_size(x,y)), Xa(of_size(x,y));
 
  for(std::size_t i=1;i<=nt2::numel(Sa);++i)
  {
 //  Sa(i) = Xa(i) = T(i);
   out(i) = T(0);
-  Xa(i) = Sa(i) = T(1);
+  in(i) = T(3);
   }
+  Xa = Sa = in;
 
 //  out = Xa;
 //  Xa = out;
@@ -57,5 +59,6 @@ NT2_TEST_CASE_TPL( direct_transform, (float) )
     nt2::log(Sa/Xa) + Xa;
 
 // NT2_TEST_EQUAL(T(0), T(0));
+ std::cout << /*Sa(1) << "\t" << Xa(1) << "\t" <<*/ out(1) << "\n";
  NT2_TEST_EQUAL(1, 1);
 }

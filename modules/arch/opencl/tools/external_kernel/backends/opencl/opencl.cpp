@@ -220,6 +220,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   {
     std::string temp_expr = core_expr.str() ;
 
+    includes = "#include <nt2/table.hpp>\n";
     for(mtype::iterator it = map_includes.begin() ; it != map_includes.end() ; ++it)
     {
       stype::const_iterator it_set = include_headers.find(it->first);
@@ -307,6 +308,8 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   }
 
   std::regex compute_v_wrap0("(const)*\\s[a-zA-Z0-9]*\\*\\s");
+  std::regex compute_core_exp("\\n");
+  std::string test = std::regex_replace(core_expr.str(), compute_core_exp, "");
   std::string krnl_params = params_wrapper;
   krnl_params = std::regex_replace(krnl_params, compute_v_wrap0, " __global $& ");
 
@@ -314,8 +317,9 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
             % str_expr % fn_sig % krnl_params;
   str_expr = boost::format("%1%  res += std::string(\"  int %2% = %3%;\\n\");\n")
             % str_expr % rank % kernl_indx;
+//std::cout << "CORE_EXPR = " << test << "\nEND_CORE_EXPR\n";
   str_expr = boost::format("%1%  res += std::string(\"  %2%\\n\");\n")
-            % str_expr % core_expr;
+            % str_expr % test;
   str_expr = boost::format("%1%  res += std::string(\"}\\n\");\n")
             % str_expr;
   str_expr = boost::format("%1%\n  return res;\n}\n")
@@ -486,6 +490,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
   detect_device =
     detect_device
+// TODO: Looks like you can create one context that uses all devices
     + "// TODO: take advantage of multiple devices\n"
     + "  std::vector<compute::context> contexts;\n"
     + "  contexts.resize(devices.size());\n"
@@ -496,7 +501,8 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   detect_device =
     detect_device
     + "  for ( std::size_t i = 0 ; i < nQueues ; ++i )\n"
-    + "    queues[i] = compute::command_queue(contexts[0], devices[0]);\n"
+//    + "    queues[i] = compute::command_queue(contexts[0], devices[0]);\n"
+    + "    queues[i] = compute::command_queue(compute::system::default_context(), compute::system::default_device());\n"
   ;
 
   stream_cu =
@@ -675,17 +681,14 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
         if(lhs.operation =="tie")
         {
           call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).specifics().data(j),\n";
-//          call_kernel += "      boost::proto::value(boost::proto::child_c<"+k_s+">(a0)).data(),\n";
         }
         else
         {
           call_kernel += "      boost::proto::value(a0).specifics().data(j),\n";
-//          call_kernel += "      boost::proto::value(a0).data(),\n";
         }
       }
       else
         call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").specifics().data(j),\n";
-//        call_kernel += "      boost::proto::value("+test_dummy[k-lhs_size]+").data(),\n";
     }
   }
 
@@ -737,7 +740,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
         }
     }
   }
-  dth_kernel += "}\n";
+  dth_kernel += "  }\n";
 
   stream_cu =
     stream_cu
@@ -745,7 +748,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     + dth_kernel
     + "\n"
     + "\n"
-    + "delete [] queues;\n"
+    + "  delete [] queues;\n"
     + "\n\n"
   ;
 

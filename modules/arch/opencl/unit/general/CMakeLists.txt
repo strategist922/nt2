@@ -13,6 +13,7 @@ SET( SOURCES
     opencl_buffer.cpp
     specific_opencl.cpp
     transform.cpp
+    blacknscholes.cpp
 #    generated_cl.cpp
 #    generated.cpp
    )
