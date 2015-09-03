@@ -40,7 +40,6 @@ void rhs_params(Expr const& rhs, std::vector<std::string> & params_call, std::si
 {
   for (std::size_t i = 0 ; i < rhs.children.size() ; ++i )
   {
-    //  std::cout << "index is : " << indx << "  with children" <<  i << " op : " << rhs.children[i].operation << std::endl;
     if(is_terminal(rhs.children[i].operation))
     {
       params_call[indx] = "child_c<"+to_string(i)+">("+params_call[indx]+")";
@@ -52,7 +51,6 @@ void rhs_params(Expr const& rhs, std::vector<std::string> & params_call, std::si
     {
         std::size_t child_size = 0;
         children_size(rhs.children[i],child_size);
-        std::cout << "in else indx : " << indx << "  children size " << child_size << std::endl;
       for(std::size_t j = indx; j < indx + child_size ; ++j)
       {
           params_call[j] = "child_c<"+to_string(i)+">(" + params_call[j];
@@ -85,7 +83,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   // define available functions for the back-end
   std::set<std::string> include_headers;
 
-  //TODO: define opencl function headers
   if(symbol.target == "opencl")
     include_headers = opencl_fun_headers();
 
@@ -176,25 +173,11 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     add_map_includes(rhs, map_includes , symbol.target );
   }
 
-//  std::cout << "*****************************************\n";
-//  std::cout << "fn_signatures = \n";
-//  for(std::size_t i = 0 ; i < fn_signatures.size() ; ++i ) {
-//    std::cout << fn_signatures[i][0] << "\n";
-//    for(std::size_t j = 1 ; j < fn_signatures[i].size() ; ++j )
-//      std::cout << fn_signatures[i][j] << "\t";
-//    std::cout << "\n";
-//  }
-//  std::cout << "*****************************************\n";
-
   // parameter call for the right-hand side
   for(std::size_t i = 0 ; i < indx - lhs_size ; ++i )
   {
     params_call += ",boost::proto::child_c<"+to_string(i)+">(a1)";
 
-  }
-
-  // recursive parameter call
-  {
   }
 
   boost::format core_expr = boost::format("") ;
@@ -224,24 +207,22 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     for(mtype::iterator it = map_includes.begin() ; it != map_includes.end() ; ++it)
     {
       stype::const_iterator it_set = include_headers.find(it->first);
-      // The function does not exist in compute::vector so add NT2 versions
+      // The function does not exist in opencl so add NT2 versions
       if( it_set == include_headers.end() )
         includes += it->second;
-      {
 //TODO: Is this fully safe with an installed version of nt2?
 //      Currently needed to have the correct tags for all functions
-        includes =
-          includes
-          + "#include <nt2/include/functions/"
-          + it->first
-          + ".hpp>\n"
-        ;
-      }
+//        when compiling generated code
+      includes =
+        includes
+        + "#include <nt2/include/functions/"
+        + it->first
+        + ".hpp>\n"
+      ;
     }
     core_expr = boost::format("%1%") % temp_expr;
   }
 
-// TODO: possibly replace with boost::compute includes
   if(symbol.target == "opencl") {
     includes =
       includes
@@ -262,11 +243,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   {
      boost::replace_all(test_dummy[i], "()" , "(a1)");
   }
-//  std::cout << "---------------rhs params-----------------" << std::endl;
-//  for(std::size_t i = 0; i < test_dummy.size() ; ++i)
-//  {
-//    std::cout << test_dummy[i] << std::endl;
-//  }
 
 //-----------------------write generated.cu file---------------------------//
   std::string kernl_indx ;
@@ -319,7 +295,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
             % str_expr % fn_sig % krnl_params;
   str_expr = boost::format("%1%  res += std::string(\"  int %2% = %3%;\\n\");\n")
             % str_expr % rank % kernl_indx;
-//std::cout << "CORE_EXPR = " << test << "\nEND_CORE_EXPR\n";
   str_expr = boost::format("%1%  res += std::string(\"  %2%\\n\");\n")
             % str_expr % test;
   str_expr = boost::format("%1%  res += std::string(\"}\\n\");\n")
@@ -327,11 +302,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   str_expr = boost::format("%1%\n  return res;\n}\n")
             % str_expr;
 
-//  std::cout << "***********************************\n"
-//            << "output = \n";
-//  std::cout << fn_sig << "\n";
-//  std::cout << str_expr
-//            << "***********************************\n";
 
   std::string cl_params_wrapper = params_wrapper;
   std::regex compute_v_wrap1("\\s[a-zA-Z0-9]*\\*\\s");
@@ -374,28 +344,22 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     % "\");\n"
   ;
 
-//cl_params_wrapper = std::regex_replace(cl_params_wrapper, only_args, "$&");
   std::regex extract_vars("\\s[a-zA-Z0-9]*\\*\\s* (t[0-9]*)");
   std::smatch cl_fn_vars;
-//  std::regex_search(params_wrapper, cl_fn_vars, extract_vars);
   std::sregex_iterator cl_it(params_wrapper.begin(), params_wrapper.end(), extract_vars);
   std::sregex_iterator regex_end;
 
 {
   int i = 0;
-//  for ( auto it = cl_it ; it != regex_end ; ++it ) {
   for ( i = 0 ; i < locality.size() ; ++i ) {
-    kernel_wrapper_fn = boost::format("%1%%2%%3%%4%%5%%6%%7%")
+    kernel_wrapper_fn = boost::format("%1%%2%%3%%4%%5%%6%")
       % kernel_wrapper_fn
       % "  kernel.set_arg("
       % i
-      % " , "
-      % "t"
+      % " , t"
       % i
-//      % std::regex_replace( (*it).str(), extract_vars, "$1" )
       % ");\n"
     ;
-//    ++i;
   }
 }
 
@@ -408,7 +372,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     % "  size_t local_size[] = { blockDim };\n"
   ;
 
-//TODO: If dim is limited to 1, you can simplify the enqueue call
   kernel_wrapper_fn = boost::format("%1%%2%")
     % kernel_wrapper_fn
     % "  queue.enqueue_nd_range_kernel(kernel, dim, offset, global_size, local_size);\n"
@@ -453,35 +416,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     + "\n"
   ;
 
-//  stream_cu =
-//    stream_cu
-//for ( std::size_t i = 0 ; i < nStreams ; ++i ) {
-//  queues[i] = command::queue(compute::context(devices[i]), devices[i]);
-//}
-//    + "cudaStream_t stream[nQueues];\n"
-//   + "  stream[j] = compute::command_queue(devices[i]);
-
-  // Allocate device memory -- generated -- TODO : add informations to allocate
-  // on is it an lhs ?
-  // compute::vectors are already on device, aren't they?
-
-//  stream_cu =
-//    stream_cu
-//    + "std::vector<compute::device> devices = compute::system::devices();\n"
-//  ;
-
-// TODO: Replace stream management with command queue management
-  stream_cu =
-    stream_cu
-//   + "for(std::size_t i = 0; i < n ; ++i)\n"
-//   + "{\n"
-//   + "  std::size_t j = i % nQueues;\n"
-//   + "}\n"
-   ;
-
-
   // Detect all devides
-//TODO: Move this before queue creation, make queue creation depend on devices
   std::string detect_device =
     "  std::vector<compute::device> devices;\n"
   ;
@@ -503,6 +438,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
     + "    contexts[i] = compute::context(devices[i]);\n"
   ;
 
+//TODO: Create a context using multiple devices to handle multi-device
   detect_device =
     detect_device
     + "  for ( std::size_t i = 0 ; i < nQueues ; ++i )\n"
@@ -632,7 +568,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
 //TODO: Check to make sure it's ok to call the kernel normally on the leftover
 //        block. I'm 90% sure you don't segfault when going past allocated
-//        memory on a GPU, but I can't find documenation to confirm...
+//        memory on a GPU, but I can't currently find documenation to confirm...
   std::string kernel = "";
 
   kernel =
@@ -762,14 +698,6 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
   std::string kernel_trans =
     kernel_wrapper_decl
     + ";\n\n"
-//    "void "
-//    + kernel_wrapper
-//    + "("
-//    + params_wrapper
-////    + ", std::size_t dimGrid, std::size_t blockDim, compute::command_queue & queue);\n\n"
-//    + ", std::size_t dimGrid, std::size_t blockDim, "
-//    + "std::size_t gridNum, std::size_t blockNum, "
-//    + "compute::command_queue & queue);\n\n"
   ;
 
   std::string header_inc = "";
