@@ -110,8 +110,8 @@ namespace nt2 { namespace container
     operator=(Xpr const& xpr)
     {
       using check = boost::mpl::bool_
-                    < meta::is_device_assign<Xpr,table>::value
-                   && meta::is_container_terminal<Xpr>::value
+                    <  meta::is_device_assign<Xpr,table>::value
+                    && meta::is_container_and_terminal<Xpr>::value
                     >;
 
       return eval(xpr,check{});

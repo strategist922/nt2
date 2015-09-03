@@ -73,6 +73,18 @@ namespace nt2
          : meta::is_container<typename T::proto_child0>
     {
     };
+
+    template<class T , class Enable = void>
+    struct is_container_and_terminal : boost::mpl::false_
+    {
+    };
+
+    template<class T>
+    struct is_container_and_terminal<T,typename T::proto_is_expr_>
+      : meta::is_container_terminal<T>
+    {
+    };
+
   }
 }
 
