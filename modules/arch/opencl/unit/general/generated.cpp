@@ -1,12 +1,16 @@
 #include <nt2/table.hpp>
 #include <nt2/arithmetic/functions/opencl/divides.hpp>
+#include <nt2/include/functions/divides.hpp>
 #include <nt2/include/functions/exp.hpp>
-#include <nt2/include/functions/fastnormcdf.hpp>
 #include <nt2/arithmetic/functions/opencl/fastnormcdf.hpp>
+#include <nt2/include/functions/fastnormcdf.hpp>
 #include <nt2/arithmetic/functions/opencl/fnms.hpp>
+#include <nt2/include/functions/fnms.hpp>
 #include <nt2/include/functions/log.hpp>
 #include <nt2/arithmetic/functions/opencl/multiplies.hpp>
+#include <nt2/include/functions/multiplies.hpp>
 #include <nt2/arithmetic/functions/opencl/plus.hpp>
+#include <nt2/include/functions/plus.hpp>
 #include <nt2/include/functions/sqrt.hpp>
 #include <CL/cl.h>
 #include <boost/compute/container/vector.hpp>
@@ -22,26 +26,12 @@ std::string tie20 ()
   res += nt2::opencl::divides() + std::string("\n");
   res += std::string("inline float multiplies( float arg0, float arg1 )");
   res += nt2::opencl::multiplies() + std::string("\n");
-  res += std::string("inline float multiplies( float arg0, float arg1 )");
-  res += nt2::opencl::multiplies() + std::string("\n");
-  res += std::string("inline float divides( float arg0, float arg1 )");
-  res += nt2::opencl::divides() + std::string("\n");
   res += std::string("inline float plus( float arg0, float arg1 )");
   res += nt2::opencl::plus() + std::string("\n");
   res += std::string("inline float fnms( float arg0, float arg1, float arg2 )");
   res += nt2::opencl::fnms() + std::string("\n");
-  res += std::string("inline float multiplies( float arg0, float arg1 )");
-  res += nt2::opencl::multiplies() + std::string("\n");
-  res += std::string("inline float multiplies( float arg0, float arg1 )");
-  res += nt2::opencl::multiplies() + std::string("\n");
   res += std::string("inline float fastnormcdf( float arg0 )");
   res += nt2::opencl::fastnormcdf() + std::string("\n");
-  res += std::string("inline float fastnormcdf( float arg0 )");
-  res += nt2::opencl::fastnormcdf() + std::string("\n");
-  res += std::string("inline float multiplies( float arg0, float arg1 )");
-  res += nt2::opencl::multiplies() + std::string("\n");
-  res += std::string("inline float fnms( float arg0, float arg1, float arg2 )");
-  res += nt2::opencl::fnms() + std::string("\n");
   res += std::string("__kernel void tie20 ( __global  float*  t0 , __global  float*  t1 , __global  float*  t2 , __global  float*  t3,  __global const float*   t4,  __global const float*   t5,  __global const float*   t6, const float t7,  __global const float*   t8, const float t9,  __global const float*   t10, const float t11,  __global const float*   t12,  __global const float*   t13,  __global const float*   t14, const float t15,  __global const float*   t16,  __global const float*   t17,  __global const float*   t18,  __global const float*   t19)\n{\n");
   res += std::string("  int index = get_global_id(0);\n");
   res += std::string("   t0[index] = sqrt(t4[index]); t1[index] = plus(log(divides(t5[index],t6[index])),divides(multiplies(t7,t8[index]),multiplies(t9,t10[index]))); t2[index] = fnms(t11,t12[index],t13[index]); t3[index] = fnms(multiplies(t14[index],exp(multiplies(t15,t16[index]))),fastnormcdf(t17[index]),multiplies(t18[index],fastnormcdf(t19[index])));\n");
@@ -51,7 +41,7 @@ std::string tie20 ()
 }
 void tie20_wrapper( compute::vector< float > & t0 , compute::vector< float > & t1 , compute::vector< float > & t2 , compute::vector< float > & t3, const compute::vector< float > &  t4, const compute::vector< float > &  t5, const compute::vector< float > &  t6, const float t7, const compute::vector< float > &  t8, const float t9, const compute::vector< float > &  t10, const float t11, const compute::vector< float > &  t12, const compute::vector< float > &  t13, const compute::vector< float > &  t14, const float t15, const compute::vector< float > &  t16, const compute::vector< float > &  t17, const compute::vector< float > &  t18, const compute::vector< float > &  t19, std::size_t dimGrid, std::size_t blockDim, std::size_t gridNum, std::size_t blockNum, compute::command_queue & queue)
 {
-  compute::program program =
+  compute::program program = 
     compute::program::create_with_source(tie20().c_str(), queue.get_context());
   program.build();
 
@@ -63,15 +53,19 @@ void tie20_wrapper( compute::vector< float > & t0 , compute::vector< float > & t
   kernel.set_arg(4 , t4);
   kernel.set_arg(5 , t5);
   kernel.set_arg(6 , t6);
-  kernel.set_arg(7 , t8);
-  kernel.set_arg(8 , t10);
-  kernel.set_arg(9 , t12);
-  kernel.set_arg(10 , t13);
-  kernel.set_arg(11 , t14);
-  kernel.set_arg(12 , t16);
-  kernel.set_arg(13 , t17);
-  kernel.set_arg(14 , t18);
-  kernel.set_arg(15 , t19);
+  kernel.set_arg(7 , t7);
+  kernel.set_arg(8 , t8);
+  kernel.set_arg(9 , t9);
+  kernel.set_arg(10 , t10);
+  kernel.set_arg(11 , t11);
+  kernel.set_arg(12 , t12);
+  kernel.set_arg(13 , t13);
+  kernel.set_arg(14 , t14);
+  kernel.set_arg(15 , t15);
+  kernel.set_arg(16 , t16);
+  kernel.set_arg(17 , t17);
+  kernel.set_arg(18 , t18);
+  kernel.set_arg(19 , t19);
 
   size_t dim = 1;
   size_t offset[] = { (dimGrid * gridNum) + (blockDim * blockNum) };
