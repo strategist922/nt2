@@ -84,7 +84,7 @@ namespace nt2{ namespace details
                         , int blockid
                         , compute::command_queue queue)
       {
-        device[streamid].resize(sizeb);
+//        device[streamid].resize(sizeb);
         queue.enqueue_write_buffer(
                                   device[streamid].get_buffer()
                                  , blockid * sizeb
@@ -176,26 +176,20 @@ namespace nt2{ namespace details
           std::size_t num = s / blocksize_  ;
           block_stream_dth.resize(num);
           block_stream_htd.resize(num);
-          buffers.allocate(blocksize, nstreams, queues);
+          buffers.allocate(s, nstreams, queues);
           allocated = true;
         }
       }
 
-// In -> nt2::table<device>
-// Stream -> CmdQueue
-// Set -> std::set<const float*>
       template<class In, class Stream/*, class Set*/>
       inline void transfer_htd( In & in, int blockid, Stream & stream ,std::size_t streamid
 //                              , Set & addr
                               , std::size_t leftover = 0)
       {
-// Is there any point to using sizeb instead of blocksize?
         std::size_t sizeb = blocksize;
         if(leftover !=0) sizeb = leftover ;
 
-//        auto it_set = addr.find(in.data());
         if( block_stream_htd[blockid] == false
-//            && (it_set == addr.end() )
           ) {
           buffers.copy_host2dev(in, streamid, sizeb, blockid, stream);
           block_stream_htd[blockid] = true;

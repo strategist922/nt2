@@ -13,7 +13,7 @@
 namespace nt2 { namespace opencl {
 inline std::string unary_minus()
 {
-  return std::string("{ return -a; }");
+  return std::string("{ return -arg0; }");
 }
 }}
 

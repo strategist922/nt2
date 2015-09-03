@@ -227,7 +227,7 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
       // The function does not exist in compute::vector so add NT2 versions
       if( it_set == include_headers.end() )
         includes += it->second;
-      else {
+      {
 //TODO: Is this fully safe with an installed version of nt2?
 //      Currently needed to have the correct tags for all functions
         includes =
@@ -297,9 +297,11 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
             % str_expr;
 
  // Add auxiliary function definitions
+  std::map<std::string, bool> already_included;
   for ( std::size_t i = 0 ; i < fn_signatures.size() ; ++i ) {
     stype::const_iterator it_set = include_headers.find(fn_signatures[i][1]);
-    if( it_set == include_headers.end() ) {
+    if( it_set == include_headers.end() && already_included[fn_signatures[i][1]] == false ) {
+      already_included[fn_signatures[i][1]] = true;
       str_expr = boost::format("%1%  res += std::string(\"inline %2%\");\n")
                 % str_expr % fn_signatures[i][0];
       str_expr = boost::format("%1%  res += nt2::opencl::%2%() + std::string(\"\\n\");\n")
@@ -381,16 +383,19 @@ extern "C" BOOST_SYMBOL_EXPORT void generate(const char* filename, kernel_symbol
 
 {
   int i = 0;
-  for ( auto it = cl_it ; it != regex_end ; ++it ) {
-    kernel_wrapper_fn = boost::format("%1%%2%%3%%4%%5%%6%")
+//  for ( auto it = cl_it ; it != regex_end ; ++it ) {
+  for ( i = 0 ; i < locality.size() ; ++i ) {
+    kernel_wrapper_fn = boost::format("%1%%2%%3%%4%%5%%6%%7%")
       % kernel_wrapper_fn
       % "  kernel.set_arg("
       % i
       % " , "
-      % std::regex_replace( (*it).str(), extract_vars, "$1" )
+      % "t"
+      % i
+//      % std::regex_replace( (*it).str(), extract_vars, "$1" )
       % ");\n"
     ;
-    ++i;
+//    ++i;
   }
 }
 

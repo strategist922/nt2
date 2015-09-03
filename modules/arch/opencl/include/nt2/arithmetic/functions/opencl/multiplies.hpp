@@ -13,7 +13,7 @@
 namespace nt2 { namespace opencl {
 inline std::string multiplies()
 {
-  return std::string("{ return a * b; }");
+  return std::string("{ return arg0 * arg1; }");
 }
 }}
 

@@ -33,7 +33,7 @@ inline std::string fastnormcdf()
     "        cnd = 1.0f - cnd;"
     "    }"
     "    return cnd;"
-//    "}"
+    "}"
   ;
 
   return res;
