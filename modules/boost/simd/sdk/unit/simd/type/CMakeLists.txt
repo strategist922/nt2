@@ -8,9 +8,9 @@
 ################################################################################
 
 SET( SOURCES
-    accumulate.cpp
-    transform.cpp
+    bitwise_cast.cpp
+    logical.cpp
+    pack.cpp
    )
 
-nt2_module_add_tests(boost.simd.sdk.simd.algorithm.unit ${SOURCES})
-
+nt2_module_add_tests(boost.simd.sdk.simd.type.unit ${SOURCES})
