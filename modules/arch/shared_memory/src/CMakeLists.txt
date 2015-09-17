@@ -16,11 +16,12 @@ nt2_module_postconfigure(gather_includes --name shared_memory.hpp
 
 set(script_path ${NT2_SOURCE_ROOT}/modules/arch/shared_memory/script/run_microbenchmarks.sh)
 set(build_dir ${NT2_BINARY_DIR})
+set(source_dir ${NT2_SOURCE_ROOT})
 
-nt2_module_postconfigure(runtime_costs --path ${script_path} --build_dir ${build_dir})
+nt2_module_postconfigure(runtime_costs --path ${script_path} --build_dir ${build_dir} --source_dir ${source_dir})
 
 add_custom_target(run_microbenchmarks
-                  COMMAND ${script_path} ${build_dir}
+                  COMMAND ${script_path} ${build_dir} ${source_dir}
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                   COMMENT "Update microbenchmarks"
                   )

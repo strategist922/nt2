@@ -1,5 +1,18 @@
 #!/bin/bash
 
+################################
+# AWK scripts                  #
+################################
+
+# linreg.awk: An awk script to compute linear regression
+# Input columns x and y, outputs a=slope and b=intercept
+# Usage: awk -f linreg.awk file
+
+
+################################
+# End of AWK Scripts           #
+################################
+
 tmp="${1}/tmp"
 out="${1}/include/nt2/sdk/runtime_costs.hpp"
 
@@ -29,7 +42,9 @@ do
     echo -n "typedef typename boost::mpl::size_t< " >> ${tmp}
     if [ -f ${next_exe} ]; then
       echo -n "(std::size_t) " >> ${tmp}
-      echo -n `./${next_exe} ${opt} | grep "cpe" | cut -f 3` >> ${tmp}
+       echo -n `./${next_exe} ${opt} | grep "cycles" | cut -f 2,3 | awk -f ${2}/modules/arch/shared_memory/script/linreg.awk  ` >> ${tmp}
+       echo -n " ------ "
+       # echo -n './${next_exe} ${opt} | grep "cycles" | cut -f 2,3 | awk -f ${2}/modules/arch/shared_memory/script/linreg.awk '
     else
       echo -n "0" >> ${tmp}
     fi

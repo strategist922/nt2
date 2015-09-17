@@ -25,6 +25,14 @@ int main(int argc, char *argv[])
           ++i;
           continue;
       }
+
+      if(!strcmp(argv[i], "--source_dir"))
+      {
+          paths.push_back(argv[i+1]);
+          ++i;
+          continue;
+      }
+
   }
   system( (paths[0]+" "+paths[1]).c_str() );
 
