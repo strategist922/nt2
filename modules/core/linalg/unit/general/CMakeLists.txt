@@ -24,11 +24,14 @@ SET( SOURCES
   rot90.cpp
   rref.cpp
   rref_result.cpp
+  signm.cpp
   sqrtm.cpp
   logm.cpp
   eyeminus.cpp
   eyeplus.cpp
   trsolve.cpp
+  sylvester.cpp
+  lyapunov.cpp
   )
 
 nt2_module_add_tests(core.linalg.general.unit ${SOURCES})

@@ -7,6 +7,10 @@
 #                     http://www.boost.org/LICENSE_1_0.txt
 ################################################################################
 
-ADD_SUBDIRECTORY(meta)
-ADD_SUBDIRECTORY(type)
-ADD_SUBDIRECTORY(algorithm)
+SET( SOURCES
+    accumulate.cpp
+    transform.cpp
+   )
+
+nt2_module_add_tests(boost.simd.sdk.simd.algorithm.unit ${SOURCES})
+
