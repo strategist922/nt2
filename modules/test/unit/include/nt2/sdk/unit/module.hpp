@@ -38,9 +38,11 @@
 #include <nt2/sdk/error/warning_as_flexible.hpp>
 #include <nt2/sdk/functor/site.hpp>
 #include <nt2/sdk/meta/type_id.hpp>
+#include <nt2/sdk/shared_memory/thread_utility.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <iostream>
 #include <string>
+#include <cstring>
 
 #if !defined(NT2_UNIT_MAIN_SUITE)
 /// INTERNAL ONLY
@@ -97,6 +99,17 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
   std::cout << "Architecture: " << BOOST_SIMD_STRING << "\n";
   std::cout << "Site: " << nt2::type_id<boost::dispatch::default_site<int>::type>() << "\n",
   std::cout <<  std::string(80,'-') << std::endl;
+
+  //  Check if number of threads must be set
+  for(int i = 1; i != argc; ++i)
+  {
+      if(!strcmp(argv[i], "--nt2:threads") && i != argc-1)
+      {
+          nt2::set_num_threads( std::atoi(argv[i+1]) );
+          ++i;
+          continue;
+      }
+  }
 
 #if defined(NT2_USE_MAGMA)
   magma_init();
