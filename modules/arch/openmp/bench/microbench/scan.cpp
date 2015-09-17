@@ -34,15 +34,12 @@ struct shared_memory_scan
   }
 
   float operator()() {
-
-
-
      return s_(w_, 0ul, n_, 1ul);
    }
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_scan const& p)
   {
-    return os << "(" << p.n_ << ")";
+    return os << p.n_;
   }
 
   nt2::cycles_t offset() const { return offset_; }

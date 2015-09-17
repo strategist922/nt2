@@ -39,7 +39,7 @@ struct shared_memory_fold
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_fold const& p)
   {
-    return os << "(" << p.n_ << ")";
+    return os << p.n_;
   }
 
   nt2::cycles_t offset() const { return offset_; }

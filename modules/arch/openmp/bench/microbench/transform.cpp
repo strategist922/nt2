@@ -23,7 +23,6 @@
 #include <cstdio>
 
 
-
 using namespace nt2::bench;
 using boost::dispatch::default_site;
 using nt2::table;
@@ -40,13 +39,12 @@ struct shared_memory_transform
   }
 
   void operator()() {
-
       s_(w_, 0, n_, 1);
    }
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_transform const& p)
   {
-    return os << "(" << p.n_ << ")";
+    return os << p.n_;
   }
 
   nt2::cycles_t offset() const { return offset_; }

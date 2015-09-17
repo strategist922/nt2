@@ -46,7 +46,7 @@ struct shared_memory_transform
 
   friend std::ostream& operator<<(std::ostream& os, shared_memory_transform const& p)
   {
-    return os << "(" << p.n_ << ")";
+    return os << p.n_;
   }
 
   nt2::cycles_t offset() const { return offset_; }
