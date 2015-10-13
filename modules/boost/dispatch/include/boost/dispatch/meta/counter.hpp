@@ -11,6 +11,7 @@
 
 #include <boost/dispatch/details/typeof.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/mpl/int.hpp>
 
 #ifndef BOOST_DISPATCH_COUNTER_MAX
 /// INTERNAL ONLY
