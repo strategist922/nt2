@@ -9,7 +9,7 @@
 
 include(nt2.info)
 include(nt2.boost)
-find_package(Boost 1.53.0 QUIET COMPONENTS program_options thread system serialization filesystem)
+find_package(Boost 1.53.0 QUIET COMPONENTS chrono date_time filesystem program_options regex system thread context random atomic)
 
 if(NOT DEFINED HPX_ROOT)
   set(HPX_ROOT $ENV{HPX_ROOT})
@@ -86,7 +86,7 @@ endif()
 
 set( NT2_ARCH.HPX_DEPENDENCIES_LIBRARIES ${HPX_LIBRARY} ${HPX_INIT_LIBRARY} ${HPX_SERIALIZATION_LIBRARY} )
 
-foreach(lib PROGRAM_OPTIONS THREAD SYSTEM SERIALIZATION FILESYSTEM)
+foreach(lib CHRONO DATE_TIME FILESYSTEM PROGRAM_OPTIONS REGEX SYSTEM THREAD CONTEXT RANDOM ATOMIC)
   if(Boost_${lib}_LIBRARY_DEBUG AND Boost_${lib}_LIBRARY_RELEASE)
     list(APPEND NT2_ARCH.HPX_DEPENDENCIES_LIBRARIES ${Boost_${lib}_LIBRARY_DEBUG} ${Boost_${lib}_LIBRARY_RELEASE})
   else()
