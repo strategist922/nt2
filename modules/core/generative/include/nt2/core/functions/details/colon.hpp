@@ -59,10 +59,9 @@ namespace nt2 { namespace details
 
   /// INTERNAL ONLY
   /// Same sign helper unity_colon_size
-  template<class L, class U, bool B> BOOST_FORCEINLINE std::size_t
+  template<class L, class U, class B> BOOST_FORCEINLINE std::size_t
   unity_helper( L const& l, U const& u
-              , boost::mpl::bool_<B> const&
-              , boost::mpl::bool_<B> const&
+              , B const&, B const&
               )
   {
     return (u >= l) ? static_cast<std::size_t>(u-l+1) : 0u;
@@ -72,7 +71,7 @@ namespace nt2 { namespace details
   /// signed/unsigned helper unity_colon_size
   template<class L, class U> BOOST_FORCEINLINE std::size_t
   unity_helper( L const& l, U const& u
-              , const boost::mpl::true_&
+              , const boost::integral_constant<bool, true>&
               , const boost::integral_constant<bool, false>&
               )
   {
