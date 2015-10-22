@@ -10,11 +10,13 @@
 #define NT2_CORE_FUNCTIONS_SCALAR_NUMEL_HPP_INCLUDED
 
 #include <nt2/core/functions/numel.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/size_t.hpp>
-#include <nt2/core/functions/numel.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/fusion/include/fold.hpp>
 #include <boost/fusion/include/advance.hpp>
 #include <boost/fusion/include/value_at.hpp>
+#include <boost/fusion/include/empty.hpp>
 #include <nt2/core/utility/of_size/mpl_value.hpp>
 #include <boost/fusion/include/iterator_range.hpp>
 #include <boost/simd/operator/functions/scalar/multiplies.hpp>
@@ -54,9 +56,11 @@ namespace nt2 { namespace ext
 
     // Proper types of the neutral element
     // If the sequence is non-empty, type of the first, else return std::ptrdiff_t
-    typedef typename  boost::fusion::result_of::
-                      value_at<A0, boost::mpl::int_<0> >::type  first_t;
-    typedef typename  mpl_value_type<first_t>::type             base_t;
+    typedef boost::fusion::result_of::empty<A0> empty_t;
+    typedef boost::fusion::result_of::value_at<A0, boost::mpl::int_<0> >  maybe_t;
+
+    typedef typename  boost::mpl::eval_if<empty_t,boost::mpl::identity<int>,maybe_t>::type   first_t;
+    typedef typename  mpl_value_type<first_t>::type           base_t;
 
     typedef typename boost::fusion::result_of::
             fold< A0
@@ -110,3 +114,4 @@ namespace nt2 { namespace ext
 } }
 
 #endif
+
