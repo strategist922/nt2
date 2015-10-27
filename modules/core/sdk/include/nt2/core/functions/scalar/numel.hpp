@@ -20,6 +20,7 @@
 #include <nt2/core/utility/of_size/mpl_value.hpp>
 #include <boost/fusion/include/iterator_range.hpp>
 #include <boost/simd/operator/functions/scalar/multiplies.hpp>
+#include <boost/dispatch/meta/strip.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -53,26 +54,17 @@ namespace nt2 { namespace ext
     // multiplies functor
     typedef typename boost::dispatch::
             make_functor<boost::simd::tag::multiplies_, A0>::type     func_t;
-
-    // Proper types of the neutral element
-    // If the sequence is non-empty, type of the first, else return std::ptrdiff_t
-    typedef boost::fusion::result_of::empty<A0> empty_t;
-    typedef boost::fusion::result_of::value_at<A0, boost::mpl::int_<0> >  maybe_t;
-
-    typedef typename  boost::mpl::eval_if<empty_t,boost::mpl::identity<int>,maybe_t>::type   first_t;
-    typedef typename  mpl_value_type<first_t>::type           base_t;
-
-    typedef typename boost::fusion::result_of::
-            fold< A0
-                , boost::mpl::integral_c<base_t,1> const
-                , func_t
-                >::type                                        result_type;
+    using seq_t = typename boost::dispatch::meta::strip<A0>::type;
+    using result_type = decltype(boost::fusion::fold( std::declval<seq_t>()
+                                , boost::mpl::integral_c<std::size_t,1>()
+                                , func_t()
+                                ));
 
     BOOST_FORCEINLINE
     result_type operator()(A0 const& a0) const
     {
       return boost::fusion::fold( a0
-                                , boost::mpl::integral_c<base_t,1>()
+                                , boost::mpl::integral_c<std::size_t,1>()
                                 , func_t()
                                 );
     }
