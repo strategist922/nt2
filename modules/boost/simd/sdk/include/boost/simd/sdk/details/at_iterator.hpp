@@ -20,7 +20,7 @@ namespace boost { namespace simd
   struct at_iterator
       : boost::fusion::
         iterator_facade < at_iterator<Seq, N>
-                        , boost::fusion::random_access_traversal_tag
+                        , boost::fusion::unbounded_tag
                         >
   {
     BOOST_STATIC_CONSTANT(int index,   = N);

@@ -40,7 +40,7 @@ namespace boost { namespace fusion { namespace extension
     template<typename Seq>
     struct apply
     {
-      typedef random_access_traversal_tag type;
+      typedef unbounded_tag type;
     };
   };
 
@@ -138,16 +138,5 @@ namespace boost { namespace fusion { namespace extension
     };
   };
 } } }
-
-#if (BOOST_VERSION > 105700 )
-namespace boost { namespace fusion { namespace detail
-{
-  template <typename Sequence, typename N>
-  struct  at_impl<Sequence,N,nt2::tag::of_size_>
-        : extension::at_impl<nt2::tag::of_size_>::template apply<Sequence, N>
-  {};
-} } }
-
-#endif
 
 #endif
