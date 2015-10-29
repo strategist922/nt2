@@ -141,6 +141,6 @@ NT2_TEST_CASE( static_numel )
 
   NT2_TEST_EXPR_TYPE( numel(mv)
                     , _
-                    , ( boost::mpl::integral_c<nt2::int16_t, 24> )
+                    , ( boost::mpl::integral_c<std::size_t, 24> )
                     );
 }
