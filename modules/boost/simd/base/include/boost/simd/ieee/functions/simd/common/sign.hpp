@@ -14,6 +14,8 @@
 #include <boost/simd/include/functions/simd/is_nan.hpp>
 #include <boost/simd/include/functions/simd/is_gtz.hpp>
 #include <boost/simd/include/functions/simd/is_ltz.hpp>
+#include <boost/simd/include/functions/simd/is_equal.hpp>
+#include <boost/simd/include/constants/valmin.hpp>
 #include <boost/simd/include/functions/simd/shift_right.hpp>
 #include <boost/simd/include/functions/simd/if_one_else_zero.hpp>
 #include <boost/simd/include/functions/simd/if_allbits_else.hpp>
@@ -32,8 +34,7 @@ namespace boost { namespace simd { namespace ext
     typedef A0 result_type;
     BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL_REPEAT(1)
     {
-      typedef typename meta::scalar_of<A0>::type sA0;
-      return shrai(a0, sizeof(sA0)*8-1)-shrai(-a0, sizeof(sA0)*8-1);
+      return if_one_else_zero(is_gtz(a0))-if_one_else_zero(is_ltz(a0));
     }
   };
 
