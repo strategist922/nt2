@@ -23,6 +23,8 @@
 #include <boost/simd/include/constants/inf.hpp>
 #include <boost/simd/include/constants/minf.hpp>
 #include <boost/simd/include/constants/nan.hpp>
+#include <boost/simd/include/constants/valmin.hpp>
+#include <boost/simd/include/constants/valmax.hpp>
 
 NT2_TEST_CASE_TPL ( sign_si,  BOOST_SIMD_SIMD_REAL_TYPES)
 {
@@ -60,4 +62,6 @@ NT2_TEST_CASE_TPL ( sign_real,  BOOST_SIMD_SIMD_INTEGRAL_SIGNED_TYPES)
   NT2_TEST_EQUAL(sign(boost::simd::Zero<vT>()), boost::simd::Zero<r_t>());
   NT2_TEST_EQUAL(sign(boost::simd::Mtwo<vT>()), boost::simd::Mone<r_t>());
   NT2_TEST_EQUAL(sign(boost::simd::Two<vT>()), boost::simd::One<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmin<vT>()), boost::simd::Mone<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmax<vT>()), boost::simd::One<r_t>());
 }
