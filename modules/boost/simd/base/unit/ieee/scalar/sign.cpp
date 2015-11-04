@@ -60,7 +60,7 @@ NT2_TEST_CASE_TPL ( sign_unsigned_int,  BOOST_SIMD_UNSIGNED_TYPES)
   // specific values tests
   NT2_TEST_EQUAL(sign(boost::simd::One<T>()), boost::simd::One<r_t>());
   NT2_TEST_EQUAL(sign(boost::simd::Zero<T>()), boost::simd::Zero<r_t>());
-  NT2_TEST_EQUAL(sign(boost::simd::Valmin<T>()), boost::simd::One<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmin<T>()), boost::simd::Zero<r_t>());
   NT2_TEST_EQUAL(sign(boost::simd::Valmax<T>()), boost::simd::One<r_t>());
 }
 

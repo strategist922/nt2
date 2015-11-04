@@ -11,6 +11,7 @@
 #define BOOST_SIMD_IEEE_FUNCTIONS_SCALAR_SIGN_HPP_INCLUDED
 
 #include <boost/simd/ieee/functions/sign.hpp>
+#include <boost/simd/include/functions/scalar/if_one_else_zero.hpp>
 #include <boost/simd/include/functions/scalar/is_ltz.hpp>
 #include <boost/simd/include/functions/scalar/is_gtz.hpp>
 #include <boost/simd/include/functions/scalar/shift_right.hpp>
@@ -31,7 +32,7 @@ namespace boost { namespace simd { namespace ext
     typedef A0 result_type;
     BOOST_FORCEINLINE BOOST_SIMD_FUNCTOR_CALL(1)
     {
-      return shrai(a0, (sizeof(A0)*8-1)) - shrai(-a0, (sizeof(A0)*8-1));
+      return if_one_else_zero(is_gtz(a0))-if_one_else_zero(is_ltz(a0));
     }
   };
 
@@ -46,7 +47,6 @@ namespace boost { namespace simd { namespace ext
       return !!a0;
     }
   };
-
 
   BOOST_DISPATCH_IMPLEMENT          ( sign_, tag::cpu_
                                     , (A0)
