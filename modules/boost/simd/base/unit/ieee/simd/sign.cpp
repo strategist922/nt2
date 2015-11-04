@@ -26,7 +26,7 @@
 #include <boost/simd/include/constants/valmin.hpp>
 #include <boost/simd/include/constants/valmax.hpp>
 
-NT2_TEST_CASE_TPL ( sign_si,  BOOST_SIMD_SIMD_REAL_TYPES)
+NT2_TEST_CASE_TPL ( sign_real,  BOOST_SIMD_SIMD_REAL_TYPES)
 {
   using boost::simd::sign;
   using boost::simd::tag::sign_;
@@ -44,10 +44,27 @@ NT2_TEST_CASE_TPL ( sign_si,  BOOST_SIMD_SIMD_REAL_TYPES)
   NT2_TEST_EQUAL(sign(boost::simd::Mone<vT>()), boost::simd::Mone<r_t>());
   NT2_TEST_EQUAL(sign(boost::simd::One<vT>()), boost::simd::One<r_t>());
   NT2_TEST_EQUAL(sign(boost::simd::Zero<vT>()), boost::simd::Zero<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmin<vT>()), boost::simd::Mone<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmax<vT>()), boost::simd::One<r_t>());
 }
 
+NT2_TEST_CASE_TPL ( sign_unsigned_int,  BOOST_SIMD_UNSIGNED_TYPES)
+{
+  using boost::simd::sign;
+  using boost::simd::tag::sign_;
+  using boost::simd::native;
+  typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
+  typedef native<T,ext_t>                  vT;
+  typedef typename boost::dispatch::meta::call<sign_(vT)>::type r_t;
 
-NT2_TEST_CASE_TPL ( sign_real,  BOOST_SIMD_SIMD_INTEGRAL_SIGNED_TYPES)
+  // specific values tests
+  NT2_TEST_EQUAL(sign(boost::simd::One<vT>()), boost::simd::One<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Zero<vT>()), boost::simd::Zero<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmin<vT>()), boost::simd::One<r_t>());
+  NT2_TEST_EQUAL(sign(boost::simd::Valmax<vT>()), boost::simd::One<r_t>());
+}
+
+NT2_TEST_CASE_TPL ( sign_si,  BOOST_SIMD_SIMD_INTEGRAL_SIGNED_TYPES)
 {
   using boost::simd::sign;
   using boost::simd::tag::sign_;
