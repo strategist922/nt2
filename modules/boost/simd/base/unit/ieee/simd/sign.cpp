@@ -48,7 +48,7 @@ NT2_TEST_CASE_TPL ( sign_real,  BOOST_SIMD_SIMD_REAL_TYPES)
   NT2_TEST_EQUAL(sign(boost::simd::Valmax<vT>()), boost::simd::One<r_t>());
 }
 
-NT2_TEST_CASE_TPL ( sign_unsigned_int,  BOOST_SIMD_UNSIGNED_TYPES)
+NT2_TEST_CASE_TPL ( sign_unsigned_int,  BOOST_SIMD_SIMD_UNSIGNED_TYPES)
 {
   using boost::simd::sign;
   using boost::simd::tag::sign_;
