@@ -8,7 +8,7 @@
 ##############################################################################
 
 SET ( SOURCES
-  future.cpp
+  #future.cpp
 )
 
 nt2_module_add_tests(arch.cuda.future.unit ${SOURCES})
