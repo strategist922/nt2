@@ -25,6 +25,7 @@
 #include <nt2/include/functions/reshape.hpp>
 #include <nt2/include/functions/size.hpp>
 #include <nt2/include/functions/squeeze.hpp>
+#include <nt2/include/functions/issorted.hpp>
 
 namespace nt2 { namespace details
 {

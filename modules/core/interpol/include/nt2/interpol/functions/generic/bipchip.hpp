@@ -11,6 +11,7 @@
 #include <nt2/interpol/functions/bipchip.hpp>
 #include <nt2/include/functions/average.hpp>
 #include <nt2/include/functions/dec.hpp>
+#include <nt2/include/functions/diff.hpp>
 #include <nt2/include/functions/fms.hpp>
 #include <nt2/include/functions/fma.hpp>
 #include <nt2/include/functions/fnms.hpp>
@@ -292,9 +293,9 @@ namespace nt2 { namespace ext
          auto tx = (xi - rowvect(x(indx))) / hx;
          auto ty = (yi - rowvect(y(indy))) / hy;
          //        construct the cubic hermite base functions in x, y
-
+         xtab_t xb(of_size(2, numel(xi), 2));
          cub(tx, hx, xb);
-         xtab_t yb(of_size(2, numel(xi), 2));
+         xtab_t yb(of_size(2, numel(yi), 2));
          cub(ty, hy, yb);
          zi = zeros(size(xi), meta::as_<x_type>());
          for (size_t i = 1;  i <= 2; ++i)
