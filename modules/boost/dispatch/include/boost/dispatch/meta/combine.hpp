@@ -60,11 +60,23 @@ namespace boost { namespace dispatch
     template<template<class> class Outer, class T, template<class> class New, class U>
     struct combine_impl<Outer<T>, New<U>, 0, true>
     {
-      typedef New<T> type;
+      typedef Outer<New<U>> type;
     };
 
     template<template<class> class Outer, class T, template<class> class New, class U>
     struct combine_impl<Outer<T>, New<U>, 0, false>
+    {
+      typedef New<Outer<T>> type;
+    };
+
+    template<template<class> class Outer, class T, class U>
+    struct combine_impl<Outer<T>, Outer<U>, 0, false>
+    {
+      typedef Outer<T> type;
+    };
+
+    template<template<class> class Outer, class T, class U>
+    struct combine_impl<Outer<T>, Outer<U>, 0, true>
     {
       typedef Outer<T> type;
     };
