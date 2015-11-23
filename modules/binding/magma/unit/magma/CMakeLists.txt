@@ -16,6 +16,7 @@ SET ( SOURCES
       gemsv.cpp
       posv.cpp
       gesvd.cpp
+      gesvd_w.cpp
       potrf.cpp
       sne.cpp
       gels.cpp
