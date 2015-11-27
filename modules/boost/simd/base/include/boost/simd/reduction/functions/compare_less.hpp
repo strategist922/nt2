@@ -35,8 +35,8 @@ namespace boost { namespace simd
   }
   namespace ext
   {
-   template<class Site>
-   BOOST_FORCEINLINE generic_dispatcher<tag::compare_less_, Site> dispatching_compare_less_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+   template<class Site, class... Ts>
+   BOOST_FORCEINLINE generic_dispatcher<tag::compare_less_, Site> dispatching_compare_less_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
    {
      return generic_dispatcher<tag::compare_less_, Site>();
    }

@@ -32,8 +32,8 @@ namespace boost { namespace simd
   }
   namespace ext
   {
-   template<class Site>
-   BOOST_FORCEINLINE generic_dispatcher<tag::Sqrt_1o_5, Site> dispatching_Sqrt_1o_5(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+   template<class Site, class... Ts>
+   BOOST_FORCEINLINE generic_dispatcher<tag::Sqrt_1o_5, Site> dispatching_Sqrt_1o_5(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
    {
      return generic_dispatcher<tag::Sqrt_1o_5, Site>();
    }

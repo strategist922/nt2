@@ -32,16 +32,16 @@ namespace nt2
    }
   namespace ext
   {
-    template<class Site>
-    BOOST_FORCEINLINE generic_dispatcher<tag::quadl_, Site> dispatching_quadl_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+    template<class Site, class... Ts>
+    BOOST_FORCEINLINE generic_dispatcher<tag::quadl_, Site> dispatching_quadl_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
     {
       return generic_dispatcher<tag::quadl_, Site>();
     }
     template<class... Args>
     struct impl_quadl_;
 
-    template<class Site>
-    BOOST_FORCEINLINE generic_dispatcher<tag::Quadlabstol, Site> dispatching_Quadlabstol(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+    template<class Site, class... Ts>
+    BOOST_FORCEINLINE generic_dispatcher<tag::Quadlabstol, Site> dispatching_Quadlabstol(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
     {
       return generic_dispatcher<tag::Quadlabstol, Site>();
     }

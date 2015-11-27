@@ -34,8 +34,8 @@ namespace boost { namespace simd
   }
   namespace ext
   {
-   template<class Site>
-   BOOST_FORCEINLINE generic_dispatcher<tag::logical_not_, Site> dispatching_logical_not_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+   template<class Site, class... Ts>
+   BOOST_FORCEINLINE generic_dispatcher<tag::logical_not_, Site> dispatching_logical_not_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
    {
      return generic_dispatcher<tag::logical_not_, Site>();
    }
