@@ -26,9 +26,9 @@ namespace nt2 { namespace tag
   }
   namespace ext
   {
-    template<class Site>
+    template<class Site, class... Ts>
     BOOST_FORCEINLINE generic_dispatcher<tag::sylvester_, Site>
-    dispatching_sylvester_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+    dispatching_sylvester_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
     {
       return generic_dispatcher<tag::sylvester_, Site>();
     }

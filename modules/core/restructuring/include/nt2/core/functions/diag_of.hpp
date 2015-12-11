@@ -49,16 +49,16 @@ namespace nt2
   }
   namespace ext
   {
-    template<class Site>
-    BOOST_FORCEINLINE generic_dispatcher<tag::diag_of_, Site> dispatching_diag_of_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+    template<class Site, class... Ts>
+    BOOST_FORCEINLINE generic_dispatcher<tag::diag_of_, Site> dispatching_diag_of_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
     {
       return generic_dispatcher<tag::diag_of_, Site>();
     }
     template<class... Args>
     struct impl_diag_of_;
 
-    template<class Site>
-    BOOST_FORCEINLINE generic_dispatcher<tag::offset_diag_of_, Site> dispatching_offset_diag_of_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+    template<class Site, class... Ts>
+    BOOST_FORCEINLINE generic_dispatcher<tag::offset_diag_of_, Site> dispatching_offset_diag_of_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
     {
       return generic_dispatcher<tag::offset_diag_of_, Site>();
     }

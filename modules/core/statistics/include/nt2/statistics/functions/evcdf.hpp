@@ -47,15 +47,15 @@ namespace nt2 { namespace tag
   }
   namespace ext
   {
-   template<class Site>
-   BOOST_FORCEINLINE generic_dispatcher<tag::evcdf_, Site> dispatching_evcdf_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+   template<class Site, class... Ts>
+   BOOST_FORCEINLINE generic_dispatcher<tag::evcdf_, Site> dispatching_evcdf_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
    {
      return generic_dispatcher<tag::evcdf_, Site>();
    }
    template<class... Args>
    struct impl_evcdf_;
-   template<class Site>
-   BOOST_FORCEINLINE generic_dispatcher<tag::evcdf0_, Site> dispatching_evcdf0_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+   template<class Site, class... Ts>
+   BOOST_FORCEINLINE generic_dispatcher<tag::evcdf0_, Site> dispatching_evcdf0_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
    {
      return generic_dispatcher<tag::evcdf0_, Site>();
    }

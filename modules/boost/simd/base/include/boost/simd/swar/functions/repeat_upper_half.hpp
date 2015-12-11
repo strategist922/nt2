@@ -35,8 +35,8 @@ namespace boost { namespace simd {
   }
   namespace ext
   {
-   template<class Site>
-   BOOST_FORCEINLINE generic_dispatcher<tag::repeat_upper_half_, Site> dispatching_repeat_upper_half_(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+   template<class Site, class... Ts>
+   BOOST_FORCEINLINE generic_dispatcher<tag::repeat_upper_half_, Site> dispatching_repeat_upper_half_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
    {
      return generic_dispatcher<tag::repeat_upper_half_, Site>();
    }

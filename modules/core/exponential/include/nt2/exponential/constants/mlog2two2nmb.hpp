@@ -32,8 +32,8 @@ namespace nt2
   }
   namespace ext
   {
-    template<class Site>
-    BOOST_FORCEINLINE generic_dispatcher<tag::Mlog2two2nmb, Site> dispatching_Mlog2two2nmb(adl_helper, boost::dispatch::meta::unknown_<Site>, ...)
+    template<class Site, class... Ts>
+    BOOST_FORCEINLINE generic_dispatcher<tag::Mlog2two2nmb, Site> dispatching_Mlog2two2nmb(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
     {
       return generic_dispatcher<tag::Mlog2two2nmb, Site>();
     }

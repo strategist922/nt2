@@ -59,9 +59,9 @@ namespace boost { namespace simd { namespace ext
 {
   struct adl_helper {};
 
-  template<class Tag, class Site>
+  template<class Tag, class Site, class... Ts>
   BOOST_FORCEINLINE boost::dispatch::generic_dispatcher<Tag, Site>
-  dispatching(adl_helper, unknown_<Tag>, unknown_<Site>, ...)
+  dispatching(adl_helper, unknown_<Tag>, unknown_<Site>, unknown_<Ts>...)
   {
     return boost::dispatch::generic_dispatcher<Tag, Site>();
   }
