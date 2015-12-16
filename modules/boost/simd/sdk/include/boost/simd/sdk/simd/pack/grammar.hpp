@@ -13,7 +13,7 @@
 
 namespace boost { namespace simd
 {
-  typedef boost::proto::_ grammar;
+  typedef boost::proto::not_<boost::proto::_> grammar;
 } }
 
 #endif
