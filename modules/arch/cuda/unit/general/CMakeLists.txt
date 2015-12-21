@@ -10,6 +10,7 @@
 SET( SOURCES
     # site.cpp
     cuda_buffer.cpp
+    cuda_container.cpp
    )
 
 nt2_module_add_tests(arch.cuda.general.unit ${SOURCES})

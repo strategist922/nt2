@@ -9,7 +9,7 @@
 #ifndef NT2_SDK_MEMORY_BUFFER_HPP_INCLUDED
 #define NT2_SDK_MEMORY_BUFFER_HPP_INCLUDED
 
-#include <nt2/sdk/memory/copy.hpp>
+#include <nt2/memory/functions/copy.hpp>
 #include <nt2/sdk/memory/destruct.hpp>
 #include <nt2/sdk/memory/local_ptr.hpp>
 #include <nt2/sdk/memory/construct.hpp>

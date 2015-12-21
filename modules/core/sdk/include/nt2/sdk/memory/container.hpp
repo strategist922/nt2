@@ -10,11 +10,13 @@
 #ifndef NT2_SDK_MEMORY_CONTAINER_HPP_INCLUDED
 #define NT2_SDK_MEMORY_CONTAINER_HPP_INCLUDED
 
+#include <nt2/include/functions/copy.hpp>
 #include <nt2/core/settings/size.hpp>
 #include <nt2/core/settings/index.hpp>
 #include <nt2/core/settings/option.hpp>
 #include <nt2/core/settings/interleaving.hpp>
 #include <nt2/core/settings/storage_order.hpp>
+#include <nt2/core/settings/locality.hpp>
 #include <nt2/core/settings/specific_data.hpp>
 #include <nt2/core/settings/storage_scheme.hpp>
 #include <nt2/core/utility/of_size.hpp>
@@ -25,9 +27,11 @@
 #include <boost/core/ignore_unused.hpp>
 #include <nt2/sdk/meta/container_traits.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/core/ignore_unused.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/assert.hpp>
 #include <algorithm>
+#include <type_traits>
 
 #ifdef NT2_LOG_COPIES
 #include <iostream>
@@ -64,6 +68,12 @@ namespace nt2 { namespace memory
     /// INTERNAL ONLY Precomputed settings type
     typedef Settings                                      settings_type;
 
+    /// INTERNAL ONLY locality option
+    typedef typename meta::option < Settings
+                                  , tag::locality_
+                                  , Kind
+                                  >::type                 locality_t;
+
     /// INTERNAL ONLY storage_scheme option
     typedef typename meta::option < Settings
                                   , tag::storage_scheme_
@@ -73,8 +83,8 @@ namespace nt2 { namespace memory
     /// INTERNAL ONLY Storage Scheme option
     typedef typename scheme_t::template apply<container> scheme_type;
 
-    /// INTERNAL ONLY Check if Type is a Fusion Sequence
-    typedef boost::fusion::traits::is_sequence<Type>      composite_t;
+    /// INTERNAL ONLY Base buffer type
+    typedef typename locality_t::template traits<container>::buffer_type buffer_t;
 
     /// INTERNAL ONLY Retrieve interleaving option
     typedef typename meta::option < Settings
@@ -82,8 +92,8 @@ namespace nt2 { namespace memory
                                   , Kind
                                   >::type::interleaving_type  inter_t;
 
-    /// INTERNAL ONLY Base buffer type
-    typedef typename scheme_type::type                        buffer_t;
+    /// INTERNAL ONLY Check if Type is a Fusion Sequence
+    typedef boost::fusion::traits::is_sequence<Type>      composite_t;
 
     /*!
       @brief Container memory buffer type
@@ -224,6 +234,20 @@ namespace nt2 { namespace memory
       init(sizes_, require_static_init());
     }
 
+
+  /*!
+      @brief Constructor from a container with different settings
+
+      Should be called only if both containers are layout compatible
+      and an implementation of copy is available for these buffers.
+  **/
+    template<typename K1,typename S1>
+    void assign(nt2::memory::container<K1,Type,S1> const& other)
+    {
+        sizes_ = other.sizes_;
+        copy(other.data_,data_);
+    }
+
     /*!
       @brief Construct a container from a dimension set
 
@@ -246,7 +270,6 @@ namespace nt2 { namespace memory
       BOOST_ASSERT_MSG( !has_static_size::value || sz == extent_type()
                       , "Invalid constructor for statically sized container"
                       );
-
       init(sizes_);
     }
 

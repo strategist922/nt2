@@ -15,7 +15,7 @@
 #include <nt2/include/constants/eps.hpp>
 #include <nt2/linalg/details/utility/f77_wrapper.hpp>
 #include <nt2/linalg/details/magma_buffer.hpp>
-#include <nt2/linalg/details/lapack/lange.hpp>
+#include <nt2/include/functions/lange.hpp>
 #include <nt2/core/container/table/kind.hpp>
 #include <nt2/include/functions/pow.hpp>
 #include <magma.h>

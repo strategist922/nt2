@@ -11,7 +11,7 @@
 
 #include <nt2/core/functions/squeeze.hpp>
 
-#include <nt2/sdk/memory/copy.hpp>
+#include <nt2/memory/functions/copy.hpp>
 #include <nt2/core/container/dsl.hpp>
 #include <nt2/include/functions/length.hpp>
 

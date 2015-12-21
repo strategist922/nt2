@@ -14,6 +14,11 @@
 #include <nt2/core/container/table/adapted/table.hpp>
 #include <nt2/include/functions/construct.hpp>
 #include <nt2/sdk/memory/container.hpp>
+#include <nt2/sdk/memory/adapted/container_ref.hpp>
+#include <nt2/sdk/meta/layout.hpp>
+#include <nt2/core/settings/locality.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <type_traits>
 
 // Disable the 'class : multiple assignment operators specified' warning
 #if defined(BOOST_MSVC)
@@ -69,8 +74,9 @@ namespace nt2 { namespace container
     // table constructor from a single initializer.
     // This version handles initializing from of_size or expression.
     //==========================================================================
+
     template<typename A0>
-    table( A0 const& a0 )
+    table( A0 const& a0)
     {
       nt2::construct(*this,a0);
     }
@@ -102,6 +108,24 @@ namespace nt2 { namespace container
                               , table&
                               >::type
     operator=(Xpr const& xpr)
+    {
+      using check = boost::mpl::bool_
+                    <  meta::is_device_assign<Xpr,table>::value
+                    && meta::is_container_and_terminal<Xpr>::value
+                    >;
+
+      return eval(xpr,check{});
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    table& eval(Xpr const& xpr, boost::mpl::true_ const&)
+    {
+      boost::proto::value(*this).assign(boost::proto::value(xpr));
+      return *this;
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    table& eval(Xpr const& xpr, boost::mpl::false_ const&)
     {
       nt2_expression::operator=(xpr);
       return *this;
