@@ -11,12 +11,45 @@
 
 #include <boost/simd/swar/functions/shuffle.hpp>
 #include <boost/simd/swar/functions/details/shuffler.hpp>
+#include <boost/simd/include/functions/evaluate.hpp>
 #include <boost/simd/include/functions/simd/bitwise_cast.hpp>
 #include <boost/simd/sdk/meta/as_arithmetic.hpp>
 #include <boost/simd/sdk/meta/cardinal_of.hpp>
+#include <boost/simd/sdk/simd/pack/forward.hpp>
+#include <boost/dispatch/dsl/semantic_of.hpp>
+#include <boost/dispatch/attributes.hpp>
 
 namespace boost { namespace simd { namespace ext
 {
+  BOOST_DISPATCH_IMPLEMENT( shuffle_, tag::cpu_
+                          , (A0)(P)
+                          , ((ast_<A0, boost::simd::domain>))
+                            (target_< unspecified_<P> >)
+                          )
+  {
+    typedef typename boost::dispatch::meta::terminal_of<A0>::type result_type;
+
+    BOOST_FORCEINLINE result_type operator()(A0 const& a0,P const&) const
+    {
+      return ::boost::simd::shuffle<typename P::type>(evaluate(a0));
+    }
+  };
+
+  BOOST_DISPATCH_IMPLEMENT( shuffle_, tag::cpu_
+                          , (A0)(A1)(P)
+                          , ((ast_<A0, boost::simd::domain>))
+                            ((ast_<A1, boost::simd::domain>))
+                            (target_< unspecified_<P> >)
+                          )
+  {
+    typedef typename boost::dispatch::meta::terminal_of<A0>::type result_type;
+
+    BOOST_FORCEINLINE result_type operator()(A0 const& a0,A1 const& a1,P const&) const
+    {
+      return ::boost::simd::shuffle<typename P::type>(evaluate(a0),evaluate(a1));
+    }
+  };
+
   BOOST_DISPATCH_IMPLEMENT          ( shuffle_
                                     , boost::simd::tag::cpu_
                                     , (A0)(X)(P)
