@@ -9,5 +9,4 @@
 
 nt2_module_use_modules(test.unit core.base)
 
-ADD_SUBDIRECTORY(general)
 ADD_SUBDIRECTORY(magma)
