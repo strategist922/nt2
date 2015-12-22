@@ -11,6 +11,8 @@
 #define BOOST_SIMD_SDK_NEXT_POWER_OF_2_HPP_INCLUDED
 
 #include <boost/config.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_integral.hpp>
 
 namespace boost { namespace simd
 {
@@ -67,6 +69,7 @@ namespace boost { namespace simd
   template < typename Int >
   inline Int next_power_of_2( Int n )
   {
+    BOOST_STATIC_ASSERT( is_integral<Int>::value );
     typedef  detail::next_power_of_2_impl< Int, sizeof(Int)*8 >  impl;
     return  impl::apply(--n) + Int(1);
   }

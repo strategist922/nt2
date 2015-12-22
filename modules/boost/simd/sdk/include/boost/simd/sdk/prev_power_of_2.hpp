@@ -39,6 +39,7 @@ namespace boost { namespace simd
   template < typename Int >
   inline Int prev_power_of_2( Int n )
   {
+    BOOST_STATIC_ASSERT( is_integral<Int>::value );
     typedef  detail::next_power_of_2_impl< Int, sizeof(Int)*8 >  impl;
     return  (n == 0) ? Int(0) : (impl::apply(n) >> 1) + Int(1);
   }
