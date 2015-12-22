@@ -10,6 +10,7 @@
 #include <boost/simd/include/constants/zero.hpp>
 #include <boost/simd/include/constants/valmax.hpp>
 #include <boost/simd/sdk/simd/native.hpp>
+#include <boost/simd/sdk/simd/pack.hpp>
 #include <boost/simd/sdk/simd/io.hpp>
 
 #include <nt2/sdk/unit/module.hpp>
@@ -77,6 +78,48 @@ NT2_TEST_CASE_TPL ( shuffle, BOOST_SIMD_SIMD_TYPES)
   using boost::simd::native;
   typedef BOOST_SIMD_DEFAULT_EXTENSION  ext_t;
   typedef native<T,ext_t>               vT;
+
+  vT origin, reference;
+  vT id, shuffled, hnull, mirrored, bcasted,randed;
+  for(std::size_t i=1; i < vT::static_size;++i) origin[i] = T(65+i);
+  origin[0] = boost::simd::Valmax<T>();
+
+  id = shuffle<identity_>(origin);
+  NT2_TEST_EQUAL(id,origin);
+
+  for(std::size_t i=0; i < vT::static_size;++i)
+    reference[i] = origin[vT::static_size - i -1];
+  shuffled = shuffle<reverse_>(origin);
+  NT2_TEST_EQUAL(shuffled,reference);
+
+  for(std::size_t i=0; i < vT::static_size;++i)
+    reference[i] = i%2 ? origin[i/2] : T(0);
+  hnull = shuffle<half_null_>(origin);
+  NT2_TEST_EQUAL(hnull,reference);
+
+  NT2_TEST_EQUAL( shuffle<null_>(origin), boost::simd::Zero<vT>());
+
+  for(std::size_t i=0; i < vT::static_size;++i)
+    reference[i] = origin[i<vT::static_size/2 ? i : vT::static_size - i -1];
+  mirrored = shuffle<mirror_>(origin);
+  NT2_TEST_EQUAL(mirrored,reference);
+
+  for(std::size_t i=0; i < vT::static_size;++i)
+    reference[i] = origin[1];
+  bcasted = shuffle< bcast_<1> >(origin);
+  NT2_TEST_EQUAL(bcasted,reference);
+
+  for(std::size_t i=0; i < vT::static_size;++i)
+    reference[i] = origin[(i*3+1) % vT::static_size];
+  randed = shuffle< random_ >(origin);
+  NT2_TEST_EQUAL(randed,reference);
+}
+
+NT2_TEST_CASE_TPL ( shuffle_pack, BOOST_SIMD_SIMD_TYPES)
+{
+  using boost::simd::shuffle;
+  using boost::simd::pack;
+  typedef pack<T>               vT;
 
   vT origin, reference;
   vT id, shuffled, hnull, mirrored, bcasted,randed;
