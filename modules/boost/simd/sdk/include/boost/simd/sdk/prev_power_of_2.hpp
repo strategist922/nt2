@@ -10,6 +10,8 @@
 #ifndef BOOST_SIMD_SDK_PREV_POWER_OF_2_HPP_INCLUDED
 #define BOOST_SIMD_SDK_PREV_POWER_OF_2_HPP_INCLUDED
 
+#include "next_power_of_2.hpp"
+
 namespace boost { namespace simd
 {
   /*!
@@ -32,19 +34,13 @@ namespace boost { namespace simd
 
     @param n Integral value.
 
-    @return An unsigned integral value.
+    @return Integral value of same type as n.
   **/
-  inline std::size_t prev_power_of_2(std::size_t n)
+  template < typename Int >
+  inline Int prev_power_of_2( Int n )
   {
-    if(n==0) return 0;
-
-    std::size_t x0    = n;
-    std::size_t x1    = x0 | (x0 >>  1);
-    std::size_t x2    = x1 | (x1 >>  2);
-    std::size_t x3    = x2 | (x2 >>  4);
-    std::size_t x4    = x3 | (x3 >>  8);
-    std::size_t x5    = x4 | (x4 >> 16);
-    return (x5 >> 1) + 1;
+    typedef  detail::next_power_of_2_impl< Int, sizeof(Int)*8 >  impl;
+    return  (n == 0) ? Int(0) : (impl::apply(n) >> 1) + Int(1);
   }
 } }
 
