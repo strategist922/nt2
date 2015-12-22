@@ -23,7 +23,7 @@ namespace boost { namespace simd
     For any given integral value @c n:
 
     @code
-    std::size_t r = prev_power_of_2(n);
+    auto r = prev_power_of_2(n);
     @endcode
 
     where @c r verifies:
@@ -37,11 +37,11 @@ namespace boost { namespace simd
     @return Integral value of same type as n.
   **/
   template < typename Int >
-  inline Int prev_power_of_2( Int n )
+  inline BOOST_CONSTEXPR Int prev_power_of_2( Int n )
   {
-    BOOST_STATIC_ASSERT( is_integral<Int>::value );
-    typedef  detail::next_power_of_2_impl< Int, sizeof(Int)*8 >  impl;
-    return  (n == 0) ? Int(0) : (impl::apply(n) >> 1) + Int(1);
+    static_assert( std::is_integral<Int>::value , "Int must be an integral type." );
+    using impl = detail::next_power_of_2_impl< Int, sizeof(Int)*8 >;
+    return  (n == 0) ? Int{0} : (impl::apply(n) >> 1) + Int{1};
   }
 } }
 

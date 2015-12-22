@@ -11,8 +11,7 @@
 #define BOOST_SIMD_SDK_NEXT_POWER_OF_2_HPP_INCLUDED
 
 #include <boost/config.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_integral.hpp>
+#include <type_traits>
 
 namespace boost { namespace simd
 {
@@ -25,7 +24,7 @@ namespace boost { namespace simd
     For any given integral value @c n:
 
     @code
-    std::size_t r = next_power_of_2(n);
+    auto r = next_power_of_2(n);
     @endcode
 
     where @c r verifies:
@@ -45,7 +44,7 @@ namespace boost { namespace simd
     template < typename Int , int s >
     struct next_power_of_2_impl
     {
-      static BOOST_FORCEINLINE
+      BOOST_STATIC_CONSTEXPR BOOST_FORCEINLINE
       Int apply( Int n )
       {
         n = next_power_of_2_impl<Int,s/2>::apply(n);
@@ -56,7 +55,7 @@ namespace boost { namespace simd
     template < typename Int >
     struct next_power_of_2_impl<Int,1>
     {
-      static BOOST_FORCEINLINE
+      BOOST_STATIC_CONSTEXPR BOOST_FORCEINLINE
       Int apply( Int n )
       {
         return n;
@@ -67,11 +66,11 @@ namespace boost { namespace simd
 
 
   template < typename Int >
-  inline Int next_power_of_2( Int n )
+  BOOST_CONSTEXPR inline Int next_power_of_2( Int n )
   {
-    BOOST_STATIC_ASSERT( is_integral<Int>::value );
-    typedef  detail::next_power_of_2_impl< Int, sizeof(Int)*8 >  impl;
-    return  impl::apply(--n) + Int(1);
+    static_assert( std::is_integral<Int>::value , "Int must be an integral type." );
+    using impl = detail::next_power_of_2_impl< Int, sizeof(Int)*8 >;
+    return  impl::apply(--n) + Int{1};
   }
 
 
