@@ -44,7 +44,7 @@ namespace boost { namespace simd
     template < typename Int , int s >
     struct next_power_of_2_impl
     {
-      BOOST_STATIC_CONSTEXPR BOOST_FORCEINLINE
+      static BOOST_CXX14_CONSTEXPR BOOST_FORCEINLINE
       Int apply( Int n )
       {
         n = next_power_of_2_impl<Int,s/2>::apply(n);
@@ -55,7 +55,7 @@ namespace boost { namespace simd
     template < typename Int >
     struct next_power_of_2_impl<Int,1>
     {
-      BOOST_STATIC_CONSTEXPR BOOST_FORCEINLINE
+      static BOOST_CXX14_CONSTEXPR BOOST_FORCEINLINE
       Int apply( Int n )
       {
         return n;
@@ -66,14 +66,12 @@ namespace boost { namespace simd
 
 
   template < typename Int >
-  BOOST_CONSTEXPR inline Int next_power_of_2( Int n )
+  BOOST_CXX14_CONSTEXPR inline Int next_power_of_2( Int n )
   {
     static_assert( std::is_integral<Int>::value , "Int must be an integral type." );
     using impl = detail::next_power_of_2_impl< Int, sizeof(Int)*8 >;
     return  impl::apply(--n) + Int{1};
   }
-
-
 } }
 
 #endif
