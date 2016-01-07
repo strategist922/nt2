@@ -1,5 +1,6 @@
 //==============================================================================
-//         Copyright 2015 NumScale SAS
+//         Copyright 2016  LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 20116 NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -46,12 +47,12 @@ namespace nt2
     Transform (FFT) algorithm.
 
     @param a0 The data to calculate the fft of
-    @param a1 Optional scalar specifying the number of arguements to use
 
     @return A matrix of size A containing \f$fft(a0)\f$
   **/
-
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION(tag::fft_, fft, 1)
+
+  /// INTERNAL
   BOOST_DISPATCH_FUNCTION_IMPLEMENTATION_TPL(tag::fft_, fft, (A0 const&)(A1&), 2);
 }
 

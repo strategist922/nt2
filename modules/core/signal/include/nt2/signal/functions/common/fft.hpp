@@ -10,13 +10,9 @@
 
 #include <nt2/signal/functions/fft.hpp>
 #include <nt2/include/functions/numel.hpp>
-#include <nt2/core/container/table/table.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
-#include <nt2/sdk/meta/type_id.hpp>
-#include <boost/dispatch/meta/as_floating.hpp>
 #include <fftw3.h>
-#include <iostream>
 
 namespace nt2 { namespace ext
 {
@@ -131,8 +127,10 @@ namespace nt2 { namespace ext
     typedef A0& result_type;
     typedef typename A0::value_type s0_type;
     typedef typename A1::value_type s1_type;
-    typedef nt2::memory::container<tag::table_, s1_type, nt2::_1D>   isemantic;
-    typedef nt2::memory::container<tag::table_, s0_type, nt2::_1D>   osemantic;
+    typedef typename A0::extent_type e0_type;
+    typedef typename A1::extent_type e0_type;
+    typedef nt2::memory::container<tag::table_, s1_type, e0_type> isemantic;
+    typedef nt2::memory::container<tag::table_, s0_type, e1_type> osemantic;
 
     result_type operator()(A0& o, const A1& i) const
     {
