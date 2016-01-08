@@ -5,18 +5,18 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SIGNAL_FUNCTIONS_COMMON_FFT_HPP_INCLUDED
-#define NT2_SIGNAL_FUNCTIONS_COMMON_FFT_HPP_INCLUDED
+#ifndef NT2_SIGNAL_FUNCTIONS_CUDA_COMMON_FFT_HPP_INCLUDED
+#define NT2_SIGNAL_FUNCTIONS_CUDA_COMMON_FFT_HPP_INCLUDED
 
-#if defined(NT2_HAS_CUDA)
+#if defined(NT2_HAS_CUDA) && defined(NT2_USE_CUFFTW)
 
 #include <nt2/sdk/cuda/cuda.hpp>
 #include <nt2/signal/functions/fft.hpp>
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
-#include <cufft.h>
 #include <cuda_runtime.h>
+#include <cufft.h>
 
 namespace nt2 { namespace ext
 {
@@ -35,15 +35,14 @@ namespace nt2 { namespace ext
 
       cufftHandle plan;
 
-      CUDA_ERROR(cufftPlan1d(&plan , nt2::numel(in) , CUFFT_R2C , 1));
+      cufftPlan1d(&plan , nt2::numel(in) , CUFFT_R2C , 1);
 
-      CUDA_ERROR(cufftExecR2C( plan
-                  ,  in.data()
+      cufftExecR2C( plan
+                  ,  const_cast<cufftReal*> (in.data())
                   , (cufftComplex *) out.data()
-                  , CUFFT_FORWARD
-                  ));
+                  );
 
-      CUDA_ERROR(cufftDestroy(p));
+      cufftDestroy(plan);
     }
   };
 
@@ -62,15 +61,15 @@ namespace nt2 { namespace ext
 
       cufftHandle plan;
 
-      CUDA_ERROR(cufftPlan1d(&plan , nt2::numel(in) , CUFFT_C2C , 1));
+      cufftPlan1d(&plan , nt2::numel(in) , CUFFT_C2C , 1);
 
-      CUDA_ERROR(cufftExecC2C( plan
-                  , (cufftComplex *) in.data()
+      cufftExecC2C( plan
+                  ,  const_cast<cufftComplex *>( in.data() )
                   , (cufftComplex *) out.data()
                   , CUFFT_FORWARD
-                  ));
+                  );
 
-      CUDA_ERROR(cufftDestroy(p));
+      cufftDestroy(plan);
     }
   };
 
@@ -89,15 +88,14 @@ namespace nt2 { namespace ext
 
       cufftHandle plan;
 
-      CUDA_ERROR(cufftPlan1d(&plan , nt2::numel(in) , CUFFT_R2C , 1));
+      cufftPlan1d(&plan , nt2::numel(in) , CUFFT_D2Z , 1);
 
-      CUDA_ERROR(cufftExecR2C( plan
-                  ,  in.data()
+      cufftExecD2Z( plan
+                  , const_cast<cufftDoubleReal *> (in.data())
                   , (cufftDoubleComplex *) out.data()
-                  , CUFFT_FORWARD
-                  ));
+                  );
 
-      CUDA_ERROR(cufftDestroy(p));
+      cufftDestroy(plan);
     }
   };
 
@@ -116,15 +114,15 @@ namespace nt2 { namespace ext
 
       cufftHandle plan;
 
-      CUDA_ERROR(cufftPlan1d(&plan , nt2::numel(in) , CUFFT_Z2Z , 1));
+      cufftPlan1d(&plan , nt2::numel(in) , CUFFT_Z2Z , 1);
 
-      CUDA_ERROR(cufftExecZ2Z( plan
-                  , (cufftDoubleComplex *) in.data()
+      cufftExecZ2Z( plan
+                  ,  const_cast<cufftDoubleComplex *>( in.data() )
                   , (cufftDoubleComplex *) out.data()
                   , CUFFT_FORWARD
-                  ));
+                  );
 
-      CUDA_ERROR(cufftDestroy(p));
+      cufftDestroy(plan);
     }
   };
 

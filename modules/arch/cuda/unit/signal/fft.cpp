@@ -5,6 +5,7 @@
 //                 See accompanying file LICENSE.txt or copy at
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
+// #include <nt2/core/settings/details/locality.hpp>
 #include <nt2/include/functions/fft.hpp>
 #include <nt2/include/functions/linspace.hpp>
 #include <nt2/include/functions/cons.hpp>
@@ -24,8 +25,9 @@
 #include <complex>
 
 #include <vector>
+#include <iostream>
 
-NT2_TEST_CASE_TPL( fft_real_complex, (double)(float))
+NT2_TEST_CASE_TPL( fft_real_complex, (float)(double) )
 {
   T Fs = 1000;
   T Period = 1./Fs;
@@ -39,7 +41,9 @@ NT2_TEST_CASE_TPL( fft_real_complex, (double)(float))
 
   nt2::table<T , nt2::settings(nt2::_1D , nt2::device_) > d_in = in ;
 
-  nt2::table<std::complex<T>, nt2::_1D > out = nt2::fft(d_in);
+  nt2::table<std::complex<T>, nt2::settings(nt2::_1D , nt2::device_) > d_out = nt2::fft(d_in);
+
+  nt2::table<std::complex<T>, nt2::_1D> out = d_out;
 
   nt2::table<std::complex<T> > ref
       = nt2::cons<std::complex<T> > ( nt2::of_size(1,25)

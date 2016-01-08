@@ -11,18 +11,16 @@ find_package(CUDA)
 
 IF(CUDA_CUFFT_LIBRARIES)
 
-# include_directories()
+include_directories(${CUDA_INCLUDE_DIRS})
 link_libraries(${CUDA_CUFFT_LIBRARIES})
 
   set ( SOURCES
         fft.cpp
       )
 
-add_definitions("-DNT2_USE_CUDA_FFTW")
+add_definitions("-DNT2_USE_CUFFTW")
 
 endif()
-
-
 
 nt2_module_add_tests(arch.cuda.signal.unit ${SOURCES})
 
