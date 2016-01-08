@@ -10,7 +10,7 @@
 
 #ifdef NT2_HAS_CUDA
 
-#include <cublas.h>
+#include <cuda_runtime.h>
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include <cstring>
@@ -166,7 +166,7 @@ namespace nt2{ namespace details
                           , cudaMemcpyDeviceToHost
                           , stream
                     ));
-                    
+
           block_stream_dth[blockid] = true;
         }
       }

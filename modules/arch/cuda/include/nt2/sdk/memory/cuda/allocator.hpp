@@ -11,7 +11,7 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/cuda/cuda.hpp>
-#include <cublas.h>
+#include <cuda_runtime.h>
 
 namespace nt2 { namespace memory
 {

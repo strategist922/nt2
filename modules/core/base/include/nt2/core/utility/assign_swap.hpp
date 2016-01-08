@@ -26,6 +26,8 @@ namespace nt2 { namespace container
   typename boost::enable_if<
     boost::mpl::and_< meta::is_container_terminal<A0>
                     , meta::is_container_terminal<A1>
+                    , meta::is_on_host<A0>
+                    , meta::is_on_host<A1>
                     , boost::is_same<typename A0::value_type, typename A1::value_type>
                     >
   >::type

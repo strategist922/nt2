@@ -14,7 +14,7 @@
 #include <boost/dispatch/meta/terminal_of.hpp>
 #include <boost/dispatch/details/typeof.hpp>
 #include <boost/mpl/bool.hpp>
-#include <nt2/core/settings/locality.hpp>
+#include <nt2/core/settings/forward/locality.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_reference.hpp>

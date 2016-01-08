@@ -12,30 +12,31 @@
 
 #if defined(NT2_HAS_CUDA)
 
-#include <nt2/sdk/memory/cuda/buffer.hpp>
 #include <nt2/core/settings/locality.hpp>
-#include <cublas.h>
+#include <nt2/sdk/memory/cuda/buffer.hpp>
+#include <cuda_runtime.h>
 
 namespace nt2 { namespace memory
 {
+
   template<typename In, typename Out>
   struct copy_;
 
-  template<> struct copy_<device_,host_>
+  template<> struct copy_<nt2::device_,nt2::host_>
   {
     static BOOST_FORCEINLINE
     BOOST_AUTO_DECLTYPE mode()
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyDeviceToHost )
   };
 
-  template<> struct copy_<host_,device_>
+  template<> struct copy_<nt2::host_,nt2::device_>
   {
     static BOOST_FORCEINLINE
     BOOST_AUTO_DECLTYPE mode()
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToDevice )
   };
 
-  template<> struct copy_<device_,device_>
+  template<> struct copy_<nt2::device_,nt2::device_>
   {
     static BOOST_FORCEINLINE
     BOOST_AUTO_DECLTYPE mode()
@@ -60,7 +61,7 @@ namespace nt2 { namespace memory
   inline void copy(cuda_buffer<T> const& a, C1 &b, cudaStream_t stream = 0)
   {
     b.resize(a.size());
-    copy(a,b,nt2::device_{},nt2::host_{},stream);
+    copy(a,b,device_{}, host_{},stream);
   }
 
   template< class C1,typename T>
@@ -80,6 +81,8 @@ namespace nt2 { namespace memory
 
 
 }}
+
+#include <nt2/sdk/meta/device.hpp>
 
 namespace nt2 { namespace container
 {
