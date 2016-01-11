@@ -17,6 +17,7 @@ if(FFTW_FOUND)
 
   set ( SOURCES
         fft.cpp
+        ifft.cpp
         static_fft.cpp
         zero_crossing_rate.cpp
         globalzero_crossing_rate.cpp
