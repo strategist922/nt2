@@ -29,7 +29,7 @@ namespace nt2 { namespace ext
     typedef typename A0::value_type s0_type;
     typedef typename A1::value_type s1_type;
     typedef typename A0::extent_type e0_type;
-    typedef typename A1::extent_type e0_type;
+    typedef typename A1::extent_type e1_type;
     typedef nt2::memory::container<tag::table_, s1_type, e0_type> isemantic;
     typedef nt2::memory::container<tag::table_, s0_type, e1_type> osemantic;
 
