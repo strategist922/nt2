@@ -8,6 +8,8 @@
 #ifndef NT2_SIGNAL_FUNCTIONS_COMMON_IFFT_HPP_INCLUDED
 #define NT2_SIGNAL_FUNCTIONS_COMMON_IFFT_HPP_INCLUDED
 
+#if defined(NT2_USE_FFTW)
+
 #include <nt2/signal/functions/ifft.hpp>
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
@@ -114,5 +116,7 @@ namespace nt2 { namespace ext
     }
   };
 } }
+
+#endif
 
 #endif

@@ -11,7 +11,6 @@
 #include <nt2/signal/functions/ifft.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
-#include <fftw3.h>
 
 namespace nt2 { namespace ext
 {

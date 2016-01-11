@@ -13,7 +13,6 @@
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
 #include <nt2/core/settings/forward/locality.hpp>
-#include <fftw3.h>
 
 namespace nt2 { namespace ext
 {
