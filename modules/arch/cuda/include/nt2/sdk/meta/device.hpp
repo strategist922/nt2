@@ -11,7 +11,7 @@
 #include <type_traits>
 #include <nt2/core/settings/add_settings.hpp>
 #include <nt2/include/functions/copy.hpp>
-#include <nt2/core/settings/locality.hpp>
+#include <nt2/core/settings/forward/locality.hpp>
 
 #if defined(NT2_HAS_CUDA)
 

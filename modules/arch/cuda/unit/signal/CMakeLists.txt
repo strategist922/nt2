@@ -16,6 +16,7 @@ link_libraries(${CUDA_CUFFT_LIBRARIES})
 
   set ( SOURCES
         fft.cpp
+        ifft.cpp
       )
 
 add_definitions("-DNT2_USE_CUFFTW")

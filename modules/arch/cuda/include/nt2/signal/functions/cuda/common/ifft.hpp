@@ -11,7 +11,7 @@
 #if defined(NT2_HAS_CUDA) && defined(NT2_USE_CUFFTW)
 
 #include <nt2/sdk/cuda/cuda.hpp>
-#include <nt2/signal/functions/fft.hpp>
+#include <nt2/signal/functions/ifft.hpp>
 #include <nt2/include/functions/numel.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
@@ -21,7 +21,7 @@
 
 namespace nt2 { namespace ext
 {
-  BOOST_DISPATCH_IMPLEMENT  ( fft_, nt2::tag::cuda_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( ifft_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, single_<A0>, S0 >))
                               ((container_< nt2::tag::table_, complex_<single_<A1>>, S1 >))
@@ -52,7 +52,7 @@ namespace nt2 { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT  ( fft_, nt2::tag::cuda_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( ifft_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, complex_<single_<A0>>, S0 >))
                               ((container_< nt2::tag::table_, complex_<single_<A1>>, S1 >))
@@ -75,7 +75,7 @@ namespace nt2 { namespace ext
       cufftExecC2C( plan
                   ,  const_cast<cufftComplex *>( device_in.data() )
                   , (cufftComplex *) device_out.data()
-                  , CUFFT_FORWARD
+                  , CUFFT_INVERSE
                   );
 
       cufftDestroy(plan);
@@ -84,7 +84,7 @@ namespace nt2 { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT  ( fft_, nt2::tag::cuda_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( ifft_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, double_<A0>, S0 >))
                               ((container_< nt2::tag::table_, complex_<double_<A1>>, S1 >))
@@ -115,7 +115,7 @@ namespace nt2 { namespace ext
     }
   };
 
-  BOOST_DISPATCH_IMPLEMENT  ( fft_, nt2::tag::cuda_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( ifft_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, complex_<double_<A0>>, S0 >))
                               ((container_< nt2::tag::table_, complex_<double_<A1>>, S1 >))
@@ -138,7 +138,7 @@ namespace nt2 { namespace ext
       cufftExecZ2Z( plan
                   ,  const_cast<cufftDoubleComplex *>( device_in.data() )
                   , (cufftDoubleComplex *) device_out.data()
-                  , CUFFT_FORWARD
+                  , CUFFT_INVERSE
                   );
 
       cufftDestroy(plan);

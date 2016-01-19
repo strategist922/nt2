@@ -11,6 +11,7 @@
 #include <nt2/signal/functions/ifft.hpp>
 #include <nt2/core/container/dsl/as_terminal.hpp>
 #include <nt2/core/utility/assign_swap.hpp>
+#include <nt2/core/settings/forward/locality.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -29,8 +30,19 @@ namespace nt2 { namespace ext
     typedef typename A1::value_type s1_type;
     typedef typename A0::extent_type e0_type;
     typedef typename A1::extent_type e1_type;
-    typedef nt2::memory::container<tag::table_, s1_type, e0_type> isemantic;
-    typedef nt2::memory::container<tag::table_, s0_type, e1_type> osemantic;
+
+    typedef typename meta::option<typename A1::proto_child0::settings_type
+                                 ,tag::locality_
+                                 ,typename  A1::proto_child0::kind_type
+                                  >::type  ilocality;
+
+    typedef typename meta::option<typename A0::settings_type
+                                 ,tag::locality_
+                                 ,typename A0::kind_type
+                                  >::type  olocality;
+
+    typedef nt2::memory::container<tag::table_, s1_type, nt2::settings(e0_type,ilocality)> isemantic;
+    typedef nt2::memory::container<tag::table_, s0_type, nt2::settings(e1_type,olocality)> osemantic;
 
     result_type operator()(A0& o, const A1& i) const
     {
