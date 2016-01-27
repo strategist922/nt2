@@ -7,6 +7,7 @@ message("-- [nt2.tool.external_kernel]  warning : dependencies not met, skipping
 else()
 
 set(NT2_DIR ${CMAKE_SOURCE_DIR}/../../cmake)
+find_package(NT2)
 
 list( APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
@@ -25,7 +26,6 @@ file(GLOB backends RELATIVE ${NT2_SOURCE_ROOT}/modules/${module}/tools/external_
 
 foreach(backend ${backends})
 message(STATUS "backend :" ${backends})
-
 if(IS_DIRECTORY ${NT2_SOURCE_ROOT}/modules/${module}/tools/external_kernel/${backend})
 message(STATUS "add extra directory ${backend}")
 add_subdirectory(${NT2_SOURCE_ROOT}/modules/${module}/tools/external_kernel/${backend} ${CMAKE_BINARY_DIR}/${backend})
