@@ -17,7 +17,7 @@
 #include <nt2/include/functions/sqr.hpp>
 #include <nt2/include/functions/conj.hpp>
 #include <nt2/include/functions/ctranspose.hpp>
-#include <iostream>
+
 namespace nt2{ namespace ext
 {
   BOOST_DISPATCH_IMPLEMENT  ( tksolve_, tag::cpu_
@@ -52,7 +52,6 @@ namespace nt2{ namespace ext
       tab_t a00 = a0;
       tab_t x = nt2::zeros(nt2::sqr(n), 1, nt2::meta::as_<value_type>());
       tab_t ii = eye(n, nt2::meta::as_<value_type>());
-      std::cout << "a2 " << a2 << std::endl;
       if (a2 == 'N')
       {
         //    % Forward substitution.
