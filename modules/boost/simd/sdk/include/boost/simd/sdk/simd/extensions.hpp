@@ -21,6 +21,11 @@
 
 #include <boost/dispatch/functor/forward.hpp>
 
+#if !defined(BOOST_SIMD_DEFINED_SITE)
+
+#define BOOST_SIMD_DEFINED_SITE
 BOOST_DISPATCH_COMBINE_SITE( BOOST_SIMD_DEFAULT_SITE )
+
+#endif
 
 #endif
