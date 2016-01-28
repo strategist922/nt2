@@ -32,6 +32,7 @@ SET( SOURCES
   trsolve.cpp
   sylvester.cpp
   lyapunov.cpp
+  tksolve.cpp
   )
 
 nt2_module_add_tests(core.linalg.general.unit ${SOURCES})
