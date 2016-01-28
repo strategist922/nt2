@@ -10,9 +10,10 @@
 #ifndef NT2_CORE_FUNCTIONS_SHARED_MEMORY_INNER_FOLD_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_SHARED_MEMORY_INNER_FOLD_HPP_INCLUDED
 
+#ifdef NT2_HAS_SHARED_MEMORY
 #include <nt2/core/functions/transform.hpp>
 #include <nt2/core/functions/inner_fold.hpp>
-#include <nt2/sdk/shared_memory/shared_memory.hpp>
+#include <nt2/sdk/functor/site.hpp>
 #include <nt2/sdk/shared_memory/worker/inner_fold.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
 
@@ -63,5 +64,6 @@ namespace nt2 { namespace ext
   };
 } }
 
+#endif
 #endif
 
