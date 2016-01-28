@@ -44,3 +44,4 @@ BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))            
 /**/
 
 #endif
+#endif
