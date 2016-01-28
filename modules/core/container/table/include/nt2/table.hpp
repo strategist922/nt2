@@ -12,6 +12,7 @@
 //==============================================================================
 // Include and injects table into nt2 namespace with all required features
 //==============================================================================
+#include <nt2/include/functor.hpp>
 #include <nt2/core/container/table/table.hpp>
 #include <nt2/core/utility/share.hpp>
 #include <nt2/include/functions/of_size.hpp>

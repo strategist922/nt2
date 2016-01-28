@@ -14,7 +14,6 @@
 #include <boost/simd/sdk/simd/extensions.hpp>
 
 #if defined(NT2_HAS_CUDA)
-#warning CUDA DETECTED FOR NT2
 #include <nt2/sdk/cuda/cuda.hpp>
 #else
 
@@ -26,15 +25,12 @@ namespace nt2
 #endif
 
 #if defined(_OPENMP)
-#warning OPENMP DETECTED FOR NT2
 #include <nt2/sdk/openmp/shared_memory.hpp>
 
 #elif defined(NT2_USE_TBB)
-#warning TBB DETECTED FOR NT2
 #include <nt2/sdk/tbb/shared_memory.hpp>
 
 #elif defined(NT2_USE_HPX)
-#warning HPX DETECTED FOR NT2
 #include <nt2/sdk/hpx/shared_memory.hpp>
 
 #else
