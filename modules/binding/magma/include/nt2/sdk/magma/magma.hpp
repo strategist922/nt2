@@ -21,8 +21,10 @@ namespace nt2 { namespace tag
   };
 } }
 
+/*
 #ifdef  NT2_USE_MAGMA
 BOOST_DISPATCH_COMBINE_SITE( nt2::tag::magma_<nt2::tag::cuda_<tag::cpu_>> )
 #endif
+*/
 
 #endif
