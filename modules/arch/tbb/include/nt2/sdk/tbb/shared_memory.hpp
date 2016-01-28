@@ -22,7 +22,11 @@ namespace nt2 { namespace tag
 } }
 
 #if defined(NT2_USE_TBB)
-BOOST_DISPATCH_COMBINE_SITE( nt2::tag::tbb_<tag::cpu_> )
+#define NT2_HAS_SHARED_MEMORY
+namespace nt2
+{
+  template<typename Site> using shared_memory_site = tag::tbb_<Site>;
+}
 
 #include <nt2/sdk/tbb/spawner.hpp>
 #include <nt2/sdk/tbb/future.hpp>

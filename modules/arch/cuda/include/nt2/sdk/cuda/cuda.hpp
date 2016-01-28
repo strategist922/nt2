@@ -34,11 +34,13 @@ namespace nt2 { namespace tag
 
 #ifdef NT2_HAS_CUDA
 
+namespace nt2
+{
+  template<typename Site> using accelerator_site = tag::cuda_<Site>;
+}
+
 #define CUDA_ERROR(status)                                                      \
 BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))            \
 /**/
-
-BOOST_DISPATCH_COMBINE_SITE( nt2::tag::cuda_<tag::cpu_> )
-#endif
 
 #endif

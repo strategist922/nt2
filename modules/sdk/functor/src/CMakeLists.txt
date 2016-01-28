@@ -9,7 +9,3 @@
 
 include(NT2Module)
 nt2_module_source_setup(sdk.functor)
-
-nt2_module_postconfigure(gather_includes --max 1 nt2/sdk/functor/site
-                                         --out nt2/sdk/functor/site/site.hpp
-                        )
