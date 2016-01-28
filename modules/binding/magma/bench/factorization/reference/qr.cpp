@@ -9,7 +9,6 @@
 //==============================================================================
 
 #include <nt2/table.hpp>
-#include <nt2/sdk/magma/magma.hpp>
 #include <nt2/include/functions/rand.hpp>
 #include <nt2/include/functions/zeros.hpp>
 #include <nt2/include/functions/geqp3.hpp>

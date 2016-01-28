@@ -12,8 +12,7 @@
 #if defined(NT2_USE_MAGMA)
 
 #include <nt2/linalg/functions/gels.hpp>
-#include <nt2/linalg/details/magma_buffer.hpp>
-#include <nt2/sdk/magma/magma.hpp>
+#include <nt2/sdk/memory/cuda/buffer.hpp>
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/core/container/table/kind.hpp>
 #include <nt2/linalg/details/utility/f77_wrapper.hpp>
@@ -30,7 +29,7 @@
 namespace nt2 { namespace ext
 {
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, double_<A0>, S0 >))
                               ((container_< nt2::tag::table_, double_<A1>, S1 >))
@@ -59,7 +58,7 @@ namespace nt2 { namespace ext
 };
 
   /// INTERNAL ONLY - Workspace is ready
-  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(site)
                             , ((container_< nt2::tag::table_, double_<A0>, S0 >))
                               ((container_< nt2::tag::table_, double_<A1>, S1 >))
@@ -79,12 +78,14 @@ namespace nt2 { namespace ext
         nt2_la_int  nhrs = nt2::width(a1);
         nt2_la_int  ldb = a1.leading_size();
 
-        details::magma_buffer<double>     dA(m,n   ,a0.data());
-        details::magma_buffer<double>     dX(m,nhrs, a1.data());
+        nt2::memory::cuda_buffer<double>  dA(m*n);
+        nt2::memory::copy(a0,dA);
+        nt2::memory::cuda_buffer<double>  dX(m*nhrs);
+        nt2::memory::copy(a1,dX);
 
         magma_dgels_gpu(MagmaNoTrans,m,n,nhrs,dA.data(),m,dX.data(),ldb,a2.main(),wn,&that);
 
-        dX.raw( a1.data() );
+        nt2::memory::copy(dX,a1);
 
         return that;
   }
@@ -92,7 +93,7 @@ namespace nt2 { namespace ext
 
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, single_<A0>, S0 >))
                               ((container_< nt2::tag::table_, single_<A1>, S1 >))
@@ -121,7 +122,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Workspace is ready
-  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gels_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(site)
                             , ((container_< nt2::tag::table_, single_<A0>, S0 >))
                              ((container_< nt2::tag::table_, single_<A1>, S1 >))
@@ -140,12 +141,15 @@ namespace nt2 { namespace ext
       nt2_la_int  nhrs = nt2::width(a1);
       nt2_la_int  ldb = a1.leading_size();
 
-      details::magma_buffer<float>     dA(m,n   ,a0.data());
-      details::magma_buffer<float>     dX(m,nhrs, a1.data());
+      nt2::memory::cuda_buffer<float>  dA(m*n);
+      nt2::memory::copy(a0,dA);
+
+      nt2::memory::cuda_buffer<float>     dX(m*nhrs);
+      nt2::memory::copy(a1,dX);
 
       magma_sgels_gpu(MagmaNoTrans,m,n,nhrs,dA.data(),m,dX.data(),ldb,a2.main(),wn,&that);
 
-      dX.raw( a1.data() );
+      nt2::memory::copy(dX,a1);
 
       return that;
     }
