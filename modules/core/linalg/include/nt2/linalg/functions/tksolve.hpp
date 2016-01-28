@@ -21,10 +21,10 @@
  * function x = tksolve(r, b, tran)
  * ksolve     solves block triangular kronecker system.
  *            x = tksolve(r, b, tran) solves
- *                  a*x = b  if tran = '',
- *                 a'*x = b  if tran = 't',
+ *                  a*x = b  if tran = 'N',
+ *                 a'*x = b  if tran = 'T',
  *            where a = kron(eye,r) + kron(transpose(r),eye).
- *            default: tran = ''.
+ *            default: tran = 'N'.
  *
  * \par Header file
  *
@@ -37,9 +37,6 @@
  *
  * \param type of tksolve required
  *
- * \par Notes
- *   Call the dedicated lapack routines available on the target.
- * \par
  *
 **/
 
