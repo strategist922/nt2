@@ -24,11 +24,10 @@ namespace nt2{ namespace details
     template<typename T>
     struct cu_buffers
     {
-      std::vector<T*> host_pinned;
-      std::vector<T*> device;
       std::size_t size;
+      std::vector<T*> device ;
+      std::vector<T*> host_pinned;
 
-      cu_buffers() : host_pinned(0), device(0) ,size(0) {}
       cu_buffers(std::size_t size_,std::size_t nstreams)
       {
         size = size_ ;
@@ -43,12 +42,19 @@ namespace nt2{ namespace details
           std::size_t sizeof_ = size*sizeof(T);
           host_pinned.resize(nstreams);
           device.resize(nstreams);
-          for(std::size_t i =0; i < nstreams ; ++i)
+          for(std::size_t i =0; i < 1 ; ++i)
           {
-            CUDA_ERROR(cudaMallocHost( (void**)&host_pinned[i] , sizeof_
-                                ));
+            std::cout << "test " << size_ << "   " << host_pinned.size() << "  size  " << sizeof_ << std::endl;
+            std::cout << &host_pinned[i] << std::endl;
+            std::cout << &device[i] << std::endl ;
 
+            auto err = cudaMallocHost( (void**)&host_pinned[i] , sizeof_
+                                );
+
+            std::cout << err << std::endl;
+            std::cout.flush();
             CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
+
           }
         }
       }
@@ -90,7 +96,7 @@ namespace nt2{ namespace details
     template<typename Arch, typename T>
     struct specific_cuda
     {
-      using btype = boost::dynamic_bitset<>;
+      using btype = std::vector<bool>;
       btype block_stream_dth;
       btype block_stream_htd;
       cu_buffers<T> buffers;
@@ -105,8 +111,8 @@ namespace nt2{ namespace details
 
       ~specific_cuda()
       {
-        block_stream_dth.reset();
-        block_stream_htd.reset();
+        // block_stream_dth.reset();
+        // block_stream_htd.reset();
         allocated = false;
       }
 
@@ -128,15 +134,14 @@ namespace nt2{ namespace details
         }
       }
 
-      template<class In, class Stream, class Set>
+      template<class In, class Stream>
       inline void transfer_htd( In & in, int blockid, Stream & stream ,std::size_t streamid
-                              , Set & addr, std::size_t leftover = 0)
+                              , std::size_t leftover = 0)
       {
         std::size_t sizeb = blocksize;
         if(leftover !=0) sizeb = leftover ;
 
-        auto it_set = addr.find(in.data());
-        if( block_stream_htd[blockid] == false && (it_set == addr.end() ) )
+        if( block_stream_htd[blockid] == false )
         {
         block_stream_htd[blockid] = true;
         buffers.copy_hostpinned(in, streamid, sizeb , blockid);
@@ -166,8 +171,9 @@ namespace nt2{ namespace details
                           , cudaMemcpyDeviceToHost
                           , stream
                     ));
-                    
+
           block_stream_dth[blockid] = true;
+          buffers.copy_host(out, streamid, sizeb , blockid);
         }
       }
 
