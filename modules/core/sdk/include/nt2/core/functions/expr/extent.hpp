@@ -33,15 +33,25 @@ namespace nt2 { namespace ext
 
   BOOST_DISPATCH_IMPLEMENT( extent_, tag::cpu_
                           , (A)(T)
-                          , ((node_<A,elementwise_<T>,boost::mpl::long_<1>,nt2::container::domain>))
+                          , ((node_ < A
+                                    , elementwise_<T>
+                                    , boost::mpl::long_<1>
+                                    , nt2::container::domain
+                                    >
+                            ))
                           )
   {
     BOOST_DISPATCH_RETURNS(1, (A const& a0), nt2::extent(boost::proto::child_c<0>(a0)));
   };
 
   BOOST_DISPATCH_IMPLEMENT( extent_, tag::cpu_
-                          , (A)(T)
-                          , ((node_<A,elementwise_<T>,boost::mpl::long_<2>,nt2::container::domain>))
+                          , (A)(T)(N)
+                          , ((node_ < A
+                                    , elementwise_<T>
+                                    , N
+                                    , nt2::container::domain
+                                    >
+                            ))
                           )
   {
     // TODO: [C++14] Remove this and use polymorphic lambda

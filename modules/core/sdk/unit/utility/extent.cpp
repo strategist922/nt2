@@ -7,6 +7,7 @@
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 #include <nt2/table.hpp>
+#include <nt2/include/functions/if_else.hpp>
 #include <nt2/include/functions/extent.hpp>
 #include <nt2/include/functions/of_size.hpp>
 #include <boost/mpl/vector.hpp>
@@ -119,6 +120,7 @@ NT2_TEST_CASE( binary_elementwise_extent )
   container_t t2( of_size(2,3,1,1) );
   container_t t3( of_size(2,3,4,1) );
   container_t t4( of_size(2,3,4,5) );
+  table<float, nt2::of_size_<2,3,4,5> > s4;
 
   NT2_TEST_EQUAL( extent(1.f+t0), of_size(0)  );
   NT2_TEST_EXPR_TYPE( extent(1.f+t0), _ , nt2::_4D );
@@ -152,4 +154,62 @@ NT2_TEST_CASE( binary_elementwise_extent )
   NT2_TEST_EQUAL( extent(1.f+t2), of_size(2,3,1,1)  );
   NT2_TEST_EQUAL( extent(1.f+t3), of_size(2,3,4,1)  );
   NT2_TEST_EQUAL( extent(1.f+t4), of_size(2,3,4,5)  );
+
+  NT2_TEST_EQUAL( extent( +(1.f+s4) - -(2.f*t4)), of_size(2,3,4,5)  );
+  NT2_TEST_EXPR_TYPE( extent( +(1.f+s4) - -(2.f*t4)), _, (nt2::of_size_<2,3,4,5>) );
+  NT2_TEST_EXPR_TYPE( extent( +(1.f+t4) - -(2.f*s4)), _, (nt2::of_size_<2,3,4,5>) );
+}
+
+template<typename T> inline void test_ternary(T const& t0)
+{
+  using boost::mpl::_;
+  NT2_TEST_EQUAL( extent( nt2::if_else(t0,t0,t0)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(t0,t0,t0)), _ , nt2::_4D );
+
+  NT2_TEST_EQUAL( extent( nt2::if_else(1.f,t0,t0)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(1.f,t0,t0)), _ , nt2::_4D );
+
+  NT2_TEST_EQUAL( extent( nt2::if_else(t0,1.f,t0)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(t0,1.f,t0)), _ , nt2::_4D );
+
+  NT2_TEST_EQUAL( extent( nt2::if_else(t0,t0,1.f)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(t0,t0,1.f)), _ , nt2::_4D );
+
+  NT2_TEST_EQUAL( extent( nt2::if_else(1.f,1.f,t0)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(1.f,1.f,t0)), _ , nt2::_4D );
+
+  NT2_TEST_EQUAL( extent( nt2::if_else(1.f,t0,1.f)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(1.f,t0,1.f)), _ , nt2::_4D );
+
+  NT2_TEST_EQUAL( extent( nt2::if_else(t0,1.f,1.f)), nt2::extent(t0) );
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(t0,1.f,1.f)), _ , nt2::_4D );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// extent of ternary elementwise expression
+////////////////////////////////////////////////////////////////////////////////
+NT2_TEST_CASE( ternary_elementwise_extent )
+{
+  using nt2::extent;
+  using nt2::of_size;
+  using nt2::of_size_;
+  using nt2::table;
+  using boost::mpl::_;
+
+  typedef table<float> container_t;
+
+  container_t t0;
+  container_t t1( of_size(2,1,1,1) );
+  table<float, nt2::of_size_<2,1> > s1;
+  container_t t2( of_size(2,3,1,1) );
+  container_t t3( of_size(2,3,4,1) );
+  container_t t4( of_size(2,3,4,5) );
+
+  test_ternary(t0);
+  test_ternary(t1);
+  test_ternary(t2);
+  test_ternary(t3);
+  test_ternary(t4);
+
+  NT2_TEST_EXPR_TYPE( extent(nt2::if_else(1.f,t1,s1)), _ , (nt2::of_size_<2,1>) );
 }
