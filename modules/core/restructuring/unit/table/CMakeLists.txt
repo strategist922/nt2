@@ -33,6 +33,7 @@ SET( SOURCES
   squeeze.cpp
   trans.cpp
   setunion.cpp
+  slice_of.cpp
   unique.cpp
   setinter.cpp
   vertcat.cpp

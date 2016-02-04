@@ -20,6 +20,7 @@
 #include <nt2/include/functions/minus.hpp>
 #include <nt2/include/functions/exp.hpp>
 #include <nt2/include/functions/sqr.hpp>
+#include <nt2/include/functions/slice_of.hpp>
 #include <nt2/table.hpp>
 
 #include <vector>
@@ -198,6 +199,52 @@ NT2_REGISTER_BENCHMARK( per_column )
   std::size_t n = args("size", 2e3);
 
   run_during_with<per_column> ( 3., fixed(n)
+                              , absolute_time<stats::median_>()
+                              , speedup < raw_C
+                                        , absolute_time<stats::median_>
+                                        >()
+                              );
+}
+
+//==============================================================================
+// Basic NT2 code using table operations per column using slices
+//==============================================================================
+struct per_column_slice
+{
+  per_column_slice( std::size_t n = 1 )
+            : size_(n)
+            , a(nt2::of_size(n,n)), b(nt2::of_size(n,n)), y(nt2::of_size(n,n))
+  {
+    nt2::roll(a,0.,10.);
+    nt2::roll(b,0.,10.);
+  }
+
+  void operator()()
+  {
+    using nt2::slice_of;
+    for(std::size_t j = 1; j <= size_; ++j)
+    {
+      slice_of(y,j) = exp(sqr(slice_of(a,j) - slice_of(b,j)) * 0.5);
+    }
+  }
+
+  std::size_t size() const { return size_*size_; }
+
+  friend std::ostream& operator<<(std::ostream& os, per_column_slice const& p)
+  {
+    return os << "(" << p.y.extent() << ")";
+  }
+
+  private:
+  std::size_t size_;
+  nt2::table<double,nt2::_2D> a,b,y;
+};
+
+NT2_REGISTER_BENCHMARK( per_column_slice )
+{
+  std::size_t n = args("size", 2e3);
+
+  run_during_with<per_column_slice> ( 3., fixed(n)
                               , absolute_time<stats::median_>()
                               , speedup < raw_C
                                         , absolute_time<stats::median_>
