@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <iterator>
 #include <cstddef>
+#include <memory>
 
 namespace boost { namespace simd
 {
