@@ -76,9 +76,10 @@ namespace boost { namespace simd
     size_type max_size() const  { return size_type(~0); }
 
     /// Performs the construction of a given value in a given memory block
-    void construct(pointer p, const T& t)
+    template<typename U, typename... Args >
+    void construct( U* p, Args&&... args )
     {
-      p = new (p) value_type (t);
+      ::new((void *)p) U(std::forward<Args>(args)...);
     }
 
     /// Performs the destruction of a given value in a given memory block
