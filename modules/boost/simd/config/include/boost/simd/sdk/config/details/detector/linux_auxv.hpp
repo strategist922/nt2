@@ -9,6 +9,8 @@
 #ifndef BOOST_SIMD_SDK_CONFIG_DETAILS_DETECTOR_LINUX_AUXV_HPP_INCLUDED
 #define BOOST_SIMD_SDK_CONFIG_DETAILS_DETECTOR_LINUX_AUXV_HPP_INCLUDED
 
+#include <boost/simd/sdk/config/os.hpp>
+
 #ifdef BOOST_SIMD_OS_LINUX
 #include <linux/auxvec.h>
 #include <fcntl.h>
