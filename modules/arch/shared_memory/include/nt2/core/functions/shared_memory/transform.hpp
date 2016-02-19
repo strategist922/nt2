@@ -10,8 +10,9 @@
 #ifndef NT2_CORE_FUNCTIONS_SHARED_MEMORY_TRANSFORM_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_SHARED_MEMORY_TRANSFORM_HPP_INCLUDED
 
+#ifdef NT2_HAS_SHARED_MEMORY
 #include <nt2/core/functions/transform.hpp>
-#include <nt2/sdk/shared_memory.hpp>
+#include <nt2/sdk/functor/site.hpp>
 #include <nt2/sdk/shared_memory/worker/transform.hpp>
 #include <nt2/sdk/shared_memory/spawner.hpp>
 #include <nt2/sdk/config/cache.hpp>
@@ -50,4 +51,6 @@ namespace nt2 { namespace ext
   };
 
 } }
+
+#endif
 #endif

@@ -12,18 +12,14 @@
 #if defined(NT2_USE_MAGMA)
 
 #include <nt2/linalg/functions/sysv.hpp>
-#include <nt2/sdk/magma/magma.hpp>
-
 #include <nt2/include/functions/width.hpp>
 #include <nt2/linalg/details/utility/f77_wrapper.hpp>
-
 #include <magma.h>
-#include <iostream>
 
 namespace nt2 { namespace ext
 {
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_< nt2::tag::table_, double_<A0>, S0 >))  // A
                               ((container_< nt2::tag::table_, integer_<A1>, S1 >)) // PIV
@@ -51,7 +47,7 @@ namespace nt2 { namespace ext
 
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_< nt2::tag::table_, single_<A0>, S0 >))  // A
                               ((container_< nt2::tag::table_, integer_<A1>, S1 >)) // PIV
@@ -80,7 +76,7 @@ namespace nt2 { namespace ext
 //--------------------------------------------Complex-----------------------------------------//
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_< nt2::tag::table_, complex_<double_<A0> >, S0 >))  // A
                               ((container_< nt2::tag::table_, integer_<A1>, S1 >)) // PIV
@@ -108,7 +104,7 @@ namespace nt2 { namespace ext
 
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( sysv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_< nt2::tag::table_, complex_<single_<A0> >, S0 >))  // A
                               ((container_< nt2::tag::table_, integer_<A1>, S1 >)) // PIV

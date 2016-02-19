@@ -21,8 +21,11 @@ namespace nt2 { namespace tag
 } }
 
 #if defined(NT2_USE_HPX)
-
-BOOST_DISPATCH_COMBINE_SITE( nt2::tag::hpx_<tag::cpu_> )
+#define NT2_HAS_SHARED_MEMORY
+namespace nt2
+{
+  template<typename Site> using shared_memory_site = tag::hpx_<Site>;
+}
 
 #include <nt2/sdk/hpx/spawner.hpp>
 #include <nt2/sdk/hpx/future.hpp>

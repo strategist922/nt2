@@ -12,7 +12,6 @@
 #if defined(NT2_USE_MAGMA)
 
 #include <nt2/linalg/functions/geqrf.hpp>
-#include <nt2/sdk/magma/magma.hpp>
 
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/core/container/table/kind.hpp>
@@ -31,7 +30,7 @@
 namespace nt2 { namespace ext
 {
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_<nt2::tag::table_,  double_<A0>, S0 >))
                               ((container_<nt2::tag::table_,  double_<A1>, S1 >))
@@ -60,7 +59,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Workspace is ready
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(site)
                             , ((container_<nt2::tag::table_,  double_<A0>, S0 >))
                               ((container_<nt2::tag::table_,  double_<A1>, S1 >))
@@ -88,7 +87,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_<nt2::tag::table_,  single_<A0>, S0 >))
                               ((container_<nt2::tag::table_,  single_<A1>, S1 >))
@@ -117,7 +116,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Workspace is ready
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(site)
                             , ((container_<nt2::tag::table_,  single_<A0>, S0 >))
                               ((container_<nt2::tag::table_,  single_<A1>, S1>))
@@ -148,7 +147,7 @@ namespace nt2 { namespace ext
 //---------------------------------------Complex-----------------------------------------//
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, complex_<single_<A0> >, S0 >))
                               ((container_< nt2::tag::table_, complex_<single_<A1> >, S1 >))
@@ -179,7 +178,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Workspace is ready
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(site)
                             , ((container_< nt2::tag::table_, complex_<single_<A0> >, S0 >))
                               ((container_< nt2::tag::table_, complex_<single_<A1> >, S1 >))
@@ -206,7 +205,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Compute the workspace
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(site)
                             , ((container_< nt2::tag::table_, complex_<double_<A0> >, S0 >))
                               ((container_< nt2::tag::table_, complex_<double_<A1> >, S1 >))
@@ -236,7 +235,7 @@ namespace nt2 { namespace ext
   };
 
   /// INTERNAL ONLY - Workspace is ready
-  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( geqrf_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(site)
                             , ((container_< nt2::tag::table_, complex_<double_<A0> >, S0 >))
                               ((container_< nt2::tag::table_, complex_<double_<A1> >, S1 >))

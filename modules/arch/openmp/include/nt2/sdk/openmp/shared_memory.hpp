@@ -22,10 +22,21 @@ namespace nt2 { namespace tag
 
 #ifdef _OPENMP
 
-BOOST_DISPATCH_COMBINE_SITE( nt2::tag::openmp_<tag::cpu_> )
+#define NT2_HAS_SHARED_MEMORY
+namespace nt2
+{
+  template<typename Site> using shared_memory_site = tag::openmp_<Site>;
+}
 
 #include <nt2/sdk/openmp/spawner.hpp>
 #include <nt2/sdk/openmp/future.hpp>
+
+#else
+
+namespace nt2
+{
+  template<typename Site> using shared_memory_site = Site;
+}
 
 #endif
 #endif

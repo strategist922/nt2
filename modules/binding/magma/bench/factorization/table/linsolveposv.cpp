@@ -8,8 +8,6 @@
 //                     http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 
-#include <nt2/sdk/magma/magma.hpp>
-
 #include <nt2/table.hpp>
 #include <nt2/include/functions/linsolve.hpp>
 #include <nt2/include/functions/eye.hpp>

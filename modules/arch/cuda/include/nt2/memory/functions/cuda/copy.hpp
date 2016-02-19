@@ -47,6 +47,7 @@ namespace nt2 { namespace memory
                   , cudaStream_t stream = 0)
   {
     using T = typename Out::value_type;
+
 //TODO
     CUDA_ERROR(cudaMemcpyAsync( (T*)b.data()
      , a.data()
@@ -59,7 +60,6 @@ namespace nt2 { namespace memory
   template<typename T, class C1>
   inline void copy(cuda_buffer<T> const& a, C1 &b, cudaStream_t stream = 0)
   {
-    b.resize(a.size());
     copy(a,b,nt2::device_{},nt2::host_{},stream);
   }
 

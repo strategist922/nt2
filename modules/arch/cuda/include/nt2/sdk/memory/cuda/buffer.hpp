@@ -14,7 +14,6 @@
 #include <nt2/include/functions/copy.hpp>
 #include <algorithm>
 #include <limits>
-#include <iostream>
 #include <stdexcept>
 
 namespace nt2 { namespace memory

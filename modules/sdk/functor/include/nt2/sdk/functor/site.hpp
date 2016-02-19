@@ -10,7 +10,45 @@
 #ifndef NT2_SDK_FUNCTOR_SITE_HPP_INCLUDED
 #define NT2_SDK_FUNCTOR_SITE_HPP_INCLUDED
 
+#define BOOST_SIMD_DEFINED_SITE
 #include <boost/simd/sdk/simd/extensions.hpp>
-#include <nt2/sdk/functor/site/site.hpp>
+
+#if defined(NT2_HAS_CUDA)
+#include <nt2/sdk/cuda/cuda.hpp>
+#else
+
+namespace nt2
+{
+  template<typename Site> using accelerator_site = Site;
+}
+
+#endif
+
+#if defined(_OPENMP)
+#include <nt2/sdk/openmp/shared_memory.hpp>
+
+#elif defined(NT2_USE_TBB)
+#include <nt2/sdk/tbb/shared_memory.hpp>
+
+#elif defined(NT2_USE_HPX)
+#include <nt2/sdk/hpx/shared_memory.hpp>
+
+#else
+
+namespace nt2
+{
+  template<typename Site> using shared_memory_site = Site;
+}
+
+#endif
+
+namespace nt2 { namespace details
+{
+  using final_locality_t = accelerator_site<shared_memory_site<BOOST_SIMD_DEFAULT_SITE>>;
+} }
+
+BOOST_DISPATCH_COMBINE_SITE( nt2::details::final_locality_t )
+
+#undef BOOST_SIMD_DEFINED_SITE
 
 #endif

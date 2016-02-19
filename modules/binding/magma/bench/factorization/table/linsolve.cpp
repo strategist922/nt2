@@ -9,7 +9,6 @@
 //==============================================================================
 
 #include <nt2/linalg/details/utility/llspgen.hpp>
-#include <nt2/sdk/magma/magma.hpp>
 #include <nt2/table.hpp>
 #include <nt2/include/functions/linsolve.hpp>
 #include <nt2/include/functions/rand.hpp>

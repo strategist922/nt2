@@ -11,10 +11,9 @@
 
 #if defined(NT2_USE_MAGMA)
 
-#include <nt2/sdk/magma/magma.hpp>
 #include <nt2/include/constants/eps.hpp>
 #include <nt2/linalg/details/utility/f77_wrapper.hpp>
-#include <nt2/linalg/details/magma_buffer.hpp>
+#include <nt2/sdk/memory/cuda/buffer.hpp>
 #include <nt2/include/functions/lange.hpp>
 #include <nt2/core/container/table/kind.hpp>
 #include <nt2/include/functions/pow.hpp>
@@ -198,9 +197,9 @@ sgerfs_gpu(magma_trans_t trans, magma_int_t N, magma_int_t NRHS,
                 magma_int_t *iter, magma_int_t *info)
 {
 
-nt2::details::magma_buffer<double> dworkd(N,1);
-nt2::details::magma_buffer<double> dXd(N,NRHS);
-nt2::details::magma_buffer<double> dBd(N,NRHS);
+nt2::memory::cuda_buffer<double> dworkd(N);
+nt2::memory::cuda_buffer<double> dXd(N*NRHS);
+nt2::memory::cuda_buffer<double> dBd(N*NRHS);
 
 float c_neg_one = MAGMA_D_NEG_ONE;
 float c_one     = MAGMA_D_ONE;
@@ -532,9 +531,9 @@ cgerfs_gpu(magma_trans_t trans, magma_int_t N, magma_int_t NRHS,
                 magma_int_t *iter, magma_int_t *info)
 {
 
-nt2::details::magma_buffer<std::complex<double> > dworkz(N,1);
-nt2::details::magma_buffer<std::complex<double> > dXd(N,NRHS);
-nt2::details::magma_buffer<std::complex<double> > dBd(N,NRHS);
+nt2::memory::cuda_buffer<std::complex<double> > dworkz(N);
+nt2::memory::cuda_buffer<std::complex<double> > dXd(N*NRHS);
+nt2::memory::cuda_buffer<std::complex<double> > dBd(N*NRHS);
 
 cuFloatComplex c_neg_one = MAGMA_C_NEG_ONE;
 cuFloatComplex c_one     = MAGMA_C_ONE;

@@ -12,8 +12,7 @@
 #if defined(NT2_USE_MAGMA)
 
 #include <nt2/linalg/functions/mcsne.hpp>
-#include <nt2/sdk/magma/magma.hpp>
-#include <nt2/linalg/details/magma_buffer.hpp>
+#include <nt2/sdk/memory/cuda/buffer.hpp>
 #include <nt2/include/functions/lange.hpp>
 #include <nt2/include/functions/width.hpp>
 #include <nt2/include/functions/height.hpp>
@@ -38,7 +37,7 @@
 
  namespace nt2{ namespace ext
  {
-   BOOST_DISPATCH_IMPLEMENT  ( mcsne_, nt2::tag::magma_<site>
+   BOOST_DISPATCH_IMPLEMENT  ( mcsne_, nt2::tag::cuda_<site>
                              , (A0)(A1)(site)
                              , ((ast_<A0, nt2::container::domain>))
                                ((ast_<A1, nt2::container::domain>))
@@ -64,14 +63,18 @@
        t_t x(nt2::of_size(ldb,nhrs));
        nt2::container::table<float> tau(nt2::of_size(std::min(m,na),1));
 
-       details::magma_buffer<double>      dA(m,na,a.data() );
-       details::magma_buffer<double>      dB(ldb,nhrs,b.data() );
-       details::magma_buffer<double>      dX(ldb,nhrs);
-       details::magma_buffer<double>      dE(ldb,nhrs);
-       details::magma_buffer<double>      temp(ldb,nhrs);
-       details::magma_buffer<float>       dSR(m,na);
-       details::magma_buffer<float>       dSX(ldb,nhrs);
-       details::magma_buffer<float>       dT(lwkopt,nhrs);
+       nt2::memory::cuda_buffer<double>      dA(m*na);
+       nt2::memory::copy(a,dA);
+
+       nt2::memory::cuda_buffer<double>      dB(ldb*nhrs);
+       nt2::memory::copy(b,dB);
+
+       nt2::memory::cuda_buffer<double>      dX(ldb*nhrs);
+       nt2::memory::cuda_buffer<double>      dE(ldb*nhrs);
+       nt2::memory::cuda_buffer<double>      temp(ldb*nhrs);
+       nt2::memory::cuda_buffer<float>       dSR(m*na);
+       nt2::memory::cuda_buffer<float>       dSX(ldb*nhrs);
+       nt2::memory::cuda_buffer<float>       dT(lwkopt*nhrs);
 
        double eps = boost::simd::Eps<double>();
        double anrm = magmablas_dlange(MagmaInfNorm, m, na, dA.data(), m, dE.data() );
@@ -107,12 +110,12 @@
 
          magmablas_slag2d(na,nhrs,dSX.data(),ldb,dE.data(),ldb,&info);
 
-         dE.raw(x.data());
+         nt2::memory::copy(dE,x);
          rnrm = nt2::maximum(nt2::abs(x(_)));
 
          magmablas_dgeadd(na,nhrs,one,dE.data(),ldb,dX.data(),ldb);
 
-         dX.raw(x.data());
+         nt2::memory::copy(dX,x);
          xnrm = nt2::maximum(nt2::abs(x(_)));
 
          magmablas_dlacpy(MagmaFull, ldb, nhrs, dB.data(), ldb, dE.data(), ldb);
@@ -121,7 +124,7 @@
          if(rnrm < xnrm*cte) { break; }
        }
 
-        dX.raw(x.data());
+        nt2::memory::copy(dX,x);
 
         return x(_(1,na));
      }
@@ -136,7 +139,7 @@
 
 // namespace nt2{ namespace ext
 // {
-//   BOOST_DISPATCH_IMPLEMENT  ( mcsne_, nt2::tag::magma_<site>
+//   BOOST_DISPATCH_IMPLEMENT  ( mcsne_, nt2::tag::cuda_<site>
 //                             , (A0)(A1)(site)
 //                             , ((ast_<A0, nt2::container::domain>))
 //                               ((ast_<A1, nt2::container::domain>))

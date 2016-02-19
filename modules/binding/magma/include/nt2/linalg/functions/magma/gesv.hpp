@@ -13,7 +13,6 @@
 
 #include <nt2/linalg/functions/gesv.hpp>
 #include <nt2/include/functions/xerbla.hpp>
-#include <nt2/sdk/magma/magma.hpp>
 
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/core/container/table/kind.hpp>
@@ -28,7 +27,7 @@
 namespace nt2 { namespace ext
 {
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_<nt2::tag::table_,  double_<A0>, S0 >))
                               ((container_<nt2::tag::table_,  integer_<A1>, S1 >))
@@ -52,7 +51,7 @@ namespace nt2 { namespace ext
      }
   };
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_<nt2::tag::table_,  single_<A0>, S0 >))
                               ((container_<nt2::tag::table_,  integer_<A1>, S1 >))
@@ -78,7 +77,7 @@ namespace nt2 { namespace ext
   };
 
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_< nt2::tag::table_, complex_<double_<A0> >, S0 >))  // A
                               ((container_< nt2::tag::table_, integer_<A1>, S1 >)) // IPIV
@@ -104,7 +103,7 @@ namespace nt2 { namespace ext
      }
   };
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesv_, nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(site)
                             , ((container_< nt2::tag::table_, complex_<single_<A0> >, S0 >))  // A
                               ((container_< nt2::tag::table_, integer_<A1>, S1 >)) // IPIV

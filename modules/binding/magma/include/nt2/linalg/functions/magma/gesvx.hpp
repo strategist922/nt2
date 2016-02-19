@@ -12,9 +12,8 @@
 #if defined(NT2_USE_MAGMA)
 
 #include <nt2/linalg/functions/gesvx.hpp>
-#include <nt2/linalg/details/magma_buffer.hpp>
+#include <nt2/sdk/memory/cuda/buffer.hpp>
 #include <nt2/linalg/functions/magma/dgerfs.hpp>
-#include <nt2/sdk/magma/magma.hpp>
 
 #include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/core/container/table/kind.hpp>
@@ -31,7 +30,7 @@
 namespace nt2 { namespace ext
 {
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(A3)(site)
                             , ((container_< nt2::tag::table_,  double_<A0>, S0 >))  //A
                               ((container_< nt2::tag::table_,  double_<A1>, S1 >))  // B
@@ -56,11 +55,20 @@ namespace nt2 { namespace ext
         copyb = a1;
         nt2::container::table<nt2_la_int> ipiv(nt2::of_size(n,1));
 
-        details::magma_buffer<T>     rwork(n,1);
-        details::magma_buffer<T>     dAf(n,n  , copya.data());
-        details::magma_buffer<T>     dA(n,n   , copya.data());
-        details::magma_buffer<T>     dB(n,nhrs, copyb.data());
-        details::magma_buffer<T>     dX(n,nhrs, copyb.data());
+        nt2::memory::cuda_buffer<T>     rwork(n);
+
+        nt2::memory::cuda_buffer<T>     dAf(n*n);
+        nt2::memory::copy(copya,dAf);
+
+        nt2::memory::cuda_buffer<T>     dA(n*n);
+        nt2::memory::copy(copya,dA);
+
+        nt2::memory::cuda_buffer<T>     dB(n*nhrs);
+        nt2::memory::copy(copyb,dB);
+
+        nt2::memory::cuda_buffer<T>     dX(n*nhrs);
+        nt2::memory::copy(copyb,dX);
+
         magma_dgesv_gpu( n, nhrs, dAf.data(), n, ipiv.data(),dX.data(), ldb, &that);
 
         dgerfs_gpu(    MagmaNoTrans
@@ -73,16 +81,14 @@ namespace nt2 { namespace ext
                            , rwork.data() , &iter
                            , &that
                            );
-        dX.raw( a2.data() );
 
-
+        nt2::memory::copy(dX,a2);
 
         return that;
      }
   };
 
-
-  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(A3)(site)
                             , ((container_< nt2::tag::table_,  single_<A0>, S0 >))  //A
                               ((container_< nt2::tag::table_,  single_<A1>, S1 >))  // B
@@ -107,11 +113,20 @@ namespace nt2 { namespace ext
         copyb = a1;
         nt2::container::table<nt2_la_int> ipiv(nt2::of_size(n,1));
 
-        details::magma_buffer<T>     rwork(n,1);
-        details::magma_buffer<T>     dAf(n,n   , copya.data());
-        details::magma_buffer<T>     dA(n,n   , copya.data());
-        details::magma_buffer<T>     dB(n,nhrs, copyb.data());
-        details::magma_buffer<T>     dX(n,nhrs, copyb.data());
+        nt2::memory::cuda_buffer<T>     rwork(n);
+
+        nt2::memory::cuda_buffer<T>     dAf(n*n);
+        nt2::memory::copy(copya,dAf);
+
+        nt2::memory::cuda_buffer<T>     dA(n*n);
+        nt2::memory::copy(copya,dA);
+
+        nt2::memory::cuda_buffer<T>     dB(n*nhrs);
+        nt2::memory::copy(copyb,dB);
+
+        nt2::memory::cuda_buffer<T>     dX(n*nhrs);
+        nt2::memory::copy(copyb,dX);
+
         magma_sgesv_gpu( n, nhrs, dAf.data(), n, ipiv.data(),dX.data(), ldb, &that);
         sgerfs_gpu(    MagmaNoTrans
                            , n           , nhrs
@@ -123,14 +138,15 @@ namespace nt2 { namespace ext
                            , rwork.data() , &iter
                            , &that
                            );
-        dX.raw( a2.data() );
+
+        nt2::memory::copy(dX,a2);
 
         return that;
      }
   };
 
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(A3)(site)
                             , ((container_< nt2::tag::table_,  complex_<double_<A0> >, S0 >))  //A
                               ((container_< nt2::tag::table_,  complex_<double_<A1> >, S1 >))  // B
@@ -156,11 +172,20 @@ namespace nt2 { namespace ext
         copyb = a1;
         nt2::container::table<nt2_la_int> ipiv(nt2::of_size(n,1));
 
-        details::magma_buffer<cT>     rwork(n,1);
-        details::magma_buffer<cT>     dAf(n,n  , copya.data());
-        details::magma_buffer<cT>     dA(n,n   , copya.data());
-        details::magma_buffer<cT>     dB(n,nhrs, copyb.data());
-        details::magma_buffer<cT>     dX(n,nhrs, copyb.data());
+        nt2::memory::cuda_buffer<cT>     rwork(n);
+
+        nt2::memory::cuda_buffer<cT>     dAf(n*n);
+        nt2::memory::copy(copya,dAf);
+
+        nt2::memory::cuda_buffer<cT>     dA(n*n);
+        nt2::memory::copy(copya,dA);
+
+        nt2::memory::cuda_buffer<cT>     dB(n*nhrs);
+        nt2::memory::copy(copyb,dB);
+
+        nt2::memory::cuda_buffer<cT>     dX(n*nhrs);
+        nt2::memory::copy(copyb,dX);
+
         magma_zgesv_gpu( n, nhrs, (cuDoubleComplex*)dAf.data(), n, ipiv.data()
                        , (cuDoubleComplex*)dX.data(), ldb, &that);
 
@@ -174,16 +199,15 @@ namespace nt2 { namespace ext
                            , (cuDoubleComplex*)rwork.data() , &iter
                            , &that
                            );
-        dX.raw( a2.data() );
 
-
+        nt2::memory::copy(dX,a2);
 
         return that;
      }
   };
 
 
-  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::magma_<site>
+  BOOST_DISPATCH_IMPLEMENT  ( gesvx_,  nt2::tag::cuda_<site>
                             , (A0)(S0)(A1)(S1)(A2)(S2)(A3)(site)
                             , ((container_< nt2::tag::table_,  complex_<single_<A0> >, S0 >))  //A
                               ((container_< nt2::tag::table_,  complex_<single_<A1> >, S1 >))  // B
@@ -210,11 +234,20 @@ namespace nt2 { namespace ext
         copyb = a1;
         nt2::container::table<nt2_la_int> ipiv(nt2::of_size(n,1));
 
-        details::magma_buffer<cT>     rwork(n,1);
-        details::magma_buffer<cT>     dAf(n,n  , copya.data());
-        details::magma_buffer<cT>     dA(n,n   , copya.data());
-        details::magma_buffer<cT>     dB(n,nhrs, copyb.data());
-        details::magma_buffer<cT>     dX(n,nhrs, copyb.data());
+        nt2::memory::cuda_buffer<cT>     rwork(n);
+
+        nt2::memory::cuda_buffer<cT>     dAf(n*n);
+        nt2::memory::copy(copya,dAf);
+
+        nt2::memory::cuda_buffer<cT>     dA(n*n);
+        nt2::memory::copy(copya,dA);
+
+        nt2::memory::cuda_buffer<cT>     dB(n*nhrs);
+        nt2::memory::copy(copyb,dB);
+
+        nt2::memory::cuda_buffer<cT>     dX(n*nhrs);
+        nt2::memory::copy(copyb,dX);
+
         magma_cgesv_gpu( n, nhrs, (cuFloatComplex*)dAf.data(), n, ipiv.data()
                        , (cuFloatComplex*)dX.data(), ldb, &that);
 
@@ -228,9 +261,8 @@ namespace nt2 { namespace ext
                            , (cuFloatComplex*)rwork.data() , &iter
                            , &that
                            );
-        dX.raw( a2.data() );
 
-
+        nt2::memory::copy(dX,a2);
 
         return that;
      }
