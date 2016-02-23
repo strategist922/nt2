@@ -21,11 +21,6 @@ endforeach()
 find_package(NT2 REQUIRED COMPONENTS boost.simd.config ${NT2_MODULES_GLOBAL_CONFIG})
 include(${NT2_USE_FILE})
 
-include(nt2.info)
-if(NOT NT2_ARCH_X86)
-  return()
-endif()
-
 add_executable(x86_model x86_model.cpp)
 set_target_properties(x86_model
                       PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}
