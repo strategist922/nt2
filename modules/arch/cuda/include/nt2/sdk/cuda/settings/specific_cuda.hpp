@@ -10,8 +10,8 @@
 
 #ifdef NT2_HAS_CUDA
 
+#include <boost/dispatch/functor/forward.hpp>
 #include <cublas.h>
-#include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include <cstring>
 #include <iostream>
@@ -28,6 +28,11 @@ namespace nt2{ namespace details
       std::vector<T*> device ;
       std::vector<T*> host_pinned;
 
+      cu_buffers()
+      {
+        size = 0;
+      }
+
       cu_buffers(std::size_t size_,std::size_t nstreams)
       {
         size = size_ ;
@@ -42,17 +47,9 @@ namespace nt2{ namespace details
           std::size_t sizeof_ = size*sizeof(T);
           host_pinned.resize(nstreams);
           device.resize(nstreams);
-          for(std::size_t i =0; i < 1 ; ++i)
+          for(std::size_t i =0; i < nstreams ; ++i)
           {
-            std::cout << "test " << size_ << "   " << host_pinned.size() << "  size  " << sizeof_ << std::endl;
-            std::cout << &host_pinned[i] << std::endl;
-            std::cout << &device[i] << std::endl ;
-
-            auto err = cudaMallocHost( (void**)&host_pinned[i] , sizeof_
-                                );
-
-            std::cout << err << std::endl;
-            std::cout.flush();
+            CUDA_ERROR(cudaMallocHost( (void**)&host_pinned[i] , sizeof_ ));
             CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
 
           }
@@ -105,14 +102,12 @@ namespace nt2{ namespace details
 
       inline void synchronize() {}
 
-      specific_cuda() : block_stream_dth(1), block_stream_htd(1) ,
-                      buffers{} , blocksize(0) , allocated(false)
+      specific_cuda() : block_stream_dth(0), block_stream_htd(0) ,
+                      buffers() , blocksize(0) , allocated(false)
       {}
 
       ~specific_cuda()
       {
-        // block_stream_dth.reset();
-        // block_stream_htd.reset();
         allocated = false;
       }
 
@@ -152,8 +147,9 @@ namespace nt2{ namespace details
                                   , cudaMemcpyHostToDevice
                                   , stream
                   ));
-
+        cudaStreamSynchronize(stream);
         }
+
       }
 
       template<class Out, class Stream>
@@ -173,8 +169,10 @@ namespace nt2{ namespace details
                     ));
 
           block_stream_dth[blockid] = true;
+          cudaStreamSynchronize(stream);
           buffers.copy_host(out, streamid, sizeb , blockid);
         }
+
       }
 
       inline T* data(std::size_t i)

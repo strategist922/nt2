@@ -168,7 +168,7 @@ namespace nt2 { namespace memory
 
     BOOST_FORCEINLINE reference operator[](size_type )
     {
-      static value_type x = 0;
+      static constexpr value_type x = 0;
       static_assert( x == 0 , "operator[] not available for cuda buffers");
       return x;
     }
@@ -176,7 +176,7 @@ namespace nt2 { namespace memory
     /// @overload
     BOOST_FORCEINLINE const_reference operator[](size_type ) const
     {
-      static value_type x = 0 ;
+      static constexpr value_type x = 0 ;
       static_assert( x == 0 , "operator[] not available for cuda buffers");
       return x;
     }
