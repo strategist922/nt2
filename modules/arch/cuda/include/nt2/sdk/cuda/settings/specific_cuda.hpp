@@ -47,7 +47,7 @@ namespace nt2{ namespace details
           std::size_t sizeof_ = size*sizeof(T);
           host_pinned.resize(nstreams);
           device.resize(nstreams);
-          for(std::size_t i =0; i < nstreams ; ++i)
+          for(std::size_t i =0; i < nstreams; ++i)
           {
             CUDA_ERROR(cudaMallocHost( (void**)&host_pinned[i] , sizeof_ ));
             CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
