@@ -13,8 +13,11 @@
 #define BOOST_SIMD_DEFINED_SITE
 #include <boost/simd/sdk/simd/extensions.hpp>
 
+#include <nt2/core/settings/specific_data.hpp>
+
 #if defined(NT2_HAS_CUDA)
 #include <nt2/sdk/cuda/cuda.hpp>
+#include <nt2/sdk/cuda/settings/specific_data.hpp>
 #else
 
 namespace nt2

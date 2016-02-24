@@ -10,6 +10,7 @@
 #ifndef NT2_SDK_MEMORY_CONTAINER_HPP_INCLUDED
 #define NT2_SDK_MEMORY_CONTAINER_HPP_INCLUDED
 
+#include <nt2/sdk/functor/site.hpp>
 #include <nt2/include/functions/copy.hpp>
 #include <nt2/core/settings/size.hpp>
 #include <nt2/core/settings/index.hpp>
@@ -17,7 +18,6 @@
 #include <nt2/core/settings/interleaving.hpp>
 #include <nt2/core/settings/storage_order.hpp>
 #include <nt2/core/settings/locality.hpp>
-#include <nt2/core/settings/specific_data.hpp>
 #include <nt2/core/settings/storage_scheme.hpp>
 #include <nt2/core/utility/of_size.hpp>
 #include <nt2/include/functions/scalar/numel.hpp>
