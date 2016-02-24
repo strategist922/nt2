@@ -10,9 +10,9 @@
 
 #ifdef NT2_HAS_CUDA
 
+#include <nt2/sdk/cuda/cuda.hpp>
 #include <nt2/sdk/cuda/settings/specific_cuda.hpp>
 #include <nt2/core/settings/specific_data.hpp>
-#include <nt2/sdk/cuda/cuda.hpp>
 
 namespace nt2{
 
