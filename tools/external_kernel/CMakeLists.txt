@@ -18,7 +18,7 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR}/../gather_includes ${Boost_INCLUDE_DIRS}  .)
 link_libraries(${Boost_LIBRARIES})
 
-add_executable(external_kernel_gen external_kernel.cpp parse_symbol.cpp backend.cpp)
+add_executable(external_kernel external_kernel.cpp parse_symbol.cpp backend.cpp)
 
 foreach(component ${NT2_FOUND_COMPONENTS})
 string(REPLACE . / module ${component} )
