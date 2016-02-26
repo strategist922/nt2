@@ -12,7 +12,7 @@
 
 #include <nt2/include/functor.hpp>
 #include <nt2/include/functions/asum2.hpp>
-#include <nt2/include/functions/global.hpp>
+#include <nt2/include/functions/colvect.hpp>
 
 namespace nt2
 {
@@ -65,26 +65,10 @@ namespace nt2
 
     @return An expression eventually evaluated to the result
   **/
-  NT2_FUNCTION_IMPLEMENTATION(nt2::tag::globalasum2_, globalasum2, 1)
+
+  template<typename Args>
+  BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE globalasum2(Args const& a0)
+  BOOST_AUTO_DECLTYPE_BODY( nt2::asum2(nt2::colvect(a0)) );
 }
-
-namespace nt2 { namespace ext
-{
-  /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT  ( globalasum2_, tag::cpu_
-                            , (A0)
-                            , (unspecified_<A0>)
-                            )
-  {
-    typedef typename meta::call<tag::global_( nt2::functor<tag::asum2_>
-                                            , const A0&
-                                            )>::type                result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-       return global(nt2::functor<tag::asum2_>(), a0);
-    }
-  };
-} }
 
 #endif

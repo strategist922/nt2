@@ -13,7 +13,9 @@
 #include <nt2/sdk/meta/as_real.hpp>
 #include <boost/mpl/int.hpp>
 
-namespace nt2 { namespace tag
+namespace nt2
+{
+  namespace tag
   {
     /*!
       @brief globalnorm generic tag

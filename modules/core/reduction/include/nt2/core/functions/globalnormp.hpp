@@ -11,33 +11,11 @@
 #define NT2_CORE_FUNCTIONS_GLOBALNORMP_HPP_INCLUDED
 
 #include <nt2/include/functor.hpp>
+#include <nt2/include/functions/normp.hpp>
+#include <nt2/include/functions/colvect.hpp>
 
 namespace nt2
 {
-  namespace tag
-  {
-    /*!
-      @brief Tag for the globalnormp functor
-    **/
-    struct globalnormp_ : ext::abstract_<globalnormp_>
-    {
-      /// @brief Parent hierarchy
-      typedef ext::abstract_<globalnormp_> parent;
-      template<class... Args>
-      static BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE dispatch(Args&&... args)
-      BOOST_AUTO_DECLTYPE_BODY( dispatching_globalnormp_( ext::adl_helper(), static_cast<Args&&>(args)... ) )
-    };
-  }
-  namespace ext
-  {
-    template<class Site, class... Ts>
-    BOOST_FORCEINLINE generic_dispatcher<tag::globalnormp_, Site> dispatching_globalnormp_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
-    {
-      return generic_dispatcher<tag::globalnormp_, Site>();
-    }
-    template<class... Args>
-    struct impl_globalnormp_;
-  }
   /*!
     @brief Sum of the p power of absolute values of table to 1/p
 
@@ -70,8 +48,9 @@ namespace nt2
     @return An expression eventually evaluated to the result
 
   **/
-
-  NT2_FUNCTION_IMPLEMENTATION(nt2::tag::globalnormp_, globalnormp, 2)
+  template<typename A0, typename A1>
+  BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE globalnormp(A0 const& a0, A1 const& a1)
+  BOOST_AUTO_DECLTYPE_BODY( nt2::normp(nt2::colvect(a0),a1) );
 }
 
 #endif

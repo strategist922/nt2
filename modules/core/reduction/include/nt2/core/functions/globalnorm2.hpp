@@ -12,35 +12,10 @@
 
 #include <nt2/include/functor.hpp>
 #include <nt2/include/functions/norm2.hpp>
-#include <nt2/include/functions/global.hpp>
+#include <nt2/include/functions/colvect.hpp>
 
 namespace nt2
 {
-  namespace tag
-  {
-    /*!
-      @brief Tag for the globalnorm2 functor
-    **/
-    struct globalnorm2_ : ext::abstract_<globalnorm2_>
-    {
-      /// @brief Parent hierarchy
-      typedef ext::abstract_<globalnorm2_> parent;
-      template<class... Args>
-      static BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE dispatch(Args&&... args)
-      BOOST_AUTO_DECLTYPE_BODY( dispatching_globalnorm2_( ext::adl_helper(), static_cast<Args&&>(args)... ) )
-    };
-  }
-  namespace ext
-  {
-    template<class Site, class... Ts>
-    BOOST_FORCEINLINE generic_dispatcher<tag::globalnorm2_, Site> dispatching_globalnorm2_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
-    {
-      return generic_dispatcher<tag::globalnorm2_, Site>();
-    }
-    template<class... Args>
-    struct impl_globalnorm2_;
-  }
-
   /*!
     @brief euclidian norm of a whole table expression elements
 
@@ -71,26 +46,9 @@ namespace nt2
 
     @return An expression eventually evaluated to the result
   **/
-  NT2_FUNCTION_IMPLEMENTATION(nt2::tag::globalnorm2_, globalnorm2, 1)
+  template<typename Args>
+  BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE globalnorm2(Args const& a0)
+  BOOST_AUTO_DECLTYPE_BODY( nt2::norm2(nt2::colvect(a0)) );
 }
-
-namespace nt2 { namespace ext
-{
-  /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT  ( globalnorm2_, tag::cpu_
-                            , (A0)
-                            , (unspecified_<A0>)
-                            )
-  {
-    typedef typename meta::call<tag::global_( nt2::functor<tag::norm2_>
-                                            , const A0&
-                                            )>::type                result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-       return global(nt2::functor<tag::norm2_>(), a0);
-    }
-  };
-} }
 
 #endif
