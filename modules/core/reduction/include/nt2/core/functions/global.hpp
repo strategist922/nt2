@@ -46,6 +46,7 @@ namespace nt2
     @param a2 additionnal parameter if needed by a0
   **/
   NT2_FUNCTION_IMPLEMENTATION(nt2::tag::global_, global, 3)
+
   /// @overload
   NT2_FUNCTION_IMPLEMENTATION(nt2::tag::global_, global, 2)
 }

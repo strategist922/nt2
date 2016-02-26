@@ -32,7 +32,6 @@ NT2_TEST_CASE_TPL( all_scalar, NT2_TYPES )
 
   x = nt2::all(nt2::True< nt2::logical<T> >(),2);
   NT2_TEST_EQUAL( x, (nt2::True< nt2::logical<T> >()) );
-
 }
 
 NT2_TEST_CASE_TPL( all_expr, NT2_TYPES )
@@ -45,10 +44,7 @@ NT2_TEST_CASE_TPL( all_expr, NT2_TYPES )
       y(i,j) = i + 10*j;
   y(2, 2) = 0;
 
-  display("y", y);
-
   sy = nt2::all(y);
-  display("sy", sy);
   for(int j=1;j<=3;j++)
     {
       nt2::logical<T> z = nt2::True< nt2::logical<T> >();
@@ -56,7 +52,7 @@ NT2_TEST_CASE_TPL( all_expr, NT2_TYPES )
       NT2_TEST_EQUAL(z, sy(j));
     }
   sy = nt2::all(y, 1);
-  display("sy", sy);
+
   for(int j=1;j<=3;j++)
     {
       nt2::logical<T> z = nt2::True< nt2::logical<T> >();
@@ -65,7 +61,7 @@ NT2_TEST_CASE_TPL( all_expr, NT2_TYPES )
     }
 
   sy = nt2::all(y, 2);
-  display("sy", sy);
+
   for(int j=1;j<=5;j++)
     {
       nt2::logical<T> z = nt2::True< nt2::logical<T> >();
@@ -74,7 +70,7 @@ NT2_TEST_CASE_TPL( all_expr, NT2_TYPES )
     }
 
   sy = nt2::all(y, 3);
-  display("sy", sy);
+
   for(int j=1;j<=3;j++)
     {
       nt2::logical<T> z;
@@ -84,9 +80,4 @@ NT2_TEST_CASE_TPL( all_expr, NT2_TYPES )
           NT2_TEST_EQUAL(z, sy(i, j));
         }
     }
-//   sy = nt2::all(y(_));
-//   display("sy", sy);
-//   NT2_TEST_EQUAL(nt2::False< nt2::logical<T> >(), sy(1));
-
 }
-

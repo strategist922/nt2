@@ -10,11 +10,6 @@
 #define NT2_CORE_FUNCTIONS_GLOBALMAX_HPP_INCLUDED
 
 #include <nt2/include/functor.hpp>
-#include <nt2/include/functions/maximum.hpp>
-#include <nt2/include/functions/global.hpp>
-#include <nt2/include/functions/is_equal.hpp>
-#include <nt2/include/functions/globalfind.hpp>
-
 
 namespace nt2
 {
@@ -90,42 +85,6 @@ namespace nt2
   NT2_FUNCTION_IMPLEMENTATION(nt2::tag::globalmax_       , globalmax, 1)
   /// @overload
   NT2_FUNCTION_IMPLEMENTATION(nt2::tag::globalmax_       , g_max, 1)
-  /// @overload
-
 }
 
-namespace nt2 { namespace ext
-{
-  /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT  ( globalmax_, tag::cpu_,
-                              (A0),
-                              (unspecified_<A0>)
-    )
-  {
-    typedef typename meta::call<tag::global_(nt2::functor<tag::maximum_>
-                                             , const A0&
-      )>::type                           result_type;
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-      return nt2::global(nt2::functor<tag::maximum_>(), a0);
-    }
-  };
-  /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT  ( globalmax_, tag::cpu_,
-                              (A0)(A1),
-                              (unspecified_<A0>)(scalar_<integer_<A1> > )
-    )
-  {
-    typedef typename meta::call<tag::global_(nt2::functor<tag::maximum_>, const A0&)>::type result_type;
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 & a1) const
-    {
-       result_type tmp =  global(nt2::functor<tag::maximum_>(), a0);
-       A1 k = nt2::globalfind(eq(a0, tmp));
-       a1 = k;
-       return tmp;
-    }
-  };
-
-
-} }
 #endif

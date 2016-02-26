@@ -16,31 +16,6 @@
 
 namespace nt2
 {
-  namespace tag
-  {
-    /*!
-      @brief Tag for the functor
-    **/
-    struct globalprod_ : ext::abstract_<globalprod_>
-    {
-      /// @brief Parent hierarchy
-      typedef ext::abstract_<globalprod_> parent;
-      template<class... Args>
-      static BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE dispatch(Args&&... args)
-      BOOST_AUTO_DECLTYPE_BODY( dispatching_globalprod_( ext::adl_helper(), static_cast<Args&&>(args)... ) )
-    };
-  }
-  namespace ext
-  {
-    template<class Site, class... Ts>
-    BOOST_FORCEINLINE generic_dispatcher<tag::globalprod_, Site> dispatching_globalprod_(adl_helper, boost::dispatch::meta::unknown_<Site>, boost::dispatch::meta::unknown_<Ts>...)
-    {
-      return generic_dispatcher<tag::globalprod_, Site>();
-    }
-    template<class... Args>
-    struct impl_globalprod_;
-  }
-
  /*!
     @brief product of all the elements of a table expression .
 
@@ -64,25 +39,9 @@ namespace nt2
     @return A scalar
 
   **/
-  NT2_FUNCTION_IMPLEMENTATION(nt2::tag::globalprod_       , globalprod, 1)
+  template<typename Args>
+  BOOST_FORCEINLINE BOOST_AUTO_DECLTYPE globalprod(Args const& a0)
+  BOOST_AUTO_DECLTYPE_BODY( global(nt2::functor<tag::prod_>(), a0) );
 }
 
-namespace nt2 { namespace ext
-{
-  /// INTERNAL ONLY
-  BOOST_DISPATCH_IMPLEMENT  ( globalprod_, tag::cpu_
-                            , (A0)
-                            , (unspecified_<A0>)
-                            )
-  {
-    typedef typename meta::call < tag::global_(nt2::functor<tag::prod_>
-                                , const A0&)
-                                >::type                             result_type;
-
-    BOOST_FORCEINLINE result_type operator()(A0 const& a0) const
-    {
-       return global(nt2::functor<tag::prod_>(), a0);
-    }
-  };
-} }
 #endif

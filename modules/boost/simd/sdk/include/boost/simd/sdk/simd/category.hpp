@@ -54,12 +54,16 @@ namespace boost { namespace dispatch { namespace meta
   template<class T, class Op, class Neutral>
   struct reduction_ : unspecified_<T>
   {
+    typedef Op              binary_op;
+    typedef Neutral         neutral_element;
     typedef unspecified_<T> parent;
   };
 
   template<class T, class Op, class Neutral>
   struct cumulative_ : unspecified_<T>
   {
+    typedef Op              binary_op;
+    typedef Neutral         neutral_element;
     typedef unspecified_<T> parent;
   };
 
