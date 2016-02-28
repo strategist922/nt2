@@ -32,11 +32,11 @@ namespace nt2
     template<typename result_type>
     struct openmp_future
     {
-      openmp_future() : ready_(new bool(false))
+      openmp_future() : ready_(new int(0))
       {}
 
       openmp_future( std::future<result_type> && other)
-      : ready_( new bool(false) )
+      : ready_( new int(0) )
       , raw_future_(
         std::forward< std::future<result_type> >(other)
         )
@@ -45,7 +45,7 @@ namespace nt2
       openmp_future(openmp_future && other) = default;
       openmp_future & operator = ( openmp_future && other ) = default;
 
-      bool is_ready() const
+      int is_ready() const
       {
         return *ready_;
       }
@@ -80,7 +80,7 @@ namespace nt2
         typedef typename details::openmp_future< then_result_type >
         then_future_type;
 
-        bool * prev( ready_.get() );
+        int * prev( ready_.get() );
 
 // Remove warning because the variable is used in the omp pragma
         boost::ignore_unused(prev);
@@ -90,21 +90,21 @@ namespace nt2
 
         then_future_type then_future( packaged_task.get_future() );
 
-        bool * next( then_future.ready_.get() );
+        int * next( then_future.ready_.get() );
 
         #pragma omp task \
         firstprivate(packaged_task,prev,next) \
-        depend(in: prev) \
-        depend(out: next)
+        depend(in: prev[0:1]) \
+        depend(out: next[0:1])
         {
           packaged_task();
-          *next = true;
+          *next = 1;
         }
 
         return then_future;
       }
 
-      std::shared_ptr<bool> ready_;
+      std::shared_ptr<int> ready_;
 
     private:
       std::future<result_type> raw_future_;

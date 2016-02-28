@@ -65,8 +65,8 @@ namespace nt2
 
       whenall_future future_res(packaged_task.get_future());
 
-      bool * next( future_res.ready_.get() );
-      bool * deps[size];
+      int * next( future_res.ready_.get() );
+      int * deps[size];
 
       for (std::size_t i=0; i<size; i++)
       {
@@ -76,12 +76,12 @@ namespace nt2
       static_cast<void>(deps);
 
       #pragma omp task \
-      firstprivate(packaged_task, next, deps) \
-      depend( in : deps[0:size] ) \
-      depend( out : next )
+      firstprivate(size, packaged_task, next, deps) \
+      depend( in : deps[0:size][0:1]) \
+      depend( out : next[0:1] )
       {
         packaged_task();
-        *next = true;
+        *next = 1;
       }
 
       return future_res;
@@ -104,12 +104,14 @@ namespace nt2
 #define N BOOST_PP_ITERATION()
 
 #define POINT(a,b) a.b
+#define BRACKET(a,b) a[b]
 
 #define NT2_FUTURE_FORWARD_ARGS0(z,n,t) details::openmp_shared_future<A##n>
 #define NT2_FUTURE_FORWARD_ARGS1(z,n,t) Future<A##n> & a##n
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) details::openmp_shared_future<A##n>(a##n)
-#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) bool * r##n = POINT(a##n,ready_).get();
+#define NT2_FUTURE_FORWARD_ARGS3(z,n,t) int * r##n = POINT(a##n,ready_).get();
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) boost::ignore_unused(r##n);
+#define NT2_FUTURE_FORWARD_ARGS5(z,n,t) BRACKET(r##n,0:1);
 
     template< BOOST_PP_ENUM_PARAMS(N, typename A)
             , template<typename> class Future
@@ -144,17 +146,17 @@ namespace nt2
 
       whenall_future future_res (packaged_task.get_future());
 
-      bool * next( future_res.ready_.get() );
+      int * next( future_res.ready_.get() );
 
       BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS3, ~)
       BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
       #pragma omp task \
       firstprivate(packaged_task, next, BOOST_PP_ENUM_PARAMS(N,r) ) \
-      depend( in : BOOST_PP_ENUM_PARAMS(N,r) ) \
-      depend( out : next )
+      depend( in : BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS5, ~) \
+      depend( out : next[0:1] )
       {
         packaged_task();
-        *next = true;
+        *next = 1;
       }
 
       return future_res;
@@ -166,6 +168,7 @@ namespace nt2
 #undef NT2_FUTURE_FORWARD_ARGS3
 #undef NT2_FUTURE_FORWARD_ARGS4
 #undef POINT
+#undef BRACKET
 #undef N
 
 #endif

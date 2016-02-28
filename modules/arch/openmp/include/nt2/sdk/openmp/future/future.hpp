@@ -52,13 +52,13 @@ namespace nt2
       details::openmp_future<result_type> future_res ( promise.get_future() );
       promise.set_value(value);
 
-      bool * next( future_res.ready_.get() );
+      int * next( future_res.ready_.get() );
 
       #pragma omp task  \
       firstprivate(next)\
-      depend(out: next)
+      depend(out: next[0:1])
       {
-        *next = true;
+        *next = 1;
       }
 
       return future_res;
@@ -85,14 +85,14 @@ namespace nt2
 
       async_future future_res( packaged_task.get_future() );
 
-      bool * next( future_res.ready_.get() );
+      int * next( future_res.ready_.get() );
 
       #pragma omp task \
       firstprivate(packaged_task,next) \
-      depend(out: next)
+      depend(out: next[0:1])
       {
         packaged_task();
-        *next = true;
+        *next = 1;
       }
 
       return future_res;
