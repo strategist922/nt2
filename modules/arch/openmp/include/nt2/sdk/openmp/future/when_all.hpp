@@ -51,17 +51,14 @@ namespace nt2
       for(std::size_t i=0; i<size; i++)
         result[i] = lazy_values[i];
 
+      auto task = []( whenall_vector result_ ){return result_;};
+
       details::openmp_task_wrapper<
-        std::function< whenall_vector(whenall_vector) >
+        decltype(task)
       , whenall_vector
       , whenall_vector
       >
-      packaged_task(
-        []( whenall_vector result_ ){
-             return result_;
-          }
-        , std::move(result)
-        );
+      packaged_task(std::move(task), std::move(result));
 
       whenall_future future_res(packaged_task.get_future());
 
@@ -133,16 +130,14 @@ namespace nt2
                           >
                        ( BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS2, ~) );
 
+      auto task = [](whenall_tuple result_) { return result_;};
+
       details::openmp_task_wrapper<
-        std::function<whenall_tuple(whenall_tuple)>
+        decltype(task)
       , whenall_tuple
       , whenall_tuple
       >
-      packaged_task( [](whenall_tuple result_)
-                     { return result_;
-                     }
-                   , std::move(result)
-                   );
+      packaged_task( std::move(task), std::move(result) );
 
       whenall_future future_res (packaged_task.get_future());
 

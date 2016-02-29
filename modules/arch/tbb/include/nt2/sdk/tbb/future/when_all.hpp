@@ -59,17 +59,14 @@ namespace nt2
       for(std::size_t i=0; i< lazy_values.size(); i++)
       result[i] = lazy_values[i];
 
+      auto task = []( whenall_vector result_ ){ return result_; };
+
       details::tbb_task_wrapper<
-        std::function< whenall_vector(whenall_vector) >
+        decltype(task)
       , whenall_vector
       , whenall_vector
       >
-      packaged_task(
-        []( whenall_vector result_ ){
-             return result_;
-          }
-        , std::move(result)
-        );
+      packaged_task( std::move(task), std::move(result) );
 
       whenall_future future_res( packaged_task.get_future() );
 
@@ -106,16 +103,14 @@ namespace nt2
                           >
                        ( details::tbb_shared_future<A>(a) ... );
 
+      auto task = [](whenall_tuple result_){ return result_;};
+
       details::tbb_task_wrapper<
-        std::function<whenall_tuple(whenall_tuple)>
+        decltype(task)
       , whenall_tuple
       , whenall_tuple
       >
-      packaged_task( [](whenall_tuple result_)
-                     { return result_;
-                     }
-                   , std::move(result)
-                   );
+      packaged_task( std::move(task) , std::move(result) );
 
       whenall_future future_res (packaged_task.get_future());
 
