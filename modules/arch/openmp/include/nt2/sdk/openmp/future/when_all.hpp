@@ -111,7 +111,7 @@ namespace nt2
 #define NT2_FUTURE_FORWARD_ARGS2(z,n,t) details::openmp_shared_future<A##n>(a##n)
 #define NT2_FUTURE_FORWARD_ARGS3(z,n,t) int * r##n = POINT(a##n,ready_).get();
 #define NT2_FUTURE_FORWARD_ARGS4(z,n,t) boost::ignore_unused(r##n);
-#define NT2_FUTURE_FORWARD_ARGS5(z,n,t) BRACKET(r##n,0:1);
+#define NT2_FUTURE_FORWARD_ARGS5(z,n,t) BRACKET(r##n,0:1)
 
     template< BOOST_PP_ENUM_PARAMS(N, typename A)
             , template<typename> class Future
@@ -152,7 +152,7 @@ namespace nt2
       BOOST_PP_REPEAT(N, NT2_FUTURE_FORWARD_ARGS4, ~)
       #pragma omp task \
       firstprivate(packaged_task, next, BOOST_PP_ENUM_PARAMS(N,r) ) \
-      depend( in : BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS5, ~) \
+      depend( in : BOOST_PP_ENUM(N,NT2_FUTURE_FORWARD_ARGS5, ~) ) \
       depend( out : next[0:1] )
       {
         packaged_task();
