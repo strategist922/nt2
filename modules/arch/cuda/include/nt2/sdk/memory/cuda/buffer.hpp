@@ -169,8 +169,9 @@ namespace nt2 { namespace memory
     BOOST_FORCEINLINE reference operator[](size_type )
     {
       static constexpr value_type x = 0;
+      static value_type result = 0;
       static_assert( x == 0 , "operator[] not available for cuda buffers");
-      return x;
+      return result;
     }
 
     /// @overload
