@@ -10,6 +10,8 @@
 #ifndef NT2_CORE_FUNCTIONS_GLOBAL_HPP_INCLUDED
 #define NT2_CORE_FUNCTIONS_GLOBAL_HPP_INCLUDED
 
+#include <nt2/include/functor.hpp>
+
 namespace nt2
 {
   namespace tag
