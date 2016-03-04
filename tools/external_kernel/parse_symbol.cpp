@@ -66,7 +66,7 @@ struct grammar : qi::grammar<char_iterator, qi::space_type, kernel_symbol()>
               >> "::" >> "tag" >> "::" >> qi::lexeme[name_underscore] >> -qi::lit("_")
               ;
 
-    name = +(qi::char_ - qi::char_(",<>() \t\n"));
+    name = +(qi::char_ - qi::char_(",<>()\t\n"));
 
     type_name
       =   -qi::lit("const")
@@ -123,6 +123,9 @@ struct grammar : qi::grammar<char_iterator, qi::space_type, kernel_symbol()>
                   >> type_name
                   >> '>'
                ) [ _val = phoenix::construct<expression>(std::string("terminal"), _1, std::vector<expression>()) ]
+            |  (+qi::char_("a-zA-Z:") >> "<" >> (+qi::char_("a-zA-Z")) >> ">") [_val = phoenix::construct<expression>(std::string("type"), _1, _2, std::vector<expression>()) ]
+            |  tag_name [  _val = phoenix::construct<expression>(std::string("tag"), _1, std::vector<expression>()) ]
+            |  name [_val = phoenix::construct<expression>(std::string("type"), _1, std::vector<expression>()) ]
             )
             >> -qi::lit("const")
          ;

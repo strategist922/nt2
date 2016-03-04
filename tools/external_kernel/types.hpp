@@ -20,6 +20,19 @@ struct type_infos
             , settings(settings_)
            {}
 
+  type_infos( std::vector<char> const& value_type_, bool container_ = false
+             , std::string const& settings_ =  ""
+            )
+           : value_type(value_type_.begin(), value_type_.end()), container(container_)
+            , settings(settings_)
+           {}
+
+  type_infos( type_infos const& template_type, type_infos const& value_type_, bool container_ = false
+             , std::string const& settings_ =  ""
+            )
+          : value_type(template_type.value_type + "<" + value_type_.value_type+ ">"), settings(settings_)
+          {}
+
 
   std::string value_type;
   bool container;
@@ -31,6 +44,11 @@ struct expression
   expression() {}
   expression( std::string const& operation_, type_infos const& type_, std::vector<expression> const& children_ )
                : operation(operation_), type(type_), children(children_)
+               {
+               }
+
+  expression( std::string const& operation_, type_infos const& over_, type_infos const& type_, std::vector<expression> const& children_ )
+               : operation(operation_), type(over_,type_), children(children_)
                {
                }
 
