@@ -905,6 +905,14 @@ macro(nt2_module_tool_setup tool)
                DESTINATION ${NT2_INSTALL_SHARE_DIR}/tools/${tool}
                COMPONENT tools
              )
+
+      if (${tool} STREQUAL "external_kernel")
+          install( DIRECTORY ${NT2_BINARY_DIR}/tools/${tool}/backends
+          DESTINATION ${NT2_INSTALL_SHARE_DIR}/tools/${tool}
+          COMPONENT tools
+          )
+      endif()
+
     endif()
 
     endif()
