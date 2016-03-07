@@ -63,22 +63,24 @@ boost::uint64_t hash_combine(boost::uint64_t s, boost::uint64_t b)
   return 2 * s + b;
 }
 
-std::string make_temporary_directory(const char* s)
+std::string make_temporary_directory(const char* s , std::string const& tmpdir)
 {
   boost::uint64_t h = 0;
   for(; *s; ++s)
     h = hash_combine(h, *s);
+
+  std::string work_directory = tmpdir;
 
   char buffer[4096];
   int c = base32_encode( reinterpret_cast<unsigned char const*>(&h), sizeof(h)
                        , reinterpret_cast<unsigned char*>(buffer), sizeof(buffer)
                        );
 
-  std::string tmpdir = "/tmp/nt2_external_kernel/";
-  tmpdir.insert(tmpdir.end(), buffer, buffer+c);
 
-  filesystem::create_directories(tmpdir);
-  return tmpdir;
+  work_directory.insert(work_directory.end(), buffer, buffer+c);
+
+  filesystem::create_directories(work_directory);
+  return work_directory;
 }
 
 void link_files(std::string const& target, std::vector<std::string> const& files_to_link)
@@ -91,11 +93,24 @@ int main(int argc, char* argv[])
   bool using_cl = false;
   bool debug = false;
   bool display = false;
+  bool out_dir = false;
   const char* generator = 0;
   int args_begin = 1;
+  std::string tmpdir = "";
+
 
   for(int i=1; i<argc; ++i)
   {
+
+    if(!strcmp(argv[i], "--output-dir") && (i+1) < argc)
+    {
+      out_dir = true;
+      ++i;
+      tmpdir = argv[i];
+      args_begin += 2;
+      continue;
+    }
+
     if(!strcmp(argv[i], "--using-cl"))
     {
       using_cl = true;
@@ -120,6 +135,8 @@ int main(int argc, char* argv[])
       args_begin += 2;
     }
   }
+
+  if (!out_dir) tmpdir = "/tmp/nt2_external_kernel/";
 
   if(args_begin >= argc)
   {
@@ -206,7 +223,7 @@ int main(int argc, char* argv[])
         if(display)
           std::cout << symbol << std::endl;
 
-        std::string work_directory = make_temporary_directory(line.c_str());
+        std::string work_directory = make_temporary_directory(line.c_str() , tmpdir);
         launch_backend(work_directory.c_str(), symbol);
 
         ctx.work_directory = work_directory;
