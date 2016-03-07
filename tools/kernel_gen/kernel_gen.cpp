@@ -20,18 +20,13 @@ int main(int argc , char** argv)
 
     for(auto & s : args)
      {
-
-      auto pos = s.find("-DDEVICE=\"");
+      auto pos = s.find("-DDEVICE=");
       if ( pos != std::string::npos)
         {
-          auto pos1 = s.find("\"",pos);
-          if ( pos1 != std::string::npos)
-          {
-           gpuflags += " " + s.substr(pos,pos1);
-          }
+           gpuflags += " " + s.substr(pos+9);
         }
+      else {bflags += " " + s;}
 
-      bflags += " " + s;
      }
 
      bflags += " -I" + boost + " -lcuda -lcublas -lcudart -lnt2 -lstdc++ ";
@@ -99,7 +94,7 @@ int main(int argc , char** argv)
       }
 
       std::string clean = " rm -R /tmp/nt2_external_kernel";
-      std::system(  (clean).c_str() );
+      // std::system(  (clean).c_str() );
       clean = "rm stderr.txt stdout.txt " + fname +".o";
       // std::system(  (clean).c_str() );
 
