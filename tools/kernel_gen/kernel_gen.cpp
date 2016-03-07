@@ -37,8 +37,8 @@ int main(int argc , char** argv)
 
      std::system(  (flags ).c_str() );
 
-     // std::string external_kernel = nt2 + "/share/nt2/tools/external_kernel/external_kernel " + fname + ".o > stdout.txt 2> stderr.txt";
-     std::string external_kernel = "/home/imasliah/dev/nt2_cleanext/build/tools/external_kernel/external_kernel " + fname + ".o > stdout.txt 2> stderr.txt";
+     std::string external_kernel = nt2 + "/share/nt2/tools/external_kernel/external_kernel " + fname + ".o > stdout.txt 2> stderr.txt";
+     // std::string external_kernel = "/home/imasliah/dev/nt2_cleanext/build/tools/external_kernel/external_kernel " + fname + ".o > stdout.txt 2> stderr.txt";
 
      std::cout << external_kernel <<std::endl << std::endl;
 
