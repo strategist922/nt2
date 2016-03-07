@@ -18,6 +18,9 @@ int main(int argc , char** argv)
     std::string foutput(argv[2]);
     std::string gpuflags = "";
 
+     std::string clean = " rm -R /tmp/nt2_external_kernel";
+     std::system(  (clean).c_str() );
+
     for(auto & s : args)
      {
       auto pos = s.find("-DDEVICE=");
@@ -92,7 +95,7 @@ int main(int argc , char** argv)
         std::system( clean.c_str() );
       }
 
-      std::string clean = " rm -R /tmp/nt2_external_kernel";
+      clean = " rm -R /tmp/nt2_external_kernel";
       std::system(  (clean).c_str() );
       clean = "rm stderr.txt stdout.txt " + fname +".o";
       std::system(  (clean).c_str() );
