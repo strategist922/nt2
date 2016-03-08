@@ -15,6 +15,7 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <ctime>
 
 #include "parse_symbol.hpp"
 #include "backend.hpp"
@@ -97,7 +98,9 @@ int main(int argc, char* argv[])
   const char* generator = 0;
   int args_begin = 1;
   std::string tmpdir = "";
-  int kernel_number = 0;
+
+  std::srand(std::time(0));
+  int kernel_number = std::rand();
 
 
   for(int i=1; i<argc; ++i)
