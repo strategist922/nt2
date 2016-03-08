@@ -97,6 +97,7 @@ int main(int argc, char* argv[])
   const char* generator = 0;
   int args_begin = 1;
   std::string tmpdir = "";
+  int kernel_number = 0;
 
 
   for(int i=1; i<argc; ++i)
@@ -224,8 +225,8 @@ int main(int argc, char* argv[])
           std::cout << symbol << std::endl;
 
         std::string work_directory = make_temporary_directory(line.c_str() , tmpdir);
-        launch_backend(work_directory.c_str(), symbol);
-
+        launch_backend(work_directory.c_str(), symbol, kernel_number);
+        ++kernel_number;
         ctx.work_directory = work_directory;
 
         // configure

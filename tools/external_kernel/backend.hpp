@@ -3,6 +3,6 @@
 
 #include "types.hpp"
 
-void launch_backend(const char* filename, kernel_symbol const& s);
+void launch_backend(const char* filename, kernel_symbol const& s, const int kernel_number);
 
 #endif

@@ -33,20 +33,20 @@ struct backend
 {
   backend(const std::string& name)
          : handle(find_backend_module(name).c_str())
-         , generate(handle.get<void(const char* filename, kernel_symbol const&)>("generate"))
+         , generate(handle.get<void(const char* filename, kernel_symbol const&,const int kernel_number)>("generate"))
   {
   }
 
   shared_handle handle;
-  void (*generate)(const char* filename, kernel_symbol const&);
+  void (*generate)(const char* filename, kernel_symbol const&, const int kernel_number);
 };
 
 std::map<std::string, boost::shared_ptr<backend> > backends;
 
-void launch_backend(const char* filename, kernel_symbol const& s)
+void launch_backend(const char* filename, kernel_symbol const& s, const int kernel_number)
 {
   std::map<std::string, boost::shared_ptr<backend> >::iterator it = backends.find(s.target);
   if(it == backends.end())
     it = backends.insert(std::make_pair(s.target, boost::make_shared<backend>(s.target))).first;
-  return it->second->generate(filename, s);
+  return it->second->generate(filename, s,kernel_number);
 }
