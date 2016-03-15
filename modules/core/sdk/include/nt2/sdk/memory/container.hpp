@@ -244,9 +244,18 @@ namespace nt2 { namespace memory
     template<typename K1,typename S1>
     void assign(nt2::memory::container<K1,Type,S1> const& other)
     {
-        sizes_ = other.sizes_;
+        resize(other.sizes_);
         copy(other.data_,data_);
     }
+
+    template<typename K1,typename S1>
+    void assign(nt2::memory::container_ref<K1,Type,S1> const& other)
+    {
+        resize(other.extent());
+        copy(other,data_ , typename nt2::memory::container_ref<K1,Type,S1>::locality_t{}
+            , nt2::memory::container<Kind,Type,Settings>::locality_t{} );
+    }
+
 
     /*!
       @brief Construct a container from a dimension set

@@ -14,7 +14,6 @@
 #include <cublas.h>
 #include <vector>
 #include <cstring>
-#include <iostream>
 
 #define CUDA_ERROR(status)                                                      \
 BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))
@@ -114,6 +113,17 @@ namespace nt2{ namespace details
       void swap(specific_cuda &)
       {
 
+      }
+
+      inline void reset()
+      {
+        allocated = false ;
+
+        for(std::size_t i = 0 ; i < block_stream_dth.size() ; ++i )
+        {
+          block_stream_dth[i] = false;
+          block_stream_htd[i] = false;
+        }
       }
 
       inline void allocate(std::size_t blocksize_ , std::size_t nstreams, std::size_t s)
