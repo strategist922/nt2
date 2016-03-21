@@ -11,7 +11,7 @@
 #ifdef NT2_HAS_CUDA
 
 #include <boost/dispatch/functor/forward.hpp>
-#include <cublas.h>
+#include <cuda_runtime.h>
 #include <vector>
 #include <cstring>
 

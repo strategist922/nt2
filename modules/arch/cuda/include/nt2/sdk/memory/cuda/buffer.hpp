@@ -40,7 +40,7 @@ namespace nt2 { namespace memory
     //==========================================================================
     // Default constructor
     //==========================================================================
-    cuda_buffer() : begin_(0), end_(0)
+    cuda_buffer() : begin_(nullptr), end_(nullptr)
     {}
 
   public:
@@ -48,7 +48,7 @@ namespace nt2 { namespace memory
     // Size constructor
     //==========================================================================
     cuda_buffer( size_type n)
-          :  begin_(0), end_(0)
+          :  begin_(nullptr), end_(nullptr)
     {
       if(!n) return;
       allocator_type alloc_;
@@ -61,7 +61,7 @@ namespace nt2 { namespace memory
     // Copy constructor
     //==========================================================================
     cuda_buffer( cuda_buffer const& src )
-          : begin_(0), end_(0)
+          : begin_(nullptr), end_(nullptr)
     {
       if(!src.size()) return;
 
@@ -136,7 +136,7 @@ namespace nt2 { namespace memory
       else if (sz > this->size())
       {
        allocator_type alloc_;
-       alloc_.deallocate(begin_);
+       if (begin_ != nullptr)  alloc_.deallocate(begin_);
        begin_ = alloc_.allocate(sz);
        end_ = begin_ + sz;
       }

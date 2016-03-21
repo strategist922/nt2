@@ -11,7 +11,7 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/cuda/cuda.hpp>
-#include <cublas.h>
+#include <cuda_runtime.h>
 
 namespace nt2 { namespace memory
 {
@@ -69,7 +69,7 @@ namespace nt2 { namespace memory
     /// Deallocate a pointer allocated by the current cuda_allocator
     void deallocate (pointer p )
     {
-      CUDA_ERROR(cudaFree(p));
+      if ( p != nullptr ) CUDA_ERROR(cudaFree(p));
     }
   };
 

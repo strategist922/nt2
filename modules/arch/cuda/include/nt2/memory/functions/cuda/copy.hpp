@@ -14,7 +14,7 @@
 
 #include <nt2/sdk/memory/cuda/buffer.hpp>
 #include <nt2/core/settings/locality.hpp>
-#include <cublas.h>
+#include <cuda_runtime.h>
 
 namespace nt2 { namespace memory
 {
@@ -33,6 +33,13 @@ namespace nt2 { namespace memory
     static BOOST_FORCEINLINE
     BOOST_AUTO_DECLTYPE mode()
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToDevice )
+  };
+
+  template<> struct copy_<host_,host_>
+  {
+    static BOOST_FORCEINLINE
+    BOOST_AUTO_DECLTYPE mode()
+    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToHost )
   };
 
   template<> struct copy_<device_,device_>
