@@ -15,9 +15,6 @@
 #include <vector>
 #include <cstring>
 
-#define CUDA_ERROR(status)                                                      \
-BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))
-
 namespace nt2{ namespace details
   {
     template<typename T>
@@ -48,8 +45,8 @@ namespace nt2{ namespace details
           device.resize(nstreams);
           for(std::size_t i =0; i < nstreams; ++i)
           {
-            CUDA_ERROR(cudaMallocHost( (void**)&host_pinned[i] , sizeof_ ));
-            CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
+            auto err = cudaMallocHost( (void**)&host_pinned[i] , sizeof_ );
+            err = cudaMalloc((void**)&device[i] , sizeof_  );
 
           }
         }
@@ -82,9 +79,12 @@ namespace nt2{ namespace details
       {
         for(std::size_t i = 0 ; i < device.size() ; ++i )
         {
-          CUDA_ERROR(cudaFreeHost(host_pinned[i]));
-          CUDA_ERROR(cudaFree(device[i]));
+         auto err = cudaFree(device[i]);
+         err = cudaFreeHost(host_pinned[i]);
         }
+        size = 0;
+        device.resize(0);
+        host_pinned.resize(0);
       }
 
     };
@@ -151,12 +151,12 @@ namespace nt2{ namespace details
         block_stream_htd[blockid] = true;
         buffers.copy_hostpinned(in, streamid, sizeb , blockid);
 
-        CUDA_ERROR(cudaMemcpyAsync( buffers.get_device(streamid)
+        auto err = cudaMemcpyAsync( buffers.get_device(streamid)
                                   , buffers.get_host(streamid)
                                   , sizeb* sizeof(T)
                                   , cudaMemcpyHostToDevice
                                   , stream
-                  ));
+                                  );
         cudaStreamSynchronize(stream);
         }
 
@@ -171,12 +171,12 @@ namespace nt2{ namespace details
 
         if(block_stream_dth[blockid] == false )
         {
-          CUDA_ERROR(cudaMemcpyAsync( buffers.get_host(streamid)
-                          , buffers.get_device(streamid)
-                          , sizeb * sizeof(T)
-                          , cudaMemcpyDeviceToHost
-                          , stream
-                    ));
+          auto err =cudaMemcpyAsync( buffers.get_host(streamid)
+                                   , buffers.get_device(streamid)
+                                   , sizeb * sizeof(T)
+                                   , cudaMemcpyDeviceToHost
+                                   , stream
+                                   );
 
           block_stream_dth[blockid] = true;
           cudaStreamSynchronize(stream);

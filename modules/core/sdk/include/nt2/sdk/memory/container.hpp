@@ -245,7 +245,8 @@ namespace nt2 { namespace memory
     void assign(nt2::memory::container<K1,Type,S1> const& other)
     {
         resize(other.sizes_);
-        copy(other.data_,data_);
+        copy(other.data_,data_ , typename nt2::memory::container_ref<K1,Type,S1>::locality_t{}
+            , nt2::memory::container<Kind,Type,Settings>::locality_t{});
     }
 
     template<typename K1,typename S1>

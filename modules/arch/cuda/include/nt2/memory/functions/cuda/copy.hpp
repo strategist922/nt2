@@ -56,12 +56,12 @@ namespace nt2 { namespace memory
     using T = typename Out::value_type;
 
 //TODO
-    CUDA_ERROR(cudaMemcpyAsync( (T*)b.data()
-     , a.data()
-     , a.size()* sizeof(T)
-     , copy_<HDI,HDO>::mode()
-     , stream
-     ));
+    auto err = cudaMemcpyAsync( (T*)b.data()
+                              , a.data()
+                              , a.size()* sizeof(T)
+                              , copy_<HDI,HDO>::mode()
+                              , stream
+                              );
   }
 
   template<typename T, class C1>

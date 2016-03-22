@@ -59,9 +59,10 @@ namespace nt2 { namespace memory
     pointer allocate( size_type c)
     {
       pointer ptr;
-      CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&ptr)
+      auto err = cudaMalloc( reinterpret_cast<void**>(&ptr)
                            , c*sizeof(value_type)
-                           ));
+                           );
+
       return ptr;
     }
 
@@ -69,7 +70,7 @@ namespace nt2 { namespace memory
     /// Deallocate a pointer allocated by the current cuda_allocator
     void deallocate (pointer p )
     {
-      if ( p != nullptr ) CUDA_ERROR(cudaFree(p));
+      if ( p != nullptr ) auto err = cudaFree(p);
     }
   };
 
