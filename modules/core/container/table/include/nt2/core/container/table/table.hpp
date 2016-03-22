@@ -19,6 +19,8 @@
 #include <nt2/core/settings/locality.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <type_traits>
+#include <iostream>
+#include <nt2/sdk/meta/type_id.hpp>
 
 // Disable the 'class : multiple assignment operators specified' warning
 #if defined(BOOST_MSVC)
@@ -68,6 +70,25 @@ namespace nt2 { namespace container
     //==========================================================================
     table( table const& a0 ) : nt2_expression(a0)
     {
+        std::cout << "table expression construct\n";
+    }
+
+
+
+    template<typename K, typename S1>
+    table( nt2::container::view<K,T,S1> const& a0)
+    {
+        std::cout << "view construct\n";
+
+        using check = boost::mpl::bool_< meta::is_device_assign< decltype(a0)
+                                                               ,table
+                                                               >::value
+                                       > ;
+
+        std::cout << std::boolalpha << check::value << std::endl;
+
+        if(check::value) boost::proto::value(*this).assign(boost::proto::value(a0));
+        else  nt2::construct(*this,a0);
     }
 
     //==========================================================================
@@ -78,6 +99,8 @@ namespace nt2 { namespace container
     template<typename A0>
     table( A0 const& a0)
     {
+        std::cout << "table construct\n";
+        std::cout << type_id(a0) << std::endl;
       nt2::construct(*this,a0);
     }
 
@@ -120,9 +143,11 @@ namespace nt2 { namespace container
     template<class Xpr> BOOST_FORCEINLINE
     table& eval(Xpr const& xpr, boost::mpl::true_ const&)
     {
+      std::cout << "table assign op=\n";
       boost::proto::value(*this).assign(boost::proto::value(xpr));
       return *this;
     }
+
 
     template<class Xpr> BOOST_FORCEINLINE
     table& eval(Xpr const& xpr, boost::mpl::false_ const&)
@@ -131,6 +156,14 @@ namespace nt2 { namespace container
       return *this;
     }
 
+/*
+    template<class K, class Settings> BOOST_FORCEINLINE
+    table& operator=(nt2::container::view<K,T,Settings> const& xpr)
+    {
+     typedef typename nt2::container::view<K,T,Settings>::container
+      return *this;
+    }
+*/
     BOOST_FORCEINLINE table& operator=(table const& xpr)
     {
       nt2_expression::operator=(xpr);

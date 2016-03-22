@@ -14,7 +14,7 @@
 #include <nt2/core/container/view/adapted/view.hpp>
 #include <boost/dispatch/dsl/semantic_of.hpp>
 #include <boost/config.hpp>
-
+#include <iostream>
 #if defined(BOOST_MSVC)
 #pragma warning( push )
 #pragma warning( disable : 4522 ) // multiple assignment operators specified
@@ -52,6 +52,11 @@ namespace nt2 { namespace container
                                     >               basic_expr;
     typedef memory::container<Kind, T, S>&                container_type;
     typedef expression<basic_expr, container_type>  nt2_expression;
+
+    typedef typename meta::option < S
+                                  , tag::locality_
+                                  , Kind
+                                  >::type                 locality_t;
 
     typedef typename container_ref::iterator        iterator;
     typedef typename container_ref::const_iterator  const_iterator;
@@ -101,14 +106,27 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr)
     {
-      nt2_expression::operator=(xpr);
-      return *this;
+      std::cout << "eval view 1\n";
+      using check = boost::mpl::bool_< meta::is_device_assign<view,Xpr>::value
+                                    && meta::is_container_and_terminal<Xpr>::value
+                                     >;
+      return eval(xpr,check{});
     }
 
-    BOOST_FORCEINLINE view& operator=(view const& xpr)
+    template<class Xpr> BOOST_FORCEINLINE
+    view& eval(Xpr const& xpr , boost::mpl::true_ const&)
     {
-      nt2_expression::operator=(xpr);
-      return *this;
+        std::cout << "eval view 1-1\n";
+        boost::proto::value(*this).assign(boost::proto::value(xpr));
+        return *this;
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    view& eval(Xpr const& xpr , boost::mpl::false_ const&)
+    {
+        std::cout << "eval view 1-2\n";
+        nt2_expression::operator=(xpr);
+        return *this;
     }
 
     template<class Xpr> BOOST_FORCEINLINE
@@ -117,12 +135,16 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr) const
     {
-      nt2_expression::operator=(xpr);
-      return *this;
+      std::cout << "view assign 1-3\n";
+      using check = boost::mpl::bool_< meta::is_device_assign<view,Xpr>::value
+                                    && meta::is_container_and_terminal<Xpr>::value
+                                     >;
+      return eval(xpr,check{});
     }
 
     BOOST_FORCEINLINE view const& operator=(view const& xpr) const
     {
+        std::cout << "view assign 1-4\n";
       nt2_expression::operator=(xpr);
       return *this;
     }
@@ -192,12 +214,14 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr)
     {
+      std::cout << "eval view 2\n";
       nt2_expression::operator=(xpr);
       return *this;
     }
 
     BOOST_FORCEINLINE view& operator=(view const& xpr)
     {
+      std::cout << "eval view 2-1\n";
       nt2_expression::operator=(xpr);
       return *this;
     }
@@ -208,12 +232,14 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr) const
     {
+      std::cout << "eval view 2-3\n";
       nt2_expression::operator=(xpr);
       return *this;
     }
 
     BOOST_FORCEINLINE view const& operator=(view const& xpr) const
     {
+      std::cout << "eval view 2-4\n";
       nt2_expression::operator=(xpr);
       return *this;
     }
