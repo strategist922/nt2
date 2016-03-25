@@ -39,9 +39,14 @@ namespace nt2
   template<typename Site> using accelerator_site = tag::cuda_<Site>;
 }
 
-#define CUDA_ERROR(status)                                                      \
-BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))            \
-/**/
+
+#define CUDA_ERROR(call) do {                       \
+    cudaError_t e = (call);                         \
+    if (e == cudaSuccess) break;                    \
+    fprintf(stderr, __FILE__":%d: %s (%d)\n",       \
+            __LINE__, cudaGetErrorString(e), e);    \
+    exit(1);                                        \
+} while (0)
 
 #endif
 #endif
