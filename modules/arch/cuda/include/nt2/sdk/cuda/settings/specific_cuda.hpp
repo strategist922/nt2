@@ -11,10 +11,20 @@
 #ifdef NT2_HAS_CUDA
 
 #include <nt2/sdk/cuda/cuda.hpp>
-#include <boost/dispatch/functor/forward.hpp>
+#include <nt2/sdk/meta/locality.hpp>
 #include <cuda_runtime.h>
 #include <vector>
 #include <cstring>
+
+namespace nt2
+{
+  namespace memory
+  {
+    template<typename T>
+    class cuda_pinned_;
+  }
+  using pinned_ = nt2::memory::cuda_pinned_<char>;
+}
 
 namespace nt2{ namespace details
   {
@@ -35,7 +45,7 @@ namespace nt2{ namespace details
         allocate(size,nstreams);
       }
 
-      void allocate(std::size_t size_,std::size_t nstreams)
+      void allocate(std::size_t size_,std::size_t nstreams , nt2::host_ &)
       {
         if(size_ > size)
         {
@@ -57,6 +67,29 @@ namespace nt2{ namespace details
             CUDA_ERROR(cudaMallocHost( (void**)&host_pinned[i] , sizeof_ ));
             CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
 
+          }
+        }
+      }
+
+      void allocate(std::size_t size_,std::size_t nstreams , nt2::pinned_ &)
+      {
+        if(size_ > size)
+        {
+          if(size != 0)
+          {
+            for(std::size_t i =0; i < device.size(); ++i)
+            {
+              CUDA_ERROR(cudaFree(device[i]));
+            }
+          }
+          ns = nstreams;
+          size = size_;
+          std::size_t sizeof_ = size*sizeof(T);
+          host_pinned.resize(0);
+          device.resize(nstreams);
+          for(std::size_t i =0; i < nstreams; ++i)
+          {
+            CUDA_ERROR(cudaMalloc((void**)&device[i] , sizeof_  ));
           }
         }
       }
@@ -88,9 +121,14 @@ namespace nt2{ namespace details
       {
         for(std::size_t i = 0 ; i < device.size() ; ++i )
         {
-          CUDA_ERROR(cudaFreeHost(host_pinned[i]));
           CUDA_ERROR(cudaFree(device[i]));
         }
+
+        for(std::size_t i = 0 ; i < host_pinned.size() ; ++i )
+        {
+          CUDA_ERROR(cudaFreeHost(host_pinned[i]));
+        }
+
         size = 0;
         device.resize(0);
         host_pinned.resize(0);
@@ -135,7 +173,8 @@ namespace nt2{ namespace details
         }
       }
 
-      inline void allocate(std::size_t blocksize_ , std::size_t nstreams, std::size_t s)
+      template<typename In>
+      inline void allocate(In const& in , std::size_t blocksize_ , std::size_t nstreams, std::size_t s)
       {
         if (!allocated)
         {
@@ -143,14 +182,23 @@ namespace nt2{ namespace details
           std::size_t num = s / blocksize_  ;
           block_stream_dth.resize(num);
           block_stream_htd.resize(num);
-          buffers.allocate(blocksize, nstreams);
+          auto loc_ = locality(in);
+          buffers.allocate(blocksize, nstreams , loc_);
           allocated = true;
         }
       }
 
       template<class In, class Stream>
       inline void transfer_htd( In & in, int blockid, Stream & stream ,std::size_t streamid
-                              , std::size_t leftover = 0)
+                              , std::size_t leftover = 0 )
+      {
+        auto loc_ = locality(in);
+        transfer_htd(in,blockid,stream,streamid,leftover, loc_);
+      }
+
+      template<class In, class Stream>
+      inline void transfer_htd( In & in, int blockid, Stream & stream ,std::size_t streamid
+                              , std::size_t leftover , nt2::host_ &)
       {
         std::size_t sizeb = blocksize;
         if(leftover !=0) sizeb = leftover ;
@@ -171,9 +219,39 @@ namespace nt2{ namespace details
 
       }
 
+      template<class In, class Stream>
+      inline void transfer_htd( In & in, int blockid, Stream & stream ,std::size_t streamid
+                              , std::size_t leftover , nt2::pinned_ & )
+      {
+        std::size_t sizeb = blocksize;
+        if(leftover !=0) sizeb = leftover ;
+
+        if( block_stream_htd[blockid] == false )
+        {
+        block_stream_htd[blockid] = true;
+
+        CUDA_ERROR(cudaMemcpyAsync( buffers.get_device(streamid)
+                                  , in.data()
+                                  , sizeb* sizeof(T)
+                                  , cudaMemcpyHostToDevice
+                                  , stream
+                  ));
+        cudaStreamSynchronize(stream);
+        }
+
+      }
+
       template<class Out, class Stream>
       inline void transfer_dth( Out & out , int blockid, Stream & stream  ,std::size_t streamid
                               , std::size_t leftover = 0)
+      {
+        auto loc_ = locality(out);
+        transfer_dth(out,blockid,stream,streamid,leftover,loc_);
+      }
+
+      template<class Out, class Stream>
+      inline void transfer_dth( Out & out , int blockid, Stream & stream  ,std::size_t streamid
+                              , std::size_t leftover , nt2::host_ &)
       {
         std::size_t sizeb = blocksize;
         if(leftover !=0) sizeb = leftover ;
@@ -191,7 +269,29 @@ namespace nt2{ namespace details
           cudaStreamSynchronize(stream);
           buffers.copy_host(out, streamid, sizeb , blockid);
         }
+      }
 
+
+      template<class Out, class Stream>
+      inline void transfer_dth( Out & out , int blockid, Stream & stream  ,std::size_t streamid
+                              , std::size_t leftover , nt2::pinned_ &)
+      {
+        std::size_t sizeb = blocksize;
+        if(leftover !=0) sizeb = leftover ;
+
+        if(block_stream_dth[blockid] == false )
+        {
+          CUDA_ERROR(cudaMemcpyAsync( out.data()
+                          , buffers.get_device(streamid)
+                          , sizeb * sizeof(T)
+                          , cudaMemcpyDeviceToHost
+                          , stream
+                    ));
+
+          block_stream_dth[blockid] = true;
+          cudaStreamSynchronize(stream);
+
+        }
       }
 
       inline T* data(std::size_t i)
