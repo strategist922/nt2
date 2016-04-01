@@ -11,6 +11,7 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/memory/cuda/allocator.hpp>
+#include <nt2/sdk/memory/cuda/pinned_allocator.hpp>
 #include <nt2/include/functions/copy.hpp>
 #include <algorithm>
 #include <limits>
