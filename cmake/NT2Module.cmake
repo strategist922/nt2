@@ -906,7 +906,7 @@ macro(nt2_module_tool_setup tool)
                COMPONENT tools
              )
 
-      if (${tool} STREQUAL "external_kernel")
+         if (${tool} STREQUAL "external_kernel" AND EXISTS ${NT2_BINARY_DIR}/tools/${tool}/backends)
           install( DIRECTORY ${NT2_BINARY_DIR}/tools/${tool}/backends
           DESTINATION ${NT2_INSTALL_SHARE_DIR}/tools/${tool}
           COMPONENT tools
