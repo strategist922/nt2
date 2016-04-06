@@ -13,6 +13,7 @@
 #include <nt2/core/settings/specific_data.hpp>
 #include <nt2/core/settings/forward/locality.hpp>
 #include <nt2/sdk/memory/forward/container.hpp>
+#include <nt2/include/functions/copy.hpp>
 
 namespace nt2 { namespace memory
 {
@@ -134,6 +135,28 @@ namespace nt2 { namespace memory
                   )
                   : ptr(p), sz(sz_), base_(c.base_)
     {
+    }
+
+
+
+  /*!
+      @brief Constructor from a container with different settings
+
+      Should be called only if both containers are layout compatible
+      and an implementation of copy is available for these buffers.
+  **/
+    template<typename K1,typename S1>
+    void assign(nt2::memory::container<K1,T,S1> const& other)
+    {
+        copy(other.data_,*this, typename decltype(other)::locality_t{}
+            , nt2::memory::container_ref<Kind,T,S>::locality_t{} );
+    }
+
+    template<typename K1,typename S1>
+    void assign(nt2::memory::container_ref<K1,T,S1> const& other)
+    {
+        copy(other,*this , typename nt2::memory::container_ref<K1,T,S1>::locality_t{}
+            , nt2::memory::container_ref<Kind,T,S>::locality_t{} );
     }
 
     //==========================================================================

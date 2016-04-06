@@ -129,11 +129,11 @@ namespace nt2 { namespace memory
 
     void resize( size_type sz )
     {
-      if (sz < this->size())
+      if (sz < size())
       {
         end_ = begin_ + sz ;
       }
-      else if (sz > this->size())
+      else if (sz > size())
       {
        allocator_type alloc_;
        if (begin_ != nullptr)  alloc_.deallocate(begin_);

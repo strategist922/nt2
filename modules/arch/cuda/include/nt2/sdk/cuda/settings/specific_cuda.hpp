@@ -10,13 +10,11 @@
 
 #ifdef NT2_HAS_CUDA
 
+#include <nt2/sdk/cuda/cuda.hpp>
 #include <boost/dispatch/functor/forward.hpp>
 #include <cuda_runtime.h>
 #include <vector>
 #include <cstring>
-
-#define CUDA_ERROR(status)                                                      \
-BOOST_VERIFY_MSG( status == cudaSuccess, cudaGetErrorString(status))
 
 namespace nt2{ namespace details
   {
@@ -26,23 +24,31 @@ namespace nt2{ namespace details
       std::size_t size;
       std::vector<T*> device ;
       std::vector<T*> host_pinned;
+      std::size_t ns;
 
-      cu_buffers()
+      cu_buffers() :size(0), ns(0)
       {
-        size = 0;
       }
 
-      cu_buffers(std::size_t size_,std::size_t nstreams)
+      cu_buffers(std::size_t size_,std::size_t nstreams) : size(0), ns(0)
       {
-        size = size_ ;
         allocate(size,nstreams);
       }
 
       void allocate(std::size_t size_,std::size_t nstreams)
       {
-        size = size_;
-        if(size != device.size())
+        if(size_ > size)
         {
+          if(size != 0)
+          {
+            for(std::size_t i =0; i < device.size(); ++i)
+            {
+              CUDA_ERROR(cudaFreeHost(host_pinned[i]));
+              CUDA_ERROR(cudaFree(device[i]));
+            }
+          }
+          ns = nstreams;
+          size = size_;
           std::size_t sizeof_ = size*sizeof(T);
           host_pinned.resize(nstreams);
           device.resize(nstreams);
@@ -85,6 +91,9 @@ namespace nt2{ namespace details
           CUDA_ERROR(cudaFreeHost(host_pinned[i]));
           CUDA_ERROR(cudaFree(device[i]));
         }
+        size = 0;
+        device.resize(0);
+        host_pinned.resize(0);
       }
 
     };

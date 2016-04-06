@@ -74,6 +74,20 @@ namespace nt2
     {
     };
 
+
+    template<class T, long Arity = T::proto_arity_c>
+    struct is_container_or_ref_terminal
+         : boost::mpl::false_
+    {
+    };
+
+    /// INTERNAL ONLY
+    template<class T>
+    struct is_container_or_ref_terminal<T, 0l>
+         : meta::is_container_or_ref<typename T::proto_child0>
+    {
+    };
+
     template<class T , class Enable = void>
     struct is_container_and_terminal : boost::mpl::false_
     {
@@ -81,7 +95,7 @@ namespace nt2
 
     template<class T>
     struct is_container_and_terminal<T,typename T::proto_is_expr_>
-      : meta::is_container_terminal<T>
+      : meta::is_container_or_ref_terminal<T>
     {
     };
 

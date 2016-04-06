@@ -53,6 +53,11 @@ namespace nt2 { namespace container
     typedef memory::container<Kind, T, S>&                container_type;
     typedef expression<basic_expr, container_type>  nt2_expression;
 
+    typedef typename meta::option < S
+                                  , tag::locality_
+                                  , Kind
+                                  >::type                 locality_t;
+
     typedef typename container_ref::iterator        iterator;
     typedef typename container_ref::const_iterator  const_iterator;
 
@@ -101,14 +106,24 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr)
     {
-      nt2_expression::operator=(xpr);
-      return *this;
+      using check = boost::mpl::bool_< meta::is_device_assign<view,Xpr>::value
+                                    && meta::is_container_and_terminal<Xpr>::value
+                                     >;
+      return eval(xpr,check{});
     }
 
-    BOOST_FORCEINLINE view& operator=(view const& xpr)
+    template<class Xpr> BOOST_FORCEINLINE
+    view& eval(Xpr const& xpr , boost::mpl::true_ const&)
     {
-      nt2_expression::operator=(xpr);
-      return *this;
+        boost::proto::value(*this).assign(boost::proto::value(xpr));
+        return *this;
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    view& eval(Xpr const& xpr , boost::mpl::false_ const&)
+    {
+        nt2_expression::operator=(xpr);
+        return *this;
     }
 
     template<class Xpr> BOOST_FORCEINLINE
@@ -117,8 +132,10 @@ namespace nt2 { namespace container
                               >::type
     operator=(Xpr const& xpr) const
     {
-      nt2_expression::operator=(xpr);
-      return *this;
+      using check = boost::mpl::bool_< meta::is_device_assign<view,Xpr>::value
+                                    && meta::is_container_and_terminal<Xpr>::value
+                                     >;
+      return eval(xpr,check{});
     }
 
     BOOST_FORCEINLINE view const& operator=(view const& xpr) const

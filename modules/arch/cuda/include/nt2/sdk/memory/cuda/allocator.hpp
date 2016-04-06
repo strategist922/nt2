@@ -62,6 +62,7 @@ namespace nt2 { namespace memory
       CUDA_ERROR(cudaMalloc( reinterpret_cast<void**>(&ptr)
                            , c*sizeof(value_type)
                            ));
+
       return ptr;
     }
 

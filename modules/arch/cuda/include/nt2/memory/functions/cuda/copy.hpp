@@ -57,11 +57,11 @@ namespace nt2 { namespace memory
 
 //TODO
     CUDA_ERROR(cudaMemcpyAsync( (T*)b.data()
-     , a.data()
-     , a.size()* sizeof(T)
-     , copy_<HDI,HDO>::mode()
-     , stream
-     ));
+                              , a.data()
+                              , a.size()* sizeof(T)
+                              , copy_<HDI,HDO>::mode()
+                              , stream
+                              ));
   }
 
   template<typename T, class C1>

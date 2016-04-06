@@ -67,7 +67,18 @@ namespace nt2 { namespace container
     // table copy constructor
     //==========================================================================
     table( table const& a0 ) : nt2_expression(a0)
+    {}
+
+    template<typename K, typename S1>
+    table( nt2::container::view<K,T,S1> const& a0)
     {
+        using check = boost::mpl::bool_< meta::is_device_assign< decltype(a0)
+                                                               ,table
+                                                               >::value
+                                       > ;
+
+        if(check::value) boost::proto::value(*this).assign(boost::proto::value(a0));
+        else  nt2::construct(*this,a0);
     }
 
     //==========================================================================
@@ -123,6 +134,7 @@ namespace nt2 { namespace container
       boost::proto::value(*this).assign(boost::proto::value(xpr));
       return *this;
     }
+
 
     template<class Xpr> BOOST_FORCEINLINE
     table& eval(Xpr const& xpr, boost::mpl::false_ const&)
