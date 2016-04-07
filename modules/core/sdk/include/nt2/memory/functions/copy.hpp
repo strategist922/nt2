@@ -30,6 +30,8 @@ namespace nt2 { namespace memory
 #endif
   }
 
+  template<class In, class Out, class HDI, class HDO> void copy(In & in, Out & out, HDI, HDO);
+
   /*!
    * Same as copy, but performs a cast to avoid warnings
    *
