@@ -24,6 +24,7 @@ namespace nt2 { namespace ext
     typedef typename meta::result_of<A0 const(const value_type&)>::type result_type;
     typedef nt2::functor<typename A0::tag_type::neutral_element>        neutral;
     typedef nt2::functor<typename A0::tag_type::binary_op>              binary_op;
+    typedef meta::as_elementwise<A1>                                        sched;
 
     BOOST_FORCEINLINE result_type operator()(A0 const&, A1 const& a1) const
     {
@@ -32,8 +33,10 @@ namespace nt2 { namespace ext
 
       result_type that = neutral()(meta::as_<result_type>());
 
+      auto x = sched::call(a1);
+
       for(std::size_t i=0;i!=sz;++i)
-        that = op(that, run(a1,i, meta::as_<result_type>()) );
+        that = op(that, run(x,i, meta::as_<result_type>()) );
 
       return that;
     }

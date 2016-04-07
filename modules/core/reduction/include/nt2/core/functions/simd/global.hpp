@@ -11,10 +11,16 @@
 #ifndef BOOST_SIMD_NO_SIMD
 
 #include <nt2/core/functions/global.hpp>
+#include <nt2/include/functions/run.hpp>
+#include <nt2/include/functions/sum.hpp>
 #include <nt2/core/container/dsl.hpp>
+#include <nt2/include/functions/numel.hpp>
 #include <boost/simd/sdk/simd/native.hpp>
 #include <boost/simd/sdk/meta/cardinal_of.hpp>
 #include <boost/simd/sdk/simd/meta/is_vectorizable.hpp>
+#include <boost/simd/sdk/simd/category.hpp>
+
+#include <boost/dispatch/meta/hierarchy_of.hpp>
 
 namespace nt2 { namespace ext
 {
@@ -34,6 +40,7 @@ namespace nt2 { namespace ext
     typedef nt2::functor<typename A0::tag_type::neutral_element>            neutral;
     typedef nt2::functor<typename A0::tag_type::binary_op>                  binary_op;
     typedef boost::simd::native<result_type, BOOST_SIMD_DEFAULT_EXTENSION>  target_type;
+    typedef meta::as_elementwise<A1>                                        sched;
 
     BOOST_FORCEINLINE result_type operator()(A0 const& a0, A1 const& a1) const
     {
@@ -47,13 +54,15 @@ namespace nt2 { namespace ext
       target_type vthat = neutral()(meta::as_<target_type>());
       binary_op op;
 
+      auto x = sched::call(a1);
+
       for(i=0;i!=aligned_sz;i+=N)
-        vthat = op(vthat, run(a1,i, meta::as_<target_type>()) );
+        vthat = op(vthat, nt2::run(x,i, meta::as_<target_type>()) );
 
       result_type that = a0(vthat);
 
       for(;i!=sz;++i)
-        that = op(that, run(a1,i, meta::as_<result_type>()) );
+        that = op(that, nt2::run(x,i, meta::as_<result_type>()) );
 
       return that;
     }
