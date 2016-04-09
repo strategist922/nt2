@@ -138,6 +138,21 @@ namespace nt2 { namespace container
       return eval(xpr,check{});
     }
 
+    template<class Xpr> BOOST_FORCEINLINE
+    view const& eval(Xpr const& xpr , boost::mpl::true_ const&) const
+    {
+        boost::proto::value(*this).assign(boost::proto::value(xpr));
+        return *this;
+    }
+
+    template<class Xpr> BOOST_FORCEINLINE
+    view const& eval(Xpr const& xpr , boost::mpl::false_ const&) const
+    {
+        nt2_expression::operator=(xpr);
+        return *this;
+    }
+
+
     BOOST_FORCEINLINE view const& operator=(view const& xpr) const
     {
       nt2_expression::operator=(xpr);

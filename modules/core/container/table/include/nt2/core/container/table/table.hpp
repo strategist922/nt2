@@ -20,6 +20,9 @@
 #include <boost/type_traits/is_same.hpp>
 #include <type_traits>
 
+#include <iostream>
+#include <nt2/sdk/meta/type_id.hpp>
+
 // Disable the 'class : multiple assignment operators specified' warning
 #if defined(BOOST_MSVC)
 #pragma warning( push )
@@ -77,8 +80,19 @@ namespace nt2 { namespace container
                                                                >::value
                                        > ;
 
-        if(check::value) boost::proto::value(*this).assign(boost::proto::value(a0));
-        else  nt2::construct(*this,a0);
+        init_view(a0 ,check{});
+    }
+
+    template <class A0>
+    void init_view(A0 const& a0 , boost::mpl::true_ const&)
+    {
+      boost::proto::value(*this).assign(boost::proto::value(a0));
+    }
+
+    template <class A0>
+    void init_view(A0 const& a0 , boost::mpl::false_ const&)
+    {
+      nt2::construct(*this,a0);
     }
 
     //==========================================================================
