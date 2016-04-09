@@ -209,7 +209,7 @@ namespace nt2 { namespace details
         if ( icount <= kcount )  //%  Check to see if minimum reached.
         {
           jcount = konvge;
-          float_t z =  nt2::global(nt2::functor<nt2::tag::asum2_>(), nt2::center(y));
+          float_t z =  nt2::global(nt2::functor<nt2::tag::sum_>(), nt2::sqr_abs(nt2::center(y)));
           if ( z <= rq ) break;
         }
       }

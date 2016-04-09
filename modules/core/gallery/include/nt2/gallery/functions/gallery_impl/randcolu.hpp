@@ -118,7 +118,7 @@ namespace nt2 { namespace ext
                       , "x elements must be strictly  positive"
                       );
 
-      BOOST_ASSERT_MSG(     nt2::abs(nt2::globalasum2(x0)-value_t(numel(x0)))
+      BOOST_ASSERT_MSG( nt2::abs(value_t(nt2::globalasum2(x0))-value_t(numel(x0)))
                         <=  value_t(100)*nt2::Eps<value_t>()
                       , "x norm must be sqrt(length(x))"
                       );

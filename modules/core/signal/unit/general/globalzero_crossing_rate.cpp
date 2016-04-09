@@ -20,8 +20,6 @@
 NT2_TEST_CASE_TPL ( globalzero_crossing_rate_real__1_0,  NT2_REAL_TYPES)
 {
   using nt2::globalzero_crossing_rate;
-  using nt2::tag::globalzero_crossing_rate_;
-
   T e = T(0.1);
   NT2_TEST_ULP_EQUAL(globalzero_crossing_rate(nt2::_(T(0), T(10))), T(0), 0.5);
   NT2_TEST_ULP_EQUAL(globalzero_crossing_rate(nt2::cospi(nt2::_(T(0), T(10)))), T(1), 0.5);

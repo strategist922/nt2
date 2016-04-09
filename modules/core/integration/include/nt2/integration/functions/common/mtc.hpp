@@ -110,7 +110,7 @@ namespace nt2 { namespace details
       BOOST_AUTO_TPL(x, nt2::fma(rnd, r2ex, r1ex));
       BOOST_AUTO_TPL(z, f(x));
       if (compute_err_)
-        err_ += nt2::Three<real_t>()*vol*nt2::real(nt2::globalstdev(z))/nt2::sqrt(tofloat(nbpts_));
+        err_ += nt2::Three<real_t>()*vol*nt2::real(nt2::globalstdev(z))/nt2::sqrt(real_t(nbpts_));
       return vol*nt2::globalmean(z);
     }
   };

@@ -198,7 +198,7 @@ namespace nt2
           rj = f(t, 0);
           return 1;
         }
-        cplx_type lambda = nt2::globalmean(diag_of(t));
+        cplx_type lambda{nt2::globalmean(diag_of(t)),0};
         rj = feval(f, lambda,0)*eye(n, meta::as_<cplx_type>());
         btab_t f_deriv_max = zeros(maxterms+n-1,1, meta::as_<r_type>());
         ctab_t nn = t - lambda*eye(n, meta::as_<cplx_type>());
