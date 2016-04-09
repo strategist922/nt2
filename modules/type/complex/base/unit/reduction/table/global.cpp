@@ -41,8 +41,6 @@ NT2_TEST_CASE_TPL( global, NT2_REAL_TYPES )
    NT2_TEST_EQUAL( nt2::global(nt2::functor<nt2::tag::prod_>(), a), cT(24));
    NT2_TEST_EQUAL( nt2::global(nt2::functor<nt2::tag::maximum_>(), a), cT(4));
    NT2_TEST_EQUAL( nt2::maximum(a(nt2::_))(1),  cT(4));
-   NT2_TEST_EQUAL( nt2::global(nt2::functor<nt2::tag::max_>(), a), cT(4));
-   NT2_TEST_EQUAL( nt2::max(a(nt2::_))(1),  cT(4));
 }
 NT2_TEST_CASE_TPL( global1, NT2_REAL_TYPES )
 {
@@ -61,8 +59,6 @@ NT2_TEST_CASE_TPL( global1, NT2_REAL_TYPES )
    NT2_TEST_EQUAL( nt2::global(nt2::functor<nt2::tag::prod_>(), a), T(24));
    NT2_TEST_EQUAL( nt2::global(nt2::functor<nt2::tag::maximum_>(), a), T(4));
    NT2_TEST_EQUAL( nt2::maximum(a(nt2::_))(1),  T(4));
-   NT2_TEST_EQUAL( nt2::global(nt2::functor<nt2::tag::max_>(), a), T(4));
-   NT2_TEST_EQUAL( nt2::max(a(nt2::_))(1),  T(4));
 }
 
 
