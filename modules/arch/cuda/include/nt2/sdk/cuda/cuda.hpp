@@ -10,6 +10,7 @@
 
 #include <boost/dispatch/functor/forward.hpp>
 #include <boost/assert.hpp>
+#include <stdio.h>
 
 namespace nt2 { namespace memory
 {

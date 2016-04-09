@@ -28,7 +28,6 @@ NT2_TEST_CASE_TPL(magma_posv, NT2_REAL_TYPES )
 using nt2::_;
 
 typedef nt2::table<T>         t_t;
-typedef nt2::table<nt2_la_int>       t_i;
 
 nt2_la_int n = 2000;
 
@@ -52,7 +51,6 @@ using nt2::_;
 
 typedef std::complex<T>              cT;
 typedef nt2::table<cT>               t_t;
-typedef nt2::table<nt2_la_int>       t_i;
 
 nt2_la_int n = 2000;
 
