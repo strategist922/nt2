@@ -51,7 +51,7 @@ namespace boost { namespace simd { namespace config { namespace x86
     : "=a"(CPUInfo[eax]), "=r"(CPUInfo[ebx])
     , "=c"(CPUInfo[ecx]), "=d"(CPUInfo[edx])
     : "a"(InfoType)
-    : "cc"
+    : "cc", "ebx"
     );
 #endif
 
@@ -90,7 +90,7 @@ namespace boost { namespace simd { namespace config { namespace x86
     : "=a"(CPUInfo[eax]), "=r"(CPUInfo[ebx])
     , "=c"(CPUInfo[ecx]), "=d"(CPUInfo[edx])
     : "a"(InfoType), "c" (ECXValue)
-    : "cc"
+    : "cc", "ebx"
     );
 #endif
 
