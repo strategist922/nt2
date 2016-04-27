@@ -296,14 +296,14 @@ NT2_TEST_CASE_TPL(container_release, NT2_TYPES )
   using nt2::of_size_;
   using nt2::memory::container;
 
-  typedef container<T,settings()> type;
+  typedef container<some_kind_, T,settings()> type;
   type b( of_size(3,2) );
 
   for(typename type::difference_type j=0;j<2;++j)
     for(typename type::difference_type i=0;i<3;++i)
       b[i+3*j] = T((1+i) + 10*(1+j));
 
-  typename container<T,settings()>::pointer ptr = b.release();
+  typename type::pointer ptr = b.release();
 
   NT2_TEST(b.empty());
   NT2_TEST_EQUAL(b.extent(), (of_size(0)) );

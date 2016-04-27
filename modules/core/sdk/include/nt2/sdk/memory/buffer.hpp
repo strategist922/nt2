@@ -177,8 +177,8 @@ namespace nt2 { namespace memory
     //==========================================================================
     BOOST_FORCEINLINE pointer release()
     {
-      pointer that = this->raw();
-      begin_ = end_ = capacity_ = &dummy_;
+      pointer that = this->data();
+      begin_ = end_ = capacity_ = nullptr;
       return  that;
     }
 
@@ -192,7 +192,7 @@ namespace nt2 { namespace memory
         if(!boost::is_same< Allocator, fixed_allocator<T> >::value)
           nt2::memory::destruct(begin_, end_, get_allocator());
 
-        begin_ = end_ = capacity_ = &dummy_;
+        begin_ = end_ = capacity_ = nullptr;
         return;
       }
 
