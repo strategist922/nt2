@@ -113,11 +113,15 @@ struct grammar : qi::grammar<char_iterator, qi::space_type, kernel_symbol()>
 
     expr =  (  proto_expr [ _val = _1 ]
             |  ( ( struct_class >> qi::lit("nt2") >> "::" >> "container" >> "::" )
+                  >> qi::lit("table")
+                  >> type_container
+               ) [ _val = phoenix::construct<expression>(std::string("terminal"), _1, std::vector<expression>()) ]
+            |  ( ( struct_class >> qi::lit("nt2") >> "::" >> "container" >> "::" )
                   >>  ( qi::lit("view")
                       | qi::lit("shared_view")
-                      | qi::lit("table")
                       )
-                  >> type_container
+                  >> qi::lit("<") >> qi::lit("nt2") >> "::" >> "container" >> "::" >> "table"
+                  >> type_container >> -qi::lit("const") >> ">"
                ) [ _val = phoenix::construct<expression>(std::string("terminal"), _1, std::vector<expression>()) ]
             |  ( struct_class >> qi::lit("nt2") >> "::" >> "box" >> '<'
                   >> type_name
