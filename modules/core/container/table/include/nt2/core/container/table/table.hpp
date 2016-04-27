@@ -72,8 +72,8 @@ namespace nt2 { namespace container
     table( table const& a0 ) : nt2_expression(a0)
     {}
 
-    template<typename K, typename S1>
-    table( nt2::container::view<K,T,S1> const& a0)
+    template<typename C>
+    table( nt2::container::view<C> const& a0)
     {
         using check = boost::mpl::bool_< meta::is_device_assign< decltype(a0)
                                                                ,table

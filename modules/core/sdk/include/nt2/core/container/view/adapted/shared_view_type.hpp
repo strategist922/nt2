@@ -39,7 +39,7 @@ namespace nt2 { namespace details
                               , settings_type
                               >&                          container_type;
 
-    typedef boost::proto::basic_expr< boost::proto::tag::terminal
+    typedef boost::proto::basic_expr< nt2::tag::terminal_
                                     , boost::proto::term<container_ref>
                                     , 0l
                                     >                     basic_expr;
@@ -68,7 +68,7 @@ namespace nt2 { namespace details
                               , settings_type
                               > const&                    container_type;
 
-    typedef boost::proto::basic_expr< boost::proto::tag::terminal
+    typedef boost::proto::basic_expr< nt2::tag::terminal_
                                     , boost::proto::term<container_ref>
                                     , 0l
                                     >                     basic_expr;
