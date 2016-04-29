@@ -91,7 +91,7 @@ namespace nt2 {  namespace memory
     {
       boost::ignore_unused(s);
       BOOST_ASSERT_MSG
-      ( (s <= max_size())
+      ( !max_size() || (s <= max_size())
       , "Allocation requests more memory than available in fixed_allocator"
       );
 

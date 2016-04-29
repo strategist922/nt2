@@ -12,6 +12,7 @@
 #include <nt2/sdk/memory/container_ref.hpp>
 #include <nt2/sdk/memory/container_shared_ref.hpp>
 #include <nt2/core/container/view/adapted/view.hpp>
+#include <nt2/core/container/view/adapted/view_type.hpp>
 #include <boost/dispatch/dsl/semantic_of.hpp>
 #include <boost/config.hpp>
 
@@ -20,61 +21,41 @@
 #pragma warning( disable : 4522 ) // multiple assignment operators specified
 #endif
 
-namespace nt2 { namespace tag
-{
-  struct table_;
-} }
-
 namespace nt2 { namespace container
 {
-  template<class Expression, class ResultType> struct expression;
-
   /* view; an expression of a container_ref terminal.
    * allows construction from an expression of a container terminal */
-  template<typename Kind, typename T, typename S>
-  struct view
-       : expression< boost::proto::basic_expr < nt2::tag::terminal_
-                                              , boost::proto::term
-                                                < memory::container_ref < Kind
-                                                                        , T
-                                                                        , S
-                                                                        >
-                                                >
-                                              , 0l
-                                              >
-                   , memory::container<Kind, T, S>&
-                   >
+  template<typename Container>
+  struct view : details::view_type<Container>::nt2_expression
   {
-    typedef memory::container_ref<Kind, T, S>             container_ref;
-    typedef boost::proto::basic_expr< nt2::tag::terminal_
-                                    , boost::proto::term<container_ref>
-                                    , 0l
-                                    >               basic_expr;
-    typedef memory::container<Kind, T, S>&                container_type;
-    typedef expression<basic_expr, container_type>  nt2_expression;
+    typedef details::view_type<Container>           v_t;
+    typedef typename v_t::basic_expr                basic_expr;
+    typedef typename v_t::container_ref             container_ref;
+    typedef typename v_t::container_type            container_type;
+    typedef typename v_t::nt2_expression            nt2_expression;
+    typedef typename v_t::value_type                value_type;
 
-    typedef typename meta::option < S
-                                  , tag::locality_
-                                  , Kind
-                                  >::type                 locality_t;
-
+    typedef typename container_ref::pointer         pointer;
     typedef typename container_ref::iterator        iterator;
     typedef typename container_ref::const_iterator  const_iterator;
 
     iterator begin()  const { return boost::proto::value(*this).begin(); }
     iterator end()    const { return boost::proto::value(*this).end(); }
 
+    /// @brief Default constructor
     BOOST_FORCEINLINE
     view()
     {
     }
 
+    /// @brief Constructor from existing expression
     BOOST_FORCEINLINE
     view( nt2_expression const& expr )
               : nt2_expression(expr)
     {
     }
 
+    /// @brief Constructor from existing base_expr
     template<class Xpr>
     BOOST_FORCEINLINE
     view( Xpr& expr )
@@ -82,6 +63,7 @@ namespace nt2 { namespace container
     {
     }
 
+    /// @brief Constructor from existing constant base_expr
     template<class Xpr>
     BOOST_FORCEINLINE
     view( Xpr const& expr )
@@ -89,10 +71,46 @@ namespace nt2 { namespace container
     {
     }
 
+    /*!
+      @brief View from pointer constructor
+
+      Build a copy-less view from a pointer and a given size. Resulting view
+      provide access to the underlying data block through the usual Container
+      interface.
+    **/
+    template<typename Extent>
+    BOOST_FORCEINLINE
+    view(pointer p, Extent const& sz)
+            : nt2_expression(basic_expr::make(container_ref(p, sz)))
+    {
+    }
+
+    template<typename K, typename T, typename S>
+    BOOST_FORCEINLINE
+    view(memory::container<K, T, S>& c)
+            : nt2_expression(basic_expr::make(container_ref(c)))
+    {
+    }
+
+    template<typename K, typename T, typename S>
+    BOOST_FORCEINLINE
+    view(memory::container<K, T, S> const& c)
+            : nt2_expression(basic_expr::make(container_ref(c)))
+    {
+    }
+
     template<class Xpr>
-    void reset(Xpr& other)
+    BOOST_FORCEINLINE void reset(Xpr& other)
     {
       view tmp(other);
+      boost::proto::value(*this) = boost::proto::value(tmp);
+      this->size_ = tmp.size_;
+    }
+
+    template<typename Extent>
+    BOOST_FORCEINLINE void reset(pointer p, Extent const& sz)
+    {
+      view tmp(p,sz);
       boost::proto::value(*this) = boost::proto::value(tmp);
       this->size_ = tmp.size_;
     }
@@ -160,28 +178,16 @@ namespace nt2 { namespace container
     }
   };
 
-  template<typename Kind, typename T, typename S>
-  struct view<Kind, T const, S>
-       : expression<  boost::proto
-                      ::basic_expr< nt2::tag::terminal_
-                                  , boost::proto::term
-                                    < memory::container_ref<Kind,T const,S> >
-                                  , 0l
-                                  >
-                   , memory::container<Kind,T,S> const&
-                   >
+  template<typename Container>
+  struct  view<Container const>
+        : details::view_type<Container const>::nt2_expression
   {
-    typedef memory::container_ref<Kind,T const,S>       container_ref;
-    typedef boost::proto::basic_expr< nt2::tag::terminal_
-                                    , boost::proto::term< memory::container_ref < Kind
-                                                                                , T const
-                                                                                , S
-                                                                                >
-                                                        >
-                                    , 0l
-                                    >               basic_expr;
-    typedef memory::container<Kind,T,S> const&          container_type;
-    typedef expression<basic_expr, container_type>  nt2_expression;
+    typedef details::view_type<Container const>     v_t;
+    typedef typename v_t::basic_expr                basic_expr;
+    typedef typename v_t::container_ref             container_ref;
+    typedef typename v_t::container_type            container_type;
+    typedef typename v_t::nt2_expression            nt2_expression;
+    typedef typename v_t::value_type                value_type;
 
     typedef typename container_ref::iterator        iterator;
     typedef typename container_ref::const_iterator  const_iterator;

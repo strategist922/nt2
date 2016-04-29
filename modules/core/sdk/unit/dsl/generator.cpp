@@ -155,14 +155,14 @@ struct is_nt2_basic_expr< nt2::container::expression< boost::proto::basic_expr<T
 template<class T, class S>
 struct is_nt2_basic_expr< nt2::table<T, S> > : is_nt2_basic_expr< nt2::container::expression< typename nt2::table<T, S>::proto_base_expr, nt2::memory::container<nt2::tag::table_,T, S>& > > {};
 
-template<class K, class T, class S>
-struct  is_nt2_basic_expr< nt2::view<K,T, S> >
-      : is_nt2_basic_expr< typename nt2::view<K,T,S>::nt2_expression >
+template<class Container>
+struct  is_nt2_basic_expr< nt2::view<Container> >
+      : is_nt2_basic_expr< typename nt2::view<Container>::nt2_expression >
 {};
 
-template<class K,class T, class S>
-struct  is_nt2_basic_expr< nt2::shared_view<K, T, S> >
-      : is_nt2_basic_expr< typename nt2::shared_view<K,T, S>::nt2_expression >
+template<class Container>
+struct  is_nt2_basic_expr< nt2::shared_view<Container> >
+      : is_nt2_basic_expr< typename nt2::shared_view<Container>::nt2_expression >
 {};
 
 template<class Expr>

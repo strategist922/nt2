@@ -280,6 +280,14 @@ namespace nt2 { namespace memory
       base_->swap(x);
     }
 
+    /*!
+      @brief Data export from within container
+    **/
+    pointer release()
+    {
+      return base_->release();
+    }
+
     //==========================================================================
     /*!
      * @brief Resize a container using new dimensions set

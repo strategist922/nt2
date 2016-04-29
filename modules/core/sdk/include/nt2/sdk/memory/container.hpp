@@ -317,6 +317,15 @@ namespace nt2 { namespace memory
             );
     }
 
+    /*!
+      @brief Data export from within container
+    **/
+    pointer release()
+    {
+      sizes_ = extent_type(0);
+      return data_.release();
+    }
+
     //==========================================================================
     /*!
      * @brief Add element at end of container, reshape to 1D

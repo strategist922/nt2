@@ -1,0 +1,104 @@
+[section Interoperability between C and __NT2__]
+
+Interaction between __NT2__ and other third party libraries is an important goal
+for maximizing the usefulness of the library. However, this interoperability may
+often be limited to exchange of raw memory block allocated and used in a C-style
+way. The C binding module provides elements for simplifying such interactions
+and to ensure no performance loss.
+
+A classical interaction with a C based library consist in:
+
+* Retrieving C pointer to data and wrap them into a __NT2__ container.
+* Applying __NT2__ functions on those containers.
+* Transfer the resulting data back to the C library.
+
+All these operations must be performed without any copy or extraneous memory
+allocation while respecting the data life time.
+
+[h3 Classical C-style function]
+
+Let's take an example where a function invert_pixel has to deal with a raw
+pointer containing data retrieved by a camera driver through a C like API and has
+to apply a simple video inverse effect on each pixel and store the result in
+another block of memory passed as an arguments. The basic outline of such a
+function could be:
+
+``
+    #include <nt2/table.hpp>
+    #include <nt2/core/utility/share.hpp>
+    #include <nt2/core/sdk/memory/c_allocator.hpp>
+
+    extern "C" void video_inverse(uint8_t* pi, int h, int w, uint8_t* pi)
+    {
+      using nt2::table;
+      using nt2::share;
+      using nt2::of_size;
+      using nt2::shared_;
+
+      // Retrieve data in a NT2 container of proper size
+      table<uint8_t, shared_> in (of_size(h,w), share(pi,pi+h*w) );
+      table<uint8_t, shared_> out(of_size(h,w), share(po,po+h*w) );
+
+      // Apply the effect
+      out = ~in;
+    }
+``
+
+This strategy of passing pointer to input and output data as parameters is a
+classical idiom of C. The function body features two of the three step outlined
+above:
+
+* The C pointers are retrieved and wrapped in __NT2__ containers by using the
+[headerref nt2/core/utility/share.hpp share] function. This function supports
+pointer range and standard array as a valid source of memory.
+
+* The inversion of the pixels is performed using the bitwise complement operator
+and is stored into the output table.
+
+[h3 C-style function returning data]
+
+Another variant of such a function could actually returns a pointer to newly
+allocated memory containing the result. In this case, we need a way to build a
+__NT2__ container and be sure that the data transfered back to the C calling
+site is compatible with classical C memory handling functions like `realloc`
+or `free`. The function can now look like:
+
+``
+    #include <nt2/table.hpp>
+    #include <nt2/core/utility/share.hpp>
+    #include <nt2/core/sdk/memory/c_allocator.hpp>
+
+    extern "C" uint8_t* video_inverse(uint8_t* data, int h, int w)
+    {
+      using nt2::table;
+      using nt2::share;
+      using nt2::of_size;
+      using nt2::shared_;
+      using nt2::c_allocator;
+
+      // Retrieve data in a NT2 container of proper size
+      table<uint8_t, shared_> in (of_size(h,w), share(pi,pi+h*w) );
+
+      // Apply the effect
+      table<uint8_t, c_allocator<uint8_t> > out = ~in;
+
+      // Return the result
+      return out.release();
+    }
+``
+
+Now, all three step outlined above are featured:
+
+* The C pointer is retrieved and wrapped in a __NT2__ container by using the
+[headerref nt2/core/utility/share.hpp share] function.
+
+* The inversion of the pixels is stored into another table using the C compatible
+allocator [headerref nt2/sdk/memory/c_allocator.hpp c_allocator]. Using this allocator
+ensures that the caller on the C side will be able to use `free` on this resource.
+
+* Finally, the resulting image is then extracted from the temporary table via the
+`release()` member function and returned to the caller. This member function
+takes care of properly transferring the ownership of the memory out of the local
+temporary __NT2__ container.
+
+[endsect]

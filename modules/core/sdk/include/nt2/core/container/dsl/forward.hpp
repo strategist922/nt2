@@ -16,12 +16,6 @@ namespace nt2 { namespace tag
   struct container_;
 } }
 
-namespace nt2
-{
-  template<class T>
-  struct box;
-}
-
 namespace nt2 { namespace container
 {
   template<bool B> struct extremum;
@@ -38,11 +32,9 @@ namespace nt2 { namespace container
   template<class Type, class Settings = nt2::settings()>
   struct table;
 
-  template<typename Kind, typename Type, typename Settings = nt2::settings()>
-  struct view;
+  template<typename Container> struct view;
 
-  template<typename Kind, typename Type, typename Settings = nt2::settings()>
-  struct shared_view;
+  template<typename Container> struct shared_view;
 } }
 
 #endif
