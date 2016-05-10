@@ -18,7 +18,9 @@ namespace nt2
     typename Container::value_type* cuda_get_mapped_device_pointer(Container & c )
     {
       typename Container::value_type * out = nullptr;
-      if ( (cuda_alloc_type == cudaHostAllocMapped) && (locality(c) == pinned_ {}) ) cudaHostGetDevicePointer( (void **) &out, (void*) c.data() ,0 );
+      using locality = typename meta::option<Container,tag::locality_>::type;
+
+      if ( (cuda_alloc_type == cudaHostAllocMapped) && std::is_same<locality,pinned_>::value ) cudaHostGetDevicePointer( (void **) &out, (void*) c.data() ,0 );
       return out;
     }
  }

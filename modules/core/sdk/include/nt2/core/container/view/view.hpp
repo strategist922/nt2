@@ -38,6 +38,7 @@ namespace nt2 { namespace container
     typedef typename container_ref::pointer         pointer;
     typedef typename container_ref::iterator        iterator;
     typedef typename container_ref::const_iterator  const_iterator;
+    typedef typename container_ref::locality_t      locality_t;
 
     iterator begin()  const { return boost::proto::value(*this).begin(); }
     iterator end()    const { return boost::proto::value(*this).end(); }

@@ -8,30 +8,95 @@
 #ifndef NT2_SDK_META_DEVICE_HPP_INCLUDED
 #define NT2_SDK_META_DEVICE_HPP_INCLUDED
 
+#if defined(NT2_HAS_CUDA)
+
 #include <type_traits>
 #include <nt2/core/settings/add_settings.hpp>
 #include <nt2/include/functions/copy.hpp>
-
-#if defined(NT2_HAS_CUDA)
+#include <nt2/sdk/meta/cuda_alloc.hpp>
+#include <iostream>
 
 namespace nt2 { namespace meta
   {
 
- template<class In, class Enable = void>
-  struct as_device
+  template<class In_,class Enableif = void>
+  struct impl
   {
-    using type = nt2::memory::cuda_buffer<typename In::value_type> ;
+    using value_type = typename In_::value_type;
+    using settings   = typename add_settings<nt2::device_,typename In_::nt2_expression>::type;
+    using table_type = nt2::container::table<value_type , settings>;
 
-    static type init(In & in)
+    static table_type init1(In_ & in )
     {
-      type result(in.size());
-      nt2::memory::copy(in, result);
+      table_type result(in.extent());
+
+      nt2::memory::copy(in, result, locality(in),locality(result));
+
       return result;
     }
   };
 
+  template<class In_>
+  struct impl<In_ ,typename std::enable_if< (cuda_alloc_type == cudaHostAllocMapped)
+                                            &&  std::is_same<typename meta::option<In_,tag::locality_>::type,nt2::pinned_>::value
+                                          >::type
+            >
+  {
+    using value_type = typename In_::value_type;
+    using settings   = typename add_settings<nt2::device_,typename In_::nt2_expression>::type ;
+    using table_type = nt2::container::table<value_type , settings>;
+    using type = nt2::container::view<table_type>;
+
+    static type init1(In_ & in)
+    {
+      type result;
+      value_type * out = nullptr;
+      cudaHostGetDevicePointer( (void **) &out, (void*) in.data() ,0 );
+      result.reset(out,in.extent() );
+
+    return result;
+    }
+  };
+
+  template<class In, class Enable = void>
+  struct as_device
+  {
+    static auto init(In & in) -> decltype(impl<In>::init1(in))
+    {
+      return impl<In>::init1(in);
+    }
+
+  };
+
   template<class In>
   struct as_device<In, typename std::enable_if< is_on_device<In>::value>::type  >
+  {
+    using type = In&;
+
+    static type init(In & in)
+    {
+      return in;
+    }
+  };
+
+
+  template<class In, class Loc, class Enable = void>
+  struct as_host
+  {
+    using value_type = typename In::value_type;
+    using settings = typename add_settings<Loc,typename In::nt2_expression>::type ;
+    using table_type = nt2::container::table<value_type , settings> ;
+
+    static table_type init(In & in)
+    {
+      table_type out = in;
+      return out;
+    }
+
+  };
+
+  template<class In, class Loc>
+  struct as_host<In, Loc, typename std::enable_if< is_on_host<In>::value>::type  >
   {
     using type = In&;
 
@@ -78,6 +143,13 @@ namespace nt2
   {
     return meta::as_device<A>::init(a);
   }
+
+  template<class A, class B = nt2::host_ >
+  auto to_host(A & a ) -> decltype(meta::as_host<A,B>::init(a))
+  {
+    return meta::as_host<A,B>::init(a);
+  }
+
 }
 
 #endif
