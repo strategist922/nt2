@@ -28,13 +28,6 @@ namespace nt2 { namespace memory
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyDeviceToHost )
   };
 
-  template<> struct copy_<device_,pinned_>
-  {
-    static BOOST_FORCEINLINE
-    BOOST_AUTO_DECLTYPE mode()
-    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyDeviceToHost )
-  };
-
   template<> struct copy_<host_,device_>
   {
     static BOOST_FORCEINLINE
@@ -49,30 +42,7 @@ namespace nt2 { namespace memory
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyDeviceToDevice )
   };
 
-
-  template<> struct copy_<pinned_,device_>
-  {
-    static BOOST_FORCEINLINE
-    BOOST_AUTO_DECLTYPE mode()
-    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToDevice )
-  };
-
   template<> struct copy_<host_,host_>
-  {
-    static BOOST_FORCEINLINE
-    BOOST_AUTO_DECLTYPE mode()
-    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToHost )
-  };
-
-  template<> struct copy_<pinned_,host_>
-  {
-    static BOOST_FORCEINLINE
-    BOOST_AUTO_DECLTYPE mode()
-    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToHost )
-  };
-
-
-  template<> struct copy_<host_,pinned_>
   {
     static BOOST_FORCEINLINE
     BOOST_AUTO_DECLTYPE mode()
@@ -85,7 +55,6 @@ namespace nt2 { namespace memory
   {
     using T = typename Out::value_type;
 //TODO
-
 
     CUDA_ERROR(cudaMemcpyAsync( (T*)b.data()
                               , a.data()

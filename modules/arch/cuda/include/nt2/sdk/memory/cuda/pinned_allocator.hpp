@@ -15,10 +15,10 @@
 #include <cuda_runtime.h>
 #include <type_traits>
 
-#define cuda_alloc_type cudaHostAllocDefault
-
 #if defined(NT2_CUDA_INTEGRATED)
 #define cuda_alloc_type cudaHostAllocMapped
+#else
+#define cuda_alloc_type cudaHostAllocDefault
 #endif
 
 namespace nt2 { namespace memory
@@ -109,19 +109,19 @@ namespace nt2 { namespace memory
 
 using pinned_ = nt2::memory::cuda_pinned_<char>;
 
-  namespace tag
-  {
-    template<>
-    struct locality_::apply<nt2::pinned_>
-                        : boost::mpl::true_
-    {};
-  }
+  // namespace tag
+  // {
+  //   template<>
+  //   struct locality_::apply<nt2::pinned_>
+  //                       : boost::mpl::true_
+  //   {};
+  // }
 
   namespace tag
   {
 
     template<typename X>
-    struct is_on_host : std::is_same< typename nt2::meta::option<X,tag::locality_>::type
+    struct is_on_host : std::is_same< typename nt2::meta::option<X,tag::allocator_>::type
                                     , nt2::pinned_
                                     >
     {};
