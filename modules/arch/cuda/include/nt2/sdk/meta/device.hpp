@@ -14,7 +14,6 @@
 #include <nt2/core/settings/add_settings.hpp>
 #include <nt2/include/functions/copy.hpp>
 #include <nt2/sdk/meta/cuda_alloc.hpp>
-#include <iostream>
 
 namespace nt2 { namespace meta
   {
@@ -29,7 +28,6 @@ namespace nt2 { namespace meta
     static table_type init1(In_ & in )
     {
       table_type result(in.extent());
-
       nt2::memory::copy(in, result, locality(in),locality(result));
 
       return result;
@@ -38,7 +36,7 @@ namespace nt2 { namespace meta
 
   template<class In_>
   struct impl<In_ ,typename std::enable_if< (cuda_alloc_type == cudaHostAllocMapped)
-                                            &&  std::is_same<typename meta::option<In_,tag::locality_>::type,nt2::pinned_>::value
+                                          && std::is_same<typename In_::allocator_type,nt2::memory::cuda_pinned_<typename In_::value_type> >::value
                                           >::type
             >
   {
@@ -144,7 +142,7 @@ namespace nt2
     return meta::as_device<A>::init(a);
   }
 
-  template<class A, class B = nt2::host_ >
+  template<class B = nt2::host_ , class A>
   auto to_host(A & a ) -> decltype(meta::as_host<A,B>::init(a))
   {
     return meta::as_host<A,B>::init(a);
