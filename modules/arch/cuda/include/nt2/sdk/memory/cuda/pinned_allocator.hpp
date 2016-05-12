@@ -109,15 +109,6 @@ namespace nt2 { namespace memory
 
 using pinned_ = nt2::memory::cuda_pinned_<char>;
 
-  namespace tag
-  {
-
-    template<typename X>
-    struct is_on_host : std::is_same< typename nt2::meta::option<X,tag::allocator_>::type
-                                    , nt2::pinned_
-                                    >
-    {};
-  }
 }
 
 #endif

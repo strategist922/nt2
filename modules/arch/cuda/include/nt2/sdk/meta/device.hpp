@@ -11,6 +11,7 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <type_traits>
+#include <nt2/core/settings/settings.hpp>
 #include <nt2/core/settings/add_settings.hpp>
 #include <nt2/include/functions/copy.hpp>
 #include <nt2/sdk/meta/cuda_alloc.hpp>
@@ -22,7 +23,7 @@ namespace nt2 { namespace meta
   struct impl
   {
     using value_type = typename In_::value_type;
-    using settings   = typename add_settings<nt2::device_,typename In_::settings_type>::type;
+    using settings   = typename add_settings<typename In_::settings_type,nt2::device_>::type;
     using type = nt2::container::table<value_type , settings>;
 
     static type init1(In_ & in )
@@ -41,7 +42,7 @@ namespace nt2 { namespace meta
             >
   {
     using value_type = typename In_::value_type;
-    using settings   = typename add_settings<nt2::device_,typename In_::settings_type>::type ;
+    using settings   = typename add_settings<typename In_::settings_type,nt2::device_>::type ;
     using table_type = nt2::container::table<value_type , settings>;
     using type = nt2::container::view<table_type>;
 
@@ -84,19 +85,20 @@ namespace nt2 { namespace meta
   struct as_host
   {
     using value_type = typename In::value_type;
-    using settings = typename add_settings<Loc,typename In::settings_type>::type ;
-    using table_type = nt2::container::table<value_type , settings> ;
+    using settings = typename add_settings<typename In::settings_type,nt2::host_>::type ;
+    using settings1 = typename add_settings<settings,Loc>::type ;
+    using type = nt2::container::table<value_type , settings1> ;
 
-    static table_type init(In & in)
+    static type init(In & in)
     {
-      table_type out = in;
+      type out = in;
       return out;
     }
 
   };
 
   template<class In, class Loc>
-  struct as_host<In, Loc, typename std::enable_if< is_on_host<In>::value>::type  >
+  struct as_host<In, Loc, typename std::enable_if< is_on_host<In>::value >::type  >
   {
     using type = In&;
 
@@ -144,7 +146,7 @@ namespace nt2
     return meta::as_device<A>::init(a);
   }
 
-  template<class B = nt2::host_ , class A>
+  template<class B = void, class A>
   auto to_host(A & a ) -> decltype(meta::as_host<A,B>::init(a))
   {
     return meta::as_host<A,B>::init(a);
