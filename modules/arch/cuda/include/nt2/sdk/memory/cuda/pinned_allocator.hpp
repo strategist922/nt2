@@ -109,14 +109,6 @@ namespace nt2 { namespace memory
 
 using pinned_ = nt2::memory::cuda_pinned_<char>;
 
-  // namespace tag
-  // {
-  //   template<>
-  //   struct locality_::apply<nt2::pinned_>
-  //                       : boost::mpl::true_
-  //   {};
-  // }
-
   namespace tag
   {
 
