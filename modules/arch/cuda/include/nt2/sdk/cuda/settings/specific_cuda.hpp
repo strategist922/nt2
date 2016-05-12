@@ -21,7 +21,7 @@ namespace nt2
   namespace memory
   {
     template<typename T>
-    class cuda_pinned_;
+    struct cuda_pinned_;
   }
   using pinned_ = nt2::memory::cuda_pinned_<char>;
 }

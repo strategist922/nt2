@@ -22,12 +22,12 @@ namespace nt2 { namespace meta
   struct impl
   {
     using value_type = typename In_::value_type;
-    using settings   = typename add_settings<nt2::device_,typename In_::nt2_expression>::type;
-    using table_type = nt2::container::table<value_type , settings>;
+    using settings   = typename add_settings<nt2::device_,typename In_::settings_type>::type;
+    using type = nt2::container::table<value_type , settings>;
 
-    static table_type init1(In_ & in )
+    static type init1(In_ & in )
     {
-      table_type result(in.extent());
+      type result(in.extent());
       nt2::memory::copy(in, result, locality(in),locality(result));
 
       return result;
@@ -41,7 +41,7 @@ namespace nt2 { namespace meta
             >
   {
     using value_type = typename In_::value_type;
-    using settings   = typename add_settings<nt2::device_,typename In_::nt2_expression>::type ;
+    using settings   = typename add_settings<nt2::device_,typename In_::settings_type>::type ;
     using table_type = nt2::container::table<value_type , settings>;
     using type = nt2::container::view<table_type>;
 
@@ -59,7 +59,9 @@ namespace nt2 { namespace meta
   template<class In, class Enable = void>
   struct as_device
   {
-    static auto init(In & in) -> decltype(impl<In>::init1(in))
+    using type = typename impl<In>::type;
+
+    static type init(In & in)
     {
       return impl<In>::init1(in);
     }
@@ -82,7 +84,7 @@ namespace nt2 { namespace meta
   struct as_host
   {
     using value_type = typename In::value_type;
-    using settings = typename add_settings<Loc,typename In::nt2_expression>::type ;
+    using settings = typename add_settings<Loc,typename In::settings_type>::type ;
     using table_type = nt2::container::table<value_type , settings> ;
 
     static table_type init(In & in)
