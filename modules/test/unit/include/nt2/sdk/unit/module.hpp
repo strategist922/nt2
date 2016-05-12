@@ -92,6 +92,11 @@ NT2_UNIT_MAIN_SPEC int NT2_UNIT_MAIN(int argc, char* argv[])
   std::cout << "Site: " << nt2::type_id<boost::dispatch::default_site<int>::type>() << "\n",
   std::cout <<  std::string(80,'-') << std::endl;
 
+
+#if defined(NT2_CUDA_INTEGRATED)
+cudaSetDeviceFlags(cudaDeviceMapHost);
+#endif
+
 #if defined(NT2_USE_MAGMA)
   magma_init();
 #endif
