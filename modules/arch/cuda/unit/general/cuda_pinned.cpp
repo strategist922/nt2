@@ -20,7 +20,7 @@
 #include <nt2/sdk/unit/tests/relation.hpp>
 #include <nt2/sdk/unit/tests/basic.hpp>
 
-NT2_TEST_CASE_TPL(cuda_buffer_pinned, NT2_REAL_TYPES )
+NT2_TEST_CASE_TPL(cuda_buffer_pinned, (double) )
 {
   nt2::table<T,nt2::pinned_> A = nt2::ones(nt2::of_size(5,5), nt2::meta::as_<T>());
   nt2::table<T> B = A;
@@ -49,10 +49,27 @@ NT2_TEST_CASE_TPL(is_on_host, (double) )
   NT2_TEST_EQUAL(out_host , result );
 }
 
+
+NT2_TEST_CASE_TPL(is_on_host_inout, (double) )
+{
+  nt2::table<T,nt2::pinned_> A = nt2::ones(nt2::of_size(5,5), nt2::meta::as_<T>());
+  nt2::table<T> result = nt2::two(5);
+
+  auto A_device = nt2::to_device(A);
+
+  cublasDscal( A.size() , 2.0 , A.data() , 1);
+
+  nt2::to_host(A_device,A);
+
+  NT2_TEST_EQUAL( A , result );
+
+}
+
 NT2_TEST_CASE_TPL(is_on_device, (double) )
 {
   nt2::table<T,nt2::pinned_> A = nt2::ones(nt2::of_size(5,5), nt2::meta::as_<T>());
   nt2::table<T> result = nt2::two(5);
+
   auto A_device = nt2::to_device(A);
 
   cublasDscal( A_device.size() , 2.0 , A_device.data() , 1);
@@ -60,4 +77,5 @@ NT2_TEST_CASE_TPL(is_on_device, (double) )
   auto out_pinned = nt2::to_host<nt2::pinned_>(A_device);
 
   NT2_TEST_EQUAL(out_pinned , result );
+  NT2_TEST_EQUAL(A , result );
 }
