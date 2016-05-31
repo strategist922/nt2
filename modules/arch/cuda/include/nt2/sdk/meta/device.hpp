@@ -49,9 +49,9 @@ namespace nt2 { namespace meta
     static type init1(In_ & in)
     {
       type result;
-      value_type * out = nullptr;
-      cudaHostGetDevicePointer( (void **) &out, (void*) in.data() ,0 );
-      result.reset(out,in.extent() );
+      // value_type * out = nullptr;
+      // cudaHostGetDevicePointer( (void **) &out, (void*) in.data() ,0 );
+      result.reset(in.data(),in.extent() );
 
     return result;
     }
@@ -80,7 +80,6 @@ namespace nt2 { namespace meta
     }
   };
 
-
   template<class In, class Loc, class Enable = void>
   struct as_host
   {
@@ -108,6 +107,32 @@ namespace nt2 { namespace meta
     }
   };
 
+  template<class In, class Out, class Enable = void>
+  struct as_host_inout
+  {
+    static void init(In & in, Out & out )
+    {
+      out = in;
+    }
+
+  };
+
+  template<class In, class Out>
+  struct as_host_inout<In,Out
+                      ,typename std::enable_if< (cuda_alloc_type == cudaHostAllocMapped)
+                                              && std::is_same<typename Out::allocator_type
+                                                              ,nt2::memory::cuda_pinned_<typename Out::value_type>
+                                                              >::value
+                                             >::type
+                      >
+  {
+    static void init(In & in, Out & out )
+    {
+      cudaDeviceSynchronize();
+    }
+
+  };
+
 
   template<class In, class Out, class Enable = void>
   struct as_container
@@ -119,11 +144,9 @@ namespace nt2 { namespace meta
   };
 
   template<class In, class Out >
-  struct as_container<In, Out
-                    , typename std::enable_if<std::is_same<In,Out>::value>::type
-                     >
+  struct as_container<In, Out , typename std::enable_if<  std::is_same<In,Out>::value>::type >
   {
-    static void init(In& , Out& ) {}
+    static void init(In & , Out& ) {}
   };
 
 }
@@ -140,17 +163,27 @@ namespace nt2
   /*!
     return a Sequence on the device
   **/
-  template<class A>
-  auto to_device(A & a) -> decltype(meta::as_device<A>::init(a))
+  template<class In>
+  auto to_device(In & a) -> decltype(meta::as_device<In>::init(a))
   {
-    return meta::as_device<A>::init(a);
+    return meta::as_device<In>::init(a);
   }
 
-  template<class B = void, class A>
-  auto to_host(A & a ) -> decltype(meta::as_host<A,B>::init(a))
+  /*!
+    return a Sequence on the host
+  **/
+  template<class LOC = void, class In>
+  auto to_host(In & a ) -> decltype(meta::as_host<In,LOC>::init(a))
   {
-    return meta::as_host<A,B>::init(a);
+    return meta::as_host<In,LOC>::init(a);
   }
+
+  template<class In, class Out>
+  void to_host(In & a, Out & b )
+  {
+    meta::as_host_inout<In,Out>::init(a,b);
+  }
+
 
 }
 
