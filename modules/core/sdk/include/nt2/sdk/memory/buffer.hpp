@@ -16,6 +16,7 @@
 #include <nt2/sdk/memory/is_safe.hpp>
 #include <nt2/sdk/memory/adapted/buffer.hpp>
 #include <nt2/sdk/memory/fixed_allocator.hpp>
+#include <nt2/sdk/memory/is_compatible_allocator.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/detail/iterator.hpp>
 #include <boost/assert.hpp>
@@ -53,6 +54,8 @@ namespace nt2 { namespace memory
     typedef std::reverse_iterator<const_iterator>         const_reverse_iterator;
     typedef typename allocator_type::size_type            size_type;
     typedef typename allocator_type::difference_type      difference_type;
+
+    template<typename U, typename B> friend class buffer;
 
     //==========================================================================
     // Default constructor
@@ -260,6 +263,18 @@ namespace nt2 { namespace memory
       boost::swap(end_            , src.end_            );
       boost::swap(capacity_       , src.capacity_       );
       boost::swap(get_allocator() , src.get_allocator() );
+    }
+
+    //==========================================================================
+    // Swap
+    //==========================================================================
+    template< typename B
+            , typename = typename std::enable_if<is_compatible_allocator<Allocator,B>::value>::type
+            > void swap( buffer<T,B>& src)
+    {
+      boost::swap(begin_          , src.begin_          );
+      boost::swap(end_            , src.end_            );
+      boost::swap(capacity_       , src.capacity_       );
     }
 
     //==========================================================================

@@ -12,6 +12,7 @@
 
 #include <nt2/sdk/cuda/cuda.hpp>
 #include <nt2/core/settings/locality.hpp>
+#include <nt2/sdk/memory/is_compatible_allocator.hpp>
 #include <cuda_runtime.h>
 #include <type_traits>
 
@@ -23,6 +24,16 @@
 
 namespace nt2 { namespace memory
 {
+#if defined(NT2_CUDA_INTEGRATED)
+struct integrated_cuda_settings
+{
+  integrated_cuda_settings() { cudaSetDeviceFlags(cudaDeviceMapHost); }
+};
+
+static const integrated_cuda_settings proper_settings= {};
+#endif
+
+
   template<typename T> struct cuda_pinned_
   {
     typedef T               value_type;
@@ -104,7 +115,22 @@ namespace nt2 { namespace memory
     return false;
   }
 
+  template<typename RefAlloc, typename T>
+  struct  is_compatible_allocator<RefAlloc, nt2::memory::cuda_pinned_<T>>
+        : std::is_same<T, typename RefAlloc::value_type>
+  {};
 
+  template<typename OtherAlloc, typename T>
+  struct  is_compatible_allocator<nt2::memory::cuda_pinned_<T>,OtherAlloc>
+        : std::is_same<T, typename OtherAlloc::value_type>
+  {};
+
+  template<typename T, typename U>
+  struct  is_compatible_allocator < nt2::memory::cuda_pinned_<T>
+                                  , nt2::memory::cuda_pinned_<U>
+                                  >
+        : std::is_same<T, U>
+  {};
 }
 
 using pinned_ = nt2::memory::cuda_pinned_<char>;
