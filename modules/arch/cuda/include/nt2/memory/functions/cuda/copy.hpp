@@ -13,8 +13,8 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/memory/cuda/buffer.hpp>
-#include <nt2/core/settings/locality.hpp>
 #include <cuda_runtime.h>
+
 
 namespace nt2 { namespace memory
 {
@@ -35,13 +35,6 @@ namespace nt2 { namespace memory
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToDevice )
   };
 
-  template<> struct copy_<host_,host_>
-  {
-    static BOOST_FORCEINLINE
-    BOOST_AUTO_DECLTYPE mode()
-    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToHost )
-  };
-
   template<> struct copy_<device_,device_>
   {
     static BOOST_FORCEINLINE
@@ -49,13 +42,20 @@ namespace nt2 { namespace memory
     BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyDeviceToDevice )
   };
 
+  template<> struct copy_<host_,host_>
+  {
+    static BOOST_FORCEINLINE
+    BOOST_AUTO_DECLTYPE mode()
+    BOOST_AUTO_DECLTYPE_BODY ( cudaMemcpyHostToHost )
+  };
+
   template<typename In, typename Out, typename HDI, typename HDO>
   inline void copy( In const& a, Out& b , HDI const& , HDO const&
                   , cudaStream_t stream = 0)
   {
     using T = typename Out::value_type;
-
 //TODO
+
     CUDA_ERROR(cudaMemcpyAsync( (T*)b.data()
                               , a.data()
                               , a.size()* sizeof(T)
@@ -84,7 +84,6 @@ namespace nt2 { namespace memory
     b.resize(a.size());
     copy(a,b,nt2::device_{},nt2::device_{},stream);
   }
-
 
 }}
 

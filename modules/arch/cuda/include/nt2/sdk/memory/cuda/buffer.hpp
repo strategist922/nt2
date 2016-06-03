@@ -11,6 +11,7 @@
 #if defined(NT2_HAS_CUDA)
 
 #include <nt2/sdk/memory/cuda/allocator.hpp>
+#include <nt2/sdk/memory/cuda/pinned_allocator.hpp>
 #include <nt2/include/functions/copy.hpp>
 #include <algorithm>
 #include <limits>
@@ -140,6 +141,17 @@ namespace nt2 { namespace memory
        begin_ = alloc_.allocate(sz);
        end_ = begin_ + sz;
       }
+    }
+
+    //==========================================================================
+    // Release
+    //==========================================================================
+
+    BOOST_FORCEINLINE pointer release()
+    {
+      pointer that = this->data();
+      begin_ = end_ = nullptr;
+      return  that;
     }
 
     //==========================================================================
