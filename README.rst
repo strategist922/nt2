@@ -13,6 +13,14 @@ The Numerical Template Toolbox
 --------------------
 About **NT**:sup:`2`
 --------------------
+
+**DISCLAIMER**
+
+**NT**:sup:`2` was a research project that spanned 10 years. It produced more than a dozen of research papers and sprout a lot of novel ideas based on the research work of Joel Falcou, Jean-Thierry Lapresté, Pierre Estérie, Antoine Tran Tan and Ian Masliah. It is however slowly shifted to new projects:
+
+ - If you use it for the old Boost.SIMD implementation which is soon to be deprecated, you may want to start migrating to the new version at https://github.com/NumScale/boost.simd
+ - If you use it for its actual Matlab like syntax, feel free to use it and report issues.
+
 The **Numerical Template Toolbox** (**NT**:sup:`2`) is an Open Source C++ library
 aimed at simplifying the development, debugging and optimization of high-performance
 computing applications by providing a **Matlab** like syntax that eases the transition
@@ -28,28 +36,6 @@ the reward of parallelism has never been so easy and straightforward. Performanc
 of **NT**:sup:`2` code is on the par with hand-written, optimized C code while
 keeping a high level of abstraction.
 
--------------
-Documentation
--------------
 
-`The (in progress) documentation is available here <http://nt2.metascale.fr/doc/html/>`_
-
-----------
-References
-----------
-
-
-----------
-License
-----------
-
-NT2 uses the `Boost Software License <http://www.boost.org/LICENSE_1_0.txt>`_. A copy should be available in the doc directory of this repository.
-
-----------
-Contact
-----------
-
-:Website: http://nt2.metascale.org
 :Mailing List: `nt2-dev <http://groups.google.com/group/nt2-dev>`_
-:Repository: `nt2 on GitHub <http://github.com/MetaScale/nt2>`_
 :IRC: #nt2 at `irc.freenode.net <http://freenode.net>`_
